@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
 import at.markushi.ui.CircleButton
@@ -22,6 +24,11 @@ class BaseUrlFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        val items = listOf("Italian","English")
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
+        (view.findViewById<CircleButton>(R.id.etLanguage) as? AutoCompleteTextView)?.setAdapter(adapter)
+
         view.findViewById<CircleButton>(R.id.btnSave).setOnClickListener {
             Log.i(Companion.TAG, "btnSave — clicked")
             findNavController().navigate(R.id.action_baseUrlFragment_to_loginFragment)

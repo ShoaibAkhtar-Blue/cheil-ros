@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/auth_nav"
-    app:startDestination="@id/baseUrlFragment">
+    app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/baseUrlFragment"
@@ -31,4 +31,15 @@
                 app:destination="@id/forgotPasswordFragment" />
         </fragment>
     </navigation>
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.cheilros.fragments.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_baseUrlFragment"
+            app:destination="@id/baseUrlFragment"
+            app:popUpTo="@id/baseUrlFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

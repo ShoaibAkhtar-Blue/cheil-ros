@@ -10,7 +10,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.example.cheilros"
+        applicationId "com.sol.hut.cheilros"
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
@@ -52,6 +52,8 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     implementation 'com.github.markushi:circlebutton:1.1'
+
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
 
 
 }
