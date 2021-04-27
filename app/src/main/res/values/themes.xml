@@ -15,7 +15,14 @@
         <item name="android:fontFamily">@font/samsungsharpsans_medium</item>
     </style>
 
+    <style name="Theme.CheilROS.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
+    <style name="Theme.CheilROS.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.CheilROS.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
 </resources>

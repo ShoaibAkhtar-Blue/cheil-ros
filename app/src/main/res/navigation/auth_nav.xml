@@ -29,7 +29,15 @@
             <action
                 android:id="@+id/action_loginFragment_to_forgotPasswordFragment"
                 app:destination="@id/forgotPasswordFragment" />
+            <action
+                android:id="@+id/action_loginFragment_to_dashboardActivity2"
+                app:destination="@id/dashboardActivity2" />
         </fragment>
+        <activity
+            android:id="@+id/dashboardActivity2"
+            android:name="com.example.cheilros.activities.DashboardActivity"
+            android:label="app_bar_main"
+            tools:layout="@layout/app_bar_main" />
     </navigation>
     <fragment
         android:id="@+id/splashFragment"
