@@ -31,7 +31,9 @@
                 app:destination="@id/forgotPasswordFragment" />
             <action
                 android:id="@+id/action_loginFragment_to_dashboardActivity2"
-                app:destination="@id/dashboardActivity2" />
+                app:destination="@id/dashboardActivity2"
+                app:launchSingleTop="true"
+                app:popUpToInclusive="true" />
         </fragment>
         <activity
             android:id="@+id/dashboardActivity2"
@@ -47,7 +49,7 @@
         <action
             android:id="@+id/action_splashFragment_to_baseUrlFragment"
             app:destination="@id/baseUrlFragment"
-            app:popUpTo="@id/baseUrlFragment"
+            app:popUpTo="@id/auth_nav"
             app:popUpToInclusive="true" />
     </fragment>
 </navigation>
