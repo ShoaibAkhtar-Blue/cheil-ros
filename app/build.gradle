@@ -15,7 +15,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0.2"
+        versionName "1.0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -52,6 +52,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.3.5'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -68,5 +69,7 @@ dependencies {
     implementation 'com.irozon.sneaker:sneaker:2.0.0'
 
     implementation 'com.agrawalsuneet.androidlibs:dotsloader:1.4'
+
+    implementation 'com.ramotion.foldingcell:folding-cell:1.2.3'
 
 }

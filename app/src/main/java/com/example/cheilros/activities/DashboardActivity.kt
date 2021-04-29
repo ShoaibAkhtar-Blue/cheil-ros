@@ -94,7 +94,7 @@ class DashboardActivity : AppCompatActivity() {
         adapter = MenuNavigationAdapter(this, menuData!!)
         gridView!!.adapter = adapter
 
-        val navController = findNavController(R.id.nav_host_fragment)
+        /*val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
@@ -103,7 +103,7 @@ class DashboardActivity : AppCompatActivity() {
                 ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        navView.setupWithNavController(navController)*/
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -112,8 +112,8 @@ class DashboardActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onSupportNavigateUp(): Boolean {
+    /*override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
+    }*/
 }
