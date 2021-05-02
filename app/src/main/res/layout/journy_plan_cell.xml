@@ -6,7 +6,8 @@
     folding-cell:additionalFlipsCount="2"
     folding-cell:animationDuration="1300"
     folding-cell:backSideColor="@color/white"
-    folding-cell:cameraHeight="30">
+    folding-cell:cameraHeight="30"
+    android:id="@+id/folding_cell">
 
     <!-- CONTENT (UNFOLDED) LAYOUT (MUST BE AT LEAST 2x times BIGGER than content layout bellow)-->
     <include layout="@layout/journey_plan_content_cell" />

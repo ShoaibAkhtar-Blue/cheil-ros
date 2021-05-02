@@ -15,7 +15,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0.3"
+        versionName "1.0.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,6 +38,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
 }
 
 dependencies {
@@ -71,5 +72,7 @@ dependencies {
     implementation 'com.agrawalsuneet.androidlibs:dotsloader:1.4'
 
     implementation 'com.ramotion.foldingcell:folding-cell:1.2.3'
+
+    implementation 'com.google.code.gson:gson:2.8.6'
 
 }

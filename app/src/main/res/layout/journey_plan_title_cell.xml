@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     android:baselineAligned="false"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:id="@+id/LLjp">
 
     <!-- LEFT TITLE PART -->
     <!-- RIGHT TITLE PART -->
