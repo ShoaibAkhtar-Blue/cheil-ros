@@ -10,9 +10,9 @@
     android:id="@+id/folding_cell">
 
     <!-- CONTENT (UNFOLDED) LAYOUT (MUST BE AT LEAST 2x times BIGGER than content layout bellow)-->
-    <include layout="@layout/journey_plan_content_cell" />
+    <include layout="@layout/mycoverage_content_cell" />
 
     <!-- TITLE (FOLDED) LAYOUT (MUST BE AT LEAST 2x times SMALLER than content layout above) -->
-    <include layout="@layout/journey_plan_title_cell" />
+    <include layout="@layout/mycoverage_title_cell" />
 
 </com.ramotion.foldingcell.FoldingCell>

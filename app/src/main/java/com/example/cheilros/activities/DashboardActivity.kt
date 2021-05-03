@@ -3,16 +3,17 @@ package com.example.cheilros.activities
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
+import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.example.cheilros.R
 import com.example.cheilros.adapters.MenuNavigationAdapter
 import com.example.cheilros.models.MenuNavigationModel
@@ -64,7 +65,7 @@ class DashboardActivity : AppCompatActivity() {
         params.width = width
         nav_view.layoutParams = params
 
-        val menus = arrayOf("Dashboard", "Explore", "Photo", "Video", "Friends", "Messages", "Profile", "Setting")
+        val menus = arrayOf("Journey Plan", "My Coverage", "Photo", "Video", "Friends", "Messages", "Profile", "Setting")
         val icon = intArrayOf(
                 R.drawable.ic_menu_gallery,
                 R.drawable.ic_menu_gallery,
@@ -93,6 +94,40 @@ class DashboardActivity : AppCompatActivity() {
         gridView = findViewById(R.id.gridview) as GridView
         adapter = MenuNavigationAdapter(this, menuData!!)
         gridView!!.adapter = adapter
+
+        gridView!!.onItemClickListener = OnItemClickListener { parent, v, i, id ->
+            //Toast.makeText(this, "menu " + menus[i] + " clicked! $i", Toast.LENGTH_SHORT).show()
+
+            try {
+                if(i === 0)
+                    findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
+
+                if(i === 1)
+                    findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
+            }catch (e: Exception){
+                Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+            }
+
+
+
+            val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+            drawer.closeDrawer(GravityCompat.START)
+
+            /*val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+            drawer.closeDrawer(GravityCompat.START)
+            menuData!!.clear()
+            for (j in menus.indices) {
+                val menu = MenuNavigation17Model()
+                menu.setMenuName(menus[j])
+                menu.setMenuIcon(icon[j])
+                if (i == j) {
+                    menu.setSelected(true)
+                    menu.setMenuIcon(iconSelected[j])
+                }
+                menuData!!.add(menu)
+            }
+            adapter!!.notifyDataSetChanged()*/
+        }
 
         /*val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each

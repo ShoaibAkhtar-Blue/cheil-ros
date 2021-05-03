@@ -60,7 +60,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etUsername"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="test.ros1" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -74,7 +75,9 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPassword"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:text="ros" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

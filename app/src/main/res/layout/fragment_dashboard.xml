@@ -14,7 +14,8 @@
             android:id="@+id/btnJourneyPlan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Journey Plan" />
+            android:text="Journey Plan"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btnTest"

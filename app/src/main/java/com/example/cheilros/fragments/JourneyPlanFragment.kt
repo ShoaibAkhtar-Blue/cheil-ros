@@ -1,22 +1,16 @@
 package com.example.cheilros.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemClickListener
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.adapters.JPAdapter
-import com.example.cheilros.adapters.JourneyPlanAdapter
-import com.example.cheilros.models.JourneyPlanModel
-import com.ramotion.foldingcell.FoldingCell
 import kotlinx.android.synthetic.main.fragment_journey_plan.*
-import kotlinx.android.synthetic.main.fragment_my_coverage.*
-import java.util.*
 
 
 class JourneyPlanFragment : Fragment() {
@@ -39,8 +33,8 @@ class JourneyPlanFragment : Fragment() {
     lateinit var recylcerAdapter: JPAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_journey_plan, container, false)
@@ -48,9 +42,14 @@ class JourneyPlanFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerView= rvJourneyPlan
+        recyclerView.setHasFixedSize(true);
+
+        recyclerView.addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
+
+
         layoutManager= LinearLayoutManager(requireContext())
 
-        recylcerAdapter= JPAdapter(requireContext(),booklist)
+        recylcerAdapter= JPAdapter(requireContext(), booklist)
 
         recyclerView.adapter=recylcerAdapter
         recyclerView.layoutManager=layoutManager

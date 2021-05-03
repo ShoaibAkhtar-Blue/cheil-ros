@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Carrefour Mall Of The Emirates"
+            android:text="Store Name"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
 
@@ -47,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/samsungsharpsans_bold"
-            android:text="Carrefour Mall Of The Emirates"
+            android:text="Store Name"
             android:textColor="@color/black" />
 
         <TextView
@@ -70,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Check in" />
+            android:text="Add in Visit Plan" />
 
         <Button
             android:id="@+id/btnCancel"
@@ -78,6 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancel" />
+            android:text="Cancel"
+            android:textColor="@color/design_default_color_error" />
     </LinearLayout>
 </LinearLayout>

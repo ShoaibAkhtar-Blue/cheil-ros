@@ -9,14 +9,17 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
-import com.google.android.material.button.MaterialButton
+import com.example.cheilros.fragments.MyCoverageData
 import com.ramotion.foldingcell.FoldingCell
 
-class JPAdapter(val context: Context, val itemList:ArrayList<String>): RecyclerView.Adapter<JPAdapter.ViewHolder>()   {
+class MyCoverageAdapter(val context: Context, val itemList:List<MyCoverageData>): RecyclerView.Adapter<MyCoverageAdapter.ViewHolder>()   {
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        //var textView: TextView = view.findViewById(R.id.txtTitle)
+        var txtSerialNo: TextView = view.findViewById(R.id.txtSerialNo)
+        var txtTitle: TextView = view.findViewById(R.id.txtTitle)
+        var txtRegion: TextView = view.findViewById(R.id.txtRegion)
+        var txtAddress: TextView = view.findViewById(R.id.txtAddress)
         var fc : FoldingCell = view.findViewById(R.id.folding_cell)
         var btnSee  : LinearLayout = view.findViewById(R.id.LLjp)
         var btnClose  : RelativeLayout = view.findViewById(R.id.RLHeader)
@@ -26,13 +29,17 @@ class JPAdapter(val context: Context, val itemList:ArrayList<String>): RecyclerV
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view= LayoutInflater.from(parent.context).inflate(R.layout.journy_plan_cell,parent,false)
+        val view= LayoutInflater.from(parent.context).inflate(R.layout.mycoverage_cell,parent,false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        /*val text=itemList[position]
-        holder.textView.text=text*/
+
+        holder.txtSerialNo.text = (position+1).toString()
+        holder.txtTitle.text = itemList[position].StoreName
+        holder.txtRegion.text = itemList[position].RegionName
+        holder.txtAddress.text = itemList[position].Address
+
         holder.btnSee.setOnClickListener {
             holder.fc.toggle(false)
         }
