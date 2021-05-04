@@ -21,10 +21,18 @@
         android:id="@+id/journeyPlanFragment"
         android:name="com.example.cheilros.fragments.JourneyPlanFragment"
         android:label="fragment_journey_plan"
-        tools:layout="@layout/fragment_journey_plan" />
+        tools:layout="@layout/fragment_journey_plan" >
+        <action
+            android:id="@+id/action_journeyPlanFragment_to_myCoverageFragment"
+            app:destination="@id/myCoverageFragment" />
+    </fragment>
     <fragment
         android:id="@+id/myCoverageFragment"
         android:name="com.example.cheilros.fragments.MyCoverageFragment"
         android:label="fragment_my_coverage"
-        tools:layout="@layout/fragment_my_coverage" />
+        tools:layout="@layout/fragment_my_coverage" >
+        <action
+            android:id="@+id/action_myCoverageFragment_to_journeyPlanFragment"
+            app:destination="@id/journeyPlanFragment" />
+    </fragment>
 </navigation>

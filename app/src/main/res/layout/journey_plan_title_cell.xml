@@ -10,6 +10,7 @@
     <!-- LEFT TITLE PART -->
     <!-- RIGHT TITLE PART -->
     <RelativeLayout
+        android:id="@+id/RLStatus"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_weight="5"
@@ -45,6 +46,16 @@
             android:padding="8dp">
 
             <TextView
+                android:id="@+id/txtCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/samsungsharpsans_bold"
+                android:text="Store Code"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
                 android:id="@+id/txtTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -55,7 +66,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/txtRemarks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

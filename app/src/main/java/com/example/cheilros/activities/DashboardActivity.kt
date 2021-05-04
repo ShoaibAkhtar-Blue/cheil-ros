@@ -2,6 +2,7 @@ package com.example.cheilros.activities
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridView
@@ -12,8 +13,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
 import com.example.cheilros.R
 import com.example.cheilros.adapters.MenuNavigationAdapter
 import com.example.cheilros.models.MenuNavigationModel
@@ -54,10 +55,6 @@ class DashboardActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-
-
-
-
         val navView: NavigationView = findViewById(R.id.nav_view)
 
         val width = resources.displayMetrics.widthPixels
@@ -97,15 +94,23 @@ class DashboardActivity : AppCompatActivity() {
 
         gridView!!.onItemClickListener = OnItemClickListener { parent, v, i, id ->
             //Toast.makeText(this, "menu " + menus[i] + " clicked! $i", Toast.LENGTH_SHORT).show()
-
+            val navController = findNavController(R.id.main_nav_fragment)
             try {
                 if(i === 0)
                     findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
+//                    navController.navigate(
+//                            R.id.action_dashboardFragment_to_journeyPlanFragment ,
+//                            NavOptions.Builder().setPopUpTo(
+//                                    R.id.dashboardFragment,
+//                                    false)
+//                    )
+                    //findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
 
                 if(i === 1)
                     findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
             }catch (e: Exception){
                 Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+                Log.e("Error_Nav", e.message.toString())
             }
 
 
@@ -147,8 +152,8 @@ class DashboardActivity : AppCompatActivity() {
         return true
     }
 
-    /*override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment)
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.main_nav_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }*/
+    }
 }
