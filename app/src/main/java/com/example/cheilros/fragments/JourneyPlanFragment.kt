@@ -1,9 +1,11 @@
 package com.example.cheilros.fragments
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +18,11 @@ import com.irozon.sneaker.Sneaker
 import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import okhttp3.*
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 class JourneyPlanFragment : Fragment() {
@@ -50,8 +57,13 @@ class JourneyPlanFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        fetchJPStatus("http://rosturkey.cheildata.com/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=2021-04-26&TeamMemberID=1")
-        fetchJourneyPlan("http://rosturkey.cheildata.com/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=2021-04-26&TeamMemberID=1&VisitStatus=0")
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val currentDateAndTime: String = simpleDateFormat.format(Date())
+
+        btnDate.text = currentDateAndTime
+
+        fetchJPStatus("http://rosturkey.cheildata.com/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=$currentDateAndTime&TeamMemberID=1")
+        fetchJourneyPlan("http://rosturkey.cheildata.com/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=$currentDateAndTime&TeamMemberID=1&VisitStatus=0")
 
 //        rvJourneyPlan.setHasFixedSize(true);
 //        rvJourneyPlan.addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
@@ -172,7 +184,7 @@ class JourneyPlanData(val VisitID: Int,
                        val VisitRemarks: String,
                        val CheckInRemarks: String,
                        val CheckOutRemarks: String,
-                       val VisitStatusID: String,
+                       val VisitStatusID: Int,
                        val VisitStatus: String,
                        val StoreCode: String,
                        val StoreName: String,

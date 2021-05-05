@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     android:background="@color/white"
     android:orientation="vertical"
     android:visibility="gone">
@@ -20,20 +19,29 @@
         android:paddingTop="7dp">
 
         <TextView
-            android:id="@+id/txtTitle"
+            android:id="@+id/txtTitleHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Store Name"
+            android:text="Carrefour Mall Of The Emirates"
             android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            app:srcCompat="@drawable/ic_baseline_arrow_drop_up_24"
+            tools:ignore="VectorDrawableCompat" />
 
     </RelativeLayout>
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="300dp"
         android:background="@color/teal_200" />
 
     <LinearLayout
@@ -43,7 +51,7 @@
         android:padding="8dp">
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/txtTitleContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/samsungsharpsans_bold"
@@ -51,7 +59,7 @@
             android:textColor="@color/black" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/txtRemarksContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/samsungsharpsans_regular"
@@ -65,7 +73,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/btnAccept"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

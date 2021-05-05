@@ -11,7 +11,7 @@
 
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btnDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableEnd="@drawable/ic_baseline_calendar_today_24"

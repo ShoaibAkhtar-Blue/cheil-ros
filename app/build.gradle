@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-android-extensions'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.secrets_gradle_plugin' version '0.5'
 }
 
 
@@ -15,7 +16,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
-        versionName "1.0.6"
+        versionName "1.0.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -59,9 +60,14 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     def nav_version = "2.3.0"
+    def room_version = "2.3.0"
+
     // Navigation Components
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    // Room Component
+    implementation "androidx.room:room-runtime:$room_version"
 
     implementation 'com.github.markushi:circlebutton:1.1'
 
@@ -74,5 +80,7 @@ dependencies {
     implementation 'com.ramotion.foldingcell:folding-cell:1.2.3'
 
     implementation 'com.google.code.gson:gson:2.8.6'
+
+    implementation 'com.github.tiper:MaterialSpinner:1.4.2'
 
 }

@@ -1,17 +1,16 @@
 package com.example.cheilros.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
-import com.example.cheilros.adapters.JPAdapter
 import com.example.cheilros.adapters.MyCoverageAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import kotlinx.android.synthetic.main.fragment_journey_plan.*
@@ -50,9 +49,19 @@ class MyCoverageFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
+
+
+
         recyclerView= rvCoverage
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
         layoutManager= LinearLayoutManager(requireContext())
         recyclerView.layoutManager=layoutManager
 
@@ -76,9 +85,9 @@ class MyCoverageFragment : Fragment() {
                 requireActivity().runOnUiThread(java.lang.Runnable {
                     activity?.let { it1 ->
                         Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                .setTitle("Error!!")
-                                .setMessage(e.message.toString())
-                                .sneakError()
+                            .setTitle("Error!!")
+                            .setMessage(e.message.toString())
+                            .sneakError()
                     }
                 })
             }
@@ -90,18 +99,18 @@ class MyCoverageFragment : Fragment() {
                 val gson = GsonBuilder().create()
                 val apiData = gson.fromJson(body, MyCoverageModel::class.java)
                 println(apiData.status)
-                if(apiData.status == 200){
+                if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
-                        recylcerAdapter= MyCoverageAdapter(requireContext(), apiData.data)
-                        recyclerView.adapter=recylcerAdapter
+                        recylcerAdapter = MyCoverageAdapter(requireContext(), apiData.data)
+                        recyclerView.adapter = recylcerAdapter
                     })
-                }else{
+                } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                    .setTitle("Error!!")
-                                    .setMessage("Data not fetched.")
-                                    .sneakWarning()
+                                .setTitle("Error!!")
+                                .setMessage("Data not fetched.")
+                                .sneakWarning()
                         }
                     })
                 }
@@ -111,13 +120,15 @@ class MyCoverageFragment : Fragment() {
 }
 
 //Models
-class MyCoverageModel(val status: Int, val data : List<MyCoverageData>)
-class MyCoverageData(val StoreID: Int,
-                     val StoreCode: String,
-                     val StoreName: String,
-                     val ChannelID: Int,
-                     val ChannelName: String,
-                     val RegionName: String,
-                     val DistrcitName: String,
-                     val MallName: String,
-                     val Address: String)
+class MyCoverageModel(val status: Int, val data: List<MyCoverageData>)
+class MyCoverageData(
+    val StoreID: Int,
+    val StoreCode: String,
+    val StoreName: String,
+    val ChannelID: Int,
+    val ChannelName: String,
+    val RegionName: String,
+    val DistrcitName: String,
+    val MallName: String,
+    val Address: String
+)
