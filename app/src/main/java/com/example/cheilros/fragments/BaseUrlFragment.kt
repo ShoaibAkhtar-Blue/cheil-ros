@@ -12,10 +12,15 @@ import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.cheilros.MainActivity
 import com.example.cheilros.R
+import com.example.cheilros.data.AppSetting
+import com.example.cheilros.datavm.AppSettingViewModel
+import com.example.cheilros.models.AppSettingModel
+import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import kotlinx.android.synthetic.main.fragment_base_url.*
 import okhttp3.*
@@ -26,6 +31,7 @@ import java.util.*
 class BaseUrlFragment : Fragment() {
 
     private val client = OkHttpClient()
+    private lateinit var mAppSettingViewModel: AppSettingViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +39,12 @@ class BaseUrlFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        return inflater.inflate(R.layout.fragment_base_url, container, false)
+        val view = inflater.inflate(R.layout.fragment_base_url, container, false)
+
+        mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
+
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,18 +89,45 @@ class BaseUrlFragment : Fragment() {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                println(response.body?.string())
-                requireActivity().runOnUiThread(java.lang.Runnable {
-                    activity?.let { it1 ->
-                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                .setTitle("Success!!")
-                                .setMessage("Setting Added Successfully")
-                                .sneakSuccess()
+                val body = response.body?.string()
+                println(body)
+
+                val gson = GsonBuilder().create()
+                val apiData = gson.fromJson(body, AppSettingModel::class.java)
+
+                try {
+                    if (apiData.status == 200) {
+                        for (data in apiData.data) {
+                            println(data.ROS_Screen)
+                            //Save Setting to DB
+                            mAppSettingViewModel.nukeTable()
+
+                            val setting = AppSetting(0, data.ROS_LabelID, data.ROS_Screen, data.ROS_LabelName, data.LanguageID, data.ImageLocation, data.FixedLabelName)
+                            mAppSettingViewModel.addSettings(setting)
+                        }
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Success!!")
+                                    .setMessage("Setting Added Successfully")
+                                    .sneakSuccess()
+                            }
+                            findNavController().navigate(R.id.action_baseUrlFragment_to_loginFragment)
+                        })
+                    }else{
+
                     }
-                    findNavController().navigate(R.id.action_baseUrlFragment_to_loginFragment)
-                })
+                }catch (ex: Exception){
+
+                }
+
+
+
+
             }
         })
     }
 }
+
+
 

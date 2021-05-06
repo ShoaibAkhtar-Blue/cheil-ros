@@ -8,13 +8,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import at.markushi.ui.CircleButton
 import com.example.cheilros.R
+import com.example.cheilros.data.AppSetting
+import com.example.cheilros.datavm.AppSettingViewModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import kotlinx.android.synthetic.main.fragment_base_url.*
 import kotlinx.android.synthetic.main.fragment_login.*
+import kotlinx.android.synthetic.main.fragment_login.view.*
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
@@ -22,13 +27,31 @@ import java.io.IOException
 class LoginFragment : Fragment() {
 
     private val client = OkHttpClient()
+    private lateinit var mAppSettingViewModel: AppSettingViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false)
+        val view = inflater.inflate(R.layout.fragment_login, container, false)
+
+        mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
+
+//        var settingData = mAppSettingViewModel.fetchAllData.observe(viewLifecycleOwner, Observer {setting ->
+//
+//        })
+        val settingData:List<AppSetting> = mAppSettingViewModel.getAllSetting
+        println(settingData)
+        var copyright = settingData.filter { it.fixedLabelName == "CopyRight"}?.get(0).labelName
+        println(copyright)
+        //Set Labels
+        view.txtCopyright.text = copyright
+        //view.txtAppName.text = settingData.filter { it.fixedLabelName == "AppTitle"}?.get(0).labelName
+//        view.OTFUsername.hint = settingData.filter { it.fixedLabelName == "Login_UserName"}?.get(0).labelName
+//        view.OTFPassword.hint = settingData.filter { it.fixedLabelName == "Login_Password"}?.get(0).labelName
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

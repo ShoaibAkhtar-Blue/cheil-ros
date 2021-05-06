@@ -51,9 +51,6 @@ class MyCoverageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 
-
-
-
         recyclerView= rvCoverage
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(
