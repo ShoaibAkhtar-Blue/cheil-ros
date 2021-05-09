@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.example.cheilros.R
 import com.example.cheilros.fragments.JPStatusData
 import com.example.cheilros.models.MenuNavigationModel
@@ -43,7 +44,8 @@ class MenuNavigationAdapter(private val context: Context, data: ArrayList<MenuNa
         } else {
             holder = convertView.tag as ViewHolder
         }
-        holder.icon!!.setImageResource(menuData[position].menuIcon)
+        Glide.with(context).load(menuData[position].menuImage).into(holder.icon!!)
+        //holder.icon!!.setImageResource(menuData[position].menuIcon)
         holder.name?.setText(menuData[position].menuName)
         if (menuData[position].isSelected) {
             holder.buttonContainer?.setCardBackgroundColor(ContextCompat.getColor(context, R.color.purple_200))

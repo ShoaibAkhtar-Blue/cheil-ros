@@ -12,11 +12,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import com.example.cheilros.R
 import com.example.cheilros.adapters.MenuNavigationAdapter
+import com.example.cheilros.data.AppSetting
+import com.example.cheilros.datavm.AppSettingViewModel
 import com.example.cheilros.models.MenuNavigationModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -26,6 +29,7 @@ import java.util.*
 
 class DashboardActivity : AppCompatActivity() {
 
+    private lateinit var mAppSettingViewModel: AppSettingViewModel
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     var gridView: GridView? = null
@@ -43,6 +47,12 @@ class DashboardActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
+
+        mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
+        val settingData:List<AppSetting> = mAppSettingViewModel.getAllSetting
+
+
+
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.setScrimColor(Color.TRANSPARENT)
         val toggle = ActionBarDrawerToggle(
@@ -62,7 +72,7 @@ class DashboardActivity : AppCompatActivity() {
         params.width = width
         nav_view.layoutParams = params
 
-        val menus = arrayOf("Journey Plan", "My Coverage", "Photo", "Video", "Friends", "Messages", "Profile", "Setting")
+        /*val menus = arrayOf("Journey Plan", "My Coverage", "Photo", "Video", "Friends", "Messages", "Profile", "Setting")
         val icon = intArrayOf(
                 R.drawable.ic_menu_gallery,
                 R.drawable.ic_menu_gallery,
@@ -87,16 +97,32 @@ class DashboardActivity : AppCompatActivity() {
             menu.menuName = menus[i]
             menu.menuIcon = icon[i]
             menuData!!.add(menu)
+        }*/
+
+        menuData = ArrayList<MenuNavigationModel>()
+        var menuDataList:List<AppSetting> = emptyList()
+        try {
+            menuDataList =settingData.filter { it.screenName == "Menu"}
+            println(menuDataList)
+            for (m in menuDataList) {
+                val menu = MenuNavigationModel()
+                menu.menuName = m.labelName
+                menu.menuImage = m.imagePath
+                menuData!!.add(menu)
+            }
+        }catch (ex: Exception){
+
         }
+
         gridView = findViewById(R.id.gridview) as GridView
         adapter = MenuNavigationAdapter(this, menuData!!)
         gridView!!.adapter = adapter
 
         gridView!!.onItemClickListener = OnItemClickListener { parent, v, i, id ->
-            //Toast.makeText(this, "menu " + menus[i] + " clicked! $i", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "menu " + menuDataList.get(i).fixedLabelName + " clicked! $i", Toast.LENGTH_SHORT).show()
             val navController = findNavController(R.id.main_nav_fragment)
             try {
-                if(i === 0)
+                if(menuDataList.get(i).fixedLabelName == "MenuTitle3")
                     findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
 //                    navController.navigate(
 //                            R.id.action_dashboardFragment_to_journeyPlanFragment ,
@@ -106,7 +132,7 @@ class DashboardActivity : AppCompatActivity() {
 //                    )
                     //findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
 
-                if(i === 1)
+                if(menuDataList.get(i).fixedLabelName == "MenuTitle2")
                     findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
             }catch (e: Exception){
                 Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()

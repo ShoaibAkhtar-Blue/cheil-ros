@@ -5,10 +5,12 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.cheilros.R
 import com.example.cheilros.fragments.JourneyPlanData
 import com.google.android.gms.maps.GoogleMap
@@ -24,6 +26,7 @@ class JPAdapter(val context: Context, val itemList: List<JourneyPlanData>): Recy
     var ctx: Context? = null
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        var imgStatus : ImageView = view.findViewById(R.id.imgStatus)
         var txtCode : TextView = view.findViewById(R.id.txtCode)
         var mapView : MapView = view.findViewById(R.id.mapView)
         var txtTitle : TextView = view.findViewById(R.id.txtTitle)
@@ -56,6 +59,8 @@ class JPAdapter(val context: Context, val itemList: List<JourneyPlanData>): Recy
         holder.txtTitleContent.text = itemList[position].StoreName
 
         holder.txtRemarks.text = itemList[position].VisitRemarks
+
+        Glide.with(context).load(itemList[position].ImageLocation).into(holder.imgStatus!!)
 
         if(itemList[position].VisitRemarks == null)
             holder.txtRemarks.visibility =  View.GONE

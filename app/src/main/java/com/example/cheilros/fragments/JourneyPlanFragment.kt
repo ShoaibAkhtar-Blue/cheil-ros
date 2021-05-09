@@ -63,7 +63,7 @@ class JourneyPlanFragment : Fragment() {
         btnDate.text = currentDateAndTime
 
         fetchJPStatus("http://rosturkey.cheildata.com/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=$currentDateAndTime&TeamMemberID=1")
-        fetchJourneyPlan("http://rosturkey.cheildata.com/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=$currentDateAndTime&TeamMemberID=1&VisitStatus=0")
+        fetchJourneyPlan("http://rosturkey.cheildata.com/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=2021-04-25&TeamMemberID=1&VisitStatus=0")
 
 //        rvJourneyPlan.setHasFixedSize(true);
 //        rvJourneyPlan.addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
@@ -189,4 +189,5 @@ class JourneyPlanData(val VisitID: Int,
                        val StoreCode: String,
                        val StoreName: String,
                        val Longitude: String,
-                       val Latitude: String)
+                       val Latitude: String,
+                       val ImageLocation:String)

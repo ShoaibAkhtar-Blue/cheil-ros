@@ -20,9 +20,11 @@ import com.irozon.sneaker.Sneaker
 import kotlinx.android.synthetic.main.fragment_base_url.*
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_login.view.*
+import kotlinx.coroutines.*
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class LoginFragment : Fragment() {
 
@@ -43,13 +45,18 @@ class LoginFragment : Fragment() {
 //        })
         val settingData:List<AppSetting> = mAppSettingViewModel.getAllSetting
         println(settingData)
-        var copyright = settingData.filter { it.fixedLabelName == "CopyRight"}?.get(0).labelName
-        println(copyright)
+
         //Set Labels
-        view.txtCopyright.text = copyright
-        //view.txtAppName.text = settingData.filter { it.fixedLabelName == "AppTitle"}?.get(0).labelName
-//        view.OTFUsername.hint = settingData.filter { it.fixedLabelName == "Login_UserName"}?.get(0).labelName
-//        view.OTFPassword.hint = settingData.filter { it.fixedLabelName == "Login_Password"}?.get(0).labelName
+        try {
+            view.txtCopyright.text = settingData.filter { it.fixedLabelName == "CopyRight"}.get(0).labelName
+            view.txtAppName.text = settingData.filter { it.fixedLabelName == "Login_Title"}?.get(0).labelName
+            view.OTFUsername.hint = settingData.filter { it.fixedLabelName == "Login_UserName"}?.get(0).labelName
+            view.OTFPassword.hint = settingData.filter { it.fixedLabelName == "Login_Password"}?.get(0).labelName
+            view.btnForgot.hint = settingData.filter { it.fixedLabelName == "Login_ForgetPassword"}?.get(0).labelName
+        }catch (ex: Exception){
+
+        }
+
 
         return view
     }

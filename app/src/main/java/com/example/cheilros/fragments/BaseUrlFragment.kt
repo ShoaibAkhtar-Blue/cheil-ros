@@ -100,7 +100,7 @@ class BaseUrlFragment : Fragment() {
                         for (data in apiData.data) {
                             println(data.ROS_Screen)
                             //Save Setting to DB
-                            mAppSettingViewModel.nukeTable()
+                            //mAppSettingViewModel.nukeTable()
 
                             val setting = AppSetting(0, data.ROS_LabelID, data.ROS_Screen, data.ROS_LabelName, data.LanguageID, data.ImageLocation, data.FixedLabelName)
                             mAppSettingViewModel.addSettings(setting)
