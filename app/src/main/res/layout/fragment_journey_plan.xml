@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple_200"
+    android:background="#e2e2e2"
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".fragments.JourneyPlanFragment">
@@ -154,7 +154,7 @@
     <GridView
         android:id="@+id/rvJPStatus"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="100dp"
         android:layout_below="@+id/photoContainer"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -168,6 +168,5 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvJourneyPlan"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-         />
+        android:layout_height="match_parent" />
 </LinearLayout>

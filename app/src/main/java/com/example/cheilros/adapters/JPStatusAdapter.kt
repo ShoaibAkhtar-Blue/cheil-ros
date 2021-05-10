@@ -11,6 +11,7 @@ import android.widget.BaseAdapter
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.cheilros.R
 import com.example.cheilros.fragments.JPStatusData
 import com.example.cheilros.models.MenuNavigationModel
@@ -50,6 +51,7 @@ class JPStatusAdapter (private val context: Context, data: List<JPStatusData>) :
         Log.i("data", ListData[position].VisitStatus)
 
         var convertView = mInflater.inflate(R.layout.item_jpstatus, null)
+        Glide.with(context).load(ListData[position].IconImage).into(convertView.imgStatus!!)
         convertView.txtCount.text = ListData[position].StatusCount
         convertView.txtLabel.text = ListData[position].VisitStatus
 
