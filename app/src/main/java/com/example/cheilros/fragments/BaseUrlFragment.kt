@@ -44,6 +44,8 @@ class BaseUrlFragment : Fragment() {
         mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
 
 
+
+
         return view
     }
 
@@ -127,6 +129,8 @@ class BaseUrlFragment : Fragment() {
             }
         })
     }
+
+
 }
 
 

@@ -14,6 +14,7 @@ import com.example.cheilros.adapters.JPAdapter
 import com.example.cheilros.adapters.JPStatusAdapter
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
+import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import kotlinx.android.synthetic.main.fragment_journey_plan.view.*
 import okhttp3.*
@@ -51,6 +52,8 @@ class JourneyPlanFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_journey_plan, container, false)
+
+        view.mainLoadingLayout.setState(LoadingLayout.LOADING)
 
         view.btnDate.setOnClickListener {
             //getting current day,month and year.
@@ -95,7 +98,16 @@ class JourneyPlanFragment : Fragment() {
 
     }
 
+    fun filerJP(status: Int){
+        println("filerJP")
+        println("http://rosturkey.cheildata.com/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.text}&TeamMemberID=1&VisitStatus=${status.toString()}")
+        fetchJourneyPlan("http://rosturkey.cheildata.com/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.text}&TeamMemberID=1&VisitStatus=${status.toString()}")
+    }
+
     fun fetchJPStatus(url: String) {
+
+        mainLoadingLayout.setState(LoadingLayout.LOADING)
+
         val request = Request.Builder()
                 .url(url)
                 .build()
@@ -121,7 +133,7 @@ class JourneyPlanFragment : Fragment() {
                 println(apiData.status)
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
-                        jpstatusAdapter = JPStatusAdapter(requireContext(), apiData.data)
+                        jpstatusAdapter = JPStatusAdapter(requireContext(), apiData.data, this@JourneyPlanFragment)
                         rvJPStatus!!.adapter = jpstatusAdapter
                     })
                 } else {
@@ -175,6 +187,7 @@ class JourneyPlanFragment : Fragment() {
                         rvJourneyPlan.layoutManager = layoutManager
                         recylcerAdapter = JPAdapter(requireContext(), apiData.data)
                         rvJourneyPlan.adapter = recylcerAdapter
+                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                     })
                 } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {

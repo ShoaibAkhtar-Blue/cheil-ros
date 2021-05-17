@@ -14,15 +14,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cheilros.R
 import com.example.cheilros.fragments.JPStatusData
+import com.example.cheilros.fragments.JourneyPlanFragment
 import com.example.cheilros.models.MenuNavigationModel
 import kotlinx.android.synthetic.main.item_jpstatus.view.*
 import java.util.ArrayList
 
 
-class JPStatusAdapter (private val context: Context, data: List<JPStatusData>) : BaseAdapter() {
+class JPStatusAdapter (private val context: Context, data: List<JPStatusData>, fragment: JourneyPlanFragment) : BaseAdapter() {
 
     private val ListData: List<JPStatusData>
     private val mInflater: LayoutInflater
+    private val frag: JourneyPlanFragment
+
     override fun getCount(): Int {
         return ListData.size
     }
@@ -55,6 +58,10 @@ class JPStatusAdapter (private val context: Context, data: List<JPStatusData>) :
         convertView.txtCount.text = ListData[position].StatusCount
         convertView.txtLabel.text = ListData[position].VisitStatus
 
+        convertView.cvJPstatus.setOnClickListener{
+            frag.filerJP(position)
+        }
+
         return convertView
     }
 
@@ -66,5 +73,6 @@ class JPStatusAdapter (private val context: Context, data: List<JPStatusData>) :
     init {
         mInflater = LayoutInflater.from(context)
         ListData = data
+        frag = fragment
     }
 }

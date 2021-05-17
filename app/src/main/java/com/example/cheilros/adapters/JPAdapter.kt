@@ -1,19 +1,29 @@
 package com.example.cheilros.adapters
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.Context.LOCATION_SERVICE
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cheilros.R
 import com.example.cheilros.fragments.JPStatusModel
 import com.example.cheilros.fragments.JourneyPlanData
 import com.example.cheilros.models.CheckInOutModel
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -33,6 +43,8 @@ class JPAdapter(val context: Context, val itemList: List<JourneyPlanData>): Recy
     private val client = OkHttpClient()
     var ctx: Context? = null
     var curPos: Int = 0
+
+    lateinit var locationManager: LocationManager
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var imgStatus : ImageView = view.findViewById(R.id.imgStatus)
@@ -129,10 +141,42 @@ class JPAdapter(val context: Context, val itemList: List<JourneyPlanData>): Recy
         }
 
         holder.btnAccept.setOnClickListener{
+
+            var lat: String = "0"
+            var lng: String = "0"
+
+
+            locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return@setOnClickListener
+            }
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,5000, 0F,object : LocationListener{
+                override fun onLocationChanged(location: Location) {
+                    lat = location.latitude.toString()
+                    lng = location.longitude.toString()
+                    println("loc: ${location.latitude}")
+                }
+
+            })
+
             if(itemList[position].VisitStatusID === 1)
-                sendCheckInOutRequest("http://rosturkey.cheildata.com/JourneyPlan.asmx/CheckIn?VisitID=${itemList[position].VisitID}&Longitude=140.66&Latitude=120.78&Remarks=checkintest")
+                sendCheckInOutRequest("http://rosturkey.cheildata.com/JourneyPlan.asmx/CheckIn?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=-")
             if(itemList[position].VisitStatusID === 2)
-                sendCheckInOutRequest("http://rosturkey.cheildata.com/JourneyPlan.asmx/CheckOut?VisitID=${itemList[position].VisitID}&Longitude=140.66&Latitude=120.78&Remarks=checkintest")
+                sendCheckInOutRequest("http://rosturkey.cheildata.com/JourneyPlan.asmx/CheckOut?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=-")
         }
 
     }
@@ -195,6 +239,8 @@ class JPAdapter(val context: Context, val itemList: List<JourneyPlanData>): Recy
             }
         })
     }
+
+
 }
 
 

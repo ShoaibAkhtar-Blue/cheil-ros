@@ -21,4 +21,6 @@
     <string name="menu_slideshow">Slideshow</string>
 
     <string name="sample_text">Lorem Epsoum ...</string>
+    <string name="error">Error</string>
+    <string name="no_results">no results</string>
 </resources>
