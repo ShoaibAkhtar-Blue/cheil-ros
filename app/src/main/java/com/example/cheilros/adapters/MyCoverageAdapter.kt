@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
-import com.example.cheilros.fragments.MyCoverageData
-import com.example.cheilros.fragments.MyCoverageModel
+import com.example.cheilros.models.MyCoverageData
+import com.example.cheilros.models.MyCoverageModel
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback

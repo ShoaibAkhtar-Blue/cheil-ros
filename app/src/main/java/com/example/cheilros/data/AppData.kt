@@ -14,3 +14,26 @@ data class AppSetting(
     val imagePath: String,
     val fixedLabelName: String
 )
+
+@Entity(tableName = "user_data")
+data class UserData(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
+    val memberID: Int,
+    val typeID: Int,
+    val memberName: String,
+    val singleID: String,
+    val email: String,
+    val divisionID: Int,
+    val divisionName: String,
+    val imagePath: String
+)
+
+@Entity(tableName = "user_permission")
+data class UserPermission(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
+    val permissionID: Int,
+    val permissionName: String,
+    val permissionValue: String
+)

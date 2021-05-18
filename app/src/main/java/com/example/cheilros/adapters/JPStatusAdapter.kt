@@ -13,8 +13,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cheilros.R
-import com.example.cheilros.fragments.JPStatusData
 import com.example.cheilros.fragments.JourneyPlanFragment
+import com.example.cheilros.models.JPStatusData
 import com.example.cheilros.models.MenuNavigationModel
 import kotlinx.android.synthetic.main.item_jpstatus.view.*
 import java.util.ArrayList

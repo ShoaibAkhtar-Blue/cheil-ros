@@ -20,9 +20,8 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cheilros.R
-import com.example.cheilros.fragments.JPStatusModel
-import com.example.cheilros.fragments.JourneyPlanData
 import com.example.cheilros.models.CheckInOutModel
+import com.example.cheilros.models.JourneyPlanData
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap

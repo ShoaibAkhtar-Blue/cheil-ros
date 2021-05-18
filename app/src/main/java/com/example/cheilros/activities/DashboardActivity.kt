@@ -13,24 +13,37 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
+import com.bumptech.glide.Glide
 import com.example.cheilros.R
 import com.example.cheilros.adapters.MenuNavigationAdapter
 import com.example.cheilros.data.AppSetting
+import com.example.cheilros.data.UserData
 import com.example.cheilros.datavm.AppSettingViewModel
+import com.example.cheilros.datavm.UserDataViewModel
+import com.example.cheilros.datavm.UserPermissionViewModel
+import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.MenuNavigationModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_dashboard.*
+import kotlinx.android.synthetic.main.activity_dashboard.view.*
+import kotlinx.android.synthetic.main.item_jpstatus.view.*
 import java.util.*
 
 class DashboardActivity : AppCompatActivity() {
 
     private lateinit var mAppSettingViewModel: AppSettingViewModel
+    private lateinit var mUserDataViewModel: UserDataViewModel
+    private lateinit var mUserPermissionViewModel: UserPermissionViewModel
+
     private lateinit var appBarConfiguration: AppBarConfiguration
+
+    lateinit var CSP: CustomSharedPref
 
     var gridView: GridView? = null
     var menuData: ArrayList<MenuNavigationModel>? = null
@@ -47,20 +60,33 @@ class DashboardActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
+        CSP = CustomSharedPref(this)
 
+        //Init DB VM
         mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
-        val settingData:List<AppSetting> = mAppSettingViewModel.getAllSetting
+        mUserDataViewModel = ViewModelProvider(this).get(UserDataViewModel::class.java)
+        mUserPermissionViewModel = ViewModelProvider(this).get(UserPermissionViewModel::class.java)
 
+        val settingData: List<AppSetting> = mAppSettingViewModel.getAllSetting
+        val userData: List<UserData> = mUserDataViewModel.getAllUser
 
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.setScrimColor(Color.TRANSPARENT)
+
+        drawerLayout.txtUsername.text = userData[0].memberName
+        drawerLayout.txtUseremail.text = userData[0].email
+
+        Glide.with(this)
+            .load("${CSP.getData("base_url")}/TeamMemberPicture/${userData[0].memberID}.png")
+            .into(drawerLayout.imgUser)
+
         val toggle = ActionBarDrawerToggle(
-                this,
-                drawerLayout,
-                toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close
+            this,
+            drawerLayout,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -72,37 +98,10 @@ class DashboardActivity : AppCompatActivity() {
         params.width = width
         nav_view.layoutParams = params
 
-        /*val menus = arrayOf("Journey Plan", "My Coverage", "Photo", "Video", "Friends", "Messages", "Profile", "Setting")
-        val icon = intArrayOf(
-                R.drawable.ic_menu_gallery,
-                R.drawable.ic_menu_gallery,
-                R.drawable.ic_menu_gallery,
-                R.drawable.ic_menu_gallery,
-                R.drawable.ic_menu_gallery,
-                R.drawable.ic_menu_gallery,
-                R.drawable.ic_menu_gallery,
-                R.drawable.ic_menu_gallery)
-        val iconSelected = intArrayOf(
-                R.drawable.ic_menu_gallery,
-                R.drawable.ic_menu_gallery,
-                R.drawable.ic_menu_gallery,
-                R.drawable.ic_menu_gallery,
-                R.drawable.ic_menu_gallery,
-                R.drawable.ic_menu_gallery,
-                R.drawable.ic_menu_gallery,
-                R.drawable.ic_menu_gallery)
         menuData = ArrayList<MenuNavigationModel>()
-        for (i in menus.indices) {
-            val menu = MenuNavigationModel()
-            menu.menuName = menus[i]
-            menu.menuIcon = icon[i]
-            menuData!!.add(menu)
-        }*/
-
-        menuData = ArrayList<MenuNavigationModel>()
-        var menuDataList:List<AppSetting> = emptyList()
+        var menuDataList: List<AppSetting> = emptyList()
         try {
-            menuDataList =settingData.filter { it.screenName == "Menu"}
+            menuDataList = settingData.filter { it.screenName == "Menu" }
             println(menuDataList)
             for (m in menuDataList) {
                 val menu = MenuNavigationModel()
@@ -110,7 +109,7 @@ class DashboardActivity : AppCompatActivity() {
                 menu.menuImage = m.imagePath
                 menuData!!.add(menu)
             }
-        }catch (ex: Exception){
+        } catch (ex: Exception) {
 
         }
 
@@ -122,23 +121,20 @@ class DashboardActivity : AppCompatActivity() {
             //Toast.makeText(this, "menu " + menuDataList.get(i).fixedLabelName + " clicked! $i", Toast.LENGTH_SHORT).show()
             val navController = findNavController(R.id.main_nav_fragment)
             try {
-                if(menuDataList.get(i).fixedLabelName == "MenuTitle3")
+                if (menuDataList.get(i).fixedLabelName == "MenuTitle3") {
+                    navController.navigateUp()
                     findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
-//                    navController.navigate(
-//                            R.id.action_dashboardFragment_to_journeyPlanFragment ,
-//                            NavOptions.Builder().setPopUpTo(
-//                                    R.id.dashboardFragment,
-//                                    false)
-//                    )
-                    //findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
+                }
 
-                if(menuDataList.get(i).fixedLabelName == "MenuTitle2")
+                if (menuDataList.get(i).fixedLabelName == "MenuTitle2") {
+                    navController.navigateUp()
                     findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
-            }catch (e: Exception){
+                }
+
+            } catch (e: Exception) {
                 Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
                 Log.e("Error_Nav", e.message.toString())
             }
-
 
 
             val drawer = findViewById(R.id.drawer_layout) as DrawerLayout

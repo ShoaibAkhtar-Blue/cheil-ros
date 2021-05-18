@@ -5,11 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.adapters.MyCoverageAdapter
+import com.example.cheilros.data.UserData
+import com.example.cheilros.datavm.AppSettingViewModel
+import com.example.cheilros.datavm.UserDataViewModel
+import com.example.cheilros.datavm.UserPermissionViewModel
+import com.example.cheilros.helpers.CustomSharedPref
+import com.example.cheilros.models.MyCoverageModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
@@ -26,18 +33,14 @@ class MyCoverageFragment : Fragment() {
     lateinit var recyclerView: RecyclerView
     lateinit var layoutManager: RecyclerView.LayoutManager
 
-    val booklist=arrayListOf(
-        "P.S I Love You",
-        "The Great Gatsby",
-        "Anna Karenina",
-        "Madame Bovary",
-        "War and Peace",
-        "Loyalty",
-        "Middle March",
-        "The Adventures",
-        "Mona Dick",
-        "The Lord Of Rings"
-    )
+    private lateinit var mAppSettingViewModel: AppSettingViewModel
+    private lateinit var mUserDataViewModel: UserDataViewModel
+    private lateinit var mUserPermissionViewModel: UserPermissionViewModel
+
+    lateinit var CSP: CustomSharedPref
+
+    lateinit var userData:List<UserData>
+
     lateinit var recylcerAdapter: MyCoverageAdapter
 
     override fun onCreateView(
@@ -45,7 +48,18 @@ class MyCoverageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_coverage, container, false)
+        val view = inflater.inflate(R.layout.fragment_my_coverage, container, false)
+
+        //Init DB VM
+        mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
+        mUserDataViewModel = ViewModelProvider(this).get(UserDataViewModel::class.java)
+        mUserPermissionViewModel = ViewModelProvider(this).get(UserPermissionViewModel::class.java)
+
+        CSP = CustomSharedPref(requireContext())
+
+        userData = mUserDataViewModel.getAllUser
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,10 +76,7 @@ class MyCoverageFragment : Fragment() {
         layoutManager= LinearLayoutManager(requireContext())
         recyclerView.layoutManager=layoutManager
 
-
-
-
-        fetchData("http://rosturkey.cheildata.com/Storelist.asmx/TeamMemberStoreList?TeamMemberID=1&ChannelID=1&SearchKeyWord=")
+        fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=1&SearchKeyWord=")
     }
 
     companion object {
@@ -116,16 +127,3 @@ class MyCoverageFragment : Fragment() {
     }
 }
 
-//Models
-class MyCoverageModel(val status: Int, val data: List<MyCoverageData>)
-class MyCoverageData(
-    val StoreID: Int,
-    val StoreCode: String,
-    val StoreName: String,
-    val ChannelID: Int,
-    val ChannelName: String,
-    val RegionName: String,
-    val DistrcitName: String,
-    val MallName: String,
-    val Address: String
-)

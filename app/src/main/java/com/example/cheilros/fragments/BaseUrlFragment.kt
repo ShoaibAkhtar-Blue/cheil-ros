@@ -1,7 +1,7 @@
 package com.example.cheilros.fragments
 
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,16 +9,15 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import com.example.cheilros.MainActivity
 import com.example.cheilros.R
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.datavm.AppSettingViewModel
+import com.example.cheilros.datavm.UserDataViewModel
+import com.example.cheilros.datavm.UserPermissionViewModel
+import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.AppSettingModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
@@ -32,6 +31,10 @@ class BaseUrlFragment : Fragment() {
 
     private val client = OkHttpClient()
     private lateinit var mAppSettingViewModel: AppSettingViewModel
+    private lateinit var mUserDataViewModel: UserDataViewModel
+    private lateinit var mUserPermissionViewModel: UserPermissionViewModel
+
+    lateinit var CSP: CustomSharedPref
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -41,9 +44,10 @@ class BaseUrlFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_base_url, container, false)
 
+        //Init DB VM
         mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
 
-
+        CSP = CustomSharedPref(requireContext())
 
 
         return view
@@ -60,9 +64,11 @@ class BaseUrlFragment : Fragment() {
 
         }
 
+
         btnSave.setOnClickListener {
            Log.i(Companion.TAG, "btnSave — clicked")
-           fetchData("${etBaseUrl.text.toString()}/Webservice.asmx/AppSettings?LanguageID=2")
+            CSP.saveData("base_url", etBaseUrl.text.toString())
+            fetchData("${etBaseUrl.text.toString()}/Webservice.asmx/AppSettings?LanguageID=2")
         }
 
 

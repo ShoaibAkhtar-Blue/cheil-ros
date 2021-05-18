@@ -48,7 +48,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/name"
+                    android:id="@+id/txtUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
@@ -57,10 +57,10 @@
                     android:textSize="26sp" />
 
                 <TextView
-                    android:id="@+id/address"
+                    android:id="@+id/txtUseremail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/name"
+                    android:layout_below="@+id/txtUsername"
                     android:layout_marginTop="4dp"
                     android:gravity="center_horizontal"
                     android:text="Lahore, PK" />
@@ -73,7 +73,7 @@
                 android:layout_marginTop="80dp">
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/imgUser"
                     android:layout_width="72dp"
                     android:layout_height="72dp"
                     android:layout_centerHorizontal="true"
@@ -83,15 +83,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignRight="@+id/imageView"
-                    android:layout_alignTop="@+id/imageView"
+                    android:layout_alignRight="@+id/imgUser"
+                    android:layout_alignTop="@+id/imgUser"
                     android:layout_margin="3dp"
                     android:background="@drawable/profile_badge"
                     android:paddingBottom="2dp"
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:paddingTop="2dp"
-                    android:text=" 2 "
+                    android:text=" 0 "
                     android:textColor="@android:color/white"
                     android:textSize="11sp" />
 

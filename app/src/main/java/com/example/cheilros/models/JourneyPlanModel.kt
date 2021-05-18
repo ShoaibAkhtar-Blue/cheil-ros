@@ -3,7 +3,7 @@ package com.example.cheilros.models
 import android.view.View
 import java.util.*
 
-class JourneyPlanModel {
+/*class JourneyPlanModel {
     var price: String? = null
     var pledgePrice: String? = null
     var fromAddress: String? = null
@@ -56,9 +56,9 @@ class JourneyPlanModel {
     }
 
     companion object {
-        /**
+        *//**
          * @return List of elements prepared for tests
-         */
+         *//*
         val testingList: ArrayList<JourneyPlanModel>
             get() {
                 val JourneyPlanModels = ArrayList<JourneyPlanModel>()
@@ -120,4 +120,4 @@ class JourneyPlanModel {
                 return JourneyPlanModels
             }
     }
-}
+}*/

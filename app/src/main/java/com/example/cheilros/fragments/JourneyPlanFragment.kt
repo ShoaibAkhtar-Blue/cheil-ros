@@ -6,12 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.adapters.JPAdapter
 import com.example.cheilros.adapters.JPStatusAdapter
+import com.example.cheilros.data.UserData
+import com.example.cheilros.datavm.AppSettingViewModel
+import com.example.cheilros.datavm.UserDataViewModel
+import com.example.cheilros.datavm.UserPermissionViewModel
+import com.example.cheilros.helpers.CustomSharedPref
+import com.example.cheilros.models.JPStatusModel
+import com.example.cheilros.models.JourneyPlanModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
@@ -27,22 +35,18 @@ class JourneyPlanFragment : Fragment() {
 
     private val client = OkHttpClient()
 
+    private lateinit var mAppSettingViewModel: AppSettingViewModel
+    private lateinit var mUserDataViewModel: UserDataViewModel
+    private lateinit var mUserPermissionViewModel: UserPermissionViewModel
+
+    lateinit var CSP: CustomSharedPref
+
+    lateinit var userData: List<UserData>
+
     //lateinit var recyclerView: RecyclerView
     lateinit var layoutManager: RecyclerView.LayoutManager
     val calendar = Calendar.getInstance()
 
-    val booklist=arrayListOf(
-        "P.S I Love You",
-        "The Great Gatsby",
-        "Anna Karenina",
-        "Madame Bovary",
-        "War and Peace",
-        "Loyalty",
-        "Middle March",
-        "The Adventures",
-        "Mona Dick",
-        "The Lord Of Rings"
-    )
     lateinit var recylcerAdapter: JPAdapter
     lateinit var jpstatusAdapter: JPStatusAdapter
 
@@ -51,7 +55,16 @@ class JourneyPlanFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view =  inflater.inflate(R.layout.fragment_journey_plan, container, false)
+        val view = inflater.inflate(R.layout.fragment_journey_plan, container, false)
+
+        //Init DB VM
+        mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
+        mUserDataViewModel = ViewModelProvider(this).get(UserDataViewModel::class.java)
+        mUserPermissionViewModel = ViewModelProvider(this).get(UserPermissionViewModel::class.java)
+
+        CSP = CustomSharedPref(requireContext())
+
+        userData = mUserDataViewModel.getAllUser
 
         view.mainLoadingLayout.setState(LoadingLayout.LOADING)
 
@@ -61,15 +74,18 @@ class JourneyPlanFragment : Fragment() {
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-            val datePickerDialog = DatePickerDialog(requireContext(), DatePickerDialog.OnDateSetListener
-            { view, year, monthOfYear, dayOfMonth ->
-                val customDate: String = "$year-${(monthOfYear+1)}-$dayOfMonth"
-                btnDate.text = customDate
+            val datePickerDialog =
+                DatePickerDialog(
+                    requireContext(), DatePickerDialog.OnDateSetListener
+                    { view, year, monthOfYear, dayOfMonth ->
+                        val customDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
+                        btnDate.text = customDate
 
-                fetchJPStatus("http://rosturkey.cheildata.com/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=$customDate&TeamMemberID=1")
-                fetchJourneyPlan("http://rosturkey.cheildata.com/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=$customDate&TeamMemberID=1&VisitStatus=0")
+                        fetchJPStatus("${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=$customDate&TeamMemberID=${userData[0].memberID}")
+                        fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=$customDate&TeamMemberID=${userData[0].memberID}&VisitStatus=0")
 
-            }, year, month, day)
+                    }, year, month, day
+                )
             datePickerDialog.show()
         }
 
@@ -83,25 +99,19 @@ class JourneyPlanFragment : Fragment() {
 
         btnDate.text = currentDateAndTime
 
-        fetchJPStatus("http://rosturkey.cheildata.com/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=$currentDateAndTime&TeamMemberID=1")
-        fetchJourneyPlan("http://rosturkey.cheildata.com/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=$currentDateAndTime&TeamMemberID=1&VisitStatus=0")
+        fetchJPStatus("${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=$currentDateAndTime&TeamMemberID=${userData[0].memberID}")
+        fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=$currentDateAndTime&TeamMemberID=${userData[0].memberID}&VisitStatus=0")
 
-//        rvJourneyPlan.setHasFixedSize(true);
-//        rvJourneyPlan.addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
-//        layoutManager= LinearLayoutManager(requireContext())
-//        recylcerAdapter= JPAdapter(requireContext(), booklist)
-//        rvJourneyPlan.adapter=recylcerAdapter
-//        rvJourneyPlan.layoutManager=layoutManager
     }
 
     companion object {
 
     }
 
-    fun filerJP(status: Int){
+    fun filerJP(status: Int) {
         println("filerJP")
-        println("http://rosturkey.cheildata.com/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.text}&TeamMemberID=1&VisitStatus=${status.toString()}")
-        fetchJourneyPlan("http://rosturkey.cheildata.com/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.text}&TeamMemberID=1&VisitStatus=${status.toString()}")
+        println("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.text}&TeamMemberID=${userData[0].memberID}&VisitStatus=${status.toString()}")
+        fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.text}&TeamMemberID=${userData[0].memberID}&VisitStatus=${status.toString()}")
     }
 
     fun fetchJPStatus(url: String) {
@@ -109,8 +119,8 @@ class JourneyPlanFragment : Fragment() {
         mainLoadingLayout.setState(LoadingLayout.LOADING)
 
         val request = Request.Builder()
-                .url(url)
-                .build()
+            .url(url)
+            .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -133,7 +143,11 @@ class JourneyPlanFragment : Fragment() {
                 println(apiData.status)
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
-                        jpstatusAdapter = JPStatusAdapter(requireContext(), apiData.data, this@JourneyPlanFragment)
+                        jpstatusAdapter = JPStatusAdapter(
+                            requireContext(),
+                            apiData.data,
+                            this@JourneyPlanFragment
+                        )
                         rvJPStatus!!.adapter = jpstatusAdapter
                     })
                 } else {
@@ -152,8 +166,8 @@ class JourneyPlanFragment : Fragment() {
 
     fun fetchJourneyPlan(url: String) {
         val request = Request.Builder()
-                .url(url)
-                .build()
+            .url(url)
+            .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -204,28 +218,3 @@ class JourneyPlanFragment : Fragment() {
     }
 }
 
-//Models
-class JPStatusModel(val status: Int, val data: List<JPStatusData>)
-class JPStatusData(val VisitStatusID: Int, val VisitStatus: String, val StatusCount: String, val IconImage: String)
-
-class JourneyPlanModel(val status: Int, val data: List<JourneyPlanData>)
-class JourneyPlanData(
-    val VisitID: Int,
-    val TeamMemberID: Int,
-    val PlanDate: String,
-    val Month: Int,
-    val Year: Int,
-    val WeekNo: Int,
-    val CheckInTime: String,
-    val CheckOutTime: String,
-    val VisitRemarks: String,
-    val CheckInRemarks: String,
-    val CheckOutRemarks: String,
-    val VisitStatusID: Int,
-    val VisitStatus: String,
-    val StoreCode: String,
-    val StoreName: String,
-    val Longitude: String,
-    val Latitude: String,
-    val ImageLocation: String
-)

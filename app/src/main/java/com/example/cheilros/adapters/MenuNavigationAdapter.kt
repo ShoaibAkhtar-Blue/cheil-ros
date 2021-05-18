@@ -12,7 +12,6 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.cheilros.R
-import com.example.cheilros.fragments.JPStatusData
 import com.example.cheilros.models.MenuNavigationModel
 import java.util.*
 
