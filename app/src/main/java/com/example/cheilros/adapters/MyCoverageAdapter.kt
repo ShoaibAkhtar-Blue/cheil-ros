@@ -7,8 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.datavm.AppSettingViewModel
+import com.example.cheilros.datavm.UserPermissionViewModel
+import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.MyCoverageData
 import com.example.cheilros.models.MyCoverageModel
 import com.google.android.gms.maps.GoogleMap
@@ -27,6 +31,7 @@ import java.io.IOException
 class MyCoverageAdapter(val context: Context, val itemList: List<MyCoverageData>): RecyclerView.Adapter<MyCoverageAdapter.ViewHolder>(),
     OnMapReadyCallback {
 
+    lateinit var CSP: CustomSharedPref
     private val client = OkHttpClient()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -51,6 +56,7 @@ class MyCoverageAdapter(val context: Context, val itemList: List<MyCoverageData>
             parent,
             false
         )
+        CSP = CustomSharedPref(parent.context)
         return ViewHolder(view)
     }
 
@@ -85,27 +91,38 @@ class MyCoverageAdapter(val context: Context, val itemList: List<MyCoverageData>
 
         holder.btnAccept.setOnClickListener {
 
-            val li = LayoutInflater.from(context)
-            val promptsView: View = li.inflate(R.layout.dialog_add_visit, null)
+            if(CSP.getData("AddVisit").equals("Y")){
+                val li = LayoutInflater.from(context)
+                val promptsView: View = li.inflate(R.layout.dialog_add_visit, null)
 
-            val dialog = Dialog(context)
-            dialog.setContentView(promptsView)
-            dialog.setCancelable(false)
-            dialog.setCanceledOnTouchOutside(true)
+                val dialog = Dialog(context)
+                dialog.setContentView(promptsView)
+                dialog.setCancelable(false)
+                dialog.setCanceledOnTouchOutside(true)
 
-            dialog.txtTitle.text = "Add Visit Plan"
-            dialog.txtQuestion.text = "Do you want to add Visit Plan for ${itemList[position].StoreName} in your journey plan?"
-            dialog.btnCancel.setOnClickListener {
-                dialog.dismiss()
+                dialog.txtTitle.text = "Add Visit Plan"
+                dialog.txtQuestion.text = "Do you want to add Visit Plan for ${itemList[position].StoreName} in your journey plan?"
+                dialog.btnCancel.setOnClickListener {
+                    dialog.dismiss()
+                }
+
+                dialog.btnAccept.setOnClickListener {
+                    sendVisitRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamMemberAddPlan?StoreID=${itemList[position].StoreID}&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=${dialog.etRemarks.text}")
+                    dialog.dismiss()
+                    holder.fc.toggle(false)
+                }
+
+                dialog.show()
+            }else{
+                (context as Activity).runOnUiThread {
+                    context?.let { it1 ->
+                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                            .setTitle("Permission!!")
+                            .setMessage("You Don't have permission rights for this action!")
+                            .sneakWarning()
+                    }
+                }
             }
-
-            dialog.btnAccept.setOnClickListener {
-                sendVisitRequest("http://rosturkey.cheildata.com/JourneyPlan.asmx/TeamMemberAddPlan?StoreID=${itemList[position].StoreID}&TeamMemberID=3&PlanRemarks=${dialog.etRemarks.text}")
-                dialog.dismiss()
-                holder.fc.toggle(false)
-            }
-
-            dialog.show()
         }
     }
 

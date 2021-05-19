@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_journeyPlanFragment_to_myCoverageFragment"
             app:destination="@id/myCoverageFragment" />
+        <action
+            android:id="@+id/action_journeyPlanFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
     </fragment>
     <fragment
         android:id="@+id/myCoverageFragment"
@@ -35,4 +38,9 @@
             android:id="@+id/action_myCoverageFragment_to_journeyPlanFragment"
             app:destination="@id/journeyPlanFragment" />
     </fragment>
+    <activity
+        android:id="@+id/cameraActivity"
+        android:name="com.example.cheilros.activities.CameraActivity"
+        android:label="activity_camera"
+        tools:layout="@layout/activity_camera" />
 </navigation>

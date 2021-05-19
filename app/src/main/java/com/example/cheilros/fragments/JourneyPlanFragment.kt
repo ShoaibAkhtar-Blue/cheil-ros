@@ -110,8 +110,13 @@ class JourneyPlanFragment : Fragment() {
 
     fun filerJP(status: Int) {
         println("filerJP")
-        println("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.text}&TeamMemberID=${userData[0].memberID}&VisitStatus=${status.toString()}")
-        fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.text}&TeamMemberID=${userData[0].memberID}&VisitStatus=${status.toString()}")
+        println("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.text}&TeamMemberID=${CSP.getData("user_id")}&VisitStatus=${status.toString()}")
+        fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.text}&TeamMemberID=${CSP.getData("user_id")}&VisitStatus=${status.toString()}", false)
+    }
+
+    fun reloadJP(){
+        fetchJPStatus("${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=${btnDate.text}&TeamMemberID=${CSP.getData("user_id")}")
+        fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.text}&TeamMemberID=${CSP.getData("user_id")}&VisitStatus=0", false)
     }
 
     fun fetchJPStatus(url: String) {
@@ -164,7 +169,7 @@ class JourneyPlanFragment : Fragment() {
         })
     }
 
-    fun fetchJourneyPlan(url: String) {
+    fun fetchJourneyPlan(url: String, isDecoratorEnabled: Boolean = true) {
         val request = Request.Builder()
             .url(url)
             .build()
@@ -190,16 +195,19 @@ class JourneyPlanFragment : Fragment() {
                 println(apiData.status)
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvJourneyPlan.setHasFixedSize(true);
+                        rvJourneyPlan.setHasFixedSize(true)
+
+                        if(isDecoratorEnabled)
                         rvJourneyPlan.addItemDecoration(
                             DividerItemDecoration(
                                 context,
                                 DividerItemDecoration.VERTICAL
                             )
                         )
+
                         layoutManager = LinearLayoutManager(requireContext())
                         rvJourneyPlan.layoutManager = layoutManager
-                        recylcerAdapter = JPAdapter(requireContext(), apiData.data)
+                        recylcerAdapter = JPAdapter(requireContext(), apiData.data, this@JourneyPlanFragment)
                         rvJourneyPlan.adapter = recylcerAdapter
                         mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                     })

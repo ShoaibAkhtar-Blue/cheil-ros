@@ -159,6 +159,7 @@ class LoginFragment : Fragment() {
                 println(apiData.status)
                 if (apiData.status == 200) {
                     println("TeamMemberID: ${apiData.data[0].TeamMemberID}")
+                    CSP.saveData("user_id", apiData.data[0].TeamMemberID.toString())
                     for (data in apiData.data) {
                         var userdata = UserData(
                             0,
@@ -175,7 +176,6 @@ class LoginFragment : Fragment() {
                     }
 
                     fetchUserPermission("${CSP.getData("base_url")}/Webservice.asmx/TeamMemberPermissions?TeamMemberID=${apiData.data[0].TeamMemberID}")
-
 
                 } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
@@ -218,6 +218,9 @@ class LoginFragment : Fragment() {
                 if (apiData.status == 200) {
 
                     for (data in apiData.data) {
+                        //Saving Permission in Shared Preference
+                        CSP.saveData(data.PermissionName, data.Permission)
+
                         var userpermission = UserPermission(
                             0,
                             data.PermissionID,

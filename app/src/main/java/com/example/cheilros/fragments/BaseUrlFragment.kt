@@ -61,7 +61,7 @@ class BaseUrlFragment : Fragment() {
         (etLanguage as? AutoCompleteTextView)?.setAdapter(adapter)
 
         etLanguage.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
-
+            Log.i("etLanguage", "${etLanguage.text}-${position.toString()}")
         }
 
 

@@ -21,6 +21,10 @@ class DashboardFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        btnCamera.setOnClickListener {
+            findNavController().navigate(R.id.cameraActivity)
+        }
+
         btnJourneyPlan.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
         }
