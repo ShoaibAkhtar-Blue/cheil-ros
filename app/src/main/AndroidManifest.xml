@@ -18,6 +18,7 @@
     <uses-feature android:name="android.hardware.location.gps" />
 
     <application
+        android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -25,7 +26,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CheilROS"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.CameraActivity"></activity>
+        <activity android:name=".activities.PhotoPreviewActivity"></activity>
+        <activity android:name=".activities.CameraActivity" />
         <activity
             android:name=".activities.DashboardActivity"
             android:label="@string/title_activity_dashboard"

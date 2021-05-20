@@ -5,6 +5,12 @@
     android:id="@+id/auth_nav"
     app:startDestination="@id/splashFragment">
 
+    <activity
+        android:id="@+id/dashboardActivity2"
+        android:name="com.example.cheilros.activities.DashboardActivity"
+        android:label="app_bar_main"
+        tools:layout="@layout/app_bar_main" />
+
     <fragment
         android:id="@+id/baseUrlFragment"
         android:name="com.example.cheilros.fragments.BaseUrlFragment"
@@ -51,5 +57,14 @@
             app:destination="@id/baseUrlFragment"
             app:popUpTo="@id/auth_nav"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashFragment_to_login_graph"
+            app:destination="@id/login_graph"
+            app:popUpTo="@id/auth_nav"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashFragment_to_dashboardActivity2"
+            app:destination="@id/dashboardActivity2" />
+
     </fragment>
 </navigation>

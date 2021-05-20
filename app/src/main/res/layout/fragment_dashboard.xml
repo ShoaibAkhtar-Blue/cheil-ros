@@ -14,7 +14,8 @@
             android:id="@+id/btnCamera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Camera" />
+            android:text="Camera"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/btnJourneyPlan"

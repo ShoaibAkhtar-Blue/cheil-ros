@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.app.ActivityCompat
+import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -155,7 +156,6 @@ class JPAdapter(val context: Context, val itemList: List<JourneyPlanData>, fragm
             var lat: String = "0"
             var lng: String = "0"
 
-
             locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
             if (ActivityCompat.checkSelfPermission(
                     context,
@@ -182,17 +182,33 @@ class JPAdapter(val context: Context, val itemList: List<JourneyPlanData>, fragm
                 }
 
             })
+            //val bundle = bundleOf("visit_id" to itemList[position].VisitID)
 
-            //Navigation.findNavController(it).navigate(R.id.action_journeyPlanFragment_to_cameraActivity)
 
 //            val myactivity = Intent(context.applicationContext, CameraActivity::class.java)
 //            myactivity.addFlags(FLAG_ACTIVITY_FORWARD_RESULT)
 //            context.applicationContext.startActivity(myactivity)
 
-            if(itemList[position].VisitStatusID === 1)
-                sendCheckInOutRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/CheckIn?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=-")
-            if(itemList[position].VisitStatusID === 2)
-                sendCheckInOutRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=-")
+            if(itemList[position].VisitStatusID === 1){
+                if(CSP.getData("CheckIn_Camera").equals("Y")){
+                    CSP.saveData("sess_visit_id", itemList[position].VisitID.toString())
+                    CSP.saveData("sess_visit_status_id", itemList[position].VisitStatusID.toString())
+                    Navigation.findNavController(it).navigate(R.id.action_journeyPlanFragment_to_cameraActivity)
+                }else{
+                    sendCheckInOutRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/CheckIn?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=-")
+                }
+            }
+
+            if(itemList[position].VisitStatusID === 2){
+                if(CSP.getData("CheckIn_Camera").equals("Y")){
+                    CSP.saveData("sess_visit_id", itemList[position].VisitID.toString())
+                    CSP.saveData("sess_visit_status_id", itemList[position].VisitStatusID.toString())
+                    Navigation.findNavController(it).navigate(R.id.action_journeyPlanFragment_to_cameraActivity)
+                }else{
+                    sendCheckInOutRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=-")
+                }
+            }
+
         }
 
         holder.btnCancel.setOnClickListener {

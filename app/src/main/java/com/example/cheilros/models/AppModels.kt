@@ -71,4 +71,10 @@ class MyCoverageData(
     val MallName: String,
     val Address: String
 )
+
+class ChannelModel(val status: Int, val data: List<ChannelData>)
+class ChannelData(
+    val ChannelID: Int,
+    val ChannelName: String
+)
 //endregion

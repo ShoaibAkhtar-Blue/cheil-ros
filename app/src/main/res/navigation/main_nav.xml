@@ -42,5 +42,10 @@
         android:id="@+id/cameraActivity"
         android:name="com.example.cheilros.activities.CameraActivity"
         android:label="activity_camera"
-        tools:layout="@layout/activity_camera" />
+        tools:layout="@layout/activity_camera" >
+        <argument
+            android:name="visit_id"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </activity>
 </navigation>

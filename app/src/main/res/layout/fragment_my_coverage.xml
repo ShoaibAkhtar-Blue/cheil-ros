@@ -1,39 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@color/purple_200"
     tools:context=".fragments.MyCoverageFragment">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/OTSeatch"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <com.valartech.loadinglayout.LoadingLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:hint="@string/search">
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mainLoadingLayoutCoverage"
+        >
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etSearch"
+        <!--  Empty      -->
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:background="#80ddc628"
+            android:gravity="center"
+            android:tag="@string/ll_empty"
+            android:text="@string/no_results"
+            android:textColor="#000"
+            android:textSize="20sp" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <!--   Loading     -->
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:tag="@string/ll_loading" />
 
-    <com.tiper.MaterialSpinner
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:id="@+id/spChannel"
+        <!--   Completed     -->
+        <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:spinnerMode="dialog"
-        android:layout_marginBottom="8dp"/>
+        android:layout_height="match_parent"
+        android:background="#e2e2e2"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:tag="@string/ll_complete">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvCoverage"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/OTSeatch"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/search">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <Button
+            android:id="@+id/btnChannel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Channel" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCoverage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+        <!--    Error    -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ff0000"
+            android:gravity="center"
+            android:tag="@string/ll_error"
+            android:text="@string/error"
+            android:textColor="#fff"
+            android:textSize="20sp" />
+
+    </com.valartech.loadinglayout.LoadingLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

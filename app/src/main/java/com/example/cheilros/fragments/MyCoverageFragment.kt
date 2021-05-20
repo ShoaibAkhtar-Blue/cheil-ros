@@ -1,5 +1,7 @@
 package com.example.cheilros.fragments
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,10 +18,12 @@ import com.example.cheilros.datavm.AppSettingViewModel
 import com.example.cheilros.datavm.UserDataViewModel
 import com.example.cheilros.datavm.UserPermissionViewModel
 import com.example.cheilros.helpers.CustomSharedPref
+import com.example.cheilros.models.ChannelData
+import com.example.cheilros.models.ChannelModel
 import com.example.cheilros.models.MyCoverageModel
-import com.google.android.material.snackbar.Snackbar
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
+import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import kotlinx.android.synthetic.main.fragment_my_coverage.*
 import okhttp3.*
@@ -40,6 +44,7 @@ class MyCoverageFragment : Fragment() {
     lateinit var CSP: CustomSharedPref
 
     lateinit var userData:List<UserData>
+    lateinit var channelData:List<ChannelData>
 
     lateinit var recylcerAdapter: MyCoverageAdapter
 
@@ -59,6 +64,8 @@ class MyCoverageFragment : Fragment() {
 
         userData = mUserDataViewModel.getAllUser
 
+
+
         return view
     }
 
@@ -76,14 +83,96 @@ class MyCoverageFragment : Fragment() {
         layoutManager= LinearLayoutManager(requireContext())
         recyclerView.layoutManager=layoutManager
 
-        fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=1&SearchKeyWord=")
+        fetchChannel("${CSP.getData("base_url")}/Webservice.asmx/ChannelList")
+
+
+        btnChannel.setOnClickListener {
+            // setup the alert builder
+            // setup the alert builder
+            val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Choose an channel")
+
+            // add a list
+
+            // add a list
+            var channels : Array<String> = arrayOf()
+            for (c in channelData){
+                channels += c.ChannelName
+            }
+
+            builder.setItems(channels,
+                DialogInterface.OnClickListener { dialog, which ->
+                    println(channelData[which].ChannelID)
+                    btnChannel.text = "Selected Channel: ${channelData[which].ChannelName}"
+                    fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${channelData[which].ChannelID}&SearchKeyWord=")
+                })
+
+            // create and show the alert dialog
+
+            // create and show the alert dialog
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+
     }
 
     companion object {
 
     }
 
+    fun fetchChannel(url: String) {
+
+        mainLoadingLayoutCoverage.setState(LoadingLayout.LOADING)
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                requireActivity().runOnUiThread(java.lang.Runnable {
+                    activity?.let { it1 ->
+                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                            .setTitle("Error!!")
+                            .setMessage(e.message.toString())
+                            .sneakError()
+                        mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                    }
+                })
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body?.string()
+                println(body)
+
+                val gson = GsonBuilder().create()
+                val apiData = gson.fromJson(body, ChannelModel::class.java)
+                println(apiData.status)
+                if (apiData.status == 200) {
+                    channelData = apiData.data
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                        }
+                    })
+                } else {
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage("Data not fetched.")
+                                .sneakWarning()
+                            mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                        }
+                    })
+                }
+            }
+        })
+    }
     fun fetchData(url: String) {
+
+        mainLoadingLayoutCoverage.setState(LoadingLayout.LOADING)
+
         val request = Request.Builder()
                 .url(url)
                 .build()
@@ -97,6 +186,7 @@ class MyCoverageFragment : Fragment() {
                             .setMessage(e.message.toString())
                             .sneakError()
                     }
+                    mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
                 })
             }
 
@@ -111,6 +201,7 @@ class MyCoverageFragment : Fragment() {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         recylcerAdapter = MyCoverageAdapter(requireContext(), apiData.data)
                         recyclerView.adapter = recylcerAdapter
+                        mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
                     })
                 } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
@@ -120,6 +211,7 @@ class MyCoverageFragment : Fragment() {
                                 .setMessage("Data not fetched.")
                                 .sneakWarning()
                         }
+                        mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
                     })
                 }
             }

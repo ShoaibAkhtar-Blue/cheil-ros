@@ -62,13 +62,28 @@ class BaseUrlFragment : Fragment() {
 
         etLanguage.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
             Log.i("etLanguage", "${etLanguage.text}-${position.toString()}")
+            var lang_id : Int = position + 1
+            CSP.saveData("lang_id", lang_id.toString())
         }
 
 
         btnSave.setOnClickListener {
-           Log.i(Companion.TAG, "btnSave — clicked")
-            CSP.saveData("base_url", etBaseUrl.text.toString())
-            fetchData("${etBaseUrl.text.toString()}/Webservice.asmx/AppSettings?LanguageID=2")
+           Log.i(Companion.TAG, "btnSave — clicked ${etLanguage.text}")
+
+            if(etLanguage.text.isEmpty() || etBaseUrl.text!!.isEmpty()){
+                requireActivity().runOnUiThread(java.lang.Runnable {
+                    activity?.let { it1 ->
+                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                            .setTitle("Warning!!")
+                            .setMessage("Please Fill all fields before proceed!")
+                            .sneakWarning()
+                    }
+                })
+            }else{
+                CSP.saveData("base_url", etBaseUrl.text.toString())
+                fetchData("${etBaseUrl.text.toString()}/Webservice.asmx/AppSettings?LanguageID=${CSP.getData("lang_id")}")
+            }
+
         }
 
 

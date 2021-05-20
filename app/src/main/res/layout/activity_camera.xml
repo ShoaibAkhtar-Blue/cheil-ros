@@ -58,6 +58,7 @@ tools:activity=".activities.CameraActivity">
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:visibility="gone"
             tools:visibility="gone" />
 
         <ImageView
@@ -87,7 +88,9 @@ tools:activity=".activities.CameraActivity">
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_gravity="bottom|left"
-        tools:ignore="ContentDescription,RtlHardcoded" />
+        android:visibility="gone"
+        tools:ignore="ContentDescription,RtlHardcoded"
+        tools:visibility="gone" />
 
     <ImageView
         android:id="@+id/capture"
