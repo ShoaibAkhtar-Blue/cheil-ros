@@ -2,18 +2,22 @@ package com.example.cheilros.activities
 
 import android.Manifest
 import android.app.Dialog
+import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -40,6 +44,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.OutputStream
 import kotlin.math.roundToInt
 
 
@@ -88,6 +93,65 @@ class CameraActivity : AppCompatActivity() {
         torchSwitch onCheckedChanged toggleFlash()
     }
 
+    // this method saves the image to gallery
+    private fun saveMediaToStorage(bitmap: Bitmap): String {
+        // Generating a file name
+        val filename = "${System.currentTimeMillis()}.jpg"
+
+        // Output stream
+        var fos: OutputStream? = null
+
+        /*// For devices running android >= Q
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // getting the contentResolver
+            this.contentResolver?.also { resolver ->
+
+                // Content resolver will process the contentvalues
+                val contentValues = ContentValues().apply {
+                    Log.i("directoryImg", Environment.DIRECTORY_PICTURES)
+                    Log.i("directoryImg", Environment.getExternalStorageDirectory(Environment.DIRECTORY_PICTURES).toString())
+                    // putting file information in content values
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+                }
+
+                // Inserting the contentValues to
+                // contentResolver and getting the Uri
+                val imageUri: Uri? = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+                // Opening an outputstream with the Uri that we got
+                fos = imageUri?.let { resolver.openOutputStream(it) }
+            }
+        } else {
+            // These for devices running on android < Q
+            val imagesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            Log.i("directoryImg1", "${imagesDir.absolutePath}/$filename")
+            val image = File(imagesDir, filename)
+            fos = FileOutputStream(image)
+        }
+
+        fos?.use {
+
+            // Finally writing the bitmap to the output stream that we opened
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
+            Toast.makeText(this , "Captured View and saved to Gallery" , Toast.LENGTH_SHORT).show()
+        }*/
+
+        val imagesDir =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        Log.i("directoryImg1", "${imagesDir.absolutePath}/$filename")
+        val image = File(imagesDir, filename)
+        fos = FileOutputStream(image)
+        fos?.use {
+
+            // Finally writing the bitmap to the output stream that we opened
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
+            Toast.makeText(this, "Captured View and saved to Gallery", Toast.LENGTH_SHORT).show()
+        }
+        return "${imagesDir.absolutePath}/$filename"
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.R)
     private fun takePicture(): () -> Unit = {
@@ -114,6 +178,7 @@ class CameraActivity : AppCompatActivity() {
                         )
 
                         val bitmapImg: Bitmap = it.bitmap
+
                         val imageView = findViewById<ImageView>(R.id.result)
 
                         imageView.setImageBitmap(it.bitmap)
@@ -128,11 +193,11 @@ class CameraActivity : AppCompatActivity() {
                         dialog.imgPrev.rotation = (-it.rotationDegrees).toFloat()
 
                         //Remarks Permission
-                        if (CSP.getData("sess_visit_status_id").equals("1")){
-                            if(CSP.getData("CheckIn_Remarks").equals("N"))
+                        if (CSP.getData("sess_visit_status_id").equals("1")) {
+                            if (CSP.getData("CheckIn_Remarks").equals("N"))
                                 dialog.etRemarksJP.visibility = View.GONE
-                        }else{
-                            if(CSP.getData("CheckOut_Camera").equals("N"))
+                        } else {
+                            if (CSP.getData("CheckOut_Camera").equals("N"))
                                 dialog.etRemarksJP.visibility = View.GONE
                         }
 
@@ -200,15 +265,18 @@ class CameraActivity : AppCompatActivity() {
 
                                 })
                             //endregion
-
-                            var checkTypeAPI : String = if (CSP.getData("sess_visit_status_id").equals("1")) "CheckIn" else "CheckOut"
+                            val savedImagePath: String = saveMediaToStorage(bitmapImg)
+                            var checkTypeAPI: String = if (CSP.getData("sess_visit_status_id")
+                                    .equals("1")
+                            ) "CheckIn" else "CheckOut"
 
                             sendCheckInOutRequest(
                                 "${CSP.getData("base_url")}/JourneyPlan.asmx/$checkTypeAPI?VisitID=${
                                     CSP.getData(
                                         "sess_visit_id"
                                     )
-                                }&Longitude=$lng&Latitude=$lat&Remarks=${dialog.etRemarksJP.text}"
+                                }&Longitude=$lng&Latitude=$lat&Remarks=${dialog.etRemarksJP.text}",
+                                savedImagePath
                             )
                         }
                         dialog.btnCancel.setOnClickListener {
@@ -332,20 +400,22 @@ class CameraActivity : AppCompatActivity() {
         zoomLvl.text = String.format("%.1f ×", roundedValue)
     }
 
-    fun sendCheckInOutRequest(url: String) {
+    fun sendCheckInOutRequest(url: String, imgPath: String) {
 
-        var checkType : String = if (CSP.getData("sess_visit_status_id").equals("1")) "CheckInImage" else "CheckOutImage"
-//        //var checkType : String = CSP.getData("sess_visit_status_id").equals("1") then "CheckInImage" : "CheckOutImage"
-//
-//        val requestBody = MultipartBody.Builder()
-//            .setType(MultipartBody.FORM)
-//            .addFormDataPart("title", "Square Logo")
-//            .addFormDataPart("checkType", "ROS.png",
-//                File("docs/images/logo-square.png").asRequestBody("image/*".toMediaType()))
-//            .build()
+        var checkType: String =
+            if (CSP.getData("sess_visit_status_id").equals("1")) "CheckInImage" else "CheckOutImage"
+
+        val requestBody = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart(
+                checkType, "${System.currentTimeMillis()}.jpg",
+                File(imgPath).asRequestBody("image/*".toMediaType())
+            )
+            .build()
 
         val request = Request.Builder()
             .url(url)
+            .post(requestBody)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -406,7 +476,8 @@ private sealed class Camera(
             flashMode = off(),
             focusMode = firstAvailable(
                 continuousFocusPicture(),
-                autoFocus()
+                autoFocus(),
+                fixed()
             ),
             frameProcessor = {
                 // Do something with the preview frame

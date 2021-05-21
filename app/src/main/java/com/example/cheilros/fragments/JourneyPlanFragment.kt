@@ -46,6 +46,7 @@ class JourneyPlanFragment : Fragment() {
     //lateinit var recyclerView: RecyclerView
     lateinit var layoutManager: RecyclerView.LayoutManager
     val calendar = Calendar.getInstance()
+    lateinit var currentDate: String
 
     lateinit var recylcerAdapter: JPAdapter
     lateinit var jpstatusAdapter: JPStatusAdapter
@@ -78,11 +79,11 @@ class JourneyPlanFragment : Fragment() {
                 DatePickerDialog(
                     requireContext(), DatePickerDialog.OnDateSetListener
                     { view, year, monthOfYear, dayOfMonth ->
-                        val customDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
-                        btnDate.text = customDate
+                        val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
+                        btnDate.text = currentDate
 
-                        fetchJPStatus("${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=$customDate&TeamMemberID=${userData[0].memberID}")
-                        fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=$customDate&TeamMemberID=${userData[0].memberID}&VisitStatus=0")
+                        fetchJPStatus("${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=$currentDate&TeamMemberID=${userData[0].memberID}")
+                        fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=$currentDate&TeamMemberID=${userData[0].memberID}&VisitStatus=0")
 
                     }, year, month, day
                 )
@@ -98,6 +99,7 @@ class JourneyPlanFragment : Fragment() {
         val currentDateAndTime: String = simpleDateFormat.format(Date())
 
         btnDate.text = currentDateAndTime
+        currentDate = currentDateAndTime
 
         fetchJPStatus("${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=$currentDateAndTime&TeamMemberID=${userData[0].memberID}")
         fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=$currentDateAndTime&TeamMemberID=${userData[0].memberID}&VisitStatus=0")
@@ -205,9 +207,11 @@ class JourneyPlanFragment : Fragment() {
                             )
                         )
 
+                        val isCurrentDate :Boolean = currentDate.equals(btnDate.text.toString())
+
                         layoutManager = LinearLayoutManager(requireContext())
                         rvJourneyPlan.layoutManager = layoutManager
-                        recylcerAdapter = JPAdapter(requireContext(), apiData.data, this@JourneyPlanFragment)
+                        recylcerAdapter = JPAdapter(requireContext(), apiData.data, this@JourneyPlanFragment, isCurrentDate)
                         rvJourneyPlan.adapter = recylcerAdapter
                         mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                     })

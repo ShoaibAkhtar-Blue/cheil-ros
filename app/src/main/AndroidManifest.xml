@@ -26,19 +26,29 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CheilROS"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.PhotoPreviewActivity"></activity>
-        <activity android:name=".activities.CameraActivity" />
+        <activity android:name=".activities.PhotoPreviewActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".activities.CameraActivity" android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.DashboardActivity"
             android:label="@string/title_activity_dashboard"
-            android:theme="@style/Theme.CheilROS.NoActionBar" />
-        <activity android:name=".MainActivity">
+            android:theme="@style/Theme.CheilROS.NoActionBar" android:screenOrientation="portrait" />
+        <activity android:name=".MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.captureimage.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

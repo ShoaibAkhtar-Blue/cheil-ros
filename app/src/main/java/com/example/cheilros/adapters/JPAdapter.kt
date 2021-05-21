@@ -40,7 +40,7 @@ import okhttp3.*
 import java.io.IOException
 
 
-class JPAdapter(val context: Context, val itemList: List<JourneyPlanData>, fragment: JourneyPlanFragment): RecyclerView.Adapter<JPAdapter.ViewHolder>(), OnMapReadyCallback {
+class JPAdapter(val context: Context, val itemList: List<JourneyPlanData>, fragment: JourneyPlanFragment, isCurrentDate: Boolean): RecyclerView.Adapter<JPAdapter.ViewHolder>(), OnMapReadyCallback {
 
     lateinit var CSP: CustomSharedPref
 
@@ -51,9 +51,11 @@ class JPAdapter(val context: Context, val itemList: List<JourneyPlanData>, fragm
     lateinit var locationManager: LocationManager
 
     private val frag: JourneyPlanFragment
+    private val isCurrDt: Boolean
 
     init {
         frag = fragment
+        isCurrDt = isCurrentDate
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -110,17 +112,30 @@ class JPAdapter(val context: Context, val itemList: List<JourneyPlanData>, fragm
         else if (itemList[position].VisitStatusID === 2){
             holder.RLStatus.setBackgroundColor(Color.BLUE)
             holder.btnAccept.text = "Check out"
+            holder.btnCancel.isEnabled = false
+            holder.btnCancel.isClickable = false
         }
 
         else if (itemList[position].VisitStatusID === 3){
             holder.RLStatus.setBackgroundColor(Color.GREEN)
             holder.btnAccept.isEnabled = false
             holder.btnAccept.isClickable = false
+
+            holder.btnCancel.isEnabled = false
+            holder.btnCancel.isClickable = false
         }
 
         else if (itemList[position].VisitStatusID === 4){
             holder.RLStatus.setBackgroundColor(Color.RED)
 
+            holder.btnAccept.isEnabled = false
+            holder.btnAccept.isClickable = false
+
+            holder.btnCancel.isEnabled = false
+            holder.btnCancel.isClickable = false
+        }
+
+        if(!isCurrDt){
             holder.btnAccept.isEnabled = false
             holder.btnAccept.isClickable = false
 
