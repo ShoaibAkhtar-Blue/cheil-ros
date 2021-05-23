@@ -7,14 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
-import com.example.cheilros.datavm.AppSettingViewModel
-import com.example.cheilros.datavm.UserPermissionViewModel
+import com.example.cheilros.data.AppSetting
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.MyCoverageData
 import com.example.cheilros.models.MyCoverageModel
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -28,24 +27,34 @@ import okhttp3.*
 import java.io.IOException
 
 
-class MyCoverageAdapter(val context: Context, val itemList: List<MyCoverageData>): RecyclerView.Adapter<MyCoverageAdapter.ViewHolder>(),
+class MyCoverageAdapter(
+    val context: Context,
+    val itemList: List<MyCoverageData>,
+    val settingData: List<AppSetting>
+): RecyclerView.Adapter<MyCoverageAdapter.ViewHolder>(),
     OnMapReadyCallback {
+
 
     lateinit var CSP: CustomSharedPref
     private val client = OkHttpClient()
 
+    var curPos: Int = 0
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var txtSerialNo: TextView = view.findViewById(R.id.txtSerialNo)
         var mapView : MapView = view.findViewById(R.id.mapView)
+        var txtCode : TextView = view.findViewById(R.id.txtCode)
         var txtTitle : TextView = view.findViewById(R.id.txtTitle)
         var txtTitleHeader : TextView = view.findViewById(R.id.txtTitleHeader)
         var txtTitleContent : TextView = view.findViewById(R.id.txtTitleContent)
+        var txtRemarksContent : TextView = view.findViewById(R.id.txtRemarksContent)
         var txtRegion: TextView = view.findViewById(R.id.txtRegion)
         var txtAddress: TextView = view.findViewById(R.id.txtAddress)
         var fc : FoldingCell = view.findViewById(R.id.folding_cell)
         var btnSee  : LinearLayout = view.findViewById(R.id.LLjp)
         var btnClose  : RelativeLayout = view.findViewById(R.id.RLHeader)
         var btnAccept  : Button = view.findViewById(R.id.btnAccept)
+        var btnCancel  : Button = view.findViewById(R.id.btnCancel)
         //var btnClose  : MaterialButton = view.findViewById(R.id.btnCancel)
 
     }
@@ -64,14 +73,24 @@ class MyCoverageAdapter(val context: Context, val itemList: List<MyCoverageData>
 
         holder.txtSerialNo.text = (position+1).toString()
 
+        holder.txtCode.text = itemList[position].StoreCode
         holder.txtTitle.text = itemList[position].StoreName
-        holder.txtTitleHeader.text = itemList[position].StoreName
-        holder.txtTitleContent.text = itemList[position].StoreName
+        holder.txtTitleHeader.text = "${itemList[position].StoreCode} - ${itemList[position].StoreName}"
+        holder.txtTitleContent.text = itemList[position].Address
+        holder.txtRemarksContent.text = "Last Visit: ${itemList[position].LastVisitedDate} (${itemList[position].VistedBy})"
 
         holder.txtRegion.text = itemList[position].RegionName
         holder.txtAddress.text = itemList[position].Address
 
         val mapView: MapView = holder.mapView
+
+        //Update Labels
+        try {
+            holder.btnAccept.text = settingData.filter { it.fixedLabelName == "StoreList_AddJPButton" }.get(0).labelName
+            holder.btnCancel.text = settingData.filter { it.fixedLabelName == "StoreList_ViewButton" }.get(0).labelName
+        }catch (ex: Exception){
+
+        }
 
         if (mapView != null) {
             // Initialise the MapView
@@ -82,6 +101,7 @@ class MyCoverageAdapter(val context: Context, val itemList: List<MyCoverageData>
         }
 
         holder.btnSee.setOnClickListener {
+            curPos = position
             holder.fc.toggle(false)
         }
 
@@ -100,12 +120,14 @@ class MyCoverageAdapter(val context: Context, val itemList: List<MyCoverageData>
                 dialog.setCancelable(false)
                 dialog.setCanceledOnTouchOutside(true)
 
-                dialog.txtTitle.text = "Add Visit Plan"
-                dialog.txtQuestion.text = "Do you want to add Visit Plan for ${itemList[position].StoreName} in your journey plan?"
+                dialog.txtTitle.text = settingData.filter { it.fixedLabelName == "StoreList_AddJPButton" }.get(0).labelName
+                dialog.txtQuestion.text = settingData.filter { it.fixedLabelName == "JounreyPlan_AddMsg" }.get(0).labelName
+
+                dialog.btnCancel.text = settingData.filter { it.fixedLabelName == "StoreList_PopupCancel" }.get(0).labelName
                 dialog.btnCancel.setOnClickListener {
                     dialog.dismiss()
                 }
-
+                dialog.btnAccept.text = settingData.filter { it.fixedLabelName == "StoreList_PopupAdd" }.get(0).labelName
                 dialog.btnAccept.setOnClickListener {
                     sendVisitRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamMemberAddPlan?StoreID=${itemList[position].StoreID}&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=${dialog.etRemarks.text}")
                     dialog.dismiss()
@@ -131,9 +153,10 @@ class MyCoverageAdapter(val context: Context, val itemList: List<MyCoverageData>
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
-        //val location: Location = locations.get(getAdapterPosition())
-        val sydney = LatLng(-33.852, 151.211)
-        googleMap!!.addMarker(MarkerOptions().position(sydney).title("Sydney"))
+        println("onMapReady-${itemList[curPos].Latitude}-${itemList[curPos].Longitude}")
+        val sydney = LatLng(itemList[curPos].Latitude.toDouble(), itemList[curPos].Longitude.toDouble())
+        googleMap!!.addMarker(MarkerOptions().position(sydney).title(itemList[curPos].StoreName))
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,13.5f));
     }
 
     private fun sendVisitRequest(url: String) {

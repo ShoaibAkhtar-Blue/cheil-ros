@@ -270,6 +270,9 @@ class CameraActivity : AppCompatActivity() {
                                     .equals("1")
                             ) "CheckIn" else "CheckOut"
 
+                            /*val uploadImgFile:File =  File(savedImagePath)
+                            println(uploadImgFile.exists())*/
+
                             sendCheckInOutRequest(
                                 "${CSP.getData("base_url")}/JourneyPlan.asmx/$checkTypeAPI?VisitID=${
                                     CSP.getData(
@@ -404,6 +407,8 @@ class CameraActivity : AppCompatActivity() {
 
         var checkType: String =
             if (CSP.getData("sess_visit_status_id").equals("1")) "CheckInImage" else "CheckOutImage"
+
+
 
         val requestBody = MultipartBody.Builder()
             .setType(MultipartBody.FORM)

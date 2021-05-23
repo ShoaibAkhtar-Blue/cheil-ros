@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.adapters.JPAdapter
 import com.example.cheilros.adapters.JPStatusAdapter
+import com.example.cheilros.data.AppSetting
 import com.example.cheilros.data.UserData
 import com.example.cheilros.datavm.AppSettingViewModel
 import com.example.cheilros.datavm.UserDataViewModel
@@ -42,6 +43,7 @@ class JourneyPlanFragment : Fragment() {
     lateinit var CSP: CustomSharedPref
 
     lateinit var userData: List<UserData>
+    lateinit var settingData: List<AppSetting>
 
     //lateinit var recyclerView: RecyclerView
     lateinit var layoutManager: RecyclerView.LayoutManager
@@ -66,6 +68,7 @@ class JourneyPlanFragment : Fragment() {
         CSP = CustomSharedPref(requireContext())
 
         userData = mUserDataViewModel.getAllUser
+        settingData = mAppSettingViewModel.getAllSetting
 
         view.mainLoadingLayout.setState(LoadingLayout.LOADING)
 
@@ -172,6 +175,7 @@ class JourneyPlanFragment : Fragment() {
     }
 
     fun fetchJourneyPlan(url: String, isDecoratorEnabled: Boolean = true) {
+        println(url)
         val request = Request.Builder()
             .url(url)
             .build()
@@ -211,7 +215,7 @@ class JourneyPlanFragment : Fragment() {
 
                         layoutManager = LinearLayoutManager(requireContext())
                         rvJourneyPlan.layoutManager = layoutManager
-                        recylcerAdapter = JPAdapter(requireContext(), apiData.data, this@JourneyPlanFragment, isCurrentDate)
+                        recylcerAdapter = JPAdapter(requireContext(), apiData.data, this@JourneyPlanFragment, isCurrentDate, settingData)
                         rvJourneyPlan.adapter = recylcerAdapter
                         mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                     })

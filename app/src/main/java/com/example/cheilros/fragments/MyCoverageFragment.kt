@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.adapters.MyCoverageAdapter
+import com.example.cheilros.data.AppSetting
 import com.example.cheilros.data.UserData
 import com.example.cheilros.datavm.AppSettingViewModel
 import com.example.cheilros.datavm.UserDataViewModel
@@ -24,7 +25,6 @@ import com.example.cheilros.models.MyCoverageModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
-import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import kotlinx.android.synthetic.main.fragment_my_coverage.*
 import okhttp3.*
 import java.io.IOException
@@ -47,6 +47,7 @@ class MyCoverageFragment : Fragment() {
     lateinit var channelData:List<ChannelData>
 
     lateinit var recylcerAdapter: MyCoverageAdapter
+    lateinit var settingData: List<AppSetting>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,7 +64,7 @@ class MyCoverageFragment : Fragment() {
         CSP = CustomSharedPref(requireContext())
 
         userData = mUserDataViewModel.getAllUser
-
+        settingData = mAppSettingViewModel.getAllSetting
 
 
         return view
@@ -104,7 +105,7 @@ class MyCoverageFragment : Fragment() {
                 DialogInterface.OnClickListener { dialog, which ->
                     println(channelData[which].ChannelID)
                     btnChannel.text = "Selected Channel: ${channelData[which].ChannelName}"
-                    fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${channelData[which].ChannelID}&SearchKeyWord=")
+                    fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${channelData[which].ChannelID}&SearchKeyWord=${etSearch.text}")
                 })
 
             // create and show the alert dialog
@@ -199,7 +200,7 @@ class MyCoverageFragment : Fragment() {
                 println(apiData.status)
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
-                        recylcerAdapter = MyCoverageAdapter(requireContext(), apiData.data)
+                        recylcerAdapter = MyCoverageAdapter(requireContext(), apiData.data, settingData)
                         recyclerView.adapter = recylcerAdapter
                         mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
                     })

@@ -77,11 +77,13 @@ class LoginFragment : Fragment() {
             view.txtCopyright.text =
                 settingData.filter { it.fixedLabelName == "CopyRight" }.get(0).labelName
             view.txtAppName.text =
-                settingData.filter { it.fixedLabelName == "Login_Title" }?.get(0).labelName
+                settingData.filter { it.fixedLabelName == "Splash_and_Login" }?.get(0).labelName
             view.OTFUsername.hint =
                 settingData.filter { it.fixedLabelName == "Login_UserName" }?.get(0).labelName
             view.OTFPassword.hint =
                 settingData.filter { it.fixedLabelName == "Login_Password" }?.get(0).labelName
+            view.btnLogin.hint =
+                settingData.filter { it.fixedLabelName == "Login" }?.get(0).labelName
             view.btnForgot.hint =
                 settingData.filter { it.fixedLabelName == "Login_ForgetPassword" }?.get(0).labelName
         } catch (ex: Exception) {

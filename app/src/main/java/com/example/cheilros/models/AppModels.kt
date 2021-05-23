@@ -45,6 +45,7 @@ class JourneyPlanData(
     val WeekNo: Int,
     val CheckInTime: String,
     val CheckOutTime: String,
+    val Address: String,
     val VisitRemarks: String,
     val CheckInRemarks: String,
     val CheckOutRemarks: String,
@@ -69,7 +70,11 @@ class MyCoverageData(
     val RegionName: String,
     val DistrcitName: String,
     val MallName: String,
-    val Address: String
+    val Address: String,
+    val Longitude: String,
+    val Latitude: String,
+    val LastVisitedDate: String,
+    val VistedBy: String
 )
 
 class ChannelModel(val status: Int, val data: List<ChannelData>)
