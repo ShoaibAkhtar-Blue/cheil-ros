@@ -16,6 +16,7 @@ class AppSettingData(
 //endregion
 
 class CheckInOutModel(val status: Int)
+class HookBin(val success: Int)
 
 //region User Permission
 class LoginUserPermission(val status: Int, val data: List<LoginUserPermissionData>)

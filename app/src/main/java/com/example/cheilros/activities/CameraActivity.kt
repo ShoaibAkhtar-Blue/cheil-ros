@@ -12,6 +12,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.StrictMode
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -24,6 +25,7 @@ import androidx.core.app.ActivityCompat
 import com.example.cheilros.R
 import com.example.cheilros.helpers.*
 import com.example.cheilros.models.CheckInOutModel
+import com.example.cheilros.models.HookBin
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import io.fotoapparat.Fotoapparat
@@ -40,6 +42,7 @@ import kotlinx.android.synthetic.main.dialog_photo_preview.*
 import kotlinx.android.synthetic.main.dialog_photo_preview.btnCancel
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.FileOutputStream
@@ -67,6 +70,9 @@ class CameraActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
+
+        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
 
         CSP = CustomSharedPref(this)
 
@@ -403,29 +409,32 @@ class CameraActivity : AppCompatActivity() {
         zoomLvl.text = String.format("%.1f ×", roundedValue)
     }
 
+
     fun sendCheckInOutRequest(url: String, imgPath: String) {
 
         var checkType: String =
             if (CSP.getData("sess_visit_status_id").equals("1")) "CheckInImage" else "CheckOutImage"
 
+        println(checkType)
 
+        val client = OkHttpClient()
+        val sourceFile = File(imgPath)
+        val mimeType = CoreHelperMethods(this@CameraActivity).getMimeType(sourceFile)
+        val fileName: String = sourceFile.name
 
-        val requestBody = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart(
-                checkType, "${System.currentTimeMillis()}.jpg",
-                File(imgPath).asRequestBody("image/*".toMediaType())
-            )
-            .build()
+        try {
+            val requestBody: RequestBody =
+                MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart(checkType, fileName,sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull()))
+                    .build()
 
-        val request = Request.Builder()
-            .url(url)
-            .post(requestBody)
-            .build()
+            val request: Request = Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build()
 
-        client.newCall(request).enqueue(object : Callback {
+            client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-
                 runOnUiThread {
                     Sneaker.with(this@CameraActivity) // Activity, Fragment or ViewGroup
                         .setTitle("Error!!")
@@ -440,7 +449,7 @@ class CameraActivity : AppCompatActivity() {
 
                 val gson = GsonBuilder().create()
                 val apiData = gson.fromJson(body, CheckInOutModel::class.java)
-                println(apiData.status)
+                println(apiData)
                 if (apiData.status == 200) {
                     runOnUiThread {
                         Sneaker.with(this@CameraActivity) // Activity, Fragment or ViewGroup
@@ -459,6 +468,75 @@ class CameraActivity : AppCompatActivity() {
                 }
             }
         })
+
+
+           /* val response: Response = client.newCall(request).execute()
+
+            println(response.body!!.string())
+
+            if (response.isSuccessful) {
+                Log.d("File upload", "success")
+            } else {
+                Log.e("File upload", "failed")
+            }*/
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            Log.e("File upload", "failed")
+        }
+
+//        var checkType: String =
+//            if (CSP.getData("sess_visit_status_id").equals("1")) "CheckInImage" else "CheckOutImage"
+//
+//
+//        val requestBody = MultipartBody.Builder()
+//            .setType(MultipartBody.FORM)
+//            .addFormDataPart(
+//                checkType, "${System.currentTimeMillis()}.jpg",
+//                File(imgPath).asRequestBody("image/*".toMediaType())
+//            )
+//            .build()
+//
+//        val request = Request.Builder()
+//            .url(url)
+//            .post(requestBody)
+//            .build()
+
+        /*client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+
+                runOnUiThread {
+                    Sneaker.with(this@CameraActivity) // Activity, Fragment or ViewGroup
+                        .setTitle("Error!!")
+                        .setMessage(e.message.toString())
+                        .sneakWarning()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body?.string()
+                println(body)
+
+//                val gson = GsonBuilder().create()
+//                val apiData = gson.fromJson(body, HookBin::class.java)
+//                println(apiData)
+                *//*if (apiData.status == 200) {
+                    runOnUiThread {
+                        Sneaker.with(this@CameraActivity) // Activity, Fragment or ViewGroup
+                            .setTitle("Success!!")
+                            .setMessage("Data Updated")
+                            .sneakSuccess()
+                        onBackPressed()
+                    }
+                } else {
+                    runOnUiThread {
+                        Sneaker.with(this@CameraActivity) // Activity, Fragment or ViewGroup
+                            .setTitle("Error!!")
+                            .setMessage("Data not Updated.")
+                            .sneakWarning()
+                    }
+                }*//*
+            }
+        })*/
     }
 
 }
