@@ -67,6 +67,7 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var fotoapparat: Fotoapparat
     private lateinit var cameraZoom: Zoom.VariableZoom
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
@@ -280,7 +281,7 @@ class CameraActivity : AppCompatActivity() {
                             println(uploadImgFile.exists())*/
 
                             sendCheckInOutRequest(
-                                "${CSP.getData("base_url")}/JourneyPlan.asmx/$checkTypeAPI?VisitID=${
+                                "${CSP.getData("base_url")}/${checkTypeAPI}.asmx/${checkTypeAPI}Img?VisitID=${
                                     CSP.getData(
                                         "sess_visit_id"
                                     )

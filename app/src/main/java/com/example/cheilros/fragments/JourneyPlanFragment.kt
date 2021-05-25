@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -93,6 +95,13 @@ class JourneyPlanFragment : Fragment() {
             datePickerDialog.show()
         }
 
+        requireActivity().title = "Journey Plan"
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
+            // Handle the back button event
+            println("callback")
+            findNavController().popBackStack()
+        }
+
         return view
     }
 
@@ -107,6 +116,18 @@ class JourneyPlanFragment : Fragment() {
         fetchJPStatus("${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=$currentDateAndTime&TeamMemberID=${userData[0].memberID}")
         fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=$currentDateAndTime&TeamMemberID=${userData[0].memberID}&VisitStatus=0")
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(CSP.getData("sess_visit_id").isNullOrEmpty()){
+
+        }else{
+            println("onResume JP")
+            CSP.delData("sess_visit_id")
+            CSP.delData("sess_visit_status_id")
+            reloadJP()
+        }
     }
 
     companion object {

@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -66,6 +68,12 @@ class MyCoverageFragment : Fragment() {
         userData = mUserDataViewModel.getAllUser
         settingData = mAppSettingViewModel.getAllSetting
 
+        requireActivity().title = "My Coverage"
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
+            // Handle the back button event
+            println("callback")
+            findNavController().popBackStack()
+        }
 
         return view
     }

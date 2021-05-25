@@ -27,7 +27,6 @@ import com.example.cheilros.data.UserData
 import com.example.cheilros.datavm.AppSettingViewModel
 import com.example.cheilros.datavm.UserDataViewModel
 import com.example.cheilros.datavm.UserPermissionViewModel
-import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.MenuNavigationModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -35,7 +34,6 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.activity_dashboard.view.*
-import kotlinx.android.synthetic.main.item_jpstatus.view.*
 import java.util.*
 
 
@@ -58,9 +56,6 @@ class DashboardActivity : AppCompatActivity() {
         setContentView(R.layout.activity_dashboard)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-
-
-
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
@@ -129,6 +124,9 @@ class DashboardActivity : AppCompatActivity() {
             val navController = findNavController(R.id.main_nav_fragment)
             try {
                 if (menuDataList.get(i).fixedLabelName == "MenuTitle3") {
+                    CSP.delData("sess_visit_id")
+                    CSP.delData("sess_visit_status_id")
+
                     navController.navigateUp()
                     findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
                 }
@@ -186,38 +184,43 @@ class DashboardActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    override fun onBackPressed() {
-        // setup the alert builder
-        // setup the alert builder
-        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setTitle("Are You Sure?")
-        builder.setMessage("You want to exit app or logout?")
+    /*override fun onBackPressed() {
 
-        // add the buttons
+        val count = supportFragmentManager.backStackEntryCount
+        if (count == 0){
+            // setup the alert builder
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            builder.setTitle("Are You Sure?")
+            builder.setMessage("You want to exit app or logout?")
 
-        // add the buttons
-        builder.setPositiveButton("Exit App") { dialogInterface, which ->
-            super.onBackPressed()
-        }
-        builder.setNeutralButton("Logout") { dialogInterface, which ->
-            CSP.delData("user_id")
-            mUserDataViewModel.nukeTable()
+            // add the buttons
+
+            // add the buttons
+            builder.setPositiveButton("Exit App") { dialogInterface, which ->
+                super.onBackPressed()
+            }
+            builder.setNeutralButton("Logout") { dialogInterface, which ->
+                CSP.delData("user_id")
+                mUserDataViewModel.nukeTable()
 //            val navController = findNavController(R.id.main_nav_fragment)
 //            navController.navigate(R.id.auth_nav)
 
-            val intent = Intent(applicationContext, MainActivity::class.java)
+                val intent = Intent(applicationContext, MainActivity::class.java)
 
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
-            applicationContext.startActivity(intent)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+                applicationContext.startActivity(intent)
 
-            finish()
+                finish()
+            }
+            builder.setNegativeButton("Cancel", null)
+
+            // create and show the alert dialog
+
+            // create and show the alert dialog
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }else{
+            super.onBackPressed()
         }
-        builder.setNegativeButton("Cancel", null)
-
-        // create and show the alert dialog
-
-        // create and show the alert dialog
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-    }
+    }*/
 }

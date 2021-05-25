@@ -8,11 +8,11 @@
     <fragment
         android:id="@+id/dashboardFragment"
         android:name="com.example.cheilros.fragments.DashboardFragment"
-        android:label="fragment_dashboard"
         tools:layout="@layout/fragment_dashboard" >
         <action
             android:id="@+id/action_dashboardFragment_to_journeyPlanFragment"
-            app:destination="@id/journeyPlanFragment" />
+            app:destination="@id/journeyPlanFragment"
+            app:launchSingleTop="false" />
         <action
             android:id="@+id/action_dashboardFragment_to_myCoverageFragment"
             app:destination="@id/myCoverageFragment" />
@@ -20,7 +20,6 @@
     <fragment
         android:id="@+id/journeyPlanFragment"
         android:name="com.example.cheilros.fragments.JourneyPlanFragment"
-        android:label="fragment_journey_plan"
         tools:layout="@layout/fragment_journey_plan" >
         <action
             android:id="@+id/action_journeyPlanFragment_to_myCoverageFragment"
@@ -32,7 +31,6 @@
     <fragment
         android:id="@+id/myCoverageFragment"
         android:name="com.example.cheilros.fragments.MyCoverageFragment"
-        android:label="fragment_my_coverage"
         tools:layout="@layout/fragment_my_coverage" >
         <action
             android:id="@+id/action_myCoverageFragment_to_journeyPlanFragment"
@@ -41,7 +39,6 @@
     <activity
         android:id="@+id/cameraActivity"
         android:name="com.example.cheilros.activities.CameraActivity"
-        android:label="activity_camera"
         tools:layout="@layout/activity_camera" >
         <argument
             android:name="visit_id"
