@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.core.content.ContextCompat.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.adapters.JPAdapter
+import com.example.cheilros.adapters.JPCurrentWeekApdater
 import com.example.cheilros.adapters.JPStatusAdapter
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.data.UserData
@@ -21,6 +23,7 @@ import com.example.cheilros.datavm.AppSettingViewModel
 import com.example.cheilros.datavm.UserDataViewModel
 import com.example.cheilros.datavm.UserPermissionViewModel
 import com.example.cheilros.helpers.CustomSharedPref
+import com.example.cheilros.models.JPCurrentWeekData
 import com.example.cheilros.models.JPStatusModel
 import com.example.cheilros.models.JourneyPlanModel
 import com.google.gson.GsonBuilder
@@ -30,6 +33,7 @@ import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import kotlinx.android.synthetic.main.fragment_journey_plan.view.*
 import okhttp3.*
 import java.io.IOException
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -54,6 +58,7 @@ class JourneyPlanFragment : Fragment() {
 
     lateinit var recylcerAdapter: JPAdapter
     lateinit var jpstatusAdapter: JPStatusAdapter
+    lateinit var jpscurrentweekAdapter: JPCurrentWeekApdater
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -85,7 +90,7 @@ class JourneyPlanFragment : Fragment() {
                     requireContext(), DatePickerDialog.OnDateSetListener
                     { view, year, monthOfYear, dayOfMonth ->
                         val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
-                        btnDate.text = currentDate
+                        btnDate.tag = currentDate
 
                         fetchJPStatus("${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=$currentDate&TeamMemberID=${userData[0].memberID}")
                         fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=$currentDate&TeamMemberID=${userData[0].memberID}&VisitStatus=0")
@@ -102,6 +107,8 @@ class JourneyPlanFragment : Fragment() {
             findNavController().popBackStack()
         }
 
+
+
         return view
     }
 
@@ -110,8 +117,10 @@ class JourneyPlanFragment : Fragment() {
         val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
         val currentDateAndTime: String = simpleDateFormat.format(Date())
 
-        btnDate.text = currentDateAndTime
+        btnDate.tag = currentDateAndTime
         currentDate = currentDateAndTime
+
+        getCurrentWeek()
 
         fetchJPStatus("${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=$currentDateAndTime&TeamMemberID=${userData[0].memberID}")
         fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=$currentDateAndTime&TeamMemberID=${userData[0].memberID}&VisitStatus=0")
@@ -134,15 +143,35 @@ class JourneyPlanFragment : Fragment() {
 
     }
 
+    fun getCurrentWeek(mDate: String = "") {
+        val format: DateFormat = SimpleDateFormat("MM/dd/yyyy")
+        val calendar = Calendar.getInstance()
+        calendar.firstDayOfWeek = Calendar.MONDAY
+        calendar[Calendar.DAY_OF_WEEK] = Calendar.MONDAY
+
+        val days = arrayOfNulls<String>(7)
+        var dayList: MutableList<String> = mutableListOf()
+        for (i in 0..6) {
+            days[i] = format.format(calendar.time)
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+            dayList.add(days[i].toString())
+            println(days[i])
+        }
+        println(dayList.size)
+
+        jpscurrentweekAdapter = JPCurrentWeekApdater(requireContext(), this@JourneyPlanFragment, dayList)
+        rvCurrentWeek!!.adapter = jpscurrentweekAdapter
+    }
+
     fun filerJP(status: Int) {
         println("filerJP")
-        println("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.text}&TeamMemberID=${CSP.getData("user_id")}&VisitStatus=${status.toString()}")
-        fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.text}&TeamMemberID=${CSP.getData("user_id")}&VisitStatus=${status.toString()}", false)
+        println("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.tag}&TeamMemberID=${CSP.getData("user_id")}&VisitStatus=${status.toString()}")
+        fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.tag}&TeamMemberID=${CSP.getData("user_id")}&VisitStatus=${status.toString()}", false)
     }
 
     fun reloadJP(){
-        fetchJPStatus("${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=${btnDate.text}&TeamMemberID=${CSP.getData("user_id")}")
-        fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.text}&TeamMemberID=${CSP.getData("user_id")}&VisitStatus=0", false)
+        fetchJPStatus("${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=${btnDate.tag}&TeamMemberID=${CSP.getData("user_id")}")
+        fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.tag}&TeamMemberID=${CSP.getData("user_id")}&VisitStatus=0", false)
     }
 
     fun fetchJPStatus(url: String) {
@@ -224,15 +253,19 @@ class JourneyPlanFragment : Fragment() {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         rvJourneyPlan.setHasFixedSize(true)
 
-                        if(isDecoratorEnabled)
-                        rvJourneyPlan.addItemDecoration(
-                            DividerItemDecoration(
-                                context,
-                                DividerItemDecoration.VERTICAL
+                        if(isDecoratorEnabled){
+                            /*var itemDecoration = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+                            itemDecoration.setDrawable(getDrawable(R.drawable.border_grey)!!)*/
+                            rvJourneyPlan.addItemDecoration(
+                                DividerItemDecoration(
+                                    context,
+                                    DividerItemDecoration.VERTICAL
+                                )
                             )
-                        )
+                        }
 
-                        val isCurrentDate :Boolean = currentDate.equals(btnDate.text.toString())
+
+                        val isCurrentDate :Boolean = currentDate.equals(btnDate.tag.toString())
 
                         layoutManager = LinearLayoutManager(requireContext())
                         rvJourneyPlan.layoutManager = layoutManager

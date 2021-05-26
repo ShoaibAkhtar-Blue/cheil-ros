@@ -1,6 +1,5 @@
 package com.example.cheilros.activities
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -9,9 +8,9 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
@@ -19,7 +18,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import com.bumptech.glide.Glide
-import com.example.cheilros.MainActivity
 import com.example.cheilros.R
 import com.example.cheilros.adapters.MenuNavigationAdapter
 import com.example.cheilros.data.AppSetting
@@ -43,7 +41,9 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var mUserDataViewModel: UserDataViewModel
     private lateinit var mUserPermissionViewModel: UserPermissionViewModel
 
+    private lateinit var toolbar: Toolbar
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
 
     lateinit var CSP: CustomSharedPref
 
@@ -54,8 +54,11 @@ class DashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
+
+        configureToolbar()
+
+
+
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
@@ -83,6 +86,13 @@ class DashboardActivity : AppCompatActivity() {
             .load("${CSP.getData("base_url")}/TeamMemberPicture/${userData[0].memberID}.png")
             .into(drawerLayout.imgUser)
 
+        actionBarDrawerToggle =
+            ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name)
+
+        actionBarDrawerToggle.drawerArrowDrawable.color = Color.BLUE;
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState()
+
         val toggle = ActionBarDrawerToggle(
             this,
             drawerLayout,
@@ -91,6 +101,8 @@ class DashboardActivity : AppCompatActivity() {
             R.string.navigation_drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
+
+
         toggle.syncState()
 
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -171,6 +183,12 @@ class DashboardActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)*/
+    }
+
+    private fun configureToolbar() {
+        toolbar= findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

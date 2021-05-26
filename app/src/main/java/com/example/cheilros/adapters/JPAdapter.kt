@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -74,6 +75,7 @@ class JPAdapter(
         var txtTime : TextView = view.findViewById(R.id.txtTime)
 
         var RLStatus : RelativeLayout = view.findViewById(R.id.RLStatus)
+        var RLHeader : RelativeLayout = view.findViewById(R.id.RLHeader)
 
         var fc : FoldingCell = view.findViewById(R.id.folding_cell)
         var btnSee  : LinearLayout = view.findViewById(R.id.LLjp)
@@ -95,6 +97,7 @@ class JPAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.txtCode.text = itemList[position].StoreCode
+        holder.txtCode.visibility = View.GONE
 
         holder.txtTitle.text = itemList[position].StoreName
         holder.txtTitleHeader.text = "${itemList[position].StoreCode} - ${itemList[position].StoreName}"
@@ -108,15 +111,17 @@ class JPAdapter(
         Glide.with(context).load(itemList[position].ImageLocation).into(holder.imgStatus!!)
 
         if(itemList[position].VisitRemarks == null)
-            holder.txtRemarks.visibility =  View.GONE
+            holder.txtRemarks.text = "No Remarks"
 
         if(itemList[position].VisitStatusID === 1){
-            holder.RLStatus.setBackgroundColor(Color.GRAY)
+            holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.status_none))
+            holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context,R.color.status_none))
             holder.txtTime.visibility =  View.GONE
             holder.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CheckinButton" }.get(0).labelName
         }
         else if (itemList[position].VisitStatusID === 2){
-            holder.RLStatus.setBackgroundColor(Color.BLUE)
+            holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkin))
+            holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkin))
             holder.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CheckoutButton" }.get(0).labelName
             holder.btnCancel.text = settingData.filter { it.fixedLabelName == "JourneyPlan_ViewButton" }.get(0).labelName
 //            holder.btnCancel.isEnabled = false
@@ -124,7 +129,11 @@ class JPAdapter(
         }
 
         else if (itemList[position].VisitStatusID === 3){
-            holder.RLStatus.setBackgroundColor(Color.GREEN)
+            holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkout))
+            holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkout))
+
+            holder.btnAccept.setTextColor(Color.GRAY)
+
             holder.btnAccept.isEnabled = false
             holder.btnAccept.isClickable = false
 
@@ -133,7 +142,10 @@ class JPAdapter(
         }
 
         else if (itemList[position].VisitStatusID === 4){
-            holder.RLStatus.setBackgroundColor(Color.RED)
+            holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.status_cancel))
+            holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context,R.color.status_cancel))
+
+            holder.btnAccept.setTextColor(Color.GRAY)
 
             holder.btnAccept.isEnabled = false
             holder.btnAccept.isClickable = false
@@ -143,6 +155,9 @@ class JPAdapter(
         }
 
         if(!isCurrDt){
+            holder.btnAccept.setTextColor(Color.GRAY)
+            holder.btnCancel.setTextColor(Color.GRAY)
+
             holder.btnAccept.isEnabled = false
             holder.btnAccept.isClickable = false
 

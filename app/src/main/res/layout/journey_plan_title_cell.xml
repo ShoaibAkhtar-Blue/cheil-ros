@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:baselineAligned="false"
     android:orientation="horizontal"
-    android:id="@+id/LLjp"
-    android:background="@drawable/recycler_view_divider">
+    android:id="@+id/LLjp">
 
     <!-- LEFT TITLE PART -->
     <!-- RIGHT TITLE PART -->
@@ -13,7 +14,7 @@
         android:id="@+id/RLStatus"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_weight="5"
+        android:layout_weight="12"
         android:background="@color/purple_700"
         android:gravity="center_horizontal"
         android:orientation="vertical">
@@ -21,11 +22,13 @@
 
         <ImageView
             android:id="@+id/imgStatus"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentBottom="true"
-            android:gravity="center" />
+            android:gravity="center"
+            android:visibility="gone"
+            tools:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -41,6 +44,14 @@
             android:orientation="vertical"
             android:padding="8dp">
 
+            <ImageView
+                android:id="@+id/imgArrowDown"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/down_arrow" />
+
             <TextView
                 android:id="@+id/txtCode"
                 android:layout_width="wrap_content"
@@ -49,7 +60,8 @@
                 android:fontFamily="@font/samsungsharpsans_bold"
                 android:text="Store Code"
                 android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:visibility="gone" />
 
             <TextView
                 android:id="@+id/txtTitle"
@@ -66,20 +78,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:fontFamily="@font/samsungsharpsans_regular"
+                android:fontFamily="@font/samsungsharpsans_medium"
                 android:text="Visit Remarks….."
-                android:textColor="@color/black"
+                android:textColor="#4c4c4c"
                 android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/txtTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
                 android:layout_weight="1"
                 android:fontFamily="@font/samsungsharpsans_medium"
                 android:text="🕥 In: 11:56 AM | 🕥 Out: 12:10PM"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:textColor="#bebebe"
+                android:textSize="10sp" />
         </LinearLayout>
     </RelativeLayout>
 

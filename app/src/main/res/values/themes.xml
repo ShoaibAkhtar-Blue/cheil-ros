@@ -13,7 +13,9 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:fontFamily">@font/samsungsharpsans_medium</item>
+        <item name="toolbarStyle">@style/AppTheme.Toolbar</item>
     </style>
+
 
     <style name="Theme.CheilROS.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -22,7 +24,27 @@
 
     <style name="Theme.CheilROS.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.CheilROS.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <!--<style name="ToolBarTheme.ToolBarStyle"    parent="ThemeOverlay.AppCompat.Dark.ActionBar">
 
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorPrimaryInverse">@color/black</item>
+        <item name="android:textColorSecondary">@color/black</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <color name="toolbarTextColor">@color/black</color>
+    </style>-->
+
+    <style name="Theme.CheilROS.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
+
+    </style>
+
+    <style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <!--<item name="titleTextColor">@android:color/black</item>
+        <item name="iconTintMode">@android:color/black</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/black</item>
+        <item name="colorOnPrimary">@android:color/black</item>
+        <item name="colorControlNormal">@android:color/black</item>-->
+    </style>
 
 </resources>

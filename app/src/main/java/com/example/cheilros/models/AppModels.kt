@@ -58,6 +58,9 @@ class JourneyPlanData(
     val Latitude: String,
     val ImageLocation: String
 )
+class JPCurrentWeekData(
+    val CurrentDate: String
+)
 //endregion
 
 //region My Coverage
