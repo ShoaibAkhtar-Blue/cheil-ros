@@ -59,7 +59,7 @@ class JPStatusAdapter (private val context: Context, data: List<JPStatusData>, f
         convertView.txtLabel.text = ListData[position].VisitStatus
 
         convertView.cvJPstatus.setOnClickListener{
-            frag.filerJP(position)
+            frag.filerJP(position+1)
         }
 
         return convertView

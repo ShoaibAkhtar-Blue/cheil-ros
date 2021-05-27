@@ -18,7 +18,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
-        versionName "1.1.5"
+        versionName "1.1.6"
 
         multiDexEnabled true
 
@@ -101,5 +101,7 @@ dependencies {
     implementation "com.valartech:loading-layout:1.0.0"
 
     implementation 'io.fotoapparat:fotoapparat:2.7.0'
+
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
 }

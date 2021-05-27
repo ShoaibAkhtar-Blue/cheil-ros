@@ -1,12 +1,17 @@
 package com.example.cheilros.fragments
 
 import android.app.DatePickerDialog
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
-import androidx.core.content.ContextCompat.getDrawable
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -23,18 +28,26 @@ import com.example.cheilros.datavm.AppSettingViewModel
 import com.example.cheilros.datavm.UserDataViewModel
 import com.example.cheilros.datavm.UserPermissionViewModel
 import com.example.cheilros.helpers.CustomSharedPref
-import com.example.cheilros.models.JPCurrentWeekData
 import com.example.cheilros.models.JPStatusModel
 import com.example.cheilros.models.JourneyPlanModel
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.utils.ColorTemplate
+import com.github.mikephil.charting.utils.MPPointF
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import kotlinx.android.synthetic.main.fragment_journey_plan.view.*
+import kotlinx.android.synthetic.main.item_jpcurrentweek.*
 import okhttp3.*
 import java.io.IOException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -112,6 +125,7 @@ class JourneyPlanFragment : Fragment() {
         return view
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
@@ -120,11 +134,10 @@ class JourneyPlanFragment : Fragment() {
         btnDate.tag = currentDateAndTime
         currentDate = currentDateAndTime
 
-        getCurrentWeek()
+        setupChart()
 
         fetchJPStatus("${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=$currentDateAndTime&TeamMemberID=${userData[0].memberID}")
         fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=$currentDateAndTime&TeamMemberID=${userData[0].memberID}&VisitStatus=0")
-
     }
 
     override fun onResume() {
@@ -143,9 +156,75 @@ class JourneyPlanFragment : Fragment() {
 
     }
 
+    fun setupChart(){
+        val NoOfEmp = ArrayList<PieEntry>()
+
+        NoOfEmp.add(PieEntry(945f, "Visited"))
+        NoOfEmp.add(PieEntry(1040f, "Cancelled"))
+        NoOfEmp.add(PieEntry(1133f, "Checkin"))
+        NoOfEmp.add(PieEntry(1133f, "Pending"))
+        val dataSet = PieDataSet(NoOfEmp, "Number Of Employees")
+
+        dataSet.setDrawIcons(false)
+        dataSet.sliceSpace = 0f
+        dataSet.iconsOffset = MPPointF(0F, 40F)
+        dataSet.selectionShift = 5f
+        dataSet.setColors(*ColorTemplate.COLORFUL_COLORS)
+
+        val data = PieData(dataSet)
+        data.setValueTextSize(0f)
+        data.setValueTextColor(Color.TRANSPARENT)
+
+        val builder = SpannableStringBuilder()
+
+        val str1 = SpannableString("10 \n")
+        str1.setSpan(ForegroundColorSpan(Color.BLACK), 0, str1.length, 0)
+        builder.append(str1)
+
+        val str2 = SpannableString("Plan")
+        str2.setSpan(ForegroundColorSpan(Color.GRAY), 0, str2.length, 0)
+        builder.append(str2)
+
+        totalJPChart.centerText = builder
+        totalJPChart.setCenterTextSize(14f)
+
+        val x = 80f
+        totalJPChart.isDrawHoleEnabled = true
+        totalJPChart.holeRadius = x
+
+        totalJPChart.description.isEnabled = false // hide the description
+        totalJPChart.legend.isEnabled = false // hide the legend
+        totalJPChart.setDrawEntryLabels(false)
+
+        totalJPChart.setDrawMarkers(false)
+        //totalJPChart.setDrawSliceText(false)
+        totalJPChart.setDrawRoundedSlices(true)
+
+        //totalJPChart.xAxis.setDrawLabels(false) // hide bottom label
+        //totalJPChart.axisLeft.setDrawLabels(false) // hide left label
+        //totalJPChart.axisRight.setDrawLabels(false) // hide right label
+
+
+        totalJPChart.data = data
+        totalJPChart.highlightValues(null)
+        totalJPChart.invalidate()
+        totalJPChart.animateXY(3000, 3000)
+
+        totalJPChart.isClickable = false
+
+        LLJPChart.setOnClickListener {
+            println("LLJPChart")
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getCurrentWeek(mDate: String = "") {
+
+        val date = SimpleDateFormat("yyyy-M-d").parse(mDate)
+
         val format: DateFormat = SimpleDateFormat("MM/dd/yyyy")
         val calendar = Calendar.getInstance()
+        calendar.time = date
         calendar.firstDayOfWeek = Calendar.MONDAY
         calendar[Calendar.DAY_OF_WEEK] = Calendar.MONDAY
 
@@ -242,6 +321,7 @@ class JourneyPlanFragment : Fragment() {
                 })
             }
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
@@ -271,6 +351,9 @@ class JourneyPlanFragment : Fragment() {
                         rvJourneyPlan.layoutManager = layoutManager
                         recylcerAdapter = JPAdapter(requireContext(), apiData.data, this@JourneyPlanFragment, isCurrentDate, settingData)
                         rvJourneyPlan.adapter = recylcerAdapter
+
+                        getCurrentWeek(btnDate.tag as String)
+
                         mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                     })
                 } else {

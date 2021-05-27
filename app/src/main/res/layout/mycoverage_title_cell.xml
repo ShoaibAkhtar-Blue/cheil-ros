@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:baselineAligned="false"
     android:orientation="horizontal"
     android:id="@+id/LLjp"
@@ -12,8 +13,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:background="@color/purple_700"
-        android:layout_weight="5"
+        android:layout_weight="12"
+        android:background="@color/status_none"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -44,6 +45,14 @@
             android:orientation="vertical"
             android:padding="8dp">
 
+            <ImageView
+                android:id="@+id/imgArrowDown"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/down_arrow" />
+
             <TextView
                 android:id="@+id/txtCode"
                 android:layout_width="wrap_content"
@@ -52,7 +61,7 @@
                 android:fontFamily="@font/samsungsharpsans_bold"
                 android:text="Store Name"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/txtTitle"
