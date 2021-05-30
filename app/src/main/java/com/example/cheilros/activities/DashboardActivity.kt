@@ -1,5 +1,6 @@
 package com.example.cheilros.activities
 
+import android.app.ActionBar
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -10,7 +11,6 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
@@ -102,8 +102,11 @@ class DashboardActivity : AppCompatActivity() {
         )
         drawerLayout.addDrawerListener(toggle)
 
-
         toggle.syncState()
+
+        supportActionBar!!.setHomeButtonEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setHomeAsUpIndicator(R.drawable.menu)
 
         val navView: NavigationView = findViewById(R.id.nav_view)
 
@@ -188,6 +191,7 @@ class DashboardActivity : AppCompatActivity() {
     private fun configureToolbar() {
         toolbar= findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+        toolbar.setTitleTextColor(Color.BLACK)
 
     }
 

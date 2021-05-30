@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -28,12 +29,12 @@ import com.example.cheilros.datavm.AppSettingViewModel
 import com.example.cheilros.datavm.UserDataViewModel
 import com.example.cheilros.datavm.UserPermissionViewModel
 import com.example.cheilros.helpers.CustomSharedPref
+import com.example.cheilros.models.JPStatusData
 import com.example.cheilros.models.JPStatusModel
 import com.example.cheilros.models.JourneyPlanModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
@@ -45,9 +46,6 @@ import okhttp3.*
 import java.io.IOException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -134,7 +132,7 @@ class JourneyPlanFragment : Fragment() {
         btnDate.tag = currentDateAndTime
         currentDate = currentDateAndTime
 
-        setupChart()
+
 
         fetchJPStatus("${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=$currentDateAndTime&TeamMemberID=${userData[0].memberID}")
         fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=$currentDateAndTime&TeamMemberID=${userData[0].memberID}&VisitStatus=0")
@@ -156,20 +154,29 @@ class JourneyPlanFragment : Fragment() {
 
     }
 
-    fun setupChart(){
+    fun setupChart(jpdata: List<JPStatusData>){
         val NoOfEmp = ArrayList<PieEntry>()
 
-        NoOfEmp.add(PieEntry(945f, "Visited"))
-        NoOfEmp.add(PieEntry(1040f, "Cancelled"))
-        NoOfEmp.add(PieEntry(1133f, "Checkin"))
-        NoOfEmp.add(PieEntry(1133f, "Pending"))
+        var total: Int = 0
+        jpdata.forEach { d ->
+            total += d.StatusCount.toInt()
+            NoOfEmp.add(PieEntry(d.StatusCount.toFloat(), d.VisitStatus))
+        }
+
         val dataSet = PieDataSet(NoOfEmp, "Number Of Employees")
 
         dataSet.setDrawIcons(false)
         dataSet.sliceSpace = 0f
         dataSet.iconsOffset = MPPointF(0F, 40F)
         dataSet.selectionShift = 5f
-        dataSet.setColors(*ColorTemplate.COLORFUL_COLORS)
+
+        val colorFirst = context?.let { ContextCompat.getColor(it, R.color.status_checkin) }
+        val colorSecond = context?.let { ContextCompat.getColor(it, R.color.status_checkout) }
+        val colorThird = context?.let { ContextCompat.getColor(it, R.color.status_cancel) }
+        val colorForth = context?.let { ContextCompat.getColor(it, R.color.status_none) }
+
+        dataSet.colors = mutableListOf(colorFirst, colorSecond, colorThird, colorForth)
+        //dataSet.setColors(*ColorTemplate.COLORFUL_COLORS)
 
         val data = PieData(dataSet)
         data.setValueTextSize(0f)
@@ -177,11 +184,11 @@ class JourneyPlanFragment : Fragment() {
 
         val builder = SpannableStringBuilder()
 
-        val str1 = SpannableString("10 \n")
+        val str1 = SpannableString("$total \n")
         str1.setSpan(ForegroundColorSpan(Color.BLACK), 0, str1.length, 0)
         builder.append(str1)
 
-        val str2 = SpannableString("Plan")
+        val str2 = SpannableString("Plans")
         str2.setSpan(ForegroundColorSpan(Color.GRAY), 0, str2.length, 0)
         builder.append(str2)
 
@@ -238,14 +245,18 @@ class JourneyPlanFragment : Fragment() {
         }
         println(dayList.size)
 
-        jpscurrentweekAdapter = JPCurrentWeekApdater(requireContext(), this@JourneyPlanFragment, dayList)
+        jpscurrentweekAdapter = JPCurrentWeekApdater(requireContext(), this@JourneyPlanFragment, dayList, btnDate.tag.toString())
         rvCurrentWeek!!.adapter = jpscurrentweekAdapter
     }
 
-    fun filerJP(status: Int) {
+    fun filerJP(status: Int = 0, filterDate: String = "") {
         println("filerJP")
-        println("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.tag}&TeamMemberID=${CSP.getData("user_id")}&VisitStatus=${status.toString()}")
-        fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.tag}&TeamMemberID=${CSP.getData("user_id")}&VisitStatus=${status.toString()}", false)
+        var fd = if(filterDate.equals("")) btnDate.tag else filterDate
+        btnDate.tag = fd
+
+        println("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${fd}&TeamMemberID=${CSP.getData("user_id")}&VisitStatus=${status}")
+        fetchJPStatus("${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=${fd}&TeamMemberID=${CSP.getData("user_id")}")
+        fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${fd}&TeamMemberID=${CSP.getData("user_id")}&VisitStatus=${status}", false)
     }
 
     fun reloadJP(){
@@ -254,7 +265,7 @@ class JourneyPlanFragment : Fragment() {
     }
 
     fun fetchJPStatus(url: String) {
-
+        println(url)
         mainLoadingLayout.setState(LoadingLayout.LOADING)
 
         val request = Request.Builder()
@@ -282,6 +293,7 @@ class JourneyPlanFragment : Fragment() {
                 println(apiData.status)
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
+                        setupChart(apiData.data)
                         jpstatusAdapter = JPStatusAdapter(
                             requireContext(),
                             apiData.data,

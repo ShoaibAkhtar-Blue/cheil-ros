@@ -25,11 +25,14 @@
             android:textSize="20sp" />
 
         <!--   Loading     -->
-        <ProgressBar
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:tag="@string/ll_loading"
+            android:id="@+id/spin_kit"
+            style="@style/SpinKitView.Large.CubeGrid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:tag="@string/ll_loading" />
+            app:SpinKit_Color="@color/black" />
 
         <!--   Completed     -->
         <LinearLayout
