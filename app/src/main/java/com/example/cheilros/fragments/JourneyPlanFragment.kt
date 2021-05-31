@@ -40,7 +40,9 @@ import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.fragment_journey_plan.*
+import kotlinx.android.synthetic.main.fragment_journey_plan.todo_list_empty_view
 import kotlinx.android.synthetic.main.fragment_journey_plan.view.*
+import kotlinx.android.synthetic.main.fragment_my_coverage.*
 import kotlinx.android.synthetic.main.item_jpcurrentweek.*
 import okhttp3.*
 import java.io.IOException
@@ -363,6 +365,8 @@ class JourneyPlanFragment : Fragment() {
                         rvJourneyPlan.layoutManager = layoutManager
                         recylcerAdapter = JPAdapter(requireContext(), apiData.data, this@JourneyPlanFragment, isCurrentDate, settingData)
                         rvJourneyPlan.adapter = recylcerAdapter
+                        val emptyView: View = todo_list_empty_view
+                        rvJourneyPlan.setEmptyView(emptyView)
 
                         getCurrentWeek(btnDate.tag as String)
 

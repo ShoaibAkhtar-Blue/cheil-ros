@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.activities.customobj.EmptyRecyclerView
 import com.example.cheilros.adapters.MyCoverageAdapter
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.data.UserData
@@ -36,7 +38,7 @@ class MyCoverageFragment : Fragment() {
 
     private val client = OkHttpClient()
 
-    lateinit var recyclerView: RecyclerView
+    lateinit var recyclerView: EmptyRecyclerView
     lateinit var layoutManager: RecyclerView.LayoutManager
 
     private lateinit var mAppSettingViewModel: AppSettingViewModel
@@ -75,6 +77,8 @@ class MyCoverageFragment : Fragment() {
             findNavController().popBackStack()
         }
 
+
+
         return view
     }
 
@@ -92,8 +96,11 @@ class MyCoverageFragment : Fragment() {
         layoutManager= LinearLayoutManager(requireContext())
         recyclerView.layoutManager=layoutManager
 
-        fetchChannel("${CSP.getData("base_url")}/Webservice.asmx/ChannelList")
+        val emptyView: View = todo_list_empty_view
+        recyclerView.setEmptyView(emptyView)
 
+        fetchChannel("${CSP.getData("base_url")}/Webservice.asmx/ChannelList")
+        fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=0&SearchKeyWord=${etSearch.text}")
 
         btnChannel.setOnClickListener {
             // setup the alert builder
@@ -123,6 +130,9 @@ class MyCoverageFragment : Fragment() {
             dialog.show()
         }
 
+        etSearch.doOnTextChanged { text, start, before, count ->
+            recylcerAdapter?.filter?.filter(text)
+        }
     }
 
     companion object {

@@ -69,10 +69,29 @@
                 android:textColor="#b2b2b2"
                 app:strokeColor="#c2c2c2" />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.example.cheilros.activities.customobj.EmptyRecyclerView
             android:id="@+id/rvCoverage"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+            <!-- Added an empty view which will be shown when the EmptyRecyclerView
+         is empty -->
+            <LinearLayout
+                android:id="@+id/todo_list_empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:textAlignment="center"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="No Data Available"/>
+
+            </LinearLayout>
+
     </LinearLayout>
 
         <!--    Error    -->

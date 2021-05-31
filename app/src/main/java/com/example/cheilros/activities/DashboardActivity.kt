@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.GridView
 import android.widget.Toast
@@ -14,9 +15,14 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.example.cheilros.R
 import com.example.cheilros.adapters.MenuNavigationAdapter
@@ -42,6 +48,7 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var mUserPermissionViewModel: UserPermissionViewModel
 
     private lateinit var toolbar: Toolbar
+    private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
 
@@ -54,7 +61,7 @@ class DashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
-
+        //navController = findNavController(R.id.main_nav_fragment)
         configureToolbar()
 
 
@@ -144,6 +151,7 @@ class DashboardActivity : AppCompatActivity() {
 
                     navController.navigateUp()
                     findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
+                    //toolbar.visibility = View.GONE
                 }
 
                 if (menuDataList.get(i).fixedLabelName == "MenuTitle2") {
@@ -183,9 +191,16 @@ class DashboardActivity : AppCompatActivity() {
                 setOf(
                         R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
                 ), drawerLayout
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)*/
+        )*/
+        //setupActionBarWithNavController(navController, appBarConfiguration)
+        //navView.setupWithNavController(navController)
+        /*appBarConfiguration.addOnDestinationChangedListener { _, destination, _ ->
+            if(destination.id == R.id.action_dashboardFragment_to_journeyPlanFragment) {
+                toolbar.visibility = View.GONE
+            } else {
+                toolbar.visibility = View.VISIBLE
+            }
+        }*/
     }
 
     private fun configureToolbar() {
@@ -193,18 +208,23 @@ class DashboardActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         toolbar.setTitleTextColor(Color.BLACK)
 
+
+
+
+        //setupActionBarWithNavController(findNavController(R.id.main_nav_fragment), appBarConfiguration)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.dashboard, menu)
         return true
-    }
+    }*/
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.main_nav_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
 
     /*override fun onBackPressed() {
 

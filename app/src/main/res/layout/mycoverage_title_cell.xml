@@ -12,7 +12,7 @@
     <!-- RIGHT TITLE PART -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="110dp"
         android:layout_weight="12"
         android:background="@color/status_none"
         android:gravity="center_horizontal"
@@ -77,6 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/textView6"
                     android:layout_width="wrap_content"
@@ -84,7 +85,7 @@
                     android:fontFamily="@font/samsungsharpsans_regular"
                     android:text="Region: "
                     android:textColor="@color/black"
-                    android:textSize="12sp" />
+                    android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/txtRegion"
@@ -93,21 +94,21 @@
                     android:fontFamily="@font/samsungsharpsans_regular"
                     android:text="Region Name"
                     android:textColor="@color/black"
-                    android:textSize="12sp" />
+                    android:textSize="10sp" />
 
             </LinearLayout>
-
 
 
             <TextView
                 android:id="@+id/txtAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/samsungsharpsans_medium"
                 android:text="Address"
                 android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
         </LinearLayout>
     </RelativeLayout>
 

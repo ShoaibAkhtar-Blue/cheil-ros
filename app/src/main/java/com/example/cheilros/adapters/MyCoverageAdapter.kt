@@ -32,13 +32,19 @@ class MyCoverageAdapter(
     val itemList: List<MyCoverageData>,
     val settingData: List<AppSetting>
 ): RecyclerView.Adapter<MyCoverageAdapter.ViewHolder>(),
-    OnMapReadyCallback {
+    OnMapReadyCallback, Filterable {
 
 
     lateinit var CSP: CustomSharedPref
     private val client = OkHttpClient()
 
     var curPos: Int = 0
+
+    var filterList = ArrayList<MyCoverageData>()
+
+    init {
+        filterList = itemList as ArrayList<MyCoverageData>
+    }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var txtSerialNo: TextView = view.findViewById(R.id.txtSerialNo)
@@ -73,14 +79,14 @@ class MyCoverageAdapter(
 
         holder.txtSerialNo.text = (position+1).toString()
 
-        holder.txtCode.text = itemList[position].StoreCode
-        holder.txtTitle.text = itemList[position].StoreName
-        holder.txtTitleHeader.text = "${itemList[position].StoreCode} - ${itemList[position].StoreName}"
-        holder.txtTitleContent.text = itemList[position].Address
-        holder.txtRemarksContent.text = "Last Visit: ${itemList[position].LastVisitedDate} (${itemList[position].VistedBy})"
+        holder.txtCode.text = filterList[position].StoreCode
+        holder.txtTitle.text = filterList[position].StoreName
+        holder.txtTitleHeader.text = "${filterList[position].StoreCode} - ${filterList[position].StoreName}"
+        holder.txtTitleContent.text = filterList[position].Address
+        holder.txtRemarksContent.text = "Last Visit: ${filterList[position].LastVisitedDate} (${filterList[position].VistedBy})"
 
-        holder.txtRegion.text = itemList[position].RegionName
-        holder.txtAddress.text = itemList[position].Address
+        holder.txtRegion.text = filterList[position].RegionName
+        holder.txtAddress.text = filterList[position].Address
 
         val mapView: MapView = holder.mapView
 
@@ -129,7 +135,7 @@ class MyCoverageAdapter(
                 }
                 dialog.btnAccept.text = settingData.filter { it.fixedLabelName == "StoreList_PopupAdd" }.get(0).labelName
                 dialog.btnAccept.setOnClickListener {
-                    sendVisitRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamMemberAddPlan?StoreID=${itemList[position].StoreID}&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=${dialog.etRemarks.text}")
+                    sendVisitRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamMemberAddPlan?StoreID=${filterList[position].StoreID}&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=${dialog.etRemarks.text}")
                     dialog.dismiss()
                     holder.fc.toggle(false)
                 }
@@ -149,13 +155,13 @@ class MyCoverageAdapter(
     }
 
     override fun getItemCount(): Int {
-        return itemList.size
+        return filterList.size
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
-        println("onMapReady-${itemList[curPos].Latitude}-${itemList[curPos].Longitude}")
-        val sydney = LatLng(itemList[curPos].Latitude.toDouble(), itemList[curPos].Longitude.toDouble())
-        googleMap!!.addMarker(MarkerOptions().position(sydney).title(itemList[curPos].StoreName))
+        println("onMapReady-${filterList[curPos].Latitude}-${filterList[curPos].Longitude}")
+        val sydney = LatLng(filterList[curPos].Latitude.toDouble(), filterList[curPos].Longitude.toDouble())
+        googleMap!!.addMarker(MarkerOptions().position(sydney).title(filterList[curPos].StoreName))
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,13.5f));
     }
 
@@ -204,5 +210,32 @@ class MyCoverageAdapter(
                 }
             }
         })
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                if (charSearch.isEmpty()) {
+                    filterList = itemList as ArrayList<MyCoverageData>
+                } else {
+                    val resultList = ArrayList<MyCoverageData>()
+                    for (row in itemList) {
+                        if (row.StoreName.toLowerCase().contains(constraint.toString().toLowerCase())) {
+                            resultList.add(row)
+                        }
+                    }
+                    filterList = resultList
+                }
+                val filterResults = FilterResults()
+                filterResults.values = filterList
+                return filterResults
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                filterList = results?.values as ArrayList<MyCoverageData>
+                notifyDataSetChanged()
+            }
+        }
     }
 }
