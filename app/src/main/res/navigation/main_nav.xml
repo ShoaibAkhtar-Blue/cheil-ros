@@ -15,7 +15,8 @@
             app:launchSingleTop="false" />
         <action
             android:id="@+id/action_dashboardFragment_to_myCoverageFragment"
-            app:destination="@id/myCoverageFragment" />
+            app:destination="@id/myCoverageFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/journeyPlanFragment"
@@ -35,6 +36,10 @@
         <action
             android:id="@+id/action_myCoverageFragment_to_journeyPlanFragment"
             app:destination="@id/journeyPlanFragment" />
+        <action
+            android:id="@+id/action_myCoverageFragment_to_storeViewFragment"
+            app:destination="@id/storeViewFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <activity
         android:id="@+id/cameraActivity"
@@ -45,4 +50,56 @@
             app:argType="integer"
             android:defaultValue="0" />
     </activity>
+    <fragment
+        android:id="@+id/storeViewFragment"
+        android:name="com.example.cheilros.fragments.storeview.StoreViewFragment"
+        android:label="fragment_store_view"
+        tools:layout="@layout/fragment_store_view" >
+        <action
+            android:id="@+id/action_storeViewFragment_to_checklistCategoryFragment"
+            app:destination="@id/checklistCategoryFragment" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
+        <argument
+            android:name="StoreID"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/checklistCategoryFragment"
+        android:name="com.example.cheilros.fragments.storeview.ChecklistCategoryFragment"
+        android:label="fragment_checklist_category"
+        tools:layout="@layout/fragment_checklist_category" >
+        <argument
+            android:name="StoreID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_checklistCategoryFragment_to_checklistCategoryDetailFragment"
+            app:destination="@id/checklistCategoryDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/checklistCategoryDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.ChecklistCategoryDetailFragment"
+        android:label="fragment_checklist_category_detail"
+        tools:layout="@layout/fragment_checklist_category_detail" >
+        <argument
+            android:name="StoreID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
+        <argument
+            android:name="ChecklistID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="ChecklistName"
+            app:argType="string" />
+    </fragment>
 </navigation>

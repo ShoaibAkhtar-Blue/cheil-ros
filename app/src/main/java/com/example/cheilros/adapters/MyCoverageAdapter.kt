@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.data.AppSetting
@@ -113,6 +115,11 @@ class MyCoverageAdapter(
 
         holder.btnClose.setOnClickListener {
             holder.fc.toggle(false)
+        }
+
+        holder.btnCancel.setOnClickListener {
+            val bundle = bundleOf("StoreID" to filterList[position].StoreID, "StoreName" to filterList[position].StoreName)
+            Navigation.findNavController(it).navigate(R.id.action_myCoverageFragment_to_storeViewFragment, bundle)
         }
 
         holder.btnAccept.setOnClickListener {

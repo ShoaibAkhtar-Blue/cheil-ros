@@ -3,6 +3,14 @@ package com.example.cheilros.models
 
 class AddVisitPlanModel(val status: Int)
 
+//region Checklist
+class CheckListModel(val status: Int, val data: List<CheckListData>)
+class CheckListData(val ChecklistCategoryID: Int, val Checklist: String)
+
+class CheckListDetailModel(val status: Int, val data: List<CheckListDetailData>)
+class CheckListDetailData(val ChecklistID: Int, val Question: String, val InputTypeID: Int, val CheckListStatus: String)
+//endregion
+
 //region BaseURL
 class AppSettingModel(val status: Int, val data: List<AppSettingData>)
 class AppSettingData(

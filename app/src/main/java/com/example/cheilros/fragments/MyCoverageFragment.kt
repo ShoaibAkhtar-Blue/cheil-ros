@@ -191,7 +191,7 @@ class MyCoverageFragment : Fragment() {
     fun fetchData(url: String) {
 
         mainLoadingLayoutCoverage.setState(LoadingLayout.LOADING)
-
+        println(url)
         val request = Request.Builder()
                 .url(url)
                 .build()
