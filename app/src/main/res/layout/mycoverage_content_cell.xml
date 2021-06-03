@@ -30,7 +30,7 @@
             android:gravity="center"
             android:text="Carrefour Mall Of The Emirates"
             android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <ImageView
             android:id="@+id/imageView3"

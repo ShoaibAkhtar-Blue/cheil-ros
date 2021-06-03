@@ -65,6 +65,15 @@
             android:name="StoreID"
             app:argType="integer"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_investmentFragment"
+            app:destination="@id/investmentFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_activityFragment"
+            app:destination="@id/activityFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_trainingFragment"
+            app:destination="@id/trainingFragment" />
     </fragment>
     <fragment
         android:id="@+id/checklistCategoryFragment"
@@ -102,4 +111,71 @@
             android:name="ChecklistName"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/investmentFragment"
+        android:name="com.example.cheilros.fragments.storeview.InvestmentFragment"
+        android:label="fragment_investment"
+        tools:layout="@layout/fragment_investment" >
+        <argument
+            android:name="StoreID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
+        <argument
+            android:name="DivisionID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="ElementCategoryID"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/activityFragment"
+        android:name="com.example.cheilros.fragments.storeview.ActivityFragment"
+        android:label="fragment_activity"
+        tools:layout="@layout/fragment_activity" >
+        <action
+            android:id="@+id/action_activityFragment_to_activityDetailFragment"
+            app:destination="@id/activityDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/activityDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.ActivitySubCategoryFragment"
+        android:label="fragment_activity_detail"
+        tools:layout="@layout/fragment_activity_sub_category" >
+        <action
+            android:id="@+id/action_activityDetailFragment_to_acrivityDetailFragment"
+            app:destination="@id/acrivityDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/acrivityDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.AcrivityDetailFragment"
+        android:label="fragment_acrivity_detail"
+        tools:layout="@layout/fragment_acrivity_detail" >
+        <action
+            android:id="@+id/action_acrivityDetailFragment_to_barcodeFragment"
+            app:destination="@id/barcodeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/barcodeFragment"
+        android:name="com.example.cheilros.fragments.BarcodeFragment"
+        android:label="fragment_barcode"
+        tools:layout="@layout/fragment_barcode" />
+    <fragment
+        android:id="@+id/trainingFragment"
+        android:name="com.example.cheilros.fragments.storeview.TrainingFragment"
+        android:label="fragment_training"
+        tools:layout="@layout/fragment_training" >
+        <action
+            android:id="@+id/action_trainingFragment_to_trainingDetailFragment"
+            app:destination="@id/trainingDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/trainingDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.TrainingDetailFragment"
+        android:label="fragment_training_detail"
+        tools:layout="@layout/fragment_training_detail" />
 </navigation>

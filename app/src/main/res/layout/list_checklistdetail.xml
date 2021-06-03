@@ -4,20 +4,38 @@
     android:id="@+id/LLchecklist"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
+    android:layout_marginBottom="2dp"
     android:background="@drawable/border_grey"
     >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="110dp"
+        android:layout_weight="12"
+        android:background="@color/status_none"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:padding="16dp"
+        android:padding="8dp"
         android:background="#FFF">
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/imgQuestion"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:layout_marginRight="8dp"
+            app:srcCompat="@color/black" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -38,10 +56,5 @@
                 android:orientation="vertical"></LinearLayout>
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imgQuestion"
-            android:layout_width="100dp"
-            android:layout_height="80dp"
-            app:srcCompat="@drawable/ic_menu_camera" />
     </LinearLayout>
 </LinearLayout>

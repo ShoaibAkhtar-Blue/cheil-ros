@@ -51,6 +51,7 @@ class JPStatusAdapter (private val context: Context, data: List<JPStatusData>, f
 
         //holder.txtCount!!.text = ListData[position].StatusCount
         //holder.txtLabel!!.text = ListData[position].VisitStatus*/
+
         Log.i("data", ListData[position].VisitStatus)
 
         var convertView = mInflater.inflate(R.layout.item_jpstatus, null)
@@ -59,7 +60,8 @@ class JPStatusAdapter (private val context: Context, data: List<JPStatusData>, f
         convertView.txtLabel.text = ListData[position].VisitStatus
 
         convertView.cvJPstatus.setOnClickListener{
-            frag.filerJP(position+1)
+            println(position)
+            frag.filerJP(ListData[position].VisitStatusID)
         }
 
         return convertView

@@ -84,11 +84,21 @@
                 android:textAlignment="center"
                 android:gravity="center">
 
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/no_record" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/samsungsharpsans_bold"
                     android:padding="16dp"
-                    android:text="No Data Available"/>
+                    android:text="NO RECORD FOUND"
+                    android:textColor="#534f47"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 

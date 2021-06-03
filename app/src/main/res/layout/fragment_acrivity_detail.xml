@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".fragments.storeview.AcrivityDetailFragment">
+
+<com.valartech.loadinglayout.LoadingLayout
+    android:id="@+id/mainLoadingLayoutCC"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--  Empty      -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80ddc628"
+        android:gravity="center"
+        android:tag="@string/ll_empty"
+        android:text="@string/no_results"
+        android:textColor="#000"
+        android:textSize="20sp" />
+
+    <!--   Loading     -->
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.CubeGrid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:tag="@string/ll_loading"
+        app:SpinKit_Color="@color/black" />
+
+    <!--   Completed     -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:tag="@string/ll_complete">
+
+        <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:id="@+id/txtStoreName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ededed"
+            android:fontFamily="@font/samsungsharpsans_bold"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="NEW ACTIVITY"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/txtStoreSubName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/samsungsharpsans_bold"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="ACTIVITY CATEGORY"
+            android:textColor="@color/black"
+            android:textSize="14dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/RLHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@color/status_none"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp">
+
+                        <TextView
+                            android:id="@+id/txtTitleHeader"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentStart="false"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="false"
+                            android:layout_alignParentBottom="false"
+                            android:layout_centerInParent="true"
+                            android:fontFamily="@font/samsungsharpsans_bold"
+                            android:gravity="center"
+                            android:text="Brand"
+                            android:textColor="@android:color/white"
+                            android:textSize="14dp" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/editTextTextMultiLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@drawable/border_grey"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="Description"
+                    android:inputType="textMultiLine"
+                    android:padding="8dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:adjustViewBounds="true"
+                    android:backgroundTint="@android:color/transparent"
+                    android:cropToPadding="true"
+                    android:padding="0dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/camera_btn" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@color/status_none"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="false"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="false"
+                        android:layout_alignParentBottom="false"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@font/samsungsharpsans_bold"
+                        android:gravity="center"
+                        android:text="SCAN BARCODE / QR CODE"
+                        android:textColor="@android:color/white"
+                        android:textSize="14dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="0dp"
+                        android:layout_toStartOf="@+id/imageView3"
+                        android:fontFamily="@font/samsungsharpsans_bold"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@android:color/white"
+                        android:textSize="14dp" />
+
+                    <ImageView
+                        android:id="@+id/imageView3"
+                        android:layout_width="24dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:adjustViewBounds="true"
+                        app:srcCompat="@drawable/ic_arrow_right_foreground"
+                        tools:ignore="VectorDrawableCompat" />
+
+                </RelativeLayout>
+
+                <ImageButton
+                    android:id="@+id/btnScanBarcode"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/barcode_logo" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Submit" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Error -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ff0000"
+        android:gravity="center"
+        android:tag="@string/ll_error"
+        android:text="@string/error"
+        android:textColor="#fff"
+        android:textSize="20sp" />
+
+</com.valartech.loadinglayout.LoadingLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

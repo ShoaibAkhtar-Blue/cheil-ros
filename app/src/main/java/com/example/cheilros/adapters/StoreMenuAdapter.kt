@@ -55,6 +55,21 @@ class StoreMenuAdapter(
                 Navigation.findNavController(it)
                     .navigate(R.id.action_storeViewFragment_to_checklistCategoryFragment, bundle)
             }
+
+            if (ListData[position].fixedLabelName.equals("StoreMenu_Investment")) {
+                Navigation.findNavController(it)
+                    .navigate(R.id.action_storeViewFragment_to_investmentFragment)
+            }
+
+            if (ListData[position].fixedLabelName.equals("StoreMenu_Activity")) {
+                Navigation.findNavController(it)
+                    .navigate(R.id.action_storeViewFragment_to_activityFragment)
+            }
+
+            if (ListData[position].fixedLabelName.equals("StoreMenu_Training")) {
+                Navigation.findNavController(it)
+                    .navigate(R.id.action_storeViewFragment_to_trainingFragment)
+            }
         }
 
         return convertView

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".fragments.storeview.ActivityFragment">
+
+<com.valartech.loadinglayout.LoadingLayout
+    android:id="@+id/mainLoadingLayoutCC"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--  Empty -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80ddc628"
+        android:gravity="center"
+        android:tag="@string/ll_empty"
+        android:text="@string/no_results"
+        android:textColor="#000"
+        android:textSize="20sp" />
+
+    <!--   Loading     -->
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.CubeGrid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:tag="@string/ll_loading"
+        app:SpinKit_Color="@color/black" />
+
+    <!--   Completed     -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:tag="@string/ll_complete">
+
+        <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:id="@+id/txtStoreName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ededed"
+            android:fontFamily="@font/samsungsharpsans_bold"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="CHECKLIST"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <com.example.cheilros.activities.customobj.EmptyRecyclerView
+            android:id="@+id/rvActivity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/samsungsharpsans_bold"
+            android:padding="16dp"
+            android:text="Recent Posted Activities"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
+    <!--    Error    -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ff0000"
+        android:gravity="center"
+        android:tag="@string/ll_error"
+        android:text="@string/error"
+        android:textColor="#fff"
+        android:textSize="20sp" />
+
+</com.valartech.loadinglayout.LoadingLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

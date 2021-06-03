@@ -97,7 +97,7 @@ class CameraActivity : AppCompatActivity() {
 
         capture onClick takePicture()
         switchCamera onClick changeCamera()
-        torchSwitch onCheckedChanged toggleFlash()
+        //torchSwitch onCheckedChanged toggleFlash()
     }
 
     // this method saves the image to gallery
@@ -319,7 +319,7 @@ class CameraActivity : AppCompatActivity() {
 
         adjustViewsVisibility()
 
-        torchSwitch.isChecked = false
+        //torchSwitch.isChecked = false
 
         Log.i(
             LOGGING_TAG,
@@ -378,7 +378,7 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun adjustViewsVisibility() {
-        fotoapparat.getCapabilities()
+        /*fotoapparat.getCapabilities()
             .whenAvailable { capabilities ->
                 capabilities
                     ?.let {
@@ -390,24 +390,24 @@ class CameraActivity : AppCompatActivity() {
                             if (it.flashModes.contains(Flash.Torch)) View.VISIBLE else View.GONE
                     }
                     ?: Log.e(LOGGING_TAG, "Couldn't obtain capabilities.")
-            }
+            }*/
 
         switchCamera.visibility = if (fotoapparat.isAvailable(front())) View.VISIBLE else View.GONE
     }
 
     private fun setupZoom(zoom: Zoom.VariableZoom) {
-        zoomSeekBar.max = zoom.maxZoom
+        /*zoomSeekBar.max = zoom.maxZoom
         cameraZoom = zoom
         zoomSeekBar.visibility = View.VISIBLE
         zoomSeekBar onProgressChanged { updateZoom(zoomSeekBar.progress) }
-        updateZoom(0)
+        updateZoom(0)*/
     }
 
     private fun updateZoom(progress: Int) {
-        fotoapparat.setZoom(progress.toFloat() / zoomSeekBar.max)
+        /*fotoapparat.setZoom(progress.toFloat() / zoomSeekBar.max)
         val value = cameraZoom.zoomRatios[progress]
         val roundedValue = ((value.toFloat()) / 10).roundToInt().toFloat() / 10
-        zoomLvl.text = String.format("%.1f ×", roundedValue)
+        zoomLvl.text = String.format("%.1f ×", roundedValue)*/
     }
 
 

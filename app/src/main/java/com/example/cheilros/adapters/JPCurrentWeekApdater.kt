@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import com.example.cheilros.R
 import com.example.cheilros.fragments.JourneyPlanFragment
@@ -41,12 +42,12 @@ class JPCurrentWeekApdater(
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
         var convertView = mInflater.inflate(R.layout.item_jpcurrentweek, null)
 
-        val simpleDateFormat = SimpleDateFormat("MM/d/yyyy")
+        val simpleDateFormat = SimpleDateFormat("MM/dd/yyyy")
         val currentDateAndTime: String = simpleDateFormat.format(Date())
 
         val listDate = data[position]
 
-        val formatter = DateTimeFormatter.ofPattern("MM/d/yyyy", Locale.ENGLISH)
+        val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.ENGLISH)
         val date = LocalDate.parse(listDate, formatter)
 
         val filterFormatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.ENGLISH)
@@ -54,14 +55,17 @@ class JPCurrentWeekApdater(
 
         val jpdate = date.format(DateTimeFormatter.ofPattern("yyyy-M-d"))
 
-        if(listDate.equals(filterdate.format(DateTimeFormatter.ofPattern("MM/d/yyyy")))){
+        println("listDate: ${listDate}-${filterdate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))}")
+
+        if(listDate.equals(filterdate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")))){
             convertView.cvJPweek.setCardBackgroundColor(Color.BLACK)
+            //convertView.cvJPweek.layoutParams = LinearLayout.LayoutParams(160, LinearLayout.LayoutParams.WRAP_CONTENT);
             convertView.txtDate.setTextColor(Color.WHITE)
         }
 
         var curDay = date.format(DateTimeFormatter.ofPattern("E"))
         var curDate = date.format(DateTimeFormatter.ofPattern("d"))
-        println("listDate: ${curDay}")
+        //println("listDate: ${curDay}")
 
         convertView.txtDay.text = curDay
         convertView.txtDate.text = curDate

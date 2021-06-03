@@ -3,12 +3,30 @@ package com.example.cheilros.models
 
 class AddVisitPlanModel(val status: Int)
 
+//region Investment
+class InvestmentModel(val status: Int, val data: List<InvestmentData>)
+class InvestmentData(
+    val ElementCategoryID: Int,
+    val ElementCategoryTitle: String,
+    val ElementID: Int,
+    val ElementTitle: String,
+    val DivisionID: Int,
+    val DivisionName: String,
+    val FrequencyDays: Int
+)
+//endregion
+
 //region Checklist
 class CheckListModel(val status: Int, val data: List<CheckListData>)
 class CheckListData(val ChecklistCategoryID: Int, val Checklist: String)
 
 class CheckListDetailModel(val status: Int, val data: List<CheckListDetailData>)
-class CheckListDetailData(val ChecklistID: Int, val Question: String, val InputTypeID: Int, val CheckListStatus: String)
+class CheckListDetailData(
+    val ChecklistID: Int,
+    val Question: String,
+    val InputTypeID: Int,
+    val CheckListStatus: String
+)
 //endregion
 
 //region BaseURL
@@ -66,6 +84,7 @@ class JourneyPlanData(
     val Latitude: String,
     val ImageLocation: String
 )
+
 class JPCurrentWeekData(
     val CurrentDate: String
 )
