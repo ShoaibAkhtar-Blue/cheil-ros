@@ -40,12 +40,20 @@
                 app:destination="@id/dashboardActivity2"
                 app:launchSingleTop="true"
                 app:popUpToInclusive="true" />
+            <action
+                android:id="@+id/action_loginFragment_to_newDashboardActivity2"
+                app:destination="@id/newDashboardActivity2" />
         </fragment>
         <activity
             android:id="@+id/dashboardActivity2"
             android:name="com.example.cheilros.activities.DashboardActivity"
             android:label="app_bar_main"
             tools:layout="@layout/app_bar_main" />
+        <activity
+            android:id="@+id/newDashboardActivity2"
+            android:name="com.example.cheilros.activities.NewDashboardActivity"
+            android:label="activity_new_dashboard"
+            tools:layout="@layout/activity_new_dashboard" />
     </navigation>
     <fragment
         android:id="@+id/splashFragment"

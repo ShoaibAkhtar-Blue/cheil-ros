@@ -239,7 +239,8 @@ class LoginFragment : Fragment() {
                                 .setMessage("Welcome User!")
                                 .sneakSuccess()
                         }
-                        findNavController().navigate(R.id.action_loginFragment_to_dashboardActivity2)
+                        //findNavController().navigate(R.id.action_loginFragment_to_dashboardActivity2)
+                        findNavController().navigate(R.id.action_loginFragment_to_newDashboardActivity2)
                         (activity as MainActivity).finish()
                     })
                 } else {
