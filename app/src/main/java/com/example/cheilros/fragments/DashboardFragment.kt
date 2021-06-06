@@ -9,29 +9,31 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.cheilros.MainActivity
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.datavm.AppSettingViewModel
 import com.example.cheilros.datavm.UserDataViewModel
 import com.example.cheilros.datavm.UserPermissionViewModel
 import com.example.cheilros.helpers.CustomSharedPref
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
-import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
-import com.github.mikephil.charting.utils.ColorTemplate
+import kotlinx.android.synthetic.main.activity_new_dashboard.*
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class DashboardFragment : Fragment() {
+class DashboardFragment : BaseFragment() {
 
     lateinit var CSP: CustomSharedPref
 
@@ -45,6 +47,8 @@ class DashboardFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_dashboard, container, false)
+
+        configureToolbar("Dashboard")
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
@@ -94,9 +98,17 @@ class DashboardFragment : Fragment() {
         return view
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        cvCoverage.setOnClickListener {
+            findNavController().navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
+        }
 
+        cvJourneyPlan.setOnClickListener {
+            findNavController().navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
+        }
 
         /*val client = OkHttpClient()
         val sourceFile = File("/storage/emulated/0/Pictures/1621837639994.jpg")

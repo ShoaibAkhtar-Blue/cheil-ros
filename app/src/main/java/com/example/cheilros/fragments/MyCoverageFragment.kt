@@ -34,7 +34,7 @@ import okhttp3.*
 import java.io.IOException
 
 
-class MyCoverageFragment : Fragment() {
+class MyCoverageFragment : BaseFragment() {
 
     private val client = OkHttpClient()
 
@@ -59,6 +59,8 @@ class MyCoverageFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_my_coverage, container, false)
+
+        configureToolbar("Coverage", true, true)
 
         //Init DB VM
         mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)

@@ -44,7 +44,8 @@ class SplashFragment : Fragment() {
                 if(CSP.getData("user_id").isNullOrEmpty())
                     findNavController().navigate(R.id.action_splashFragment_to_login_graph)
                 else{
-                    findNavController().navigate(R.id.action_splashFragment_to_dashboardActivity2)
+                    //findNavController().navigate(R.id.action_splashFragment_to_dashboardActivity2)
+                    findNavController().navigate(R.id.action_splashFragment_to_newDashboardActivity)
                     (activity as MainActivity).finish()
                 }
             }

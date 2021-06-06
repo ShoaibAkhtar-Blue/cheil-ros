@@ -10,10 +10,11 @@ import com.example.cheilros.R
 import com.example.cheilros.adapters.StoreMenuAdapter
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.datavm.AppSettingViewModel
+import com.example.cheilros.fragments.BaseFragment
 import kotlinx.android.synthetic.main.fragment_store_view.*
 
 
-class StoreViewFragment : Fragment() {
+class StoreViewFragment : BaseFragment() {
 
     private lateinit var mAppSettingViewModel: AppSettingViewModel
     private lateinit var settingData: List<AppSetting>
@@ -26,6 +27,8 @@ class StoreViewFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_store_view, container, false)
+
+        configureToolbar("Store View: ${arguments?.getString("StoreName")}", true)
 
         //Init DB VM
         mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)

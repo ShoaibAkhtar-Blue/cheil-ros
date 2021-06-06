@@ -45,6 +45,7 @@
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cvJourneyPlan"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -109,6 +110,7 @@
             android:paddingLeft="16dp">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cvCoverage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -148,7 +150,7 @@
                         android:gravity="right"
                         android:text="Store Coverage"
                         android:textColor="#fff"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

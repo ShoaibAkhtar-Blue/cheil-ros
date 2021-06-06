@@ -65,6 +65,14 @@
         <action
             android:id="@+id/action_splashFragment_to_dashboardActivity2"
             app:destination="@id/dashboardActivity2" />
+        <action
+            android:id="@+id/action_splashFragment_to_newDashboardActivity"
+            app:destination="@id/newDashboardActivity" />
 
     </fragment>
+    <activity
+        android:id="@+id/newDashboardActivity"
+        android:name="com.example.cheilros.activities.NewDashboardActivity"
+        android:label="activity_new_dashboard"
+        tools:layout="@layout/activity_new_dashboard" />
 </navigation>

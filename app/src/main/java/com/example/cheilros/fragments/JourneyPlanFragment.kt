@@ -51,7 +51,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class JourneyPlanFragment : Fragment() {
+class JourneyPlanFragment : BaseFragment() {
 
     private val client = OkHttpClient()
 
@@ -79,6 +79,8 @@ class JourneyPlanFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_journey_plan, container, false)
+
+        configureToolbar("Journey Plan", true)
 
         //Init DB VM
         mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
