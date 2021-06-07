@@ -60,7 +60,7 @@
                 android:fontFamily="@font/samsungsharpsans_bold"
                 android:text="Store Code"
                 android:textColor="@color/black"
-                android:textSize="14dp"
+                android:textSize="12dp"
                 tools:visibility="gone" />
 
             <TextView
@@ -71,7 +71,7 @@
                 android:fontFamily="@font/samsungsharpsans_bold"
                 android:text="Carrefour Mall Of The Emirates"
                 android:textColor="@color/black"
-                android:textSize="18dp" />
+                android:textSize="14dp" />
 
             <TextView
                 android:id="@+id/txtRemarks"
@@ -81,7 +81,7 @@
                 android:fontFamily="@font/samsungsharpsans_medium"
                 android:text="Visit Remarks….."
                 android:textColor="#4c4c4c"
-                android:textSize="12dp" />
+                android:textSize="10dp" />
 
             <TextView
                 android:id="@+id/txtTime"

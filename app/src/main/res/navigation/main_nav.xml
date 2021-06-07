@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_journeyPlanFragment_to_cameraActivity"
             app:destination="@id/cameraActivity" />
+        <action
+            android:id="@+id/action_journeyPlanFragment_to_storeViewFragment"
+            app:destination="@id/storeViewFragment" />
     </fragment>
     <fragment
         android:id="@+id/myCoverageFragment"

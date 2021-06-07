@@ -46,7 +46,7 @@ class InvestmentFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        txtStoreName.text = arguments?.getString("StoreName")
+        //txtStoreName.text = arguments?.getString("StoreName")
         fetchInvestment("${CSP.getData("base_url")}/MarketActivity.asmx/InvesmentElements?DivisionID=1&ElementCategoryID=1")
     }
 

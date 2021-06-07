@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -294,7 +295,9 @@ class JPAdapter(
                     }
                 }
             }else{
-
+                // If type is view
+                val bundle = bundleOf("StoreID" to itemList[position].StoreID, "StoreName" to itemList[position].StoreName)
+                Navigation.findNavController(it).navigate(R.id.action_journeyPlanFragment_to_storeViewFragment, bundle)
             }
         }
 
@@ -310,11 +313,11 @@ class JPAdapter(
             println("onMapReady-${itemList[curPos].Latitude}-${itemList[curPos].Longitude}")
             val sydney = LatLng(itemList[curPos].Latitude.toDouble(), itemList[curPos].Longitude.toDouble())
             googleMap!!.addMarker(MarkerOptions().position(sydney).title(itemList[curPos].StoreName))
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,13.5f))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,20.5f))
         }catch (ex: Exception){
             val sydney = LatLng(0.0, 0.0)
             googleMap!!.addMarker(MarkerOptions().position(sydney).title(itemList[curPos].StoreName))
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,13.5f))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,20.5f))
         }
 
     }

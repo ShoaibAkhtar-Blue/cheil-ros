@@ -4,31 +4,46 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.StrictMode
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridView
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.cheilros.MainActivity
 import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
+import com.example.cheilros.adapters.MenuNavigationAdapter
+import com.example.cheilros.data.AppSetting
+import com.example.cheilros.data.UserData
 import com.example.cheilros.datavm.AppSettingViewModel
 import com.example.cheilros.datavm.UserDataViewModel
 import com.example.cheilros.datavm.UserPermissionViewModel
 import com.example.cheilros.helpers.CustomSharedPref
+import com.example.cheilros.models.MenuNavigationModel
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
+import kotlinx.android.synthetic.main.activity_dashboard.view.*
 import kotlinx.android.synthetic.main.activity_new_dashboard.*
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.android.synthetic.main.fragment_journey_plan.*
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -40,6 +55,13 @@ class DashboardFragment : BaseFragment() {
     private lateinit var mAppSettingViewModel: AppSettingViewModel
     private lateinit var mUserDataViewModel: UserDataViewModel
     private lateinit var mUserPermissionViewModel: UserPermissionViewModel
+
+    private lateinit var userData: List<UserData>
+    private lateinit var settingData: List<AppSetting>
+
+    var gridView: GridView? = null
+    var menuData: java.util.ArrayList<MenuNavigationModel>? = null
+    var adapter: MenuNavigationAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,11 +75,71 @@ class DashboardFragment : BaseFragment() {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 
+        mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
         mUserDataViewModel = ViewModelProvider(this).get(UserDataViewModel::class.java)
+
+        settingData = mAppSettingViewModel.getAllSetting
+        userData = mUserDataViewModel.getAllUser
 
         CSP = CustomSharedPref(requireContext())
 
-        requireActivity().title = "Home"
+        Glide.with(this)
+            .load("${CSP.getData("base_url")}/TeamMemberPicture/${userData[0].memberID}.png")
+            .into(view.imgUser)
+
+        view.txtUsername.text = userData[0].memberName
+        view.txtUseremail.text = userData[0].email
+
+
+        //region Menu Grid
+
+        menuData = java.util.ArrayList<MenuNavigationModel>()
+        var menuDataList: List<AppSetting> = emptyList()
+        try {
+            menuDataList = settingData.filter { it.screenName == "Menu" }
+            println(menuDataList)
+            for (m in menuDataList) {
+                val menu = MenuNavigationModel()
+                menu.menuName = m.labelName
+                menu.menuImage = m.imagePath
+                menuData!!.add(menu)
+            }
+        } catch (ex: Exception) {
+
+        }
+
+        gridView = view.gridview
+        adapter = MenuNavigationAdapter(requireContext(), menuData!!)
+        gridView!!.adapter = adapter
+
+        /*gridView!!.onItemClickListener = OnItemClickListener { parent, v, i, id ->
+            //Toast.makeText(this, "menu " + menuDataList.get(i).fixedLabelName + " clicked! $i", Toast.LENGTH_SHORT).show()
+            val navController = findNavController(R.id.main_nav_fragment)
+            try {
+                if (menuDataList.get(i).fixedLabelName == "MenuTitle3") {
+                    CSP.delData("sess_visit_id")
+                    CSP.delData("sess_visit_status_id")
+
+                    navController.navigateUp()
+                    findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
+                    //toolbar.visibility = View.GONE
+                }
+
+                if (menuDataList.get(i).fixedLabelName == "MenuTitle2") {
+                    navController.navigateUp()
+                    findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
+                }
+
+            } catch (e: Exception) {
+                Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+                Log.e("Error_Nav", e.message.toString())
+            }
+
+
+        }*/
+
+        //endregion
+
 
         val callback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
             // Handle the back button event
@@ -102,12 +184,44 @@ class DashboardFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+
+
         cvCoverage.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
         }
 
         cvJourneyPlan.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
+        }
+
+        cvDeployement.setOnClickListener {
+            /*val url = "http://rosturkey.cheildata.com/Audit.asmx/CheckList_AuditAdd"
+
+            val JSON: MediaType? = "application/text; charset=utf-8".toMediaTypeOrNull()
+
+            val JSONObjectString = "{\n" +
+                    "    \"data\":\n" +
+                    "    [\n" +
+                    "        {\"CheckListID\":\"1\",\"StoreID\":\"1\",\"CheckListStatus\":\"0\",\"TeamMemberID\":\"1\"},\n" +
+                    "        {\"CheckListID\":\"2\",\"StoreID\":\"1\",\"CheckListStatus\":\"0\",\"TeamMemberID\":\"1\"},\n" +
+                    "        {\"CheckListID\":\"3\",\"StoreID\":\"1\",\"CheckListStatus\":\"0\",\"TeamMemberID\":\"1\"}\n" +
+                    "    ]\n" +
+                    "}" //The data I want to send
+
+            var body: RequestBody = RequestBody.create(JSON, JSONObjectString)
+            val request = Request.Builder().post(body).url(url).build()
+            val client = OkHttpClient()
+            client.newCall(request).enqueue(object : Callback {
+                override fun onResponse(call: Call, response: Response) {
+                    val tm = response.body?.string()
+                    println(tm)
+                }
+
+                override fun onFailure(call: Call, e: IOException) {
+                    Log.d("Failed", "FAILED")
+                    e.printStackTrace()
+                }
+            })*/
         }
 
         /*val client = OkHttpClient()

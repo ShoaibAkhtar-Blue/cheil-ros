@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.appcompat.widget.SearchView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -29,6 +30,7 @@ import com.example.cheilros.models.MyCoverageModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
+import kotlinx.android.synthetic.main.activity_new_dashboard.*
 import kotlinx.android.synthetic.main.fragment_my_coverage.*
 import okhttp3.*
 import java.io.IOException
@@ -102,7 +104,7 @@ class MyCoverageFragment : BaseFragment() {
         recyclerView.setEmptyView(emptyView)
 
         fetchChannel("${CSP.getData("base_url")}/Webservice.asmx/ChannelList")
-        fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=0&SearchKeyWord=${etSearch.text}")
+        fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=0&SearchKeyWord=")
 
         btnChannel.setOnClickListener {
             // setup the alert builder
@@ -122,7 +124,7 @@ class MyCoverageFragment : BaseFragment() {
                 DialogInterface.OnClickListener { dialog, which ->
                     println(channelData[which].ChannelID)
                     btnChannel.text = "Selected Channel: ${channelData[which].ChannelName}"
-                    fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${channelData[which].ChannelID}&SearchKeyWord=${etSearch.text}")
+                    fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${channelData[which].ChannelID}&SearchKeyWord=")
                 })
 
             // create and show the alert dialog
@@ -132,9 +134,22 @@ class MyCoverageFragment : BaseFragment() {
             dialog.show()
         }
 
-        etSearch.doOnTextChanged { text, start, before, count ->
+       requireActivity().toolbar_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            android.widget.SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(qString: String): Boolean {
+                recylcerAdapter?.filter?.filter(qString)
+                return true
+            }
+            override fun onQueryTextSubmit(qString: String): Boolean {
+
+                return true
+            }
+        })
+
+        /*etSearch.doOnTextChanged { text, start, before, count ->
             recylcerAdapter?.filter?.filter(text)
-        }
+        }*/
     }
 
     companion object {

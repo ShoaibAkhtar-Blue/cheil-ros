@@ -6,12 +6,12 @@
     android:layout_height="wrap_content"
     android:background="@drawable/border_grey"
     android:orientation="vertical"
-    android:layout_marginBottom="2dp">
+    android:layout_marginBottom="8dp">
 
     <RelativeLayout
         android:id="@+id/RLHeader"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="32dp"
         android:background="@color/status_none"
         android:paddingLeft="8dp"
         android:paddingRight="8dp">
@@ -30,7 +30,7 @@
             android:gravity="center"
             android:text="Title"
             android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
 
         <ImageView
             android:id="@+id/imageView3"

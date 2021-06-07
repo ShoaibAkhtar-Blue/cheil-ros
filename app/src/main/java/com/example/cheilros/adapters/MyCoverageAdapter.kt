@@ -166,10 +166,16 @@ class MyCoverageAdapter(
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
-        println("onMapReady-${filterList[curPos].Latitude}-${filterList[curPos].Longitude}")
-        val sydney = LatLng(filterList[curPos].Latitude.toDouble(), filterList[curPos].Longitude.toDouble())
-        googleMap!!.addMarker(MarkerOptions().position(sydney).title(filterList[curPos].StoreName))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,13.5f));
+        try {
+            println("onMapReady-${itemList[curPos].Latitude}-${itemList[curPos].Longitude}")
+            val sydney = LatLng(itemList[curPos].Latitude.toDouble(), itemList[curPos].Longitude.toDouble())
+            googleMap!!.addMarker(MarkerOptions().position(sydney).title(itemList[curPos].StoreName))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,20.5f))
+        }catch (ex: Exception){
+            val sydney = LatLng(0.0, 0.0)
+            googleMap!!.addMarker(MarkerOptions().position(sydney).title(itemList[curPos].StoreName))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,20.5f))
+        }
     }
 
     private fun sendVisitRequest(url: String) {

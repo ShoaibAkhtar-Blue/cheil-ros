@@ -52,11 +52,12 @@ class InvestmentAdapter(val context: Context, val itemList: List<InvestmentData>
                     tv.setTextColor(Color.BLACK)
 
                     if (j % 2 == 0){
-                        tv!!.typeface = ResourcesCompat.getFont(context!!, R.font.samsungsharpsans_bold)
+                        //tv!!.typeface = ResourcesCompat.getFont(context!!, R.font.samsungsharpsans_bold)
+                        tv.setTextColor(Color.parseColor("#4c4c4c"))
                         tv.text = "LABEL"
                     }
                    else
-                    tv.text = "${value.toString()}($j)"
+                    tv.text = "$value"
 
                     val tableRowParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1f)
                     tableRowParams.setMargins(5, 5, 5, 5)

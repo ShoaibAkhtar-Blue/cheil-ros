@@ -28,7 +28,7 @@ class StoreViewFragment : BaseFragment() {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_store_view, container, false)
 
-        configureToolbar("Store View: ${arguments?.getString("StoreName")}", true)
+        configureToolbar("${arguments?.getString("StoreName")}", true)
 
         //Init DB VM
         mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)

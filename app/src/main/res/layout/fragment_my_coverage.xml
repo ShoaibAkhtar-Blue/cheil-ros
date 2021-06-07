@@ -40,10 +40,11 @@
         android:layout_height="match_parent"
         android:background="#e2e2e2"
         android:orientation="vertical"
-        android:padding="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:tag="@string/ll_complete">
 
-        <com.google.android.material.textfield.TextInputLayout
+        <!--<com.google.android.material.textfield.TextInputLayout
             android:id="@+id/OTSeatch"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -56,18 +57,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>-->
 
 
             <Button
                 android:id="@+id/btnChannel"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:background="@color/white"
+                android:backgroundTint="@color/white"
                 android:drawableRight="@drawable/btn_drawable_down_arrow"
                 android:text="Select Channel"
                 android:textColor="#b2b2b2"
-                app:strokeColor="#c2c2c2" />
+                app:cornerRadius="0dp"
+                app:strokeColor="#c2c2c2"
+                app:strokeWidth="2dp" />
 
         <com.example.cheilros.activities.customobj.EmptyRecyclerView
             android:id="@+id/rvCoverage"

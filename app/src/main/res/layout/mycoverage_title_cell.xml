@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/LLjp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:baselineAligned="false"
-    android:orientation="horizontal"
-    android:id="@+id/LLjp"
-    android:background="@drawable/recycler_view_divider">
+    android:orientation="horizontal">
 
     <!-- LEFT TITLE PART -->
     <!-- RIGHT TITLE PART -->
@@ -61,7 +60,7 @@
                 android:fontFamily="@font/samsungsharpsans_bold"
                 android:text="Store Name"
                 android:textColor="@color/black"
-                android:textSize="16dp" />
+                android:textSize="12dp" />
 
             <TextView
                 android:id="@+id/txtTitle"
@@ -71,7 +70,7 @@
                 android:fontFamily="@font/samsungsharpsans_bold"
                 android:text="Store Name"
                 android:textColor="@color/black"
-                android:textSize="18dp" />
+                android:textSize="14dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"

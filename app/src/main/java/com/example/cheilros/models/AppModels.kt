@@ -78,6 +78,7 @@ class JourneyPlanData(
     val CheckOutRemarks: String,
     val VisitStatusID: Int,
     val VisitStatus: String,
+    val StoreID: Int,
     val StoreCode: String,
     val StoreName: String,
     val Longitude: String,
