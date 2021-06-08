@@ -50,7 +50,7 @@ tools:context=".fragments.storeview.InvestmentFragment">
             android:padding="8dp"
             android:text="INVESTMENT"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="20dp" />
 
         <com.example.cheilros.activities.customobj.EmptyRecyclerView
             android:id="@+id/rvInvestment"

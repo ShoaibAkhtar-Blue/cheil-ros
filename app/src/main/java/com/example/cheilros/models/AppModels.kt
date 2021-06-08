@@ -6,13 +6,15 @@ class AddVisitPlanModel(val status: Int)
 //region Investment
 class InvestmentModel(val status: Int, val data: List<InvestmentData>)
 class InvestmentData(
-    val ElementCategoryID: Int,
-    val ElementCategoryTitle: String,
     val ElementID: Int,
     val ElementTitle: String,
-    val DivisionID: Int,
-    val DivisionName: String,
-    val FrequencyDays: Int
+    val Brands: List<BrandsData>
+)
+
+class BrandsData(
+    val BrandID: Int,
+    val BrandName: String,
+    val ElementStatus: String
 )
 //endregion
 

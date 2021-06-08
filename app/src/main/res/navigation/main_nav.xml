@@ -135,6 +135,9 @@
             android:name="ElementCategoryID"
             app:argType="integer"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/action_investmentFragment_to_investmentDetailFragment"
+            app:destination="@id/investmentDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/activityFragment"
@@ -182,4 +185,18 @@
         android:name="com.example.cheilros.fragments.storeview.TrainingDetailFragment"
         android:label="fragment_training_detail"
         tools:layout="@layout/fragment_training_detail" />
+    <fragment
+        android:id="@+id/investmentDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.InvestmentDetailFragment"
+        android:label="fragment_investment_detail"
+        tools:layout="@layout/fragment_investment_detail" >
+        <argument
+            android:name="BrandID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="StoreID"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
 </navigation>

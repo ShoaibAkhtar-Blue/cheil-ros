@@ -28,6 +28,9 @@
             android:layout_centerInParent="true"
             android:fontFamily="@font/samsungsharpsans_bold"
             android:gravity="center"
+            android:lines="1"
+            android:maxLength="30"
+            android:maxLines="1"
             android:text="Title"
             android:textColor="@android:color/white"
             android:textSize="14dp" />

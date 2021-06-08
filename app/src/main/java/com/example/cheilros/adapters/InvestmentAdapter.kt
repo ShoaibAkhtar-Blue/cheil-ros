@@ -39,34 +39,46 @@ class InvestmentAdapter(val context: Context, val itemList: List<InvestmentData>
     override fun onBindViewHolder(holder: InvestmentAdapter.ViewHolder, position: Int) {
         holder.txtTitleHeader.text = itemList[position].ElementTitle
 
+        println("Brands: ${itemList[position].Brands.size}")
+
         if(holder.LLtable!!.childCount == 0){
-            var table = TableLayout(context)
-            val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            //table.layoutParams = lp
 
-            for (i in 0 until 3) {
-                val row = TableRow(context)
-                for (j in 0 until 4) {
-                    val value: Int = (100..200).random()
-                    val tv = TextView(context)
-                    tv.setTextColor(Color.BLACK)
+            try {
+                var table = TableLayout(context)
 
-                    if (j % 2 == 0){
-                        //tv!!.typeface = ResourcesCompat.getFont(context!!, R.font.samsungsharpsans_bold)
-                        tv.setTextColor(Color.parseColor("#4c4c4c"))
-                        tv.text = "LABEL"
+                val numRows: Int = (itemList[position].Brands.size / 2).toInt()
+                var brandIndex = 0
+
+                for (i in 0 until numRows) { //Rows
+                    val row = TableRow(context)
+                    for (j in 0 until 4) { //Column
+                        println("j: $j")
+                        val value: Int = (100..200).random()
+                        val tv = TextView(context)
+                        tv.setTextColor(Color.BLACK)
+
+                        if (j % 2 == 0){
+                            //tv!!.typeface = ResourcesCompat.getFont(context!!, R.font.samsungsharpsans_bold)
+                            tv.setTextColor(Color.parseColor("#4c4c4c"))
+                            tv.text = itemList[position].Brands[brandIndex].BrandName
+                        }
+                        else{
+                            tv.text = if(itemList[position].Brands[brandIndex].ElementStatus == "") "0" else itemList[position].Brands[0].ElementStatus
+                            brandIndex++
+                        }
+
+
+                        val tableRowParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1f)
+                        tableRowParams.setMargins(5, 5, 5, 5)
+                        row.addView(tv, tableRowParams)
                     }
-                   else
-                    tv.text = "$value"
-
-                    val tableRowParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1f)
-                    tableRowParams.setMargins(5, 5, 5, 5)
-                    row.addView(tv, tableRowParams)
+                    table.addView(row)
                 }
-                table.addView(row)
-            }
 
-            holder.LLtable.addView(table)
+                holder.LLtable.addView(table)
+            }catch (ex:Exception){
+
+            }
         }
     }
 
