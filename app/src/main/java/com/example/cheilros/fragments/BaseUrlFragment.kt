@@ -55,7 +55,7 @@ class BaseUrlFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val items = listOf("Turkish", "English")
+        val items = listOf("English", "Korean", "Turkish", "Chinese")
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
         //var etLang = view.findViewById<AutoCompleteTextView>(R.id.etLanguage)
         (etLanguage as? AutoCompleteTextView)?.setAdapter(adapter)

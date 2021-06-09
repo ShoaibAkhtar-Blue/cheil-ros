@@ -1,5 +1,8 @@
 package com.example.cheilros.models
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 
 class AddVisitPlanModel(val status: Int)
 
@@ -11,10 +14,25 @@ class InvestmentData(
     val Brands: List<BrandsData>
 )
 
-class BrandsData(
+@Parcelize
+data class BrandsData(
     val BrandID: Int,
     val BrandName: String,
     val ElementStatus: String
+) : Parcelable
+
+@Parcelize
+class BrandsList : ArrayList<BrandsData>(), Parcelable
+
+class InvestmentJSON(val data: List<InvestmentJSONData>)
+class InvestmentJSONData(
+    val BrandID: Int,
+    val StoreID: Int?,
+    val ElementID: Int?,
+    val ElementStatus: String,
+    val Remarks: String,
+    val TeamMemberID: Int?,
+    val InvestmentUpdateDate: String
 )
 //endregion
 
@@ -28,6 +46,14 @@ class CheckListDetailData(
     val Question: String,
     val InputTypeID: Int,
     val CheckListStatus: String
+)
+
+class CheckListJSON(val data: List<CheckListJSONData>)
+class CheckListJSONData(
+    val CheckListID: Int?,
+    val StoreID: Int?,
+    val CheckListStatus: String,
+    val TeamMemberID: Int?
 )
 //endregion
 

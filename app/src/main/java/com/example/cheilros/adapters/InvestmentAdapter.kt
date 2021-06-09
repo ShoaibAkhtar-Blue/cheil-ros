@@ -11,18 +11,21 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.helpers.CustomSharedPref
+import com.example.cheilros.models.BrandsData
 import com.example.cheilros.models.InvestmentData
 
 
-class InvestmentAdapter(val context: Context, val itemList: List<InvestmentData>, arguments: Bundle?): RecyclerView.Adapter<InvestmentAdapter.ViewHolder>() {
+class InvestmentAdapter(val context: Context, val itemList: List<InvestmentData>, val arguments: Bundle?): RecyclerView.Adapter<InvestmentAdapter.ViewHolder>() {
 
     lateinit var CSP: CustomSharedPref
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var LLchecklist : LinearLayout = view.findViewById(R.id.LLchecklist)
+        var LLInvestment : LinearLayout = view.findViewById(R.id.LLInvestment)
         var txtTitleHeader : TextView = view.findViewById(R.id.txtTitleHeader)
         var LLtable : LinearLayout = view.findViewById(R.id.LLtable)
     }
@@ -36,10 +39,23 @@ class InvestmentAdapter(val context: Context, val itemList: List<InvestmentData>
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: InvestmentAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtTitleHeader.text = itemList[position].ElementTitle
 
-        println("Brands: ${itemList[position].Brands.size}")
+        holder.LLInvestment.setOnClickListener {
+
+            val brands: ArrayList<BrandsData> = itemList[position].Brands as ArrayList<BrandsData>
+
+            val bundle = bundleOf(
+                "StoreID" to arguments?.getInt("StoreID"),
+                "ElementID" to itemList[position].ElementID,
+                "ElementTitle" to itemList[position].ElementTitle,
+                "BrandsList" to brands
+            )
+
+            Navigation.findNavController(it)
+                .navigate(R.id.action_investmentFragment_to_investmentDetailFragment, bundle)
+        }
 
         if(holder.LLtable!!.childCount == 0){
 
@@ -63,7 +79,7 @@ class InvestmentAdapter(val context: Context, val itemList: List<InvestmentData>
                             tv.text = itemList[position].Brands[brandIndex].BrandName
                         }
                         else{
-                            tv.text = if(itemList[position].Brands[brandIndex].ElementStatus == "") "0" else itemList[position].Brands[0].ElementStatus
+                            tv.text = if(itemList[position].Brands[brandIndex].ElementStatus == "") "0" else itemList[position].Brands[brandIndex].ElementStatus
                             brandIndex++
                         }
 
@@ -80,6 +96,8 @@ class InvestmentAdapter(val context: Context, val itemList: List<InvestmentData>
 
             }
         }
+
+
     }
 
     override fun getItemCount(): Int {

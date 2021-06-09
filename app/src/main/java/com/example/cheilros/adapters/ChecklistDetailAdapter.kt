@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.CheckListDetailData
+import com.example.cheilros.models.CheckListJSONData
 
 
 class ChecklistDetailAdapter(
@@ -22,6 +23,8 @@ class ChecklistDetailAdapter(
 ) : RecyclerView.Adapter<ChecklistDetailAdapter.ViewHolder>() {
 
     lateinit var CSP: CustomSharedPref
+
+    var checklistAnswer: MutableList<CheckListJSONData> = mutableListOf()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var LLchecklist: LinearLayout = view.findViewById(R.id.LLchecklist)
@@ -42,8 +45,6 @@ class ChecklistDetailAdapter(
         if(holder.LLAnswer!!.childCount == 0){
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-
-
             if(itemList[position].InputTypeID == 1){
                 val rowView: View = inflater.inflate(R.layout.checkbox, null)
                 holder.LLAnswer!!.addView(rowView, holder.LLAnswer!!.childCount - 1)
@@ -62,6 +63,15 @@ class ChecklistDetailAdapter(
                 val rowView: View = inflater.inflate(R.layout.datebutton, null)
                 holder.LLAnswer!!.addView(rowView, holder.LLAnswer!!.childCount - 1)
             }
+
+
+            if(itemList[position].InputTypeID == 2 || itemList[position].InputTypeID == 3){
+                var v = holder.LLAnswer.getChildAt(1)
+                if (v is EditText) {
+                    println(v.text)
+                }
+            }
+
         }
 
         holder.LLchecklist.setOnClickListener {

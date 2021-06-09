@@ -47,18 +47,19 @@ class StoreMenuAdapter(
         convertView.cvStoreMenu.setOnClickListener {
             println(ListData[position].labelName)
 
+            val bundle = bundleOf(
+                "StoreID" to arguments?.getInt("StoreID"),
+                "StoreName" to arguments?.getString("StoreName")
+            )
+
             if (ListData[position].fixedLabelName.equals("StoreMenu_Checklist")) {
-                val bundle = bundleOf(
-                    "StoreID" to arguments?.getInt("StoreID"),
-                    "StoreName" to arguments?.getString("StoreName")
-                )
                 Navigation.findNavController(it)
                     .navigate(R.id.action_storeViewFragment_to_checklistCategoryFragment, bundle)
             }
 
             if (ListData[position].fixedLabelName.equals("StoreMenu_Investment")) {
                 Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_investmentFragment)
+                    .navigate(R.id.action_storeViewFragment_to_investmentFragment, bundle)
             }
 
             if (ListData[position].fixedLabelName.equals("StoreMenu_Activity")) {

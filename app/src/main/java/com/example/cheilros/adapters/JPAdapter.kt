@@ -2,6 +2,7 @@ package com.example.cheilros.adapters
 
 import android.Manifest
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Context.LOCATION_SERVICE
 import android.content.Intent.*
@@ -35,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.ramotion.foldingcell.FoldingCell
+import kotlinx.android.synthetic.main.dialog_add_visit.*
 import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import okhttp3.*
 import java.io.IOException
@@ -283,7 +285,29 @@ class JPAdapter(
 
                     })
 
-                    cancelJP("${CSP.getData("base_url")}/JourneyPlan.asmx/CancelVisit?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=Cancel")
+                    val li = LayoutInflater.from(context)
+                    val promptsView: View = li.inflate(R.layout.dialog_add_visit, null)
+
+                    val dialog = Dialog(context)
+                    dialog.setContentView(promptsView)
+                    dialog.setCancelable(false)
+                    dialog.setCanceledOnTouchOutside(true)
+
+                    dialog.txtTitle.text = "Journey Plan"
+                    dialog.txtQuestion.text = "Do you want to cancel?"
+
+                    dialog.btnCancel.text = settingData.filter { it.fixedLabelName == "StoreList_PopupCancel" }.get(0).labelName
+                    dialog.btnCancel.setOnClickListener {
+                        dialog.dismiss()
+                    }
+
+                    dialog.btnAccept.text = "Save"
+                    dialog.btnAccept.setOnClickListener {
+                        cancelJP("${CSP.getData("base_url")}/JourneyPlan.asmx/CancelVisit?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=${dialog.etRemarks.text}")
+                        dialog.dismiss()
+                    }
+                    dialog.show()
+
                 }else{
                     (context as Activity).runOnUiThread {
                         context?.let { it1 ->

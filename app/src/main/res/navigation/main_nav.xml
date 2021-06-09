@@ -191,11 +191,17 @@
         android:label="fragment_investment_detail"
         tools:layout="@layout/fragment_investment_detail" >
         <argument
-            android:name="BrandID"
+            android:name="StoreID"
             app:argType="integer"
             android:defaultValue="0" />
         <argument
-            android:name="StoreID"
+            android:name="BrandsList"
+            app:argType="com.example.cheilros.models.BrandsList" />
+        <argument
+            android:name="ElementTitle"
+            app:argType="string" />
+        <argument
+            android:name="ElementID"
             app:argType="integer"
             android:defaultValue="0" />
     </fragment>
