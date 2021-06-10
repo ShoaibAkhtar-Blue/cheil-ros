@@ -318,7 +318,7 @@ class JPAdapter(
                         }
                     }
                 }
-            }else{
+            }else if(itemList[position].VisitStatusID === 2){
                 // If type is view
                 val bundle = bundleOf("StoreID" to itemList[position].StoreID, "StoreName" to itemList[position].StoreName)
                 Navigation.findNavController(it).navigate(R.id.action_journeyPlanFragment_to_storeViewFragment, bundle)

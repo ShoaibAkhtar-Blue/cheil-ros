@@ -48,7 +48,7 @@ tools:context=".fragments.storeview.ActivityFragment">
             android:fontFamily="@font/samsungsharpsans_bold"
             android:gravity="center"
             android:padding="8dp"
-            android:text="CHECKLIST"
+            android:text="NEW ACTIVITY"
             android:textColor="@color/black"
             android:textSize="20sp" />
 

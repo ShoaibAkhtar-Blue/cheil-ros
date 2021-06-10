@@ -147,6 +147,17 @@
         <action
             android:id="@+id/action_activityFragment_to_activityDetailFragment"
             app:destination="@id/activityDetailFragment" />
+        <argument
+            android:name="StoreID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
+        <argument
+            android:name="DivisionID"
+            app:argType="integer"
+            android:defaultValue="1" />
     </fragment>
     <fragment
         android:id="@+id/activityDetailFragment"
@@ -156,6 +167,24 @@
         <action
             android:id="@+id/action_activityDetailFragment_to_acrivityDetailFragment"
             app:destination="@id/acrivityDetailFragment" />
+        <argument
+            android:name="StoreID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
+        <argument
+            android:name="DivisionID"
+            app:argType="integer"
+            android:defaultValue="1" />
+        <argument
+            android:name="ActivityTypeID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="ActivityTypeName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/acrivityDetailFragment"
@@ -165,6 +194,27 @@
         <action
             android:id="@+id/action_acrivityDetailFragment_to_barcodeFragment"
             app:destination="@id/barcodeFragment" />
+        <argument
+            android:name="StoreID"
+            app:argType="integer" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
+        <argument
+            android:name="ActivityTypeID"
+            app:argType="integer" />
+        <argument
+            android:name="ActivityCategoryID"
+            app:argType="integer" />
+        <argument
+            android:name="ActivityTypeName"
+            app:argType="string" />
+        <argument
+            android:name="ActivityCategoryName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_acrivityDetailFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
     </fragment>
     <fragment
         android:id="@+id/barcodeFragment"
@@ -204,5 +254,14 @@
             android:name="ElementID"
             app:argType="integer"
             android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.example.cheilros.fragments.CameraFragment"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" >
+        <argument
+            android:name="fragName"
+            app:argType="string" />
     </fragment>
 </navigation>

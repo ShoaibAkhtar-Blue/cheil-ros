@@ -8,11 +8,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
-import com.example.cheilros.adapters.ChecklistAdapter
 import com.example.cheilros.adapters.ChecklistDetailAdapter
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.CheckListDetailModel
-import com.example.cheilros.models.CheckListModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
@@ -86,7 +84,7 @@ class ChecklistCategoryDetailFragment : Fragment() {
                         layoutManager = LinearLayoutManager(requireContext())
                         rvChecklistDetail.layoutManager = layoutManager
                         recylcerAdapter =
-                            ChecklistDetailAdapter(requireContext(), apiData.data, arguments)
+                            ChecklistDetailAdapter(requireContext(), apiData.data, arguments, this@ChecklistCategoryDetailFragment)
                         rvChecklistDetail.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })

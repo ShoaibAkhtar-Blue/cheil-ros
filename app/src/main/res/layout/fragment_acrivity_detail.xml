@@ -107,7 +107,7 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
                 </LinearLayout>
 
                 <EditText
-                    android:id="@+id/editTextTextMultiLine"
+                    android:id="@+id/txtBrandDescription"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:background="@drawable/border_grey"
@@ -127,7 +127,7 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
                 android:orientation="vertical">
 
                 <ImageButton
-                    android:id="@+id/imageButton"
+                    android:id="@+id/btnTakePicture"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:adjustViewBounds="true"
@@ -169,7 +169,7 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-
+                        android:id="@+id/txtBarcodeCount"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="0dp"
                         android:layout_toStartOf="@+id/imageView3"
@@ -204,7 +204,7 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
             </LinearLayout>
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btnSubmit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Submit" />

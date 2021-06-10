@@ -64,7 +64,7 @@ class StoreMenuAdapter(
 
             if (ListData[position].fixedLabelName.equals("StoreMenu_Activity")) {
                 Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_activityFragment)
+                    .navigate(R.id.action_storeViewFragment_to_activityFragment, bundle)
             }
 
             if (ListData[position].fixedLabelName.equals("StoreMenu_Training")) {

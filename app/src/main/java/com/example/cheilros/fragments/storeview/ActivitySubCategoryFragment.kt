@@ -5,15 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.adapters.ActivitySubCategoryAdapter
+import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.helpers.CustomSharedPref
+import com.example.cheilros.models.ActivityCategoryModel
 import com.example.cheilros.models.CheckListModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
+import kotlinx.android.synthetic.main.activity_new_dashboard.*
 import kotlinx.android.synthetic.main.fragment_activity.*
 import kotlinx.android.synthetic.main.fragment_activity_sub_category.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.*
@@ -23,7 +27,7 @@ import okhttp3.*
 import java.io.IOException
 
 
-class ActivitySubCategoryFragment : Fragment() {
+class ActivitySubCategoryFragment : BaseFragment() {
 
     private val client = OkHttpClient()
 
@@ -37,7 +41,9 @@ class ActivitySubCategoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view =  inflater.inflate(R.layout.fragment_activity_sub_category, container, false)
+        val view = inflater.inflate(R.layout.fragment_activity_sub_category, container, false)
+
+        arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
 
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
@@ -47,10 +53,30 @@ class ActivitySubCategoryFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        fetchActivtyDetail("${CSP.getData("base_url")}/Audit.asmx/CheckList?StoreID=1")
+        txtStoreSubName.text = arguments?.getString("ActivityTypeName")
+        fetchActivityDetail(
+            "${CSP.getData("base_url")}/Activity.asmx/ActivityCategoryList?DivisionID=${
+                arguments?.getInt(
+                    "DivisionID"
+                )
+            }&ActivityTypeID=${arguments?.getInt("ActivityTypeID")}"
+        )
+
+        requireActivity().toolbar_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            android.widget.SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(qString: String): Boolean {
+                recylcerAdapter?.filter?.filter(qString)
+                return true
+            }
+            override fun onQueryTextSubmit(qString: String): Boolean {
+
+                return true
+            }
+        })
     }
 
-    fun fetchActivtyDetail(url: String){
+    fun fetchActivityDetail(url: String) {
         println(url)
         val request = Request.Builder()
             .url(url)
@@ -73,17 +99,18 @@ class ActivitySubCategoryFragment : Fragment() {
                 val body = response.body?.string()
                 println(body)
                 val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, CheckListModel::class.java)
+                val apiData = gson.fromJson(body, ActivityCategoryModel::class.java)
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         rvActivityDetail.setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(requireContext())
                         rvActivityDetail.layoutManager = layoutManager
-                        recylcerAdapter = ActivitySubCategoryAdapter(requireContext(), apiData.data, arguments)
+                        recylcerAdapter =
+                            ActivitySubCategoryAdapter(requireContext(), apiData.data, arguments)
                         rvActivityDetail.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
-                }else {
+                } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup

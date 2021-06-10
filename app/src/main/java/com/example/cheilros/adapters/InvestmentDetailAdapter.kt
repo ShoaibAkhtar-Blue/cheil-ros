@@ -20,6 +20,7 @@ import com.example.cheilros.models.BrandsData
 import com.example.cheilros.models.InvestmentJSON
 import com.example.cheilros.models.InvestmentJSONData
 import com.google.gson.Gson
+import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.fragment_investment_detail.*
 import okhttp3.*
@@ -32,6 +33,8 @@ class InvestmentDetailAdapter(val context: Context, val itemList: ArrayList<Bran
 
     lateinit var CSP: CustomSharedPref
     var investmentsCountData: MutableList<InvestmentJSONData> = mutableListOf()
+
+
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var txtNum: TextView = view.findViewById(R.id.txtNum)
@@ -56,6 +59,7 @@ class InvestmentDetailAdapter(val context: Context, val itemList: ArrayList<Bran
 
         holder.txtAttend.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -114,7 +118,6 @@ class InvestmentDetailAdapter(val context: Context, val itemList: ArrayList<Bran
                 } catch (ex: Exception) {
                     println(ex.message)
                 }
-
             }
         })
 
@@ -138,6 +141,12 @@ class InvestmentDetailAdapter(val context: Context, val itemList: ArrayList<Bran
                     val tm = response.body?.string()
                     println(tm)
                     (context as Activity).runOnUiThread {
+                        context?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Success!!")
+                                .setMessage("Data saved!")
+                                .sneakSuccess()
+                        }
                         Navigation.findNavController(it).navigateUp()
                         fragment.mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     }
@@ -145,8 +154,14 @@ class InvestmentDetailAdapter(val context: Context, val itemList: ArrayList<Bran
 
                 override fun onFailure(call: Call, e: IOException) {
                     Log.d("Failed", "FAILED")
-                    e.printStackTrace()
+                    //e.printStackTrace()
                     (context as Activity).runOnUiThread {
+                        context?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage("Data not saved!")
+                                .sneakError()
+                        }
                         fragment.mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     }
                 }

@@ -6,6 +6,31 @@ import kotlinx.android.parcel.Parcelize
 
 class AddVisitPlanModel(val status: Int)
 
+//region Activity
+class ActivityTypeModel(val status: Int, val data: List<ActivityTypeData>)
+class ActivityTypeData(
+    val ActivityTypeID: Int,
+    val ActivityTypeName: String,
+    val DivisionID: Int,
+    val DivisionName: String
+)
+
+class ActivityCategoryModel(val status: Int, val data: List<ActivityCategoryData>)
+class ActivityCategoryData(
+    val ActivityTypeID: Int,
+    val ActivityTypeName: String,
+    val ActivityCategoryID: Int,
+    val ActivityCategoryName: String,
+    val DivisionID: Int,
+    val DivisionName: String
+)
+//endregion
+
+//region Dashboard
+class DashboardModel(val status: Int, val data: List<DashboardData>)
+class DashboardData(val Coverage: String, val TodayVisit: String, val PendingData: String)
+//endregion
+
 //region Investment
 class InvestmentModel(val status: Int, val data: List<InvestmentData>)
 class InvestmentData(

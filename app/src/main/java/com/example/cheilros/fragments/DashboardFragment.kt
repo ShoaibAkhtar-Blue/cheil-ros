@@ -30,6 +30,8 @@ import com.example.cheilros.datavm.AppSettingViewModel
 import com.example.cheilros.datavm.UserDataViewModel
 import com.example.cheilros.datavm.UserPermissionViewModel
 import com.example.cheilros.helpers.CustomSharedPref
+import com.example.cheilros.models.CheckListDetailModel
+import com.example.cheilros.models.DashboardModel
 import com.example.cheilros.models.MenuNavigationModel
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
@@ -37,9 +39,19 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
+import com.google.gson.GsonBuilder
+import com.irozon.sneaker.Sneaker
+import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.activity_dashboard.view.*
+import kotlinx.android.synthetic.main.activity_dashboard.view.gridview
+import kotlinx.android.synthetic.main.activity_dashboard.view.imgUser
+import kotlinx.android.synthetic.main.activity_dashboard.view.txtUseremail
+import kotlinx.android.synthetic.main.activity_dashboard.view.txtUsername
 import kotlinx.android.synthetic.main.activity_new_dashboard.*
+import kotlinx.android.synthetic.main.fragment_checklist_category.*
 import kotlinx.android.synthetic.main.fragment_dashboard.*
+import kotlinx.android.synthetic.main.fragment_dashboard.mainLoadingLayoutCC
+import kotlinx.android.synthetic.main.fragment_dashboard.view.*
 import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -82,6 +94,10 @@ class DashboardFragment : BaseFragment() {
         userData = mUserDataViewModel.getAllUser
 
         CSP = CustomSharedPref(requireContext())
+
+        view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
+
+        fetchDashboardData("${CSP.getData("base_url")}/Dashboard.asmx/DashboardLabels?TeamMemberID=${userData[0].memberID}")
 
         Glide.with(this)
             .load("${CSP.getData("base_url")}/TeamMemberPicture/${userData[0].memberID}.png")
@@ -177,6 +193,8 @@ class DashboardFragment : BaseFragment() {
             dialog.show()
         }
 
+        view.mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+
         return view
     }
 
@@ -185,6 +203,7 @@ class DashboardFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
 
+        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
 
         cvCoverage.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
@@ -265,6 +284,60 @@ class DashboardFragment : BaseFragment() {
         val data = createChartData()
         configureChartAppearance()
         data?.let { prepareChartData(it) }
+    }
+
+    fun fetchDashboardData(url: String){
+
+
+
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                requireActivity().runOnUiThread(java.lang.Runnable {
+                    activity?.let { it1 ->
+                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                            .setTitle("Error!!")
+                            .setMessage(e.message.toString())
+                            .sneakError()
+                    }
+                    mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                })
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body?.string()
+                println(body)
+
+                val gson = GsonBuilder().create()
+                val apiData = gson.fromJson(body, DashboardModel::class.java)
+
+                if (apiData.status == 200) {
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        txtTodayVisitCount.text = apiData.data[0].TodayVisit
+                        txtCoverageCount.text = apiData.data[0].Coverage
+                        txtPendingCount.text = apiData.data[0].PendingData
+                    })
+
+                }else{
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage("Data not fetched.")
+                                .sneakWarning()
+                        }
+                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                    })
+                }
+
+            }
+
+        })
     }
 
     private fun setBarChart() {

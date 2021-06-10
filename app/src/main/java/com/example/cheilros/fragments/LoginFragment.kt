@@ -102,6 +102,11 @@ class LoginFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        btnSetting.setOnClickListener {
+            findNavController().navigate(R.id.action_global_baseUrlFragment)
+        }
+
         btnLogin.setOnClickListener {
             Log.i(TAG, "btnLogin — clicked")
             //run("http://rosturkey.cheildata.com/Webservice.asmx/ROSAppUserLogin?Username=test.ros1&Password=ros&DeviceIMEIID=test.ros1")

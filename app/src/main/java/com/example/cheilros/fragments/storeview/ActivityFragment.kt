@@ -5,16 +5,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.adapters.ActivityAdapter
 import com.example.cheilros.adapters.ChecklistAdapter
+import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.helpers.CustomSharedPref
+import com.example.cheilros.models.ActivityTypeModel
 import com.example.cheilros.models.CheckListModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
+import kotlinx.android.synthetic.main.activity_new_dashboard.*
 import kotlinx.android.synthetic.main.fragment_activity.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.mainLoadingLayoutCC
@@ -23,7 +27,7 @@ import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
 import okhttp3.*
 import java.io.IOException
 
-class ActivityFragment : Fragment() {
+class ActivityFragment : BaseFragment() {
 
     private val client = OkHttpClient()
 
@@ -38,8 +42,10 @@ class ActivityFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_activity, container, false)
+        arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
 
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
+
 
         CSP = CustomSharedPref(requireContext())
 
@@ -47,11 +53,24 @@ class ActivityFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        txtStoreName.text = arguments?.getString("StoreName")
-        fetchActivty("${CSP.getData("base_url")}/Audit.asmx/CheckList?StoreID=1")
+        //txtStoreName.text = arguments?.getString("StoreName")
+        fetchActivity("${CSP.getData("base_url")}/Activity.asmx/ActivityTypeList?DivisionID=1")
+
+        requireActivity().toolbar_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            android.widget.SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(qString: String): Boolean {
+                recylcerAdapter?.filter?.filter(qString)
+                return true
+            }
+            override fun onQueryTextSubmit(qString: String): Boolean {
+
+                return true
+            }
+        })
     }
 
-    fun fetchActivty(url: String){
+    fun fetchActivity(url: String){
         println(url)
         val request = Request.Builder()
             .url(url)
@@ -74,7 +93,7 @@ class ActivityFragment : Fragment() {
                 val body = response.body?.string()
                 println(body)
                 val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, CheckListModel::class.java)
+                val apiData = gson.fromJson(body, ActivityTypeModel::class.java)
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         rvActivity.setHasFixedSize(true)

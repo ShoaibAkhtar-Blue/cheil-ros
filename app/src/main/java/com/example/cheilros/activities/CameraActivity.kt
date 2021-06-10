@@ -542,9 +542,9 @@ class CameraActivity : AppCompatActivity() {
 
 }
 
-private const val LOGGING_TAG = "Fotoapparat Example"
+const val LOGGING_TAG = "Fotoapparat Example"
 
-private sealed class Camera(
+sealed class Camera(
     val lensPosition: LensPositionSelector,
     val configuration: CameraConfiguration
 ) {
