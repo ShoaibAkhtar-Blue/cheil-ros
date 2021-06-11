@@ -116,6 +116,16 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
                     android:hint="Description"
                     android:inputType="textMultiLine"
                     android:padding="8dp" />
+                <EditText
+                    android:id="@+id/txtBrandQuantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_grey"
+                    android:maxLength="5"
+                    android:gravity="start|top"
+                    android:hint="Quantity"
+                    android:inputType="number"
+                    android:padding="8dp" />
 
             </LinearLayout>
 
@@ -124,7 +134,7 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <ImageButton
                     android:id="@+id/btnTakePicture"
@@ -136,6 +146,13 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
                     android:padding="0dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/camera_btn" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvActivityPictures"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+
             </LinearLayout>
 
             <LinearLayout

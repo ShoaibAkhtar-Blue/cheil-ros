@@ -49,6 +49,10 @@ class ActivitySubCategoryFragment : BaseFragment() {
 
         CSP = CustomSharedPref(requireContext())
 
+        CSP.delData("activity_barcodes")
+        CSP.delData("ActivityDetail_SESSION_IMAGE")
+        CSP.delData("ActivityDetail_SESSION_IMAGE_SET")
+
         return view
     }
 

@@ -84,6 +84,8 @@ class DashboardFragment : BaseFragment() {
 
         configureToolbar("Dashboard")
 
+
+
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 
@@ -94,6 +96,10 @@ class DashboardFragment : BaseFragment() {
         userData = mUserDataViewModel.getAllUser
 
         CSP = CustomSharedPref(requireContext())
+
+        //region Clear Sessions
+        CSP.delData("fragName")
+        //endregion
 
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 

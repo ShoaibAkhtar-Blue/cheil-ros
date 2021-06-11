@@ -8,7 +8,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.cheilros.R
 
-internal class PermissionsDelegate(private val activity: Activity) {
+class PermissionsDelegate(private val activity: Activity) {
     fun hasCameraPermission(): Boolean {
         val permissionCheckResult = ContextCompat.checkSelfPermission(
             activity,

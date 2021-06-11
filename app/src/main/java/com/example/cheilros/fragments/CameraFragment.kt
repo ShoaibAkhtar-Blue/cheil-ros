@@ -50,7 +50,7 @@ class CameraFragment : BaseFragment() {
 
     lateinit var locationManager: LocationManager
 
-    private val permissionsDelegate = PermissionsDelegate(requireActivity())
+    lateinit var permissionsDelegate: PermissionsDelegate
 
     private var permissionsGranted: Boolean = false
     private var activeCamera: Camera = Camera.Back
@@ -66,22 +66,22 @@ class CameraFragment : BaseFragment() {
         // Inflate the layout for this fragment
         viewCV = inflater.inflate(R.layout.fragment_camera, container, false)
 
+        permissionsDelegate = PermissionsDelegate(requireActivity())
+
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 
         CSP = CustomSharedPref(requireContext())
 
-        permissionsGranted = permissionsDelegate.hasCameraPermission()
-
         if (permissionsGranted) {
-            cameraView.visibility = View.VISIBLE
+            viewCV.cameraView.visibility = View.VISIBLE
         } else {
             permissionsDelegate.requestCameraPermission()
         }
 
         fotoapparat = Fotoapparat(
             context = requireContext(),
-            view = cameraView,
+            view = viewCV.cameraView,
             focusView = focusView,
             logger = logcat(),
             lensPosition = activeCamera.lensPosition,
@@ -89,10 +89,16 @@ class CameraFragment : BaseFragment() {
             cameraErrorCallback = { Log.e(LOGGING_TAG, "Camera error: ", it) }
         )
 
-        capture onClick takePicture()
-        switchCamera onClick changeCamera()
+        viewCV.capture onClick takePicture()
+        viewCV.switchCamera onClick changeCamera()
 
         return view
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
     }
 
     // this method saves the image to gallery
@@ -265,49 +271,51 @@ class CameraFragment : BaseFragment() {
         switchCamera.visibility = if (fotoapparat.isAvailable(front())) View.VISIBLE else View.GONE
     }
 
-}
 
-/*
-const val LOGGING_TAG = "Fotoapparat Example"
+    val LOGGING_TAG = "Fotoapparat Example"
 
-sealed class Camera(
-    val lensPosition: LensPositionSelector,
-    val configuration: CameraConfiguration
-) {
+    sealed class Camera(
+        val lensPosition: LensPositionSelector,
+        val configuration: CameraConfiguration
+    ) {
 
-    object Back : Camera(
-        lensPosition = back(),
-        configuration = CameraConfiguration(
-            previewResolution = firstAvailable(
-                wideRatio(highestResolution()),
-                standardRatio(highestResolution())
-            ),
-            previewFpsRange = highestFps(),
-            flashMode = off(),
-            focusMode = firstAvailable(
-                continuousFocusPicture(),
-                autoFocus(),
-                fixed()
-            ),
-            frameProcessor = {
-                // Do something with the preview frame
-            }
-        )
-    )
-
-    object Front : Camera(
-        lensPosition = front(),
-        configuration = CameraConfiguration(
-            previewResolution = firstAvailable(
-                wideRatio(highestResolution()),
-                standardRatio(highestResolution())
-            ),
-            previewFpsRange = highestFps(),
-            flashMode = off(),
-            focusMode = firstAvailable(
-                fixed(),
-                autoFocus()
+        object Back : Camera(
+            lensPosition = back(),
+            configuration = CameraConfiguration(
+                previewResolution = firstAvailable(
+                    wideRatio(highestResolution()),
+                    standardRatio(highestResolution())
+                ),
+                previewFpsRange = highestFps(),
+                flashMode = off(),
+                focusMode = firstAvailable(
+                    continuousFocusPicture(),
+                    autoFocus(),
+                    fixed()
+                ),
+                frameProcessor = {
+                    // Do something with the preview frame
+                }
             )
         )
-    )
-}*/
+
+        object Front : Camera(
+            lensPosition = front(),
+            configuration = CameraConfiguration(
+                previewResolution = firstAvailable(
+                    wideRatio(highestResolution()),
+                    standardRatio(highestResolution())
+                ),
+                previewFpsRange = highestFps(),
+                flashMode = off(),
+                focusMode = firstAvailable(
+                    fixed(),
+                    autoFocus()
+                )
+            )
+        )
+    }
+
+}
+
+

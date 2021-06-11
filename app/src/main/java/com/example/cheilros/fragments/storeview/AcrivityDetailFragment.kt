@@ -7,20 +7,30 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.adapters.CapturedPictureAdapter
+import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.helpers.CustomSharedPref
 import com.irozon.sneaker.Sneaker
 import kotlinx.android.synthetic.main.fragment_acrivity_detail.*
 import kotlinx.android.synthetic.main.fragment_acrivity_detail.txtStoreSubName
-import kotlinx.android.synthetic.main.fragment_activity_sub_category.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import java.io.IOException
 
 class AcrivityDetailFragment : Fragment() {
 
     lateinit var CSP: CustomSharedPref
+
+    lateinit var layoutManager: RecyclerView.LayoutManager
+    lateinit var recylcerAdapter: CapturedPictureAdapter
+
+    var capturedPicturesList: MutableList<String> = arrayListOf()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +48,16 @@ class AcrivityDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         txtStoreSubName.text = arguments?.getString("ActivityCategoryName")
 
+        try{
+            rvActivityPictures.setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(requireContext(),RecyclerView.HORIZONTAL, false)
+            rvActivityPictures.layoutManager = layoutManager
+            recylcerAdapter = CapturedPictureAdapter(requireContext(), capturedPicturesList)
+            rvActivityPictures.adapter = recylcerAdapter
+        }catch (ex: Exception){
+
+        }
+
         try {
             txtBarcodeCount.text = if (CSP.getData("activity_barcodes").equals("")) "0" else {
                 CSP.getData("activity_barcodes")?.split(",")?.size.toString()
@@ -51,26 +71,45 @@ class AcrivityDetailFragment : Fragment() {
         }
 
         btnTakePicture.setOnClickListener {
-            //val bundle = bundleOf("fragName" to "ActivityDetailFragment")
-            //findNavController().navigate(R.id.action_acrivityDetailFragment_to_cameraFragment, bundle)
+            CSP.saveData("fragName", "ActivityDetail")
+            val bundle = bundleOf("fragName" to "ActivityDetailFragment")
+            findNavController().navigate(R.id.action_acrivityDetailFragment_to_cameraActivity, bundle)
         }
 
         btnSubmit.setOnClickListener {
             val client = OkHttpClient()
 
             try {
-                val requestBody: RequestBody =
-                    MultipartBody.Builder().setType(MultipartBody.FORM)
-                        .addFormDataPart("SerialNumbers", "1,2,3,4")
-                        .build()
 
+                val builder: MultipartBody.Builder  =  MultipartBody.Builder().setType(MultipartBody.FORM)
+
+                builder.addFormDataPart("SerialNumbers", CSP.getData("activity_barcodes").toString())
+
+                if(!CSP.getData("ActivityDetail_SESSION_IMAGE_SET").equals("")){
+                    val imgPaths = CSP.getData("ActivityDetail_SESSION_IMAGE_SET")?.split(",")
+                    if (imgPaths != null) {
+                        for (paths in imgPaths){
+                            println(paths)
+                            val sourceFile = File(paths)
+                            val mimeType = CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
+                            val fileName: String = sourceFile.name
+                            builder.addFormDataPart("ActivityPictures", fileName,sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull()))
+                        }
+                    }
+                }
+
+               /* val requestBody: RequestBody =
+                    MultipartBody.Builder().setType(MultipartBody.FORM)
+                        .addFormDataPart("SerialNumbers", CSP.getData("activity_barcodes").toString())
+                        .build()*/
+                val requestBody = builder.build()
                 val request: Request = Request.Builder()
                     .url(
                         "${CSP.getData("base_url")}/OperMarketActivities.asmx/MarketActivityDetails?TeamMemberID=${
                             CSP.getData(
                                 "user_id"
                             )
-                        }&ActivityTypeID=1&ActivityCategoryID=1&StoreID=1&BrandID=1&ActivityDescription=${txtBrandDescription.text}&StatusID=1&Quantity=1"
+                        }&ActivityTypeID=${arguments?.getInt("ActivityTypeID")}&ActivityCategoryID=${arguments?.getInt("ActivityCategoryID")}&StoreID=${arguments?.getInt("StoreID")}&BrandID=1&ActivityDescription=${txtBrandDescription.text}&StatusID=1&Quantity=${txtBrandQuantity.text}"
                     )
                     .post(requestBody)
                     .build()
@@ -99,6 +138,8 @@ class AcrivityDetailFragment : Fragment() {
                                     .sneakSuccess()
                             }
                             CSP.delData("activity_barcodes")
+                            CSP.delData("ActivityDetail_SESSION_IMAGE")
+                            CSP.delData("ActivityDetail_SESSION_IMAGE_SET")
 
                             findNavController().navigateUp()
                         }
@@ -114,6 +155,30 @@ class AcrivityDetailFragment : Fragment() {
 
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        println(CSP.getData("ActivityDetail_SESSION_IMAGE_SET"))
+        if(!CSP.getData("ActivityDetail_SESSION_IMAGE").equals("")){
+            Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                .setTitle("Success!!")
+                .setMessage("Image Added to this session!")
+                .sneakSuccess()
+
+            if (CSP.getData("ActivityDetail_SESSION_IMAGE_SET").equals("")) {
+                recylcerAdapter.addNewItem(CSP.getData("ActivityDetail_SESSION_IMAGE"))
+                CSP.saveData("ActivityDetail_SESSION_IMAGE_SET", CSP.getData("ActivityDetail_SESSION_IMAGE"))
+                CSP.delData("ActivityDetail_SESSION_IMAGE")
+            } else {
+                recylcerAdapter.addNewItem(CSP.getData("ActivityDetail_SESSION_IMAGE"))
+                CSP.saveData(
+                    "ActivityDetail_SESSION_IMAGE_SET",
+                    "${CSP.getData("ActivityDetail_SESSION_IMAGE_SET")},${CSP.getData("ActivityDetail_SESSION_IMAGE")}"
+                )
+                CSP.delData("ActivityDetail_SESSION_IMAGE")
+            }
+        }
     }
 
 }

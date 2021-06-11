@@ -27,6 +27,9 @@ import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class InvestmentDetailAdapter(val context: Context, val itemList: ArrayList<BrandsData>, val fragment: InvestmentDetailFragment, val arguments: Bundle?) :
     RecyclerView.Adapter<InvestmentDetailAdapter.ViewHolder>() {
@@ -67,6 +70,8 @@ class InvestmentDetailAdapter(val context: Context, val itemList: ArrayList<Bran
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 println("$position : $s")
+                val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+                val currentDateAndTime: String = simpleDateFormat.format(Date())
                 try {
                     if (investmentsCountData.isNullOrEmpty()) {
                         println("investmentsCountData: null")
@@ -78,7 +83,7 @@ class InvestmentDetailAdapter(val context: Context, val itemList: ArrayList<Bran
                                 s.toString(),
                                 "",
                                 CSP.getData("user_id")?.toInt(),
-                                "2021-06-09"
+                                currentDateAndTime
                             )
                         )
                     } else {
@@ -94,7 +99,7 @@ class InvestmentDetailAdapter(val context: Context, val itemList: ArrayList<Bran
                                     s.toString(),
                                     "",
                                     CSP.getData("user_id")?.toInt(),
-                                    "2021-06-09"
+                                    currentDateAndTime
                                 )
                             )
                         } else {
@@ -109,7 +114,7 @@ class InvestmentDetailAdapter(val context: Context, val itemList: ArrayList<Bran
                                     s.toString(),
                                     "",
                                     CSP.getData("user_id")?.toInt(),
-                                    "2021-06-09"
+                                    currentDateAndTime
                                 )
                             )
                             println("investmentIndex $investmentIndex")

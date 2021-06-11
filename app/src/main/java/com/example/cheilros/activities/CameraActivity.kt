@@ -22,6 +22,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.navigation.findNavController
 import com.example.cheilros.R
 import com.example.cheilros.helpers.*
 import com.example.cheilros.models.CheckInOutModel
@@ -188,119 +189,131 @@ class CameraActivity : AppCompatActivity() {
 
                         val imageView = findViewById<ImageView>(R.id.result)
 
-                        imageView.setImageBitmap(it.bitmap)
-                        imageView.rotation = (-it.rotationDegrees).toFloat()
-
-                        val dialog = Dialog(this)
-                        dialog.setContentView(R.layout.dialog_photo_preview)
-                        dialog.setCancelable(false)
-                        dialog.setCanceledOnTouchOutside(true)
-
-                        dialog.imgPrev.setImageBitmap(it.bitmap)
-                        dialog.imgPrev.rotation = (-it.rotationDegrees).toFloat()
-
-                        //Remarks Permission
-                        if (CSP.getData("sess_visit_status_id").equals("1")) {
-                            if (CSP.getData("CheckIn_Remarks").equals("N"))
-                                dialog.etRemarksJP.visibility = View.GONE
+                        if (CSP.getData("fragName").equals("ActivityDetail")) {
+                            println("ActivityDetail")
+                            val savedImagePath: String = saveMediaToStorage(bitmapImg)
+                            println(savedImagePath)
+                            CSP.saveData("ActivityDetail_SESSION_IMAGE", savedImagePath)
+                            finish()
+                        } else if (CSP.getData("fragName").equals("TrainingDetail")) {
+                            println("TrainingDetail")
+                            val savedImagePath: String = saveMediaToStorage(bitmapImg)
+                            println(savedImagePath)
+                            CSP.saveData("TrainingDetail_SESSION_IMAGE", savedImagePath)
+                            finish()
                         } else {
-                            if (CSP.getData("CheckOut_Camera").equals("N"))
-                                dialog.etRemarksJP.visibility = View.GONE
-                        }
+                            imageView.setImageBitmap(it.bitmap)
+                            imageView.rotation = (-it.rotationDegrees).toFloat()
 
-                        dialog.btnUpload.setOnClickListener {
-                            dialog.btnUpload.isEnabled = false
-                            dialog.btnUpload.isClickable = false
-                            dialog.btnCancel.isEnabled = false
-                            dialog.btnCancel.isClickable = false
+                            val dialog = Dialog(this)
+                            dialog.setContentView(R.layout.dialog_photo_preview)
+                            dialog.setCancelable(false)
+                            dialog.setCanceledOnTouchOutside(true)
 
-                            dialog.btnUpload.text = "Uploading"
+                            dialog.imgPrev.setImageBitmap(it.bitmap)
+                            dialog.imgPrev.rotation = (-it.rotationDegrees).toFloat()
 
-                            //region Save File
+                            //Remarks Permission
+                            if (CSP.getData("sess_visit_status_id").equals("1")) {
+                                if (CSP.getData("CheckIn_Remarks").equals("N"))
+                                    dialog.etRemarksJP.visibility = View.GONE
+                            } else {
+                                if (CSP.getData("CheckOut_Camera").equals("N"))
+                                    dialog.etRemarksJP.visibility = View.GONE
+                            }
+
+                            dialog.btnUpload.setOnClickListener {
+                                dialog.btnUpload.isEnabled = false
+                                dialog.btnUpload.isClickable = false
+                                dialog.btnCancel.isEnabled = false
+                                dialog.btnCancel.isClickable = false
+
+                                dialog.btnUpload.text = "Uploading"
+
+                                //region Save File
 
 //                            val exteranlStorageState = Environment.getExternalStorageState()
 //                            if(exteranlStorageState.equals(Environment.MEDIA_MOUNTED)){
 //                                val storageDir = Environment.getStorageDirectory().toString()
 //                            }
 
-                            /*val file_path = Environment.getStorageDirectory().path + "/ROS"
-                            println(file_path)
-                            val dir = File(file_path)
-                            if (!dir.exists()) dir.mkdirs()
+                                /*val file_path = Environment.getStorageDirectory().path + "/ROS"
+                                println(file_path)
+                                val dir = File(file_path)
+                                if (!dir.exists()) dir.mkdirs()
 
-                            val file = File(dir, "ros.png")
-                            val fOut = FileOutputStream(file)
-                            bitmapImg.compress(Bitmap.CompressFormat.PNG, 100, fOut)
-                            fOut.flush()
-                            fOut.close()*/
-                            //endregion
+                                val file = File(dir, "ros.png")
+                                val fOut = FileOutputStream(file)
+                                bitmapImg.compress(Bitmap.CompressFormat.PNG, 100, fOut)
+                                fOut.flush()
+                                fOut.close()*/
+                                //endregion
 
-                            //region Get Location
-                            var lat: String = "0"
-                            var lng: String = "0"
+                                //region Get Location
+                                var lat: String = "0"
+                                var lng: String = "0"
 
-                            locationManager =
-                                this@CameraActivity.getSystemService(LOCATION_SERVICE) as LocationManager
-                            if (ActivityCompat.checkSelfPermission(
-                                    this@CameraActivity,
-                                    Manifest.permission.ACCESS_FINE_LOCATION
-                                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                                    this@CameraActivity,
-                                    Manifest.permission.ACCESS_COARSE_LOCATION
-                                ) != PackageManager.PERMISSION_GRANTED
-                            ) {
-                                // TODO: Consider calling
-                                //    ActivityCompat#requestPermissions
-                                // here to request the missing permissions, and then overriding
-                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                //                                          int[] grantResults)
-                                // to handle the case where the user grants the permission. See the documentation
-                                // for ActivityCompat#requestPermissions for more details.
-                                return@setOnClickListener
+                                locationManager =
+                                    this@CameraActivity.getSystemService(LOCATION_SERVICE) as LocationManager
+                                if (ActivityCompat.checkSelfPermission(
+                                        this@CameraActivity,
+                                        Manifest.permission.ACCESS_FINE_LOCATION
+                                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                                        this@CameraActivity,
+                                        Manifest.permission.ACCESS_COARSE_LOCATION
+                                    ) != PackageManager.PERMISSION_GRANTED
+                                ) {
+                                    // TODO: Consider calling
+                                    //    ActivityCompat#requestPermissions
+                                    // here to request the missing permissions, and then overriding
+                                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                    //                                          int[] grantResults)
+                                    // to handle the case where the user grants the permission. See the documentation
+                                    // for ActivityCompat#requestPermissions for more details.
+                                    return@setOnClickListener
+                                }
+                                locationManager.requestLocationUpdates(
+                                    LocationManager.GPS_PROVIDER,
+                                    5000,
+                                    0F,
+                                    object :
+                                        LocationListener {
+                                        override fun onLocationChanged(location: Location) {
+                                            lat = location.latitude.toString()
+                                            lng = location.longitude.toString()
+                                            println("loc: ${location.latitude}")
+                                        }
+
+                                    })
+                                //endregion
+                                val savedImagePath: String = saveMediaToStorage(bitmapImg)
+                                var checkTypeAPI: String = if (CSP.getData("sess_visit_status_id")
+                                        .equals("1")
+                                ) "CheckIn" else "CheckOut"
+
+                                /*val uploadImgFile:File =  File(savedImagePath)
+                                println(uploadImgFile.exists())*/
+
+                                sendCheckInOutRequest(
+                                    "${CSP.getData("base_url")}/${checkTypeAPI}.asmx/${checkTypeAPI}Img?VisitID=${
+                                        CSP.getData(
+                                            "sess_visit_id"
+                                        )
+                                    }&Longitude=$lng&Latitude=$lat&Remarks=${dialog.etRemarksJP.text}",
+                                    savedImagePath
+                                )
                             }
-                            locationManager.requestLocationUpdates(
-                                LocationManager.GPS_PROVIDER,
-                                5000,
-                                0F,
-                                object :
-                                    LocationListener {
-                                    override fun onLocationChanged(location: Location) {
-                                        lat = location.latitude.toString()
-                                        lng = location.longitude.toString()
-                                        println("loc: ${location.latitude}")
-                                    }
+                            dialog.btnCancel.setOnClickListener {
+                                dialog.dismiss()
+                            }
 
-                                })
-                            //endregion
-                            val savedImagePath: String = saveMediaToStorage(bitmapImg)
-                            var checkTypeAPI: String = if (CSP.getData("sess_visit_status_id")
-                                    .equals("1")
-                            ) "CheckIn" else "CheckOut"
+                            dialog.show()
 
-                            /*val uploadImgFile:File =  File(savedImagePath)
-                            println(uploadImgFile.exists())*/
-
-                            sendCheckInOutRequest(
-                                "${CSP.getData("base_url")}/${checkTypeAPI}.asmx/${checkTypeAPI}Img?VisitID=${
-                                    CSP.getData(
-                                        "sess_visit_id"
-                                    )
-                                }&Longitude=$lng&Latitude=$lat&Remarks=${dialog.etRemarksJP.text}",
-                                savedImagePath
-                            )
+                            /*val intent = Intent(applicationContext, PhotoPreviewActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+                            //intent.putExtra("capturedImage", it.bitmap)
+                            applicationContext.startActivity(intent)*/
                         }
-                        dialog.btnCancel.setOnClickListener {
-                            dialog.dismiss()
-                        }
-
-                        dialog.show()
-
-                        /*val intent = Intent(applicationContext, PhotoPreviewActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
-                        //intent.putExtra("capturedImage", it.bitmap)
-                        applicationContext.startActivity(intent)*/
-
-
                     }
                     ?: Log.e(LOGGING_TAG, "Couldn't capture photo.")
             }
@@ -426,7 +439,11 @@ class CameraActivity : AppCompatActivity() {
         try {
             val requestBody: RequestBody =
                 MultipartBody.Builder().setType(MultipartBody.FORM)
-                    .addFormDataPart(checkType, fileName,sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull()))
+                    .addFormDataPart(
+                        checkType,
+                        fileName,
+                        sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
+                    )
                     .build()
 
             val request: Request = Request.Builder()
@@ -435,51 +452,51 @@ class CameraActivity : AppCompatActivity() {
                 .build()
 
             client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread {
-                    Sneaker.with(this@CameraActivity) // Activity, Fragment or ViewGroup
-                        .setTitle("Error!!")
-                        .setMessage(e.message.toString())
-                        .sneakWarning()
-                }
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                val body = response.body?.string()
-                println(body)
-
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, CheckInOutModel::class.java)
-                println(apiData)
-                if (apiData.status == 200) {
-                    runOnUiThread {
-                        Sneaker.with(this@CameraActivity) // Activity, Fragment or ViewGroup
-                            .setTitle("Success!!")
-                            .setMessage("Data Updated")
-                            .sneakSuccess()
-                        onBackPressed()
-                    }
-                } else {
+                override fun onFailure(call: Call, e: IOException) {
                     runOnUiThread {
                         Sneaker.with(this@CameraActivity) // Activity, Fragment or ViewGroup
                             .setTitle("Error!!")
-                            .setMessage("Data not Updated.")
+                            .setMessage(e.message.toString())
                             .sneakWarning()
                     }
                 }
-            }
-        })
+
+                override fun onResponse(call: Call, response: Response) {
+                    val body = response.body?.string()
+                    println(body)
+
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, CheckInOutModel::class.java)
+                    println(apiData)
+                    if (apiData.status == 200) {
+                        runOnUiThread {
+                            Sneaker.with(this@CameraActivity) // Activity, Fragment or ViewGroup
+                                .setTitle("Success!!")
+                                .setMessage("Data Updated")
+                                .sneakSuccess()
+                            onBackPressed()
+                        }
+                    } else {
+                        runOnUiThread {
+                            Sneaker.with(this@CameraActivity) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage("Data not Updated.")
+                                .sneakWarning()
+                        }
+                    }
+                }
+            })
 
 
-           /* val response: Response = client.newCall(request).execute()
+            /* val response: Response = client.newCall(request).execute()
 
-            println(response.body!!.string())
+             println(response.body!!.string())
 
-            if (response.isSuccessful) {
-                Log.d("File upload", "success")
-            } else {
-                Log.e("File upload", "failed")
-            }*/
+             if (response.isSuccessful) {
+                 Log.d("File upload", "success")
+             } else {
+                 Log.e("File upload", "failed")
+             }*/
         } catch (ex: Exception) {
             ex.printStackTrace()
             Log.e("File upload", "failed")
