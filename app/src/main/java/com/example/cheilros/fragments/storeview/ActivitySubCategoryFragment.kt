@@ -34,8 +34,6 @@ class ActivitySubCategoryFragment : BaseFragment() {
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: ActivitySubCategoryAdapter
 
-    lateinit var CSP: CustomSharedPref
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,7 +45,9 @@ class ActivitySubCategoryFragment : BaseFragment() {
 
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
-        CSP = CustomSharedPref(requireContext())
+        //region Set Labels
+        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Activity" }.get(0).labelName
+        //endregion
 
         CSP.delData("activity_barcodes")
         CSP.delData("ActivityDetail_SESSION_IMAGE")

@@ -153,9 +153,10 @@ tools:context=".fragments.storeview.TrainingDetailFragment">
                             android:textSize="14dp" />
 
                         <TextView
+                            android:id="@+id/PromoterName"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_toStartOf="@+id/txtAttend"
+                            android:layout_toStartOf="@+id/PromoterAttend"
                             android:layout_toEndOf="@+id/txtNum"
                             android:fontFamily="@font/samsungsharpsans_bold"
                             android:gravity="center|left"
@@ -164,7 +165,7 @@ tools:context=".fragments.storeview.TrainingDetailFragment">
                             android:textSize="14dp" />
 
                         <TextView
-                            android:id="@+id/txtAttend"
+                            android:id="@+id/PromoterAttend"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_alignParentEnd="true"
@@ -203,15 +204,6 @@ tools:context=".fragments.storeview.TrainingDetailFragment">
                         android:padding="0dp"
                         android:scaleType="fitCenter"
                         android:src="@drawable/add_person" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/samsungsharpsans_bold"
-                        android:paddingBottom="4dp"
-                        android:text="Picture"
-                        android:textColor="@color/black"
-                        android:textSize="24sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"

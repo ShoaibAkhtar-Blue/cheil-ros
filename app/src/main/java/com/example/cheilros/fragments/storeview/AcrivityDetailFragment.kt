@@ -11,20 +11,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.adapters.CapturedPictureAdapter
+import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.helpers.CustomSharedPref
 import com.irozon.sneaker.Sneaker
 import kotlinx.android.synthetic.main.fragment_acrivity_detail.*
 import kotlinx.android.synthetic.main.fragment_acrivity_detail.txtStoreSubName
+import kotlinx.android.synthetic.main.fragment_acrivity_detail.view.*
+import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
+import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.IOException
 
-class AcrivityDetailFragment : Fragment() {
-
-    lateinit var CSP: CustomSharedPref
+class AcrivityDetailFragment : BaseFragment() {
 
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: CapturedPictureAdapter
@@ -39,14 +41,23 @@ class AcrivityDetailFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_acrivity_detail, container, false)
 
-        CSP = CustomSharedPref(requireContext())
+        //region Set Labels
+        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Activity" }.get(0).labelName
+        view.txtBrandDescription.hint = settingData.filter { it.fixedLabelName == "ActivityDescription" }.get(0).labelName
+        view.txtBrandQuantity.hint = settingData.filter { it.fixedLabelName == "Activity_Qty" }.get(0).labelName
+        view.ScanCode.text = settingData.filter { it.fixedLabelName == "ScanCode" }.get(0).labelName
+        view.btnSubmit.text = settingData.filter { it.fixedLabelName == "LoginForgetSubmitButton" }.get(0).labelName
+        //endregion
+
+
 
         return view
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        txtStoreSubName.text = arguments?.getString("ActivityCategoryName")
+        txtStoreSubName.text = arguments?.getString("ActivityTypeName")
+        txtTitleHeader.text = arguments?.getString("ActivityCategoryName")
 
         try{
             rvActivityPictures.setHasFixedSize(true)

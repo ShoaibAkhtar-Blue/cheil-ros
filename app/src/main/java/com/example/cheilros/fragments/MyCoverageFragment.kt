@@ -32,6 +32,7 @@ import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.activity_new_dashboard.*
 import kotlinx.android.synthetic.main.fragment_my_coverage.*
+import kotlinx.android.synthetic.main.fragment_my_coverage.view.*
 import okhttp3.*
 import java.io.IOException
 
@@ -43,17 +44,9 @@ class MyCoverageFragment : BaseFragment() {
     lateinit var recyclerView: EmptyRecyclerView
     lateinit var layoutManager: RecyclerView.LayoutManager
 
-    private lateinit var mAppSettingViewModel: AppSettingViewModel
-    private lateinit var mUserDataViewModel: UserDataViewModel
-    private lateinit var mUserPermissionViewModel: UserPermissionViewModel
-
-    lateinit var CSP: CustomSharedPref
-
-    lateinit var userData:List<UserData>
     lateinit var channelData:List<ChannelData>
 
     lateinit var recylcerAdapter: MyCoverageAdapter
-    lateinit var settingData: List<AppSetting>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,17 +55,9 @@ class MyCoverageFragment : BaseFragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_my_coverage, container, false)
 
-        configureToolbar("Coverage", true, true)
-
-        //Init DB VM
-        mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
-        mUserDataViewModel = ViewModelProvider(this).get(UserDataViewModel::class.java)
-        mUserPermissionViewModel = ViewModelProvider(this).get(UserPermissionViewModel::class.java)
-
-        CSP = CustomSharedPref(requireContext())
-
-        userData = mUserDataViewModel.getAllUser
-        settingData = mAppSettingViewModel.getAllSetting
+        //region Set Labels
+        view.btnChannel.text = settingData.filter { it.fixedLabelName == "StoreList_SearchBox" }.get(0).labelName
+        //endregion
 
         requireActivity().title = "My Coverage"
         val callback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {

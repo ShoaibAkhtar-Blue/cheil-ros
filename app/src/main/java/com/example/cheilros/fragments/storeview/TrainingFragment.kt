@@ -36,7 +36,6 @@ class TrainingFragment : BaseFragment() {
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: TrainingAdapter
 
-    lateinit var CSP: CustomSharedPref
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,7 +48,9 @@ class TrainingFragment : BaseFragment() {
 
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
-        CSP = CustomSharedPref(requireContext())
+        //region Set Labels
+        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Training" }.get(0).labelName
+        //endregion
 
         return view
     }

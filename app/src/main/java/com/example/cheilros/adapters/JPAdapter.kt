@@ -116,11 +116,14 @@ class JPAdapter(
         if(itemList[position].VisitRemarks == null)
             holder.txtRemarks.text = "No Remarks"
 
+        holder.btnCancel.text = settingData.filter { it.fixedLabelName == "JuorneyPlan_CancelButton" }.get(0).labelName
+        holder.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CheckinButton" }.get(0).labelName
+
         if(itemList[position].VisitStatusID === 1){
             holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.status_none))
             holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context,R.color.status_none))
             holder.txtTime.visibility =  View.GONE
-            holder.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CheckinButton" }.get(0).labelName
+
         }
         else if (itemList[position].VisitStatusID === 2){
             holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkin))
@@ -134,24 +137,29 @@ class JPAdapter(
         else if (itemList[position].VisitStatusID === 3){
             holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkout))
             holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkout))
-
+            holder.btnCancel.text = settingData.filter { it.fixedLabelName == "JourneyPlan_ViewButton" }.get(0).labelName
             holder.btnAccept.setTextColor(Color.GRAY)
 
             holder.btnAccept.isEnabled = false
             holder.btnAccept.isClickable = false
 
-//            holder.btnCancel.isEnabled = false
-//            holder.btnCancel.isClickable = false
+            //holder.btnCancel.visibility = View.GONE
+
+            //holder.btnCancel.isEnabled = false
+            //holder.btnCancel.isClickable = false
         }
 
         else if (itemList[position].VisitStatusID === 4){
             holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.status_cancel))
             holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context,R.color.status_cancel))
-
+            holder.btnCancel.text = settingData.filter { it.fixedLabelName == "JourneyPlan_ViewButton" }.get(0).labelName
             holder.btnAccept.setTextColor(Color.GRAY)
 
             holder.btnAccept.isEnabled = false
             holder.btnAccept.isClickable = false
+
+            holder.btnAccept.visibility = View.GONE
+            //holder.btnCancel.visibility = View.GONE
 
 //            holder.btnCancel.isEnabled = false
 //            holder.btnCancel.isClickable = false
@@ -293,15 +301,15 @@ class JPAdapter(
                     dialog.setCancelable(false)
                     dialog.setCanceledOnTouchOutside(true)
 
-                    dialog.txtTitle.text = "Journey Plan"
-                    dialog.txtQuestion.text = "Do you want to cancel?"
+                    dialog.txtTitle.text = settingData.filter { it.fixedLabelName == "JourneyPlan_Title" }.get(0).labelName
+                    dialog.txtQuestion.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CancelTitle" }.get(0).labelName
 
                     dialog.btnCancel.text = settingData.filter { it.fixedLabelName == "StoreList_PopupCancel" }.get(0).labelName
                     dialog.btnCancel.setOnClickListener {
                         dialog.dismiss()
                     }
 
-                    dialog.btnAccept.text = "Save"
+                    dialog.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CancelSave" }.get(0).labelName
                     dialog.btnAccept.setOnClickListener {
                         cancelJP("${CSP.getData("base_url")}/JourneyPlan.asmx/CancelVisit?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=${dialog.etRemarks.text}")
                         dialog.dismiss()
@@ -318,7 +326,7 @@ class JPAdapter(
                         }
                     }
                 }
-            }else if(itemList[position].VisitStatusID === 2){
+            }else{
                 // If type is view
                 val bundle = bundleOf("StoreID" to itemList[position].StoreID, "StoreName" to itemList[position].StoreName)
                 Navigation.findNavController(it).navigate(R.id.action_journeyPlanFragment_to_storeViewFragment, bundle)

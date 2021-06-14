@@ -43,7 +43,7 @@ import java.io.OutputStream
 
 class CameraFragment : BaseFragment() {
 
-    lateinit var CSP: CustomSharedPref
+
     lateinit var viewCV: View
 
     private val client = OkHttpClient()
@@ -70,8 +70,6 @@ class CameraFragment : BaseFragment() {
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
-
-        CSP = CustomSharedPref(requireContext())
 
         if (permissionsGranted) {
             viewCV.cameraView.visibility = View.VISIBLE

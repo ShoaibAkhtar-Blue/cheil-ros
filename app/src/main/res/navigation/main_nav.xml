@@ -22,7 +22,8 @@
     <fragment
         android:id="@+id/journeyPlanFragment"
         android:name="com.example.cheilros.fragments.JourneyPlanFragment"
-        tools:layout="@layout/fragment_journey_plan" >
+        android:label="journeyplan"
+        tools:layout="@layout/fragment_journey_plan">
         <action
             android:id="@+id/action_journeyPlanFragment_to_myCoverageFragment"
             app:destination="@id/myCoverageFragment" />
@@ -36,7 +37,8 @@
     <fragment
         android:id="@+id/myCoverageFragment"
         android:name="com.example.cheilros.fragments.MyCoverageFragment"
-        tools:layout="@layout/fragment_my_coverage" >
+        android:label="mycoverage"
+        tools:layout="@layout/fragment_my_coverage">
         <action
             android:id="@+id/action_myCoverageFragment_to_journeyPlanFragment"
             app:destination="@id/journeyPlanFragment" />
@@ -121,23 +123,23 @@
     <fragment
         android:id="@+id/investmentFragment"
         android:name="com.example.cheilros.fragments.storeview.InvestmentFragment"
-        android:label="fragment_investment"
-        tools:layout="@layout/fragment_investment" >
+        android:label="investment"
+        tools:layout="@layout/fragment_investment">
         <argument
             android:name="StoreID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="StoreName"
             app:argType="string" />
         <argument
             android:name="DivisionID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="ElementCategoryID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <action
             android:id="@+id/action_investmentFragment_to_investmentDetailFragment"
             app:destination="@id/investmentDetailFragment" />

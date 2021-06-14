@@ -49,6 +49,8 @@ class BaseUrlFragment : Fragment() {
 
         CSP = CustomSharedPref(requireContext())
 
+        //Save Setting to DB
+        mAppSettingViewModel.nukeTable()
 
         return view
     }
@@ -61,8 +63,8 @@ class BaseUrlFragment : Fragment() {
         (etLanguage as? AutoCompleteTextView)?.setAdapter(adapter)
 
         etLanguage.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
-            Log.i("etLanguage", "${etLanguage.text}-${position.toString()}")
-            var lang_id : Int = position + 1
+            var lang_id : Int = items.indexOf(etLanguage.text.toString()) + 1
+            Log.i("etLanguage", "${etLanguage.text}-${lang_id.toString()}")
             CSP.saveData("lang_id", lang_id.toString())
         }
 
@@ -95,6 +97,7 @@ class BaseUrlFragment : Fragment() {
 
 
     fun fetchData(url: String) {
+        println(url)
         val request = Request.Builder()
                 .url(url)
                 .build()
@@ -122,8 +125,7 @@ class BaseUrlFragment : Fragment() {
                     if (apiData.status == 200) {
                         for (data in apiData.data) {
                             println(data.ROS_Screen)
-                            //Save Setting to DB
-                            //mAppSettingViewModel.nukeTable()
+
 
                             val setting = AppSetting(0, data.ROS_LabelID, data.ROS_Screen, data.ROS_LabelName, data.LanguageID, data.ImageLocation, data.FixedLabelName)
                             mAppSettingViewModel.addSettings(setting)

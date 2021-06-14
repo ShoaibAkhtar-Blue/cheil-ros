@@ -16,9 +16,6 @@ import kotlinx.android.synthetic.main.fragment_store_view.*
 
 class StoreViewFragment : BaseFragment() {
 
-    private lateinit var mAppSettingViewModel: AppSettingViewModel
-    private lateinit var settingData: List<AppSetting>
-
     lateinit var storemenuAdapter: StoreMenuAdapter
 
     override fun onCreateView(
@@ -34,8 +31,6 @@ class StoreViewFragment : BaseFragment() {
         mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
 
         settingData = mAppSettingViewModel.getAllSetting
-
-
 
         return view
     }

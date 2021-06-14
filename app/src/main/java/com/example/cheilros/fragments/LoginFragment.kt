@@ -2,30 +2,21 @@ package com.example.cheilros.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.telephony.TelephonyManager
-import android.text.TextUtils
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import at.markushi.ui.CircleButton
 import com.example.cheilros.MainActivity
 import com.example.cheilros.R
-import com.example.cheilros.data.AppSetting
 import com.example.cheilros.data.UserData
 import com.example.cheilros.data.UserPermission
-import com.example.cheilros.datavm.AppSettingViewModel
-import com.example.cheilros.datavm.UserDataViewModel
-import com.example.cheilros.datavm.UserPermissionViewModel
-import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.LoginUserPermission
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
@@ -34,18 +25,12 @@ import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_login.view.*
 import kotlinx.coroutines.*
 import okhttp3.*
-import org.json.JSONObject
 import java.io.IOException
-import java.util.concurrent.TimeUnit
+import java.net.URL
 
-class LoginFragment : Fragment() {
+class LoginFragment : BaseFragment() {
 
     private val client = OkHttpClient()
-    private lateinit var mAppSettingViewModel: AppSettingViewModel
-    private lateinit var mUserDataViewModel: UserDataViewModel
-    private lateinit var mUserPermissionViewModel: UserPermissionViewModel
-
-    lateinit var CSP: CustomSharedPref
 
     var userIMEI : String = ""
 
@@ -58,36 +43,40 @@ class LoginFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
-        //Init DB VM
-        mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
-        mUserDataViewModel = ViewModelProvider(this).get(UserDataViewModel::class.java)
-        mUserPermissionViewModel = ViewModelProvider(this).get(UserPermissionViewModel::class.java)
-
-        CSP = CustomSharedPref(requireContext())
-
         //Remove User Data & Permissions
         mUserDataViewModel.nukeTable()
         mUserPermissionViewModel.nukeTable()
 
-        val settingData: List<AppSetting> = mAppSettingViewModel.getAllSetting
-        println(settingData)
+        try {
+            var url = URL("${CSP.getData("base_url")}/AppImages/Background.jpg")
+            val bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+            val background = BitmapDrawable(resources, bmp)
+            view.CLlogin.background = background
+
+            var urlLogo = URL("${CSP.getData("base_url")}/AppImages/ROS_Logo.png")
+            val bmpLogo = BitmapFactory.decodeStream(urlLogo.openConnection().getInputStream())
+            val backgroundLogo = BitmapDrawable(resources, bmpLogo)
+            view.imgLogoLogin.background = backgroundLogo
+        }catch (ex: Exception){
+            Log.e("Error_", "CLlogin: ${ex.message.toString()}")
+        }
 
         //Set Labels
         try {
-            view.txtCopyright.text =
-                settingData.filter { it.fixedLabelName == "CopyRight" }.get(0).labelName
-            view.txtAppName.text =
-                settingData.filter { it.fixedLabelName == "Splash_and_Login" }?.get(0).labelName
             view.OTFUsername.hint =
                 settingData.filter { it.fixedLabelName == "Login_UserName" }?.get(0).labelName
             view.OTFPassword.hint =
                 settingData.filter { it.fixedLabelName == "Login_Password" }?.get(0).labelName
-            view.btnLogin.hint =
-                settingData.filter { it.fixedLabelName == "Login" }?.get(0).labelName
-            view.btnForgot.hint =
+            view.txtCopyright.text =
+                settingData.filter { it.fixedLabelName == "CopyRight" }.get(0).labelName
+            view.txtAppName.text =
+                settingData.filter { it.fixedLabelName == "AppTitle" }?.get(0).labelName
+            view.btnLogin.text =
+                settingData.filter { it.fixedLabelName == "Login_Title" }?.get(0).labelName
+            view.btnForgot.text =
                 settingData.filter { it.fixedLabelName == "Login_ForgetPassword" }?.get(0).labelName
         } catch (ex: Exception) {
-
+            Log.e("Error_", ex.message.toString())
         }
 
         try {
@@ -98,10 +87,14 @@ class LoginFragment : Fragment() {
             Log.e("Error_", ex.message.toString())
         }
 
+
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
 
         btnSetting.setOnClickListener {
             findNavController().navigate(R.id.action_global_baseUrlFragment)

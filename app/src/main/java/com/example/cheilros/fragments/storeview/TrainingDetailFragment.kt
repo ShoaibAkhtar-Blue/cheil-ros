@@ -28,8 +28,11 @@ import kotlinx.android.synthetic.main.dialog_training_attendee.*
 import kotlinx.android.synthetic.main.fragment_acrivity_detail.*
 import kotlinx.android.synthetic.main.fragment_acrivity_detail.txtTitleHeader
 import kotlinx.android.synthetic.main.fragment_checklist_category.*
+import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
+import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
 import kotlinx.android.synthetic.main.fragment_training.*
 import kotlinx.android.synthetic.main.fragment_training_detail.*
+import kotlinx.android.synthetic.main.fragment_training_detail.view.*
 import okhttp3.*
 import java.io.IOException
 
@@ -45,7 +48,7 @@ class TrainingDetailFragment : BaseFragment() {
 
     var capturedPicturesList: MutableList<String> = arrayListOf()
 
-    lateinit var CSP: CustomSharedPref
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,7 +57,12 @@ class TrainingDetailFragment : BaseFragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_training_detail, container, false)
 
-        CSP = CustomSharedPref(requireContext())
+        //region Set Labels
+        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Training" }.get(0).labelName
+        view.txtTrainingDescription.hint = settingData.filter { it.fixedLabelName == "ActivityDescription" }.get(0).labelName
+        view.PromoterName.text = settingData.filter { it.fixedLabelName == "PromoterName" }.get(0).labelName
+        view.PromoterAttend.text = settingData.filter { it.fixedLabelName == "PromoterAttend" }.get(0).labelName
+        //endregion
 
         return view
     }
@@ -84,15 +92,15 @@ class TrainingDetailFragment : BaseFragment() {
             dialog.setCancelable(false)
             dialog.setCanceledOnTouchOutside(true)
 
-            dialog.txtTitle.text = "Add Attendee"
-            dialog.txtQuestion.text = "You can add new attendee by typing his/her name below"
-
-            dialog.btnCancel.text = "Cancel"
+            dialog.txtTitle.text = settingData.filter { it.fixedLabelName == "AttendeeAddPopupTitle" }.get(0).labelName
+            dialog.txtQuestion.text = settingData.filter { it.fixedLabelName == "AttendeeAddPopupInfo" }.get(0).labelName
+            dialog.OTAttendeeName.hint = settingData.filter { it.fixedLabelName == "AttendeeAddPopupName" }.get(0).labelName
+            dialog.btnCancel.text = settingData.filter { it.fixedLabelName == "Logout_Cancel" }.get(0).labelName
             dialog.btnCancel.setOnClickListener {
                 dialog.dismiss()
             }
 
-            dialog.btnAccept.text = "Add"
+            dialog.btnAccept.text = settingData.filter { it.fixedLabelName == "StoreList_PopupAdd" }.get(0).labelName
             dialog.btnAccept.setOnClickListener {
                 recylcerAdapter.addNewItem(TeamMemberData(0, dialog.etAttendeeName.text.toString()))
                 dialog.dismiss()

@@ -116,9 +116,10 @@ tools:context=".fragments.storeview.InvestmentDetailFragment">
                         android:textSize="14dp" />
 
                     <TextView
+                        android:id="@+id/BrandHeading"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_toStartOf="@+id/txtAttend"
+                        android:layout_toStartOf="@+id/CountHeading"
                         android:layout_toEndOf="@+id/txtNum"
                         android:fontFamily="@font/samsungsharpsans_bold"
                         android:gravity="center|left"
@@ -127,7 +128,7 @@ tools:context=".fragments.storeview.InvestmentDetailFragment">
                         android:textSize="14dp" />
 
                     <TextView
-                        android:id="@+id/txtAttend"
+                        android:id="@+id/CountHeading"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_alignParentEnd="true"

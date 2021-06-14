@@ -5,15 +5,15 @@
     android:id="@+id/CLsplash"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/splash_bg"
+    android:background="#e2e2e2"
     tools:context=".fragments.SplashFragment">
 
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imgLogo"
         android:layout_width="272dp"
         android:layout_height="96dp"
-        android:src="@drawable/samsung_retail_onsite"
+        android:src="@mipmap/ic_launcher1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

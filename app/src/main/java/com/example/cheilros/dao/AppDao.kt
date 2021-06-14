@@ -20,7 +20,6 @@ interface AppSettingDao{
     @Query("SELECT * FROM app_settings")
     fun getAllSetting(): List<AppSetting>
 
-
     @Query("DELETE FROM app_settings")
     fun nukeTable()
 }

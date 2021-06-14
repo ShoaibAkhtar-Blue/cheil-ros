@@ -9,23 +9,27 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.adapters.InvestmentDetailAdapter
+import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.BrandsData
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.fragment_checklist_category.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
+import kotlinx.android.synthetic.main.fragment_checklist_category.view.mainLoadingLayoutCC
+import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
 import kotlinx.android.synthetic.main.fragment_investment_detail.*
 import kotlinx.android.synthetic.main.fragment_investment_detail.mainLoadingLayoutCC
+import kotlinx.android.synthetic.main.fragment_investment_detail.view.*
 import okhttp3.OkHttpClient
 
-class InvestmentDetailFragment : Fragment() {
+class InvestmentDetailFragment : BaseFragment() {
 
     private val client = OkHttpClient()
 
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: InvestmentDetailAdapter
 
-    lateinit var CSP: CustomSharedPref
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +40,12 @@ class InvestmentDetailFragment : Fragment() {
 
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
-        CSP = CustomSharedPref(requireContext())
+        //region Set Labels
+        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Investment" }.get(0).labelName
+        view.BrandHeading.text = settingData.filter { it.fixedLabelName == "BrandHeading" }.get(0).labelName
+        view.CountHeading.text = settingData.filter { it.fixedLabelName == "CountHeading" }.get(0).labelName
+        view.btnSubmit.text = settingData.filter { it.fixedLabelName == "LoginForgetSubmitButton" }.get(0).labelName
+        //endregion
 
         println("onCreateView")
         println("BrandsList: ${arguments?.getParcelableArrayList<BrandsData>("BrandsList")?.size}")

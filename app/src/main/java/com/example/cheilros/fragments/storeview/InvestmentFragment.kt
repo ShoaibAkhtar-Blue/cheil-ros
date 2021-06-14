@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.adapters.InvestmentAdapter
+import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.InvestmentModel
 import com.google.gson.GsonBuilder
@@ -22,14 +23,13 @@ import okhttp3.*
 import java.io.IOException
 
 
-class InvestmentFragment : Fragment() {
+class InvestmentFragment : BaseFragment() {
 
     private val client = OkHttpClient()
 
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: InvestmentAdapter
 
-    lateinit var CSP: CustomSharedPref
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +40,11 @@ class InvestmentFragment : Fragment() {
 
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
-        CSP = CustomSharedPref(requireContext())
+        //region Set Labels
+        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Investment" }.get(0).labelName
+        //endregion
+
+
 
         return view
     }

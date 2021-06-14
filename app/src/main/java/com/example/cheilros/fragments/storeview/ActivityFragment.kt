@@ -34,8 +34,6 @@ class ActivityFragment : BaseFragment() {
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: ActivityAdapter
 
-    lateinit var CSP: CustomSharedPref
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,8 +44,9 @@ class ActivityFragment : BaseFragment() {
 
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
-
-        CSP = CustomSharedPref(requireContext())
+        //region Set Labels
+        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Activity" }.get(0).labelName
+        //endregion
 
         return view
     }

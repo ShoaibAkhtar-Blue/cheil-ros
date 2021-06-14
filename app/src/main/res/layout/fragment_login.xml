@@ -5,21 +5,21 @@
     android:id="@+id/CLlogin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/splash_bg"
+    android:background="#e2e2e2"
     tools:context=".fragments.LoginFragment">
 
 
     <ImageView
-        android:id="@+id/imgLogo"
+        android:id="@+id/imgLogoLogin"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="160dp"
         android:adjustViewBounds="true"
-        android:src="@drawable/samsung_retail_onsite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/samsung_retail_onsite" />
 
     <TextView
         android:id="@+id/txtAppName"
@@ -34,7 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgLogo" />
+        app:layout_constraintTop_toBottomOf="@+id/imgLogoLogin" />
 
     <LinearLayout
         android:id="@+id/lvForm"
@@ -94,14 +94,6 @@
             android:layout_height="wrap_content"
             android:text="Forgot Password" />
 
-        <ImageButton
-            android:id="@+id/btnSetting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:backgroundTint="@android:color/transparent"
-            android:src="@android:drawable/ic_menu_preferences" />
-
 
     </LinearLayout>
 
@@ -118,4 +110,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lvForm"
         app:layout_constraintVertical_bias="0.882" />
+
+    <ImageButton
+        android:id="@+id/btnSetting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@android:color/transparent"
+        android:src="@android:drawable/ic_menu_preferences"
+        app:layout_constraintBottom_toTopOf="@+id/txtCopyright"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lvForm" />
 </androidx.constraintlayout.widget.ConstraintLayout>

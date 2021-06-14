@@ -56,20 +56,12 @@ import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 class DashboardFragment : BaseFragment() {
-
-    lateinit var CSP: CustomSharedPref
-
-    private lateinit var mAppSettingViewModel: AppSettingViewModel
-    private lateinit var mUserDataViewModel: UserDataViewModel
-    private lateinit var mUserPermissionViewModel: UserPermissionViewModel
-
-    private lateinit var userData: List<UserData>
-    private lateinit var settingData: List<AppSetting>
 
     var gridView: GridView? = null
     var menuData: java.util.ArrayList<MenuNavigationModel>? = null
@@ -82,20 +74,21 @@ class DashboardFragment : BaseFragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_dashboard, container, false)
 
-        configureToolbar("Dashboard")
+        val simpleDateFormat = SimpleDateFormat("E dd, MMMM")
+        val currentDateAndTime: String = simpleDateFormat.format(Date())
 
-
+        //region Set Labels
+        view.Dashboard_TodayVisit.text = settingData.filter { it.fixedLabelName == "Dashboard_TodayVisit" }.get(0).labelName
+        view.Dashboard_StorePlan.text = settingData.filter { it.fixedLabelName == "Dashboard_StorePlan" }.get(0).labelName
+        view.Dashboard_GraphTitle.text = settingData.filter { it.fixedLabelName == "Dashboard_GraphTitle" }.get(0).labelName
+        view.Dashboard_TaskTitle.text = settingData.filter { it.fixedLabelName == "Dashboard_TaskTitle" }.get(0).labelName
+        view.Dashboard_CoverageButton.text = settingData.filter { it.fixedLabelName == "Dashboard_CoverageButton" }.get(0).labelName
+        view.Dashboard_PendingButton.text = settingData.filter { it.fixedLabelName == "Dashboard_PendingButton" }.get(0).labelName
+        view.txtCurrentDate.text = currentDateAndTime
+        //endregion
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
-
-        mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
-        mUserDataViewModel = ViewModelProvider(this).get(UserDataViewModel::class.java)
-
-        settingData = mAppSettingViewModel.getAllSetting
-        userData = mUserDataViewModel.getAllUser
-
-        CSP = CustomSharedPref(requireContext())
 
         //region Clear Sessions
         CSP.delData("fragName")
@@ -112,7 +105,6 @@ class DashboardFragment : BaseFragment() {
         view.txtUsername.text = userData[0].memberName
         view.txtUseremail.text = userData[0].email
 
-
         //region Menu Grid
 
         menuData = java.util.ArrayList<MenuNavigationModel>()
@@ -120,7 +112,9 @@ class DashboardFragment : BaseFragment() {
         try {
             menuDataList = settingData.filter { it.screenName == "Menu" }
             println(menuDataList)
+            menuData!!.clear()
             for (m in menuDataList) {
+                println(m.labelName)
                 val menu = MenuNavigationModel()
                 menu.menuName = m.labelName
                 menu.menuImage = m.imagePath
@@ -156,8 +150,6 @@ class DashboardFragment : BaseFragment() {
                 Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
                 Log.e("Error_Nav", e.message.toString())
             }
-
-
         }*/
 
         //endregion
@@ -168,16 +160,16 @@ class DashboardFragment : BaseFragment() {
             println("callback")
             // setup the alert builder
             val builder: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
-            builder.setTitle("Are You Sure?")
-            builder.setMessage("You want to exit app or logout?")
+            builder.setTitle(settingData.filter { it.fixedLabelName == "Logout_Sure" }.get(0).labelName)
+            builder.setMessage(settingData.filter { it.fixedLabelName == "Logout_Want" }.get(0).labelName)
 
             // add the buttons
 
             // add the buttons
-            builder.setPositiveButton("Exit App") { dialogInterface, which ->
+            builder.setPositiveButton(settingData.filter { it.fixedLabelName == "Logout_Exit" }.get(0).labelName) { dialogInterface, which ->
                 requireActivity().finish()
             }
-            builder.setNeutralButton("Logout") { dialogInterface, which ->
+            builder.setNeutralButton(settingData.filter { it.fixedLabelName == "Logout_Logout" }.get(0).labelName) { dialogInterface, which ->
                 CSP.delData("user_id")
                 mUserDataViewModel.nukeTable()
 //            val navController = findNavController(R.id.main_nav_fragment)
@@ -190,7 +182,7 @@ class DashboardFragment : BaseFragment() {
 
                 requireActivity().finish()
             }
-            builder.setNegativeButton("Cancel", null)
+            builder.setNegativeButton(settingData.filter { it.fixedLabelName == "Logout_Cancel" }.get(0).labelName, null)
 
             // create and show the alert dialog
 
@@ -419,7 +411,6 @@ class DashboardFragment : BaseFragment() {
     }
 
     private fun createChartData(): BarData? {
-
         val r = Random()
 
         val values: ArrayList<BarEntry> = ArrayList()

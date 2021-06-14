@@ -13,8 +13,6 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,12 +21,6 @@ import com.example.cheilros.R
 import com.example.cheilros.adapters.JPAdapter
 import com.example.cheilros.adapters.JPCurrentWeekApdater
 import com.example.cheilros.adapters.JPStatusAdapter
-import com.example.cheilros.data.AppSetting
-import com.example.cheilros.data.UserData
-import com.example.cheilros.datavm.AppSettingViewModel
-import com.example.cheilros.datavm.UserDataViewModel
-import com.example.cheilros.datavm.UserPermissionViewModel
-import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.JPStatusData
 import com.example.cheilros.models.JPStatusModel
 import com.example.cheilros.models.JourneyPlanModel
@@ -55,15 +47,6 @@ class JourneyPlanFragment : BaseFragment() {
 
     private val client = OkHttpClient()
 
-    private lateinit var mAppSettingViewModel: AppSettingViewModel
-    private lateinit var mUserDataViewModel: UserDataViewModel
-    private lateinit var mUserPermissionViewModel: UserPermissionViewModel
-
-    lateinit var CSP: CustomSharedPref
-
-    lateinit var userData: List<UserData>
-    lateinit var settingData: List<AppSetting>
-
     //lateinit var recyclerView: RecyclerView
     lateinit var layoutManager: RecyclerView.LayoutManager
     val calendar = Calendar.getInstance()
@@ -80,17 +63,8 @@ class JourneyPlanFragment : BaseFragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_journey_plan, container, false)
 
-        configureToolbar("Journey Plan", true)
+        //configureToolbar("Journey Plan", true)
 
-        //Init DB VM
-        mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
-        mUserDataViewModel = ViewModelProvider(this).get(UserDataViewModel::class.java)
-        mUserPermissionViewModel = ViewModelProvider(this).get(UserPermissionViewModel::class.java)
-
-        CSP = CustomSharedPref(requireContext())
-
-        userData = mUserDataViewModel.getAllUser
-        settingData = mAppSettingViewModel.getAllSetting
 
         view.mainLoadingLayout.setState(LoadingLayout.LOADING)
 
@@ -144,9 +118,9 @@ class JourneyPlanFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        if(CSP.getData("sess_visit_id").isNullOrEmpty()){
+        if (CSP.getData("sess_visit_id").isNullOrEmpty()) {
 
-        }else{
+        } else {
             println("onResume JP")
             CSP.delData("sess_visit_id")
             CSP.delData("sess_visit_status_id")
@@ -158,7 +132,7 @@ class JourneyPlanFragment : BaseFragment() {
 
     }
 
-    fun setupChart(jpdata: List<JPStatusData>){
+    fun setupChart(jpdata: List<JPStatusData>) {
         val NoOfEmp = ArrayList<PieEntry>()
 
         var total: Int = 0
@@ -192,7 +166,7 @@ class JourneyPlanFragment : BaseFragment() {
         str1.setSpan(ForegroundColorSpan(Color.BLACK), 0, str1.length, 0)
         builder.append(str1)
 
-        val str2 = SpannableString("Plans")
+        val str2 = SpannableString(settingData.filter { it.fixedLabelName == "JourneyPlanAll" }.get(0).labelName)
         str2.setSpan(ForegroundColorSpan(Color.GRAY), 0, str2.length, 0)
         builder.append(str2)
 
@@ -249,23 +223,58 @@ class JourneyPlanFragment : BaseFragment() {
         }
         println(dayList.size)
 
-        jpscurrentweekAdapter = JPCurrentWeekApdater(requireContext(), this@JourneyPlanFragment, dayList, btnDate.tag.toString())
+        jpscurrentweekAdapter = JPCurrentWeekApdater(
+            requireContext(),
+            this@JourneyPlanFragment,
+            dayList,
+            btnDate.tag.toString()
+        )
         rvCurrentWeek!!.adapter = jpscurrentweekAdapter
     }
 
     fun filerJP(status: Int = 0, filterDate: String = "") {
         println("filerJP")
-        var fd = if(filterDate.equals("")) btnDate.tag else filterDate
+        var fd = if (filterDate.equals("")) btnDate.tag else filterDate
         btnDate.tag = fd
 
-        println("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${fd}&TeamMemberID=${CSP.getData("user_id")}&VisitStatus=${status}")
-        fetchJPStatus("${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=${fd}&TeamMemberID=${CSP.getData("user_id")}")
-        fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${fd}&TeamMemberID=${CSP.getData("user_id")}&VisitStatus=${status}", false)
+        println(
+            "${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${fd}&TeamMemberID=${
+                CSP.getData(
+                    "user_id"
+                )
+            }&VisitStatus=${status}"
+        )
+        fetchJPStatus(
+            "${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=${fd}&TeamMemberID=${
+                CSP.getData(
+                    "user_id"
+                )
+            }"
+        )
+        fetchJourneyPlan(
+            "${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${fd}&TeamMemberID=${
+                CSP.getData(
+                    "user_id"
+                )
+            }&VisitStatus=${status}", false
+        )
     }
 
-    fun reloadJP(){
-        fetchJPStatus("${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=${btnDate.tag}&TeamMemberID=${CSP.getData("user_id")}")
-        fetchJourneyPlan("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.tag}&TeamMemberID=${CSP.getData("user_id")}&VisitStatus=0", false)
+    fun reloadJP() {
+        fetchJPStatus(
+            "${CSP.getData("base_url")}/JourneyPlan.asmx/JourneyPlanSummary?PlanDate=${btnDate.tag}&TeamMemberID=${
+                CSP.getData(
+                    "user_id"
+                )
+            }"
+        )
+        fetchJourneyPlan(
+            "${CSP.getData("base_url")}/JourneyPlan.asmx/TeamJourneyPlan?PlanDate=${btnDate.tag}&TeamMemberID=${
+                CSP.getData(
+                    "user_id"
+                )
+            }&VisitStatus=0", false
+        )
     }
 
     fun fetchJPStatus(url: String) {
@@ -301,7 +310,7 @@ class JourneyPlanFragment : BaseFragment() {
                         jpstatusAdapter = JPStatusAdapter(
                             requireContext(),
                             apiData.data,
-                            this@JourneyPlanFragment
+                            this@JourneyPlanFragment, settingData
                         )
                         rvJPStatus!!.adapter = jpstatusAdapter
                     })
@@ -349,7 +358,7 @@ class JourneyPlanFragment : BaseFragment() {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         rvJourneyPlan.setHasFixedSize(true)
 
-                        if(isDecoratorEnabled){
+                        if (isDecoratorEnabled) {
                             /*var itemDecoration = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
                             itemDecoration.setDrawable(getDrawable(R.drawable.border_grey)!!)*/
                             rvJourneyPlan.addItemDecoration(
@@ -361,11 +370,17 @@ class JourneyPlanFragment : BaseFragment() {
                         }
 
 
-                        val isCurrentDate :Boolean = currentDate.equals(btnDate.tag.toString())
+                        val isCurrentDate: Boolean = currentDate.equals(btnDate.tag.toString())
 
                         layoutManager = LinearLayoutManager(requireContext())
                         rvJourneyPlan.layoutManager = layoutManager
-                        recylcerAdapter = JPAdapter(requireContext(), apiData.data, this@JourneyPlanFragment, isCurrentDate, settingData)
+                        recylcerAdapter = JPAdapter(
+                            requireContext(),
+                            apiData.data,
+                            this@JourneyPlanFragment,
+                            isCurrentDate,
+                            settingData
+                        )
                         rvJourneyPlan.adapter = recylcerAdapter
                         val emptyView: View = todo_list_empty_view
                         rvJourneyPlan.setEmptyView(emptyView)
