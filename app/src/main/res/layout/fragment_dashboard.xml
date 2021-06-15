@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--  Empty      -->
+        <!-- Empty -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -22,7 +22,7 @@
             android:textColor="#000"
             android:textSize="20dp" />
 
-        <!--   Loading     -->
+        <!-- Loading -->
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/spin_kit"
             style="@style/SpinKitView.Large.CubeGrid"
@@ -41,289 +41,316 @@
             android:orientation="vertical"
             android:tag="@string/ll_complete">
 
-            <androidx.cardview.widget.CardView
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="8dp"
-                android:padding="16dp"
-                app:cardBackgroundColor="@color/black"
-                app:cardCornerRadius="6dp">
+                android:layout_height="match_parent"
+                android:scrollbars="none">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
-
-                        <ImageView
-                            android:id="@+id/imgUser"
-                            android:layout_width="72dp"
-                            android:layout_height="72dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_launcher_background" />
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="8dp"
+                        android:padding="16dp"
+                        app:cardBackgroundColor="@color/black"
+                        app:cardCornerRadius="6dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="4dp">
-
-                            <TextView
-                                android:id="@+id/txtUsername"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/samsungsharpsans_bold"
-                                android:text="Burhan Ahmed"
-                                android:textColor="@color/white"
-                                android:textSize="14dp" />
-
-                            <TextView
-                                android:id="@+id/txtUseremail"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@+id/txtUsername"
-                                android:layout_marginTop="4dp"
-                                android:text="Lahore, PK"
-                                android:textColor="@color/white"
-                                android:textSize="10dp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/cvJourneyPlan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="#3E3E3E"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="4dp">
-
-                            <TextView
-                                android:id="@+id/txtCurrentDate"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="right"
-                                android:fontFamily="@font/samsungsharpsans_medium"
-                                android:paddingBottom="4dp"
-                                android:text="Sat 22 May 2021"
-                                android:textColor="#bebebe"
-                                android:textSize="8dp" />
+                            android:orientation="horizontal"
+                            android:padding="8dp">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1">
+
+                                <ImageView
+                                    android:id="@+id/imgUser"
+                                    android:layout_width="80dp"
+                                    android:layout_height="80dp"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@drawable/ic_launcher_background" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center"
+                                    android:orientation="vertical"
+                                    android:padding="4dp">
+
+                                    <TextView
+                                        android:id="@+id/txtUsername"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/samsungsharpsans_bold"
+                                        android:text="Burhan Ahmed"
+                                        android:textColor="@color/white"
+                                        android:textSize="14dp" />
+
+                                    <TextView
+                                        android:id="@+id/txtUseremail"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/txtUsername"
+                                        android:layout_marginTop="4dp"
+                                        android:text="Lahore, PK"
+                                        android:textColor="@color/white"
+                                        android:textSize="10dp" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/cvJourneyPlan"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="#3E3E3E"
                                 android:orientation="vertical">
 
-                                <TextView
-                                    android:maxLength="15"
-                                    android:id="@+id/Dashboard_TodayVisit"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
                                     android:layout_gravity="center"
-                                    android:fontFamily="@font/samsungsharpsans_medium"
-                                    android:text="Today's Visit"
+                                    android:gravity="center"
+                                    android:orientation="vertical"
+                                    android:padding="4dp">
+
+                                    <TextView
+                                        android:id="@+id/txtCurrentDate"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="right"
+                                        android:fontFamily="@font/samsungsharpsans_medium"
+                                        android:paddingBottom="4dp"
+                                        android:text="Sat 22 May 2021"
+                                        android:textColor="#bebebe"
+                                        android:textSize="10dp" />
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:id="@+id/Dashboard_TodayVisit"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center"
+                                            android:fontFamily="@font/samsungsharpsans_medium"
+                                            android:maxLength="20"
+                                            android:text="Today's Visit"
+                                            android:textColor="#fff"
+                                            android:textSize="14sp" />
+
+                                        <TextView
+                                            android:id="@+id/txtTodayVisitCount"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center"
+                                            android:text="00"
+                                            android:textColor="#fff"
+                                            android:textSize="16sp" />
+
+                                        <TextView
+                                            android:id="@+id/Dashboard_StorePlan"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center"
+                                            android:maxLength="15"
+                                            android:text="Store Plans"
+                                            android:textColor="#fff"
+                                            android:textSize="10sp" />
+                                    </LinearLayout>
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="16dp"
+                        android:orientation="horizontal">
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cvCoverage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            app:cardBackgroundColor="#534f47"
+                            app:cardCornerRadius="6dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:padding="8dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="wrap_content"
+                                        android:adjustViewBounds="true"
+                                        android:src="@drawable/home_icon" />
+
+                                    <TextView
+                                        android:id="@+id/txtCoverageCount"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:gravity="right"
+                                        android:text="0000"
+                                        android:textColor="#fff"
+                                        android:textSize="24dp" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/Dashboard_CoverageButton"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="right"
+                                    android:maxLength="20"
+                                    android:maxLines="1"
+                                    android:text="Store Coverage"
                                     android:textColor="#fff"
                                     android:textSize="12dp" />
 
-                                <TextView
-                                    android:id="@+id/txtTodayVisitCount"
-                                    android:layout_width="wrap_content"
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cvDeployement"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="1"
+                            app:cardBackgroundColor="#ea4335"
+                            app:cardCornerRadius="6dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:padding="8dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:text="00"
-                                    android:textColor="#fff"
-                                    android:textSize="14dp" />
+                                    android:orientation="horizontal">
+
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="wrap_content"
+                                        android:adjustViewBounds="true"
+                                        android:src="@drawable/watch_icon" />
+
+                                    <TextView
+                                        android:id="@+id/txtPendingCount"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:gravity="right"
+                                        android:text="000"
+                                        android:textColor="#fff"
+                                        android:textSize="24dp" />
+                                </LinearLayout>
 
                                 <TextView
-                                    android:id="@+id/Dashboard_StorePlan"
-                                    android:layout_width="wrap_content"
+                                    android:id="@+id/Dashboard_PendingButton"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:maxLength="15"
-                                    android:text="Store Plans"
+                                    android:gravity="right"
+                                    android:maxLength="25"
+                                    android:maxLines="1"
+                                    android:text="Pending Deployment"
                                     android:textColor="#fff"
-                                    android:textSize="8dp" />
+                                    android:textSize="12dp" />
+
                             </LinearLayout>
-                        </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
                     </LinearLayout>
+
+                    <GridView
+                        android:id="@+id/gridview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/photoContainer"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="16dp"
+                        android:columnWidth="74dp"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:horizontalSpacing="10dp"
+                        android:numColumns="auto_fit"
+                        android:stretchMode="columnWidth"
+                        android:verticalSpacing="10dp" />
+
+                    <TextView
+                        android:id="@+id/Dashboard_GraphTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/samsungsharpsans_bold"
+                        android:paddingBottom="8dp"
+                        android:text="Daily Visit Status"
+                        android:textColor="@color/black"
+                        android:textSize="24dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border_grey"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <com.github.mikephil.charting.charts.BarChart
+                            android:id="@+id/chartDailyStatus"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/Dashboard_TaskTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/samsungsharpsans_bold"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:text="Assigned Task and Status"
+                        android:textColor="@color/black"
+                        android:textSize="24dp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvAssignedTask"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="16dp">
+
+                    </androidx.recyclerview.widget.RecyclerView>
 
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="16dp"
-                android:orientation="horizontal">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cvCoverage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_weight="1"
-                    app:cardBackgroundColor="#534f47"
-                    app:cardCornerRadius="6dp">
+            </ScrollView>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="8dp">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="wrap_content"
-                                android:adjustViewBounds="true"
-                                android:src="@drawable/home_icon" />
-
-                            <TextView
-                                android:id="@+id/txtCoverageCount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="right"
-                                android:text="0000"
-                                android:textColor="#fff"
-                                android:textSize="24dp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/Dashboard_CoverageButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="right"
-                            android:maxLength="20"
-                            android:maxLines="1"
-                            android:text="Store Coverage"
-                            android:textColor="#fff"
-                            android:textSize="10dp" />
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cvDeployement"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_weight="1"
-                    app:cardBackgroundColor="#ea4335"
-                    app:cardCornerRadius="6dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="8dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="wrap_content"
-                                android:adjustViewBounds="true"
-                                android:src="@drawable/watch_icon" />
-
-                            <TextView
-                                android:id="@+id/txtPendingCount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="right"
-                                android:text="000"
-                                android:textColor="#fff"
-                                android:textSize="24dp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/Dashboard_PendingButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="right"
-                            android:maxLength="25"
-                            android:maxLines="1"
-                            android:text="Pending Deployment"
-                            android:textColor="#fff"
-                            android:textSize="10dp" />
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-            </LinearLayout>
-
-            <GridView
-                android:id="@+id/gridview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/photoContainer"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="16dp"
-                android:columnWidth="74dp"
-                android:gravity="center_horizontal|center_vertical"
-                android:horizontalSpacing="10dp"
-                android:numColumns="auto_fit"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="10dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border_grey"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/Dashboard_GraphTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/samsungsharpsans_bold"
-                    android:text="Daily Visit Status"
-                    android:textColor="@color/black"
-                    android:textSize="16dp" />
-
-                <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/chartDailyStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/Dashboard_TaskTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/samsungsharpsans_bold"
-                android:paddingTop="8dp"
-                android:text="Assigned Task and Status"
-                android:textColor="@color/black"
-                android:textSize="24dp" />
 
         </LinearLayout>
 

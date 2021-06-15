@@ -4,37 +4,25 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.StrictMode
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridView
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cheilros.MainActivity
 import com.example.cheilros.R
-import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.MenuNavigationAdapter
+import com.example.cheilros.adapters.TaskAssignedAdapter
 import com.example.cheilros.data.AppSetting
-import com.example.cheilros.data.UserData
-import com.example.cheilros.datavm.AppSettingViewModel
-import com.example.cheilros.datavm.UserDataViewModel
-import com.example.cheilros.datavm.UserPermissionViewModel
-import com.example.cheilros.helpers.CustomSharedPref
-import com.example.cheilros.models.CheckListDetailModel
-import com.example.cheilros.models.DashboardModel
-import com.example.cheilros.models.MenuNavigationModel
+import com.example.cheilros.models.*
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -42,19 +30,14 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
-import kotlinx.android.synthetic.main.activity_dashboard.view.*
 import kotlinx.android.synthetic.main.activity_dashboard.view.gridview
 import kotlinx.android.synthetic.main.activity_dashboard.view.imgUser
 import kotlinx.android.synthetic.main.activity_dashboard.view.txtUseremail
 import kotlinx.android.synthetic.main.activity_dashboard.view.txtUsername
-import kotlinx.android.synthetic.main.activity_new_dashboard.*
-import kotlinx.android.synthetic.main.fragment_checklist_category.*
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.android.synthetic.main.fragment_dashboard.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_dashboard.view.*
-import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -66,6 +49,9 @@ class DashboardFragment : BaseFragment() {
     var gridView: GridView? = null
     var menuData: java.util.ArrayList<MenuNavigationModel>? = null
     var adapter: MenuNavigationAdapter? = null
+
+    lateinit var layoutManager: RecyclerView.LayoutManager
+    lateinit var recylcerAdapter: TaskAssignedAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -278,10 +264,10 @@ class DashboardFragment : BaseFragment() {
         btnTest.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
         }*/
+        fetchTaskAssignedData("${CSP.getData("base_url")}/Dashboard.asmx/TaskAssigned?TeamMemberID=1&Status=1")
 
-        val data = createChartData()
-        configureChartAppearance()
-        data?.let { prepareChartData(it) }
+        fetchChartData("${CSP.getData("base_url")}/Dashboard.asmx/DailyTrend?TeamMemberID=1&TrendDate=2021-06-14")
+
     }
 
     fun fetchDashboardData(url: String){
@@ -338,6 +324,100 @@ class DashboardFragment : BaseFragment() {
         })
     }
 
+    fun fetchChartData(url: String){
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                requireActivity().runOnUiThread(java.lang.Runnable {
+                    activity?.let { it1 ->
+                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                            .setTitle("Error!!")
+                            .setMessage(e.message.toString())
+                            .sneakError()
+                    }
+                })
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body?.string()
+                println(body)
+
+                val gson = GsonBuilder().create()
+                val apiData = gson.fromJson(body, DashboardBarChartModel::class.java)
+                if (apiData.status == 200) {
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        val data = createChartData(apiData.data)
+                        configureChartAppearance(apiData.data)
+                        data?.let { prepareChartData(it) }
+                    })
+                }else{
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage("Data not fetched.")
+                                .sneakWarning()
+                        }
+                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                    })
+                }
+            }
+        })
+    }
+
+    fun fetchTaskAssignedData(url: String){
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                requireActivity().runOnUiThread(java.lang.Runnable {
+                    activity?.let { it1 ->
+                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                            .setTitle("Error!!")
+                            .setMessage(e.message.toString())
+                            .sneakError()
+                    }
+                })
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body?.string()
+                println(body)
+
+                val gson = GsonBuilder().create()
+                val apiData = gson.fromJson(body, DashboardTaskAssignedModel::class.java)
+                if (apiData.status == 200) {
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        rvAssignedTask.setHasFixedSize(true)
+                        layoutManager = LinearLayoutManager(requireContext())
+                        rvAssignedTask.layoutManager = layoutManager
+                        recylcerAdapter = TaskAssignedAdapter(requireContext(), apiData.data)
+                        rvAssignedTask.adapter = recylcerAdapter
+                    })
+                }else{
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage("Data not fetched.")
+                                .sneakWarning()
+                        }
+                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                    })
+                }
+            }
+        })
+    }
+
     private fun setBarChart() {
         chartDailyStatus.getDescription().setEnabled(false)
 
@@ -387,7 +467,7 @@ class DashboardFragment : BaseFragment() {
         chartDailyStatus.invalidate()
     }
 
-    private fun configureChartAppearance() {
+    private fun configureChartAppearance(data: List<DashboardBarChartData>) {
         chartDailyStatus.getDescription().setEnabled(false)
         chartDailyStatus.setDrawValueAboveBar(false)
         val xAxis: XAxis = chartDailyStatus.getXAxis()
@@ -397,23 +477,36 @@ class DashboardFragment : BaseFragment() {
                 return DAYS.get(value.toInt())
             }
         }*/
+        /*var xAxisLabels : MutableList<String> = ArrayList()
+        for(label in data){
+            xAxisLabels.add(label.TrendDate)
+        }
+
+        chartDailyStatus.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisLabels)*/
         chartDailyStatus.legend.isEnabled = false
         chartDailyStatus.axisLeft.setDrawGridLines(false);
         chartDailyStatus.xAxis.setDrawGridLines(false);
         chartDailyStatus.axisLeft.setDrawLabels(false);
         chartDailyStatus.axisRight.setDrawLabels(false);
-        /*val axisLeft: YAxis = chartDailyStatus.getAxisLeft()
+        val axisLeft: YAxis = chartDailyStatus.axisLeft
         axisLeft.granularity = 10f
         axisLeft.axisMinimum = 0f
-        val axisRight: YAxis = chartDailyStatus.getAxisRight()
+        val axisRight: YAxis = chartDailyStatus.axisRight
         axisRight.granularity = 10f
-        axisRight.axisMinimum = 0f*/
+        axisRight.axisMinimum = 0f
     }
 
-    private fun createChartData(): BarData? {
+    private fun createChartData(data: List<DashboardBarChartData>): BarData? {
         val r = Random()
 
         val values: ArrayList<BarEntry> = ArrayList()
+
+        /*for(chartVal in data){
+            val random: Float = 5 + r.nextFloat()* (50 - 5)
+            val x = random
+            values.add(BarEntry(x, ))
+        }*/
+
         for (i in 0 until 7) {
             val random: Float = 5 + r.nextFloat()* (50 - 5)
             val x = i.toFloat() +1

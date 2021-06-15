@@ -3,10 +3,13 @@ package com.example.cheilros.adapters
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -92,6 +95,10 @@ class MyCoverageAdapter(
 
         val mapView: MapView = holder.mapView
 
+        mapView.setOnClickListener {
+            println("mapview")
+        }
+
         //Update Labels
         try {
             holder.btnAccept.text = settingData.filter { it.fixedLabelName == "StoreList_AddJPButton" }.get(0).labelName
@@ -175,6 +182,18 @@ class MyCoverageAdapter(
             val sydney = LatLng(0.0, 0.0)
             googleMap!!.addMarker(MarkerOptions().position(sydney).title(itemList[curPos].StoreName))
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,20.5f))
+        }
+
+        googleMap!!.setOnMapClickListener {
+            try {
+                val uri =
+                    "http://maps.google.com/maps?saddr=25.1540,55.2701&daddr=25.3462,55.4211"
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+                intent.setPackage("com.google.android.apps.maps")
+                context.startActivity(intent)
+            }catch (ex: Exception){
+
+            }
         }
     }
 

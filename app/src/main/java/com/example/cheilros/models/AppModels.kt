@@ -38,6 +38,24 @@ class ActivityCategoryData(
 //region Dashboard
 class DashboardModel(val status: Int, val data: List<DashboardData>)
 class DashboardData(val Coverage: String, val TodayVisit: String, val PendingData: String)
+
+class DashboardBarChartModel(val status: Int, val data: List<DashboardBarChartData>)
+class DashboardBarChartData(
+    val TeamMemberID: Int,
+    val TrendDate: String,
+    val Value1: String,
+    val Value2: String
+)
+
+class DashboardTaskAssignedModel(val status: Int, val data: List<DashboardTaskAssignedData>)
+class DashboardTaskAssignedData(
+    val TaskID: Int,
+    val TaskTitle: String,
+    val TaskDescription: String,
+    val AssignedDateTime: String,
+    val TeamMemberName: String,
+    val TaskTitle1: String
+)
 //endregion
 
 //region Investment

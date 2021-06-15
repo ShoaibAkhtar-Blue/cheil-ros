@@ -82,7 +82,13 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <at.markushi.ui.CircleButton
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save" />
+
+        <!--<at.markushi.ui.CircleButton
             android:id="@+id/btnSave"
             android:layout_width="64dip"
             android:layout_height="64dip"
@@ -90,7 +96,7 @@
             android:layout_marginTop="8dp"
             android:src="@drawable/ic_arrow_right_foreground"
             app:cb_color="@color/purple_500"
-            app:cb_pressedRingWidth="8dip" />
+            app:cb_pressedRingWidth="8dip" />-->
 
     </LinearLayout>
 

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.telephony.TelephonyManager
@@ -13,6 +14,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.cheilros.MainActivity
 import com.example.cheilros.R
 import com.example.cheilros.data.UserData
@@ -20,6 +24,7 @@ import com.example.cheilros.data.UserPermission
 import com.example.cheilros.models.LoginUserPermission
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
+import kotlinx.android.synthetic.main.activity_dashboard.view.*
 import kotlinx.android.synthetic.main.fragment_base_url.*
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_login.view.*
@@ -47,19 +52,7 @@ class LoginFragment : BaseFragment() {
         mUserDataViewModel.nukeTable()
         mUserPermissionViewModel.nukeTable()
 
-        try {
-            var url = URL("${CSP.getData("base_url")}/AppImages/Background.jpg")
-            val bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream())
-            val background = BitmapDrawable(resources, bmp)
-            view.CLlogin.background = background
 
-            var urlLogo = URL("${CSP.getData("base_url")}/AppImages/ROS_Logo.png")
-            val bmpLogo = BitmapFactory.decodeStream(urlLogo.openConnection().getInputStream())
-            val backgroundLogo = BitmapDrawable(resources, bmpLogo)
-            view.imgLogoLogin.background = backgroundLogo
-        }catch (ex: Exception){
-            Log.e("Error_", "CLlogin: ${ex.message.toString()}")
-        }
 
         //Set Labels
         try {
@@ -88,11 +81,42 @@ class LoginFragment : BaseFragment() {
         }
 
 
+        try {
+            Glide.with(this).load("${CSP.getData("base_url")}/AppImages/Background.jpg").into(object :
+                CustomTarget<Drawable>() {
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    view.CLlogin.background=resource
+                }
+            })
+
+            Glide.with(this).load("${CSP.getData("base_url")}/AppImages/ROS_Logo.png").into(object :
+                CustomTarget<Drawable>() {
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    view.imgLogoLogin.background=resource
+                }
+            })
+        }catch (ex: Exception){
+            Log.e("Error_", "CLlogin: ${ex.message.toString()}")
+        }
 
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
 
 
 

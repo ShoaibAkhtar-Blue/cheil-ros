@@ -2,6 +2,7 @@ package com.example.cheilros.fragments
 
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,13 +13,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.cheilros.MainActivity
 import com.example.cheilros.R
 import com.example.cheilros.datavm.AppSettingViewModel
 import com.example.cheilros.helpers.CustomSharedPref
+import kotlinx.android.synthetic.main.fragment_base_url.view.*
 import kotlinx.android.synthetic.main.fragment_login.view.*
 import kotlinx.android.synthetic.main.fragment_login.view.imgLogoLogin
 import kotlinx.android.synthetic.main.fragment_splash.view.*
+import kotlinx.android.synthetic.main.fragment_splash.view.imgLogo
 import java.net.URL
 
 
@@ -39,15 +45,31 @@ class SplashFragment : Fragment() {
             mAppSettingViewModel.nukeTable()
 
         try {
-            var url = URL("${CSP.getData("base_url")}/AppImages/Background.jpg")
-            val bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream())
-            val background = BitmapDrawable(resources, bmp)
-            view.CLsplash.background = background
+            Glide.with(this).load("${CSP.getData("base_url")}/AppImages/Background.jpg").into(object :
+                CustomTarget<Drawable>() {
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
 
-            /*var urlLogo = URL("${CSP.getData("base_url")}/AppImages/ROS_Logo.png")
-            val bmpLogo = BitmapFactory.decodeStream(urlLogo.openConnection().getInputStream())
-            val backgroundLogo = BitmapDrawable(resources, bmpLogo)
-            view.imgLogo.background = backgroundLogo*/
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    view.CLsplash.background=resource
+                }
+            })
+
+            /*Glide.with(this).load("${CSP.getData("base_url")}/AppImages/ROS_Logo.png").into(object :
+                CustomTarget<Drawable>() {
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    view.imgLogo.background=resource
+                }
+            })*/
         }catch (ex: Exception){
             Log.e("Error_", "CLlogin: ${ex.message.toString()}")
         }

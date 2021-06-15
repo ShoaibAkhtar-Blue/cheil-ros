@@ -1,6 +1,7 @@
 package com.example.cheilros.fragments
 
 import android.content.SharedPreferences
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +13,9 @@ import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.cheilros.R
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.datavm.AppSettingViewModel
@@ -22,6 +26,8 @@ import com.example.cheilros.models.AppSettingModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import kotlinx.android.synthetic.main.fragment_base_url.*
+import kotlinx.android.synthetic.main.fragment_base_url.view.*
+import kotlinx.android.synthetic.main.fragment_login.view.*
 import okhttp3.*
 import java.io.IOException
 import java.util.*
@@ -51,6 +57,37 @@ class BaseUrlFragment : Fragment() {
 
         //Save Setting to DB
         mAppSettingViewModel.nukeTable()
+
+
+        try {
+            Glide.with(this).load("${CSP.getData("base_url")}/AppImages/Background.jpg").into(object :
+                CustomTarget<Drawable>() {
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    view.CLbaseurl.background=resource
+                }
+            })
+
+            Glide.with(this).load("${CSP.getData("base_url")}/AppImages/ROS_Logo.png").into(object :
+                CustomTarget<Drawable>() {
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    view.imgLogo.background=resource
+                }
+            })
+        }catch (ex: Exception){
+            Log.e("Error_", "CLlogin: ${ex.message.toString()}")
+        }
 
         return view
     }
