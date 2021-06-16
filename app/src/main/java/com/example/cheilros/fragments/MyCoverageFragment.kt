@@ -1,16 +1,16 @@
 package com.example.cheilros.fragments
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.appcompat.widget.SearchView
-import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,12 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.activities.customobj.EmptyRecyclerView
 import com.example.cheilros.adapters.MyCoverageAdapter
-import com.example.cheilros.data.AppSetting
-import com.example.cheilros.data.UserData
-import com.example.cheilros.datavm.AppSettingViewModel
-import com.example.cheilros.datavm.UserDataViewModel
-import com.example.cheilros.datavm.UserPermissionViewModel
-import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.ChannelData
 import com.example.cheilros.models.ChannelModel
 import com.example.cheilros.models.MyCoverageModel
@@ -47,6 +41,11 @@ class MyCoverageFragment : BaseFragment() {
     lateinit var channelData:List<ChannelData>
 
     lateinit var recylcerAdapter: MyCoverageAdapter
+
+    lateinit var locationManager: LocationManager
+
+    var latitude: String = "0.0"
+    var longitude: String = "0.0"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,6 +71,8 @@ class MyCoverageFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
 
 
         recyclerView= rvCoverage
@@ -220,7 +221,7 @@ class MyCoverageFragment : BaseFragment() {
                 println(apiData.status)
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
-                        recylcerAdapter = MyCoverageAdapter(requireContext(), apiData.data, settingData)
+                        recylcerAdapter = MyCoverageAdapter(requireContext(), apiData.data, settingData, latitude, longitude)
                         recyclerView.adapter = recylcerAdapter
                         mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
                     })
@@ -238,5 +239,7 @@ class MyCoverageFragment : BaseFragment() {
             }
         })
     }
+
+
 }
 

@@ -1,14 +1,18 @@
 package com.example.cheilros.fragments.storeview
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cheilros.MainActivity
 import com.example.cheilros.R
 import com.example.cheilros.adapters.CapturedPictureAdapter
 import com.example.cheilros.fragments.BaseFragment
@@ -49,6 +53,29 @@ class AcrivityDetailFragment : BaseFragment() {
         view.btnSubmit.text = settingData.filter { it.fixedLabelName == "LoginForgetSubmitButton" }.get(0).labelName
         //endregion
 
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
+            // Handle the back button event
+            println("callback")
+            // setup the alert builder
+            val builder: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
+            builder.setTitle("Close Session")
+            builder.setMessage("Are You Sure you want to close current session?")
+
+            // add the buttons
+
+            // add the buttons
+            builder.setPositiveButton("Ok") { dialogInterface, which ->
+                findNavController().popBackStack()
+            }
+
+            builder.setNegativeButton("Cancel", null)
+
+            // create and show the alert dialog
+
+            // create and show the alert dialog
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
 
 
         return view

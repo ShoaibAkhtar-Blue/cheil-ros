@@ -55,8 +55,9 @@ tools:context=".fragments.storeview.ActivityFragment">
         <com.example.cheilros.activities.customobj.EmptyRecyclerView
             android:id="@+id/rvActivity"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp" />
+            android:layout_height="300dp"
+            android:padding="16dp"
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -65,7 +66,7 @@ tools:context=".fragments.storeview.ActivityFragment">
             android:padding="16dp"
             android:text="Recent Posted Activities"
             android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:textSize="20dp" />
 
     </LinearLayout>
 

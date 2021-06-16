@@ -126,7 +126,7 @@ tools:context=".fragments.storeview.TrainingDetailFragment">
                         android:paddingBottom="4dp"
                         android:text="Select who attent the training"
                         android:textColor="@color/black"
-                        android:textSize="24sp" />
+                        android:textSize="20dp" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -224,6 +224,7 @@ tools:context=".fragments.storeview.TrainingDetailFragment">
                             android:src="@drawable/camera_btn" />
 
                         <androidx.recyclerview.widget.RecyclerView
+                            android:layout_marginLeft="8dp"
                             android:id="@+id/rvTrainingPictures"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" />

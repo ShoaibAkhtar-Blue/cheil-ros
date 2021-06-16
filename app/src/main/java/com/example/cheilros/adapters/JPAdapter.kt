@@ -5,12 +5,14 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Context.LOCATION_SERVICE
+import android.content.Intent
 import android.content.Intent.*
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -346,6 +348,19 @@ class JPAdapter(
             val sydney = LatLng(itemList[curPos].Latitude.toDouble(), itemList[curPos].Longitude.toDouble())
             googleMap!!.addMarker(MarkerOptions().position(sydney).title(itemList[curPos].StoreName))
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,20.5f))
+
+            googleMap!!.setOnMapClickListener {
+                try {
+                    val uri =
+                        "http://maps.google.com/maps?daddr=${itemList[curPos].Latitude},${itemList[curPos].Longitude}"
+                    val intent = Intent(ACTION_VIEW, Uri.parse(uri))
+                    intent.setPackage("com.google.android.apps.maps")
+                    context.startActivity(intent)
+                }catch (ex: Exception){
+
+                }
+            }
+
         }catch (ex: Exception){
             val sydney = LatLng(0.0, 0.0)
             googleMap!!.addMarker(MarkerOptions().position(sydney).title(itemList[curPos].StoreName))

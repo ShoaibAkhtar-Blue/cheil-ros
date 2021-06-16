@@ -62,8 +62,8 @@
     <fragment
         android:id="@+id/storeViewFragment"
         android:name="com.example.cheilros.fragments.storeview.StoreViewFragment"
-        android:label="fragment_store_view"
-        tools:layout="@layout/fragment_store_view" >
+        android:label="store_view"
+        tools:layout="@layout/fragment_store_view">
         <action
             android:id="@+id/action_storeViewFragment_to_checklistCategoryFragment"
             app:destination="@id/checklistCategoryFragment" />
@@ -72,8 +72,8 @@
             app:argType="string" />
         <argument
             android:name="StoreID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <action
             android:id="@+id/action_storeViewFragment_to_investmentFragment"
             app:destination="@id/investmentFragment" />
@@ -147,46 +147,46 @@
     <fragment
         android:id="@+id/activityFragment"
         android:name="com.example.cheilros.fragments.storeview.ActivityFragment"
-        android:label="fragment_activity"
-        tools:layout="@layout/fragment_activity" >
+        android:label="activity"
+        tools:layout="@layout/fragment_activity">
         <action
             android:id="@+id/action_activityFragment_to_activityDetailFragment"
             app:destination="@id/activityDetailFragment" />
         <argument
             android:name="StoreID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="StoreName"
             app:argType="string" />
         <argument
             android:name="DivisionID"
-            app:argType="integer"
-            android:defaultValue="1" />
+            android:defaultValue="1"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/activityDetailFragment"
         android:name="com.example.cheilros.fragments.storeview.ActivitySubCategoryFragment"
-        android:label="fragment_activity_detail"
-        tools:layout="@layout/fragment_activity_sub_category" >
+        android:label="activity_category"
+        tools:layout="@layout/fragment_activity_sub_category">
         <action
             android:id="@+id/action_activityDetailFragment_to_acrivityDetailFragment"
             app:destination="@id/acrivityDetailFragment" />
         <argument
             android:name="StoreID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="StoreName"
             app:argType="string" />
         <argument
             android:name="DivisionID"
-            app:argType="integer"
-            android:defaultValue="1" />
+            android:defaultValue="1"
+            app:argType="integer" />
         <argument
             android:name="ActivityTypeID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="ActivityTypeName"
             app:argType="string" />
@@ -194,8 +194,8 @@
     <fragment
         android:id="@+id/acrivityDetailFragment"
         android:name="com.example.cheilros.fragments.storeview.AcrivityDetailFragment"
-        android:label="fragment_acrivity_detail"
-        tools:layout="@layout/fragment_acrivity_detail" >
+        android:label="activity_detail"
+        tools:layout="@layout/fragment_acrivity_detail">
         <action
             android:id="@+id/action_acrivityDetailFragment_to_barcodeFragment"
             app:destination="@id/barcodeFragment" />
@@ -232,8 +232,8 @@
     <fragment
         android:id="@+id/trainingFragment"
         android:name="com.example.cheilros.fragments.storeview.TrainingFragment"
-        android:label="fragment_training"
-        tools:layout="@layout/fragment_training" >
+        android:label="training"
+        tools:layout="@layout/fragment_training">
         <action
             android:id="@+id/action_trainingFragment_to_trainingDetailFragment"
             app:destination="@id/trainingDetailFragment" />
@@ -241,8 +241,8 @@
     <fragment
         android:id="@+id/trainingDetailFragment"
         android:name="com.example.cheilros.fragments.storeview.TrainingDetailFragment"
-        android:label="fragment_training_detail"
-        tools:layout="@layout/fragment_training_detail" >
+        android:label="training_detail"
+        tools:layout="@layout/fragment_training_detail">
         <action
             android:id="@+id/action_trainingDetailFragment_to_cameraActivity"
             app:destination="@id/cameraActivity" />

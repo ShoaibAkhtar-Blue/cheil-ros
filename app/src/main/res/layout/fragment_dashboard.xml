@@ -144,7 +144,7 @@
                                             android:layout_height="wrap_content"
                                             android:layout_gravity="center"
                                             android:fontFamily="@font/samsungsharpsans_medium"
-                                            android:maxLength="20"
+                                            android:maxLength="15"
                                             android:text="Today's Visit"
                                             android:textColor="#fff"
                                             android:textSize="14sp" />
@@ -310,7 +310,7 @@
                         android:paddingBottom="8dp"
                         android:text="Daily Visit Status"
                         android:textColor="@color/black"
-                        android:textSize="24dp" />
+                        android:textSize="20dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -335,7 +335,7 @@
                         android:paddingBottom="8dp"
                         android:text="Assigned Task and Status"
                         android:textColor="@color/black"
-                        android:textSize="24dp" />
+                        android:textSize="20dp" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvAssignedTask"

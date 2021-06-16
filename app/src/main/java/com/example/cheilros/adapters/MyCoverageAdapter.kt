@@ -4,12 +4,12 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.location.Location
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -35,7 +35,9 @@ import java.io.IOException
 class MyCoverageAdapter(
     val context: Context,
     val itemList: List<MyCoverageData>,
-    val settingData: List<AppSetting>
+    val settingData: List<AppSetting>,
+    val latitude: String,
+    val longitude: String
 ): RecyclerView.Adapter<MyCoverageAdapter.ViewHolder>(),
     OnMapReadyCallback, Filterable {
 
@@ -174,28 +176,35 @@ class MyCoverageAdapter(
 
     override fun onMapReady(googleMap: GoogleMap?) {
         try {
+            //val myLocation: Location = googleMap!!.myLocation
+
             println("onMapReady-${itemList[curPos].Latitude}-${itemList[curPos].Longitude}")
             val sydney = LatLng(itemList[curPos].Latitude.toDouble(), itemList[curPos].Longitude.toDouble())
             googleMap!!.addMarker(MarkerOptions().position(sydney).title(itemList[curPos].StoreName))
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,20.5f))
+
+            googleMap!!.setOnMapClickListener {
+                try {
+                    val uri =
+                        "http://maps.google.com/maps?daddr=${itemList[curPos].Latitude},${itemList[curPos].Longitude}"
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+                    intent.setPackage("com.google.android.apps.maps")
+                    context.startActivity(intent)
+                }catch (ex: Exception){
+
+                }
+            }
+
         }catch (ex: Exception){
             val sydney = LatLng(0.0, 0.0)
             googleMap!!.addMarker(MarkerOptions().position(sydney).title(itemList[curPos].StoreName))
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,20.5f))
         }
 
-        googleMap!!.setOnMapClickListener {
-            try {
-                val uri =
-                    "http://maps.google.com/maps?saddr=25.1540,55.2701&daddr=25.3462,55.4211"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
-                intent.setPackage("com.google.android.apps.maps")
-                context.startActivity(intent)
-            }catch (ex: Exception){
 
-            }
-        }
     }
+
+
 
     private fun sendVisitRequest(url: String) {
         val request = Request.Builder()

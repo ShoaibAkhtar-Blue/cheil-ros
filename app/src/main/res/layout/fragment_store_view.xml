@@ -28,7 +28,7 @@
         android:paddingTop="8dp"
         android:text="Pending Deployments"
         android:textColor="@color/black"
-        android:textSize="24sp" />
+        android:textSize="20dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -37,6 +37,6 @@
         android:paddingTop="32dp"
         android:text="Open Issues"
         android:textColor="@color/black"
-        android:textSize="24sp" />
+        android:textSize="20dp" />
 
 </LinearLayout>

@@ -39,7 +39,7 @@
     <LinearLayout
         android:id="@+id/lvForm"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="320dp"
         android:layout_marginTop="32dp"
         android:orientation="vertical"
         android:paddingLeft="48dp"
@@ -70,6 +70,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:hint="@string/Password">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -93,6 +94,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Forgot Password" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/thumb_icon" />
 
 
     </LinearLayout>

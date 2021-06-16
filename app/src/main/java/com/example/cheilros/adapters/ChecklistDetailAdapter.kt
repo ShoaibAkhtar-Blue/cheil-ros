@@ -1,6 +1,7 @@
 package com.example.cheilros.adapters
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
@@ -33,14 +34,17 @@ import kotlinx.android.synthetic.main.dialog_add_visit.btnCancel
 import kotlinx.android.synthetic.main.dialog_add_visit.txtQuestion
 import kotlinx.android.synthetic.main.dialog_add_visit.txtTitle
 import kotlinx.android.synthetic.main.dialog_checklist.*
+import kotlinx.android.synthetic.main.dialog_checklist.btnDate
 import kotlinx.android.synthetic.main.fragment_checklist_category_detail.*
 import kotlinx.android.synthetic.main.fragment_checklist_category_detail.btnSubmit
 import kotlinx.android.synthetic.main.fragment_checklist_category_detail.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_investment_detail.*
+import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
+import java.util.*
 
 
 class ChecklistDetailAdapter(
@@ -235,6 +239,23 @@ class ChecklistDetailAdapter(
 
             if (itemList[position].InputTypeID == 4) {
                 dialog.btnDate.visibility = View.VISIBLE
+
+                dialog.btnDate.setOnClickListener {
+                    val calendar = Calendar.getInstance()
+                    val year = calendar.get(Calendar.YEAR)
+                    val month = calendar.get(Calendar.MONTH)
+                    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+                    val datePickerDialog =
+                        DatePickerDialog(
+                            context, DatePickerDialog.OnDateSetListener
+                            { view, year, monthOfYear, dayOfMonth ->
+                                val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
+                                dialog.btnDate.text = currentDate
+                            }, year, month, day
+                        )
+                    datePickerDialog.show()
+                }
             }
             //endregion
 

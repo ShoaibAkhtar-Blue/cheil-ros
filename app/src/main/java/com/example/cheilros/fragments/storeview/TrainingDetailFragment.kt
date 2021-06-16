@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -63,6 +65,8 @@ class TrainingDetailFragment : BaseFragment() {
         view.PromoterName.text = settingData.filter { it.fixedLabelName == "PromoterName" }.get(0).labelName
         view.PromoterAttend.text = settingData.filter { it.fixedLabelName == "PromoterAttend" }.get(0).labelName
         //endregion
+
+
 
         return view
     }
