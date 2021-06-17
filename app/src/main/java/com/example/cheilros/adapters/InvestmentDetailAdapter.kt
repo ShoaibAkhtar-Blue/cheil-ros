@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
@@ -31,18 +32,32 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class InvestmentDetailAdapter(val context: Context, val itemList: ArrayList<BrandsData>, val fragment: InvestmentDetailFragment, val arguments: Bundle?) :
+class InvestmentDetailAdapter(
+    val context: Context,
+    val itemList: MutableList<BrandsData>,
+    val fragment: InvestmentDetailFragment,
+    val arguments: Bundle?
+) :
     RecyclerView.Adapter<InvestmentDetailAdapter.ViewHolder>() {
 
     lateinit var CSP: CustomSharedPref
     var investmentsCountData: MutableList<InvestmentJSONData> = mutableListOf()
 
 
-
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        //lateinit var onTextUpdated: (String) -> Unit
+
         var txtNum: TextView = view.findViewById(R.id.txtNum)
         var txtBrand: TextView = view.findViewById(R.id.txtBrand)
         var txtAttend: EditText = view.findViewById(R.id.txtAttend)
+        var watcher: TextWatcher? = null
+
+        /*init { // TextChanged listener added only once.
+            txtAttend.doAfterTextChanged { editable ->
+                val text = editable.toString()
+                onTextUpdated(text)
+            }
+        }*/
     }
 
     override fun onCreateViewHolder(
@@ -58,9 +73,153 @@ class InvestmentDetailAdapter(val context: Context, val itemList: ArrayList<Bran
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtNum.text = (position + 1).toString()
         holder.txtBrand.text = itemList[position].BrandName
+
+
+        /*holder.onTextUpdated = { text ->
+            val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+            val currentDateAndTime: String = simpleDateFormat.format(Date())
+            try {
+                if (investmentsCountData.isNullOrEmpty()) {
+                    println("investmentsCountData: null")
+                    investmentsCountData.add(
+                        InvestmentJSONData(
+                            itemList[position].BrandID,
+                            arguments?.getInt("StoreID"),
+                            arguments?.getInt("ElementID"),
+                            text.toString(),
+                            "",
+                            CSP.getData("user_id")?.toInt(),
+                            currentDateAndTime
+                        )
+                    )
+                } else {
+                    val investmentSize =
+                        investmentsCountData.filter { it.BrandID == itemList[position].BrandID }.size
+                    println(investmentSize)
+                    if (investmentSize == 0) {
+                        investmentsCountData.add(
+                            InvestmentJSONData(
+                                itemList[position].BrandID,
+                                arguments?.getInt("StoreID"),
+                                arguments?.getInt("ElementID"),
+                                text.toString(),
+                                "",
+                                CSP.getData("user_id")?.toInt(),
+                                currentDateAndTime
+                            )
+                        )
+                    } else {
+                        val investmentIndex =
+                            investmentsCountData.indexOf(investmentsCountData.find { it.BrandID == itemList[position].BrandID })
+                        investmentsCountData.add(
+                            investmentIndex,
+                            InvestmentJSONData(
+                                itemList[position].BrandID,
+                                arguments?.getInt("StoreID"),
+                                arguments?.getInt("ElementID"),
+                                text.toString(),
+                                "",
+                                CSP.getData("user_id")?.toInt(),
+                                currentDateAndTime
+                            )
+                        )
+                        println("investmentIndex $investmentIndex")
+                    }
+                }
+
+                updateItem(
+                    position,
+                    BrandsData(
+                        itemList[position].BrandID,
+                        itemList[position].BrandName,
+                        text.toString()
+                    )
+                )
+
+            } catch (ex: Exception) {
+                println(ex.message)
+            }
+        }*/
         holder.txtAttend.setText(itemList[position].ElementStatus)
 
-        holder.txtAttend.addTextChangedListener(object : TextWatcher {
+        holder.watcher = holder.txtAttend.doAfterTextChanged { text ->
+            println(text.toString())
+            val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+            val currentDateAndTime: String = simpleDateFormat.format(Date())
+            try {
+                if (investmentsCountData.isNullOrEmpty()) {
+                    println("investmentsCountData: null")
+                    investmentsCountData.add(
+                        InvestmentJSONData(
+                            itemList[position].BrandID,
+                            arguments?.getInt("StoreID"),
+                            arguments?.getInt("ElementID"),
+                            text.toString(),
+                            "",
+                            CSP.getData("user_id")?.toInt(),
+                            currentDateAndTime
+                        )
+                    )
+                } else {
+                    val investmentSize =
+                        investmentsCountData.filter { it.BrandID == itemList[position].BrandID }.size
+                    println(investmentSize)
+                    if (investmentSize == 0) {
+                        investmentsCountData.add(
+                            InvestmentJSONData(
+                                itemList[position].BrandID,
+                                arguments?.getInt("StoreID"),
+                                arguments?.getInt("ElementID"),
+                                text.toString(),
+                                "",
+                                CSP.getData("user_id")?.toInt(),
+                                currentDateAndTime
+                            )
+                        )
+                    } else {
+                        val investmentIndex =
+                            investmentsCountData.indexOf(investmentsCountData.find { it.BrandID == itemList[position].BrandID })
+                        /*investmentsCountData.add(
+                            investmentIndex,
+                            InvestmentJSONData(
+                                itemList[position].BrandID,
+                                arguments?.getInt("StoreID"),
+                                arguments?.getInt("ElementID"),
+                                text.toString(),
+                                "",
+                                CSP.getData("user_id")?.toInt(),
+                                currentDateAndTime
+                            )
+                        )*/
+                        investmentsCountData[investmentIndex] = InvestmentJSONData(
+                            itemList[position].BrandID,
+                            arguments?.getInt("StoreID"),
+                            arguments?.getInt("ElementID"),
+                            text.toString(),
+                            "",
+                            CSP.getData("user_id")?.toInt(),
+                            currentDateAndTime
+                        )
+                        println("investmentIndex $investmentIndex")
+                        println("investmentIndex ${text.toString()}")
+                    }
+                }
+
+                updateItem(
+                    position,
+                    BrandsData(
+                        itemList[position].BrandID,
+                        itemList[position].BrandName,
+                        text.toString()
+                    )
+                )
+
+            } catch (ex: Exception) {
+                println(ex.message)
+            }
+        }
+
+        /*holder.txtAttend.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
             }
@@ -124,7 +283,7 @@ class InvestmentDetailAdapter(val context: Context, val itemList: ArrayList<Bran
                     println(ex.message)
                 }
             }
-        })
+        })*/
 
         fragment.btnSubmit.setOnClickListener {
 
@@ -176,5 +335,11 @@ class InvestmentDetailAdapter(val context: Context, val itemList: ArrayList<Bran
 
     override fun getItemCount(): Int {
         return itemList.size
+    }
+
+    fun updateItem(position: Int, item: BrandsData) {
+        itemList[position] = item
+        //itemList[position] = item
+        //notifyDataSetChanged()
     }
 }

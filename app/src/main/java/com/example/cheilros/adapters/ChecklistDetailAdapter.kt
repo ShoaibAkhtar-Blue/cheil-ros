@@ -80,11 +80,11 @@ class ChecklistDetailAdapter(
         holder.txtTitle.text = itemList[position].Question
 
         if(itemList[position].CheckListStatus != ""){
-            if(checklistAnswer.indexOf(checklistAnswer.find { it.CheckListID ==  itemList[position].ChecklistID}) != -1){
+            //if(checklistAnswer.indexOf(checklistAnswer.find { it.CheckListID ==  itemList[position].ChecklistID}) != -1){
                 holder.txtAnswer.text = "Answer: ${itemList[position].CheckListStatus}"
                 holder.RLcolor.setBackgroundColor(Color.RED)
                 holder.txtAnswer.visibility = View.VISIBLE
-            }
+            //}
         }
 
 

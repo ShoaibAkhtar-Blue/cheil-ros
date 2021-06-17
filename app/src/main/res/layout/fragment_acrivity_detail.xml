@@ -53,6 +53,7 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
             android:textSize="20dp" />
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/txtStoreSubName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

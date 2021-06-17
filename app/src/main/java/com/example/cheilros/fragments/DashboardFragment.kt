@@ -26,19 +26,20 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.activity_dashboard.view.gridview
 import kotlinx.android.synthetic.main.activity_dashboard.view.imgUser
-import kotlinx.android.synthetic.main.activity_dashboard.view.txtUseremail
 import kotlinx.android.synthetic.main.activity_dashboard.view.txtUsername
 import kotlinx.android.synthetic.main.fragment_dashboard.*
-import kotlinx.android.synthetic.main.fragment_dashboard.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_dashboard.view.*
 import okhttp3.*
 import java.io.IOException
+import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -64,7 +65,7 @@ class DashboardFragment : BaseFragment() {
         val currentDateAndTime: String = simpleDateFormat.format(Date())
 
         //region Set Labels
-        view.Dashboard_TodayVisit.text = settingData.filter { it.fixedLabelName == "Dashboard_TodayVisit" }.get(0).labelName
+        //view.Dashboard_TodayVisit.text = settingData.filter { it.fixedLabelName == "Dashboard_TodayVisit" }.get(0).labelName
         view.Dashboard_StorePlan.text = settingData.filter { it.fixedLabelName == "Dashboard_StorePlan" }.get(0).labelName
         view.Dashboard_GraphTitle.text = settingData.filter { it.fixedLabelName == "Dashboard_GraphTitle" }.get(0).labelName
         view.Dashboard_TaskTitle.text = settingData.filter { it.fixedLabelName == "Dashboard_TaskTitle" }.get(0).labelName
@@ -89,7 +90,8 @@ class DashboardFragment : BaseFragment() {
             .into(view.imgUser)
 
         view.txtUsername.text = userData[0].memberName
-        view.txtUseremail.text = userData[0].email
+        view.txtUserteam.text = userData[0].teamType
+        view.txtUserregion.text = userData[0].regionName
 
         //region Menu Grid
 
@@ -264,9 +266,12 @@ class DashboardFragment : BaseFragment() {
         btnTest.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
         }*/
-        fetchTaskAssignedData("${CSP.getData("base_url")}/Dashboard.asmx/TaskAssigned?TeamMemberID=1&Status=1")
+        val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+        val currentDateAndTime: String = simpleDateFormat.format(Date())
 
-        fetchChartData("${CSP.getData("base_url")}/Dashboard.asmx/DailyTrend?TeamMemberID=1&TrendDate=2021-06-14")
+        fetchTaskAssignedData("${CSP.getData("base_url")}/Dashboard.asmx/TaskAssigned?TeamMemberID=${CSP.getData("user_id")}&Status=1")
+
+        fetchChartData("${CSP.getData("base_url")}/Dashboard.asmx/DailyTrend?TeamMemberID=${CSP.getData("user_id")}&TrendDate=${currentDateAndTime}")
 
     }
 
@@ -302,9 +307,11 @@ class DashboardFragment : BaseFragment() {
 
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
-                        txtTodayVisitCount.text = apiData.data[0].TodayVisit
-                        txtCoverageCount.text = apiData.data[0].Coverage
-                        txtPendingCount.text = apiData.data[0].PendingData
+                        val formatter: NumberFormat = DecimalFormat("00")
+                        val formatter1: NumberFormat = DecimalFormat("00000")
+                        txtTodayVisitCount.text = formatter.format(apiData.data[0].TodayVisit.toInt())
+                        txtCoverageCount.text = formatter1.format(apiData.data[0].Coverage.toInt())
+                        txtPendingCount.text = formatter1.format(apiData.data[0].PendingData.toInt())
                     })
 
                 }else{
@@ -477,22 +484,39 @@ class DashboardFragment : BaseFragment() {
                 return DAYS.get(value.toInt())
             }
         }*/
-        /*var xAxisLabels : MutableList<String> = ArrayList()
+        var xAxisLabels : MutableList<String> = ArrayList()
+        var i = 0
         for(label in data){
+            println(label.TrendDate)
+
             xAxisLabels.add(label.TrendDate)
+            if(i == 0)
+                xAxisLabels.add(label.TrendDate)
+            i++
         }
 
-        chartDailyStatus.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisLabels)*/
+
+        xAxis.setCenterAxisLabels(false)
+
+        xAxis.setDrawGridLines(false)
+        //xAxis.granularity = 1f // only intervals of 1 day
+        xAxis.textColor = Color.BLACK;
+        xAxis.textSize = 8f
+        //xAxis.axisLineColor = Color.WHITE;
+        //xAxis.axisMinimum = 1f
+
+        chartDailyStatus.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisLabels)
+
         chartDailyStatus.legend.isEnabled = false
-        chartDailyStatus.axisLeft.setDrawGridLines(false);
-        chartDailyStatus.xAxis.setDrawGridLines(false);
-        chartDailyStatus.axisLeft.setDrawLabels(false);
-        chartDailyStatus.axisRight.setDrawLabels(false);
+        chartDailyStatus.axisLeft.setDrawGridLines(false)
+        chartDailyStatus.xAxis.setDrawGridLines(false)
+//        chartDailyStatus.axisLeft.setDrawLabels(false);
+//        chartDailyStatus.axisRight.setDrawLabels(false);
         val axisLeft: YAxis = chartDailyStatus.axisLeft
-        axisLeft.granularity = 10f
+        axisLeft.granularity = 0f
         axisLeft.axisMinimum = 0f
         val axisRight: YAxis = chartDailyStatus.axisRight
-        axisRight.granularity = 10f
+        axisRight.granularity = 0f
         axisRight.axisMinimum = 0f
     }
 
@@ -500,19 +524,20 @@ class DashboardFragment : BaseFragment() {
         val r = Random()
 
         val values: ArrayList<BarEntry> = ArrayList()
-
-        /*for(chartVal in data){
+        var i = 0
+        for(chartVal in data){
             val random: Float = 5 + r.nextFloat()* (50 - 5)
-            val x = random
-            values.add(BarEntry(x, ))
-        }*/
+            val x = i.toFloat() +1
+            values.add(BarEntry(x, chartVal.Value1.toFloat(), chartVal.Value2.toFloat()))
+            i++
+        }
 
-        for (i in 0 until 7) {
+        /*for (i in 0 until 7) {
             val random: Float = 5 + r.nextFloat()* (50 - 5)
             val x = i.toFloat() +1
             val y: Float = random
             values.add(BarEntry(x, y))
-        }
+        }*/
         val set1 = BarDataSet(values, "Daily Visit Status")
         set1.setColors(Color.GRAY)
         val dataSets: ArrayList<IBarDataSet> = ArrayList()

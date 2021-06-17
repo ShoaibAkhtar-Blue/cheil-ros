@@ -47,12 +47,14 @@ tools:context=".fragments.storeview.InvestmentDetailFragment">
             android:background="#ededed"
             android:fontFamily="@font/samsungsharpsans_bold"
             android:gravity="center"
+            android:maxLines="1"
             android:padding="8dp"
             android:text="INVESTMENT"
             android:textColor="@color/black"
             android:textSize="20dp" />
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/txtElementName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -194,7 +194,9 @@ class LoginFragment : BaseFragment() {
                             data.Email,
                             data.DivisionID,
                             data.DivisionName,
-                            ""
+                            "",
+                            data.TeamTypeName,
+                            data.RegionName
                         )
                         mUserDataViewModel.addUser(userdata)
                     }
@@ -290,5 +292,7 @@ class LoginData(
     val mySingleID: String,
     val Email: String,
     val DivisionID: Int,
-    val DivisionName: String
+    val DivisionName: String,
+    val TeamTypeName: String,
+    val RegionName: String
 )

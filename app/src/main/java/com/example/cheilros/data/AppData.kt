@@ -26,7 +26,9 @@ data class UserData(
     val email: String,
     val divisionID: Int,
     val divisionName: String,
-    val imagePath: String
+    val imagePath: String,
+    val teamType: String,
+    val regionName: String
 )
 
 @Entity(tableName = "user_permission")

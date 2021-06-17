@@ -1,5 +1,54 @@
 package com.example.cheilros.models
 
+
+
+/*class MyAdapter(
+    val context: Context,
+    val itemList: MutableList<String>
+) :
+    RecyclerView.Adapter<MyAdapter.ViewHolder>() {
+
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        var txtLabel: TextView = view.findViewById(R.id.txtLabel)
+        var etValue: EditText = view.findViewById(R.id.etValue)
+        var watcher: TextWatcher? = null
+    }
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolder {
+        val view =
+            LayoutInflater.from(context).inflate(R.layout.list_comment, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.txtLabel.text = itemList[position]
+        holder.watcher = holder.etValue.doAfterTextChanged { text ->
+            try {
+                updateItem(
+                    position,
+                    text.toString()
+                )
+
+            } catch (ex: Exception) {
+                println(ex.message)
+            }
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return itemList.size
+    }
+
+    fun updateItem(position: Int, item: String) {
+        itemList.add(position, item)
+        notifyDataSetChanged()
+    }
+}*/
+
+
 import android.view.View
 import java.util.*
 

@@ -46,7 +46,7 @@ class ActivitySubCategoryFragment : BaseFragment() {
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
-        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Activity" }.get(0).labelName
+        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Activity" }.get(0).labelName + " / ${arguments?.getString("ActivityTypeName")}"
         //endregion
 
         CSP.delData("activity_barcodes")

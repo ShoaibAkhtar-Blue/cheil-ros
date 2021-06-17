@@ -46,7 +46,7 @@ class AcrivityDetailFragment : BaseFragment() {
         val view = inflater.inflate(R.layout.fragment_acrivity_detail, container, false)
 
         //region Set Labels
-        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Activity" }.get(0).labelName
+        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Activity" }.get(0).labelName + " / ${arguments?.getString("ActivityTypeName")}"
         view.txtBrandDescription.hint = settingData.filter { it.fixedLabelName == "ActivityDescription" }.get(0).labelName
         view.txtBrandQuantity.hint = settingData.filter { it.fixedLabelName == "Activity_Qty" }.get(0).labelName
         view.ScanCode.text = settingData.filter { it.fixedLabelName == "ScanCode" }.get(0).labelName

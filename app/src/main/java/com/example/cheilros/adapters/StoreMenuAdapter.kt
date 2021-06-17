@@ -1,6 +1,7 @@
 package com.example.cheilros.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -43,6 +44,12 @@ class StoreMenuAdapter(
         var convertView = mInflater.inflate(R.layout.item_storemenu, null)
         Glide.with(context).load(ListData[position].imagePath).into(convertView.imgStatus!!)
         convertView.txtLabel.text = ListData[position].labelName
+
+        if (ListData[position].fixedLabelName == "StoreMenu_Checklist" || ListData[position].fixedLabelName == "StoreMenu_Investment" || ListData[position].fixedLabelName == "StoreMenu_Activity" || ListData[position].fixedLabelName == "StoreMenu_Training") {
+
+        } else {
+            convertView.cvStoreMenu.setCardBackgroundColor(Color.GRAY)
+        }
 
         convertView.cvStoreMenu.setOnClickListener {
             println(ListData[position].labelName)
