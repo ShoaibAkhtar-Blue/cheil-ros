@@ -79,12 +79,12 @@ class ChecklistDetailAdapter(
 
         holder.txtTitle.text = itemList[position].Question
 
-        if(itemList[position].CheckListStatus != ""){
-            //if(checklistAnswer.indexOf(checklistAnswer.find { it.CheckListID ==  itemList[position].ChecklistID}) != -1){
-                holder.txtAnswer.text = "Answer: ${itemList[position].CheckListStatus}"
+        if (itemList[position].CheckListStatus != "") {
+            holder.txtAnswer.text = "Answer: ${itemList[position].CheckListStatus}"
+            holder.txtAnswer.visibility = View.VISIBLE
+            if (checklistAnswer.indexOf(checklistAnswer.find { it.CheckListID == itemList[position].ChecklistID }) != -1) {
                 holder.RLcolor.setBackgroundColor(Color.RED)
-                holder.txtAnswer.visibility = View.VISIBLE
-            //}
+            }
         }
 
 
@@ -273,7 +273,7 @@ class ChecklistDetailAdapter(
                 } else if (itemList[position].InputTypeID == 4) {
                     answer = dialog.btnDate.text.toString()
                 } else if (itemList[position].InputTypeID == 1) {
-                    answer = if (dialog.checkBox.isChecked) "True" else "False"
+                    answer = if (dialog.checkBox.isChecked) "1" else "0"
                 }
 
                 updateItem(
@@ -312,14 +312,11 @@ class ChecklistDetailAdapter(
                             val checklistIndex =
                                 checklistAnswer.indexOf(checklistAnswer.find { it.CheckListID == itemList[position].ChecklistID })
 
-                            checklistAnswer.add(
-                                checklistIndex,
-                                CheckListJSONData(
-                                    itemList[position].ChecklistID,
-                                    arguments?.getInt("StoreID"),
-                                    answer,
-                                    CSP.getData("user_id")?.toInt()
-                                )
+                            checklistAnswer[checklistIndex] = CheckListJSONData(
+                                itemList[position].ChecklistID,
+                                arguments?.getInt("StoreID"),
+                                answer,
+                                CSP.getData("user_id")?.toInt()
                             )
                         }
                     }
@@ -508,6 +505,8 @@ class ChecklistDetailAdapter(
     override fun getItemCount(): Int {
         return itemList.size
     }
+
+    override fun getItemViewType(position: Int): Int = position
 
     fun updateItem(qid: Int, answer: CheckListDetailData) {
         val index = itemList.indexOf(itemList.find { it.ChecklistID == qid })

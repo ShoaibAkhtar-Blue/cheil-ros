@@ -166,6 +166,8 @@ class TrainingAttendeesAdapter(
         return itemList.size
     }
 
+    override fun getItemViewType(position: Int): Int = position
+
     fun addNewItem(itemsNew: TeamMemberData){
         itemList.addAll(listOf(itemsNew))
         notifyDataSetChanged()

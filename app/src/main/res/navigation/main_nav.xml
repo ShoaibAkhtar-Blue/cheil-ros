@@ -18,6 +18,9 @@
             android:id="@+id/action_dashboardFragment_to_myCoverageFragment"
             app:destination="@id/myCoverageFragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
     </fragment>
     <fragment
         android:id="@+id/journeyPlanFragment"

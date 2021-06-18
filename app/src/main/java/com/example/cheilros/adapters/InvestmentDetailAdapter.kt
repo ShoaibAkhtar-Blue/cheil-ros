@@ -45,19 +45,20 @@ class InvestmentDetailAdapter(
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        //lateinit var onTextUpdated: (String) -> Unit
+        lateinit var onTextUpdated: (String) -> Unit
 
         var txtNum: TextView = view.findViewById(R.id.txtNum)
         var txtBrand: TextView = view.findViewById(R.id.txtBrand)
         var txtAttend: EditText = view.findViewById(R.id.txtAttend)
         var watcher: TextWatcher? = null
 
-        /*init { // TextChanged listener added only once.
+        init { // TextChanged listener added only once.
             txtAttend.doAfterTextChanged { editable ->
                 val text = editable.toString()
+                println(text)
                 onTextUpdated(text)
             }
-        }*/
+        }
     }
 
     override fun onCreateViewHolder(
@@ -75,7 +76,7 @@ class InvestmentDetailAdapter(
         holder.txtBrand.text = itemList[position].BrandName
 
 
-        /*holder.onTextUpdated = { text ->
+        holder.onTextUpdated = { text ->
             val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
             val currentDateAndTime: String = simpleDateFormat.format(Date())
             try {
@@ -111,8 +112,7 @@ class InvestmentDetailAdapter(
                     } else {
                         val investmentIndex =
                             investmentsCountData.indexOf(investmentsCountData.find { it.BrandID == itemList[position].BrandID })
-                        investmentsCountData.add(
-                            investmentIndex,
+                        investmentsCountData[investmentIndex] =
                             InvestmentJSONData(
                                 itemList[position].BrandID,
                                 arguments?.getInt("StoreID"),
@@ -122,8 +122,8 @@ class InvestmentDetailAdapter(
                                 CSP.getData("user_id")?.toInt(),
                                 currentDateAndTime
                             )
-                        )
                         println("investmentIndex $investmentIndex")
+                        println(investmentsCountData)
                     }
                 }
 
@@ -139,10 +139,12 @@ class InvestmentDetailAdapter(
             } catch (ex: Exception) {
                 println(ex.message)
             }
-        }*/
-        holder.txtAttend.setText(itemList[position].ElementStatus)
+        }
 
-        holder.watcher = holder.txtAttend.doAfterTextChanged { text ->
+        if(itemList[position].ElementStatus != "")
+            holder.txtAttend.setText(itemList[position].ElementStatus)
+
+        /*holder.watcher = holder.txtAttend.doAfterTextChanged { text ->
             println(text.toString())
             val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
             val currentDateAndTime: String = simpleDateFormat.format(Date())
@@ -179,7 +181,7 @@ class InvestmentDetailAdapter(
                     } else {
                         val investmentIndex =
                             investmentsCountData.indexOf(investmentsCountData.find { it.BrandID == itemList[position].BrandID })
-                        /*investmentsCountData.add(
+                        *//*investmentsCountData.add(
                             investmentIndex,
                             InvestmentJSONData(
                                 itemList[position].BrandID,
@@ -190,7 +192,7 @@ class InvestmentDetailAdapter(
                                 CSP.getData("user_id")?.toInt(),
                                 currentDateAndTime
                             )
-                        )*/
+                        )*//*
                         investmentsCountData[investmentIndex] = InvestmentJSONData(
                             itemList[position].BrandID,
                             arguments?.getInt("StoreID"),
@@ -217,7 +219,7 @@ class InvestmentDetailAdapter(
             } catch (ex: Exception) {
                 println(ex.message)
             }
-        }
+        }*/
 
         /*holder.txtAttend.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -336,6 +338,8 @@ class InvestmentDetailAdapter(
     override fun getItemCount(): Int {
         return itemList.size
     }
+
+    override fun getItemViewType(position: Int): Int = position
 
     fun updateItem(position: Int, item: BrandsData) {
         itemList[position] = item

@@ -275,6 +275,36 @@ class DashboardFragment : BaseFragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        if(!CSP.getData("Dashboard_SESSION_IMAGE").equals("")){
+            Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                .setTitle("Success!!")
+                .setMessage("Image Added to this session!")
+                .sneakSuccess()
+
+            try {
+                recylcerAdapter.addNewItem(CSP.getData("Dashboard_SESSION_IMAGE").toString())
+                CSP.delData("Dashboard_SESSION_IMAGE")
+
+                if (CSP.getData("Dashboard_SESSION_IMAGE").equals("")) {
+                    recylcerAdapter.addNewItem(CSP.getData("Dashboard_SESSION_IMAGE").toString())
+                    CSP.saveData("Dashboard_SESSION_IMAGE_SET", CSP.getData("Dashboard_SESSION_IMAGE"))
+                    CSP.delData("Dashboard_SESSION_IMAGE")
+                } else {
+                    recylcerAdapter.addNewItem(CSP.getData("Dashboard_SESSION_IMAGE").toString())
+                    CSP.saveData(
+                        "Dashboard_SESSION_IMAGE_SET",
+                        "${CSP.getData("Dashboard_SESSION_IMAGE_SET")},${CSP.getData("Dashboard_SESSION_IMAGE")}"
+                    )
+                    CSP.delData("Dashboard_SESSION_IMAGE")
+                }
+            }catch (ex: Exception){
+
+            }
+        }
+    }
+
     fun fetchDashboardData(url: String){
 
 
