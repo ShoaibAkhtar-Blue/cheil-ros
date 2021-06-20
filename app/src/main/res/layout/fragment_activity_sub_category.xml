@@ -80,11 +80,40 @@ tools:context=".fragments.storeview.ActivitySubCategoryFragment">
             <com.example.cheilros.activities.customobj.EmptyRecyclerView
                 android:id="@+id/rvActivityDetail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="300dp"
                 android:padding="8dp" />
 
         </androidx.cardview.widget.CardView>
 
+        <androidx.cardview.widget.CardView
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:cardCornerRadius="4dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_marginBottom="8dp"
+                    android:id="@+id/StoreView_SubTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/samsungsharpsans_bold"
+                    android:text="Pending Deployments"
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
+                <com.example.cheilros.activities.customobj.EmptyRecyclerView
+                    android:id="@+id/rvRecentSubActivities"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
 
 
     </LinearLayout>

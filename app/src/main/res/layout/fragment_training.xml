@@ -61,7 +61,7 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="300dp"
                     app:cardCornerRadius="4dp">
 
                     <com.example.cheilros.activities.customobj.EmptyRecyclerView
@@ -69,6 +69,38 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="8dp" />
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_marginTop="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="4dp">
+
+                    <LinearLayout
+                        android:padding="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/Training_SubTitle"
+                            android:layout_marginBottom="8dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/samsungsharpsans_bold"
+                            android:text="Recent Trainings"
+                            android:textColor="@color/black"
+                            android:textSize="20dp" />
+
+                        <com.example.cheilros.activities.customobj.EmptyRecyclerView
+                            android:id="@+id/rvRecentTraining"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp" />
+
+                    </LinearLayout>
+
+
 
                 </androidx.cardview.widget.CardView>
 

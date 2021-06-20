@@ -10,12 +10,44 @@ class AddVisitPlanModel(val status: Int)
 class TrainingModel(val status: Int, val data: List<TrainingModelData>)
 class TrainingModelData(val TrainingModelID: Int, val TrainingModelTitle: String)
 
+class RecentTrainingModel(val status: Int, val data: List<RecentTrainingModelData>)
+class RecentTrainingModelData(
+    val TrainingModelID: Int,
+    val TrainingModelTitle: String,
+    val TrainingDateTime: String,
+    val StoreID: Int,
+    val Attendees: Int,
+    val TeamMemberID: Int,
+    val StoreID1: Int
+)
+
 class TeamMemberModel(val status: Int, val data: List<TeamMemberData>)
 class TeamMemberData(val TeamMemberID: Int, val TeamMemberName: String)
 
 //endregion
 
 //region Activity
+class RecentActivityModel(val status: Int, val data: List<RecentActivityData>)
+class RecentActivityData(
+    val ActivityID: Int,
+    val TeamMemberID: Int,
+    val mySingleID: String,
+    val TeamMemberName: String,
+    val ActivityDateTime: String,
+    val ActivityTypeID: Int,
+    val ActivityTypeName: String,
+    val ActivityCategoryID: Int,
+    val ActivityCategoryName: String,
+    val BrandID: Int,
+    val BrandName: String,
+    val ActivityDescription: String,
+    val StatusID: Int,
+    val Quantity: Int,
+    val StoreID: Int,
+    val StoreCode: String,
+    val StoreName: String
+)
+
 class ActivityTypeModel(val status: Int, val data: List<ActivityTypeData>)
 class ActivityTypeData(
     val ActivityTypeID: Int,

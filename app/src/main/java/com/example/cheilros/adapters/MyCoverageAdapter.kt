@@ -1,6 +1,7 @@
 package com.example.cheilros.adapters
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -28,8 +29,17 @@ import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.ramotion.foldingcell.FoldingCell
 import kotlinx.android.synthetic.main.dialog_add_visit.*
+import kotlinx.android.synthetic.main.dialog_add_visit.btnAccept
+import kotlinx.android.synthetic.main.dialog_add_visit.btnCancel
+import kotlinx.android.synthetic.main.dialog_add_visit.btnDate
+import kotlinx.android.synthetic.main.dialog_add_visit.txtQuestion
+import kotlinx.android.synthetic.main.dialog_add_visit.txtTitle
+import kotlinx.android.synthetic.main.dialog_checklist.*
 import okhttp3.*
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MyCoverageAdapter(
@@ -134,6 +144,10 @@ class MyCoverageAdapter(
         holder.btnAccept.setOnClickListener {
 
             if(CSP.getData("AddVisit").equals("Y")){
+
+                val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+                val currentDateAndTime: String = simpleDateFormat.format(Date())
+
                 val li = LayoutInflater.from(context)
                 val promptsView: View = li.inflate(R.layout.dialog_add_visit, null)
 
@@ -145,13 +159,33 @@ class MyCoverageAdapter(
                 dialog.txtTitle.text = settingData.filter { it.fixedLabelName == "StoreList_AddJPButton" }.get(0).labelName
                 dialog.txtQuestion.text = settingData.filter { it.fixedLabelName == "JounreyPlan_AddMsg" }.get(0).labelName
 
+                dialog.btnDate.text = currentDateAndTime
+
+                dialog.btnDate.setOnClickListener {
+                    val calendar = Calendar.getInstance()
+                    val year = calendar.get(Calendar.YEAR)
+                    val month = calendar.get(Calendar.MONTH)
+                    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+                    val datePickerDialog =
+                        DatePickerDialog(
+                            context, DatePickerDialog.OnDateSetListener
+                            { view, year, monthOfYear, dayOfMonth ->
+                                val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
+                                dialog.btnDate.text = currentDate
+                            }, year, month, day
+                        )
+                    datePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
+                    datePickerDialog.show()
+                }
+
                 dialog.btnCancel.text = settingData.filter { it.fixedLabelName == "StoreList_PopupCancel" }.get(0).labelName
                 dialog.btnCancel.setOnClickListener {
                     dialog.dismiss()
                 }
                 dialog.btnAccept.text = settingData.filter { it.fixedLabelName == "StoreList_PopupAdd" }.get(0).labelName
                 dialog.btnAccept.setOnClickListener {
-                    sendVisitRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamMemberAddPlan?StoreID=${filterList[position].StoreID}&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=${dialog.etRemarks.text}")
+                    sendVisitRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/TeamMemberAddPlan?StoreID=${filterList[position].StoreID}&TeamMemberID=${CSP.getData("user_id")}&PlanDate=${dialog.btnDate.text}&PlanRemarks=${dialog.etRemarks.text}")
                     dialog.dismiss()
                     holder.fc.toggle(false)
                 }
