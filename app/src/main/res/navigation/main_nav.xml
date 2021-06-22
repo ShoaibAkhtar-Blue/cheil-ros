@@ -21,6 +21,9 @@
         <action
             android:id="@+id/action_dashboardFragment_to_cameraActivity"
             app:destination="@id/cameraActivity" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_teamStatusFragment"
+            app:destination="@id/teamStatusFragment" />
     </fragment>
     <fragment
         android:id="@+id/journeyPlanFragment"
@@ -279,4 +282,9 @@
             android:name="fragName"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/teamStatusFragment"
+        android:name="com.example.cheilros.fragments.TeamStatusFragment"
+        android:label="team_status"
+        tools:layout="@layout/fragment_team_status" />
 </navigation>

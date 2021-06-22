@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.example.cheilros.R
 import com.example.cheilros.models.MenuNavigationModel
@@ -37,6 +39,7 @@ class MenuNavigationAdapter(private val context: Context, data: ArrayList<MenuNa
             convertView = mInflater.inflate(R.layout.grid_menunavigation, null)
             holder = ViewHolder()
             holder.buttonContainer = convertView.findViewById<View>(R.id.buttonContainer) as CardView
+            holder.buttonMenu = convertView.findViewById<View>(R.id.buttonMenu) as LinearLayout
             holder.icon = convertView.findViewById<View>(R.id.icon) as ImageView
             holder.name = convertView.findViewById<View>(R.id.name) as TextView
             convertView.tag = holder
@@ -53,11 +56,20 @@ class MenuNavigationAdapter(private val context: Context, data: ArrayList<MenuNa
             holder.buttonContainer?.setCardBackgroundColor(ContextCompat.getColor(context, R.color.white))
             holder.name!!.setTypeface(null, Typeface.NORMAL)
         }
+
+        holder.buttonMenu!!.setOnClickListener {
+            if(menuData[position].fixedLabel == "MenuTitle5"){
+                Navigation.findNavController(it)
+                    .navigate(R.id.action_dashboardFragment_to_teamStatusFragment)
+            }
+        }
+
         return convertView
     }
 
     internal class ViewHolder {
         var buttonContainer: CardView? = null
+        var buttonMenu: LinearLayout? = null
         var icon: ImageView? = null
         var name: TextView? = null
     }

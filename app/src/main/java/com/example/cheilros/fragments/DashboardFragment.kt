@@ -106,6 +106,7 @@ class DashboardFragment : BaseFragment() {
                 val menu = MenuNavigationModel()
                 menu.menuName = m.labelName
                 menu.menuImage = m.imagePath
+                menu.fixedLabel = m.fixedLabelName
                 menuData!!.add(menu)
             }
         } catch (ex: Exception) {
@@ -115,6 +116,8 @@ class DashboardFragment : BaseFragment() {
         gridView = view.gridview
         adapter = MenuNavigationAdapter(requireContext(), menuData!!)
         gridView!!.adapter = adapter
+
+
 
         /*gridView!!.onItemClickListener = OnItemClickListener { parent, v, i, id ->
             //Toast.makeText(this, "menu " + menuDataList.get(i).fixedLabelName + " clicked! $i", Toast.LENGTH_SHORT).show()

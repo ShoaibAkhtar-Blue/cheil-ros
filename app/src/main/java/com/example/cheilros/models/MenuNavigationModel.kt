@@ -5,4 +5,5 @@ class MenuNavigationModel {
     var menuImage: String? = null
     var menuIcon = 0
     var isSelected = false
+    var fixedLabel: String? = null
 }

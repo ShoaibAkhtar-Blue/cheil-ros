@@ -6,6 +6,27 @@ import kotlinx.android.parcel.Parcelize
 
 class AddVisitPlanModel(val status: Int)
 
+//region Team Status
+class AssignedTeamMemberModel(val status: Int, val data: List<AssignedTeamMemberData>)
+class AssignedTeamMemberData(
+    val AssignedTeamMemberID: Int,
+    val TeamMemberName: String,
+    val TeamMemberID: Int
+)
+
+class TeamStatusModel(val status: Int, val data: List<TeamStatusData>)
+class TeamStatusData(
+    val TeamMemberID: Int,
+    val PlanDate: String,
+    val CheckInTime: String,
+    val CheckOutTime: String,
+    val VisitRemarks: String,
+    val TeamMemberName: String,
+    val StoreName: String,
+    val TeamTypeName: String
+)
+//endregion
+
 //region Training
 class TrainingModel(val status: Int, val data: List<TrainingModelData>)
 class TrainingModelData(val TrainingModelID: Int, val TrainingModelTitle: String)

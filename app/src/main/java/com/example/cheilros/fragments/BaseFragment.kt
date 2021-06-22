@@ -84,6 +84,8 @@ open class BaseFragment : Fragment() {
         } else if (fragmentLabel == "mycoverage") {
             configureToolbar(settingData.filter { it.fixedLabelName == "StoreList_Title" }
                 .get(0).labelName, true, true)
+        }else if (fragmentLabel == "team_status") {
+            configureToolbar("Team Status", true, true)
         } else if (fragmentLabel == "activity_detail") {
             arguments?.getString("StoreName")?.let { configureToolbar(it, true) }
         } else if (fragmentLabel == "training" || fragmentLabel == "activity_category" || fragmentLabel == "store_view" || fragmentLabel == "activity") {
