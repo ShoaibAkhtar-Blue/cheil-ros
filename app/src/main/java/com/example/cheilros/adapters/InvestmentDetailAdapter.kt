@@ -313,6 +313,7 @@ class InvestmentDetailAdapter(
                                 .setMessage("Data saved!")
                                 .sneakSuccess()
                         }
+                        CSP.saveData("sess_last_update_element_id", arguments?.getInt("ElementID").toString())
                         Navigation.findNavController(it).navigateUp()
                         fragment.mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     }

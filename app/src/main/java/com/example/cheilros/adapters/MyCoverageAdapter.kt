@@ -159,6 +159,7 @@ class MyCoverageAdapter(
                 dialog.txtTitle.text = settingData.filter { it.fixedLabelName == "StoreList_AddJPButton" }.get(0).labelName
                 dialog.txtQuestion.text = settingData.filter { it.fixedLabelName == "JounreyPlan_AddMsg" }.get(0).labelName
 
+                dialog.btnDate.visibility = View.VISIBLE
                 dialog.btnDate.text = currentDateAndTime
 
                 dialog.btnDate.setOnClickListener {

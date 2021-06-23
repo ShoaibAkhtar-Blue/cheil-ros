@@ -1,15 +1,13 @@
 package com.example.cheilros.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
@@ -25,6 +23,7 @@ class InvestmentAdapter(val context: Context, val itemList: List<InvestmentData>
     lateinit var CSP: CustomSharedPref
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        var RLHeader : RelativeLayout = view.findViewById(R.id.RLHeader)
         var LLInvestment : LinearLayout = view.findViewById(R.id.LLInvestment)
         var txtTitleHeader : TextView = view.findViewById(R.id.txtTitleHeader)
         var LLtable : LinearLayout = view.findViewById(R.id.LLtable)
@@ -39,8 +38,13 @@ class InvestmentAdapter(val context: Context, val itemList: List<InvestmentData>
         return ViewHolder(view)
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtTitleHeader.text = itemList[position].ElementTitle
+
+        if(CSP.getData("sess_last_update_element_id") == itemList[position].ElementID.toString()){
+            holder.RLHeader.setBackgroundColor(R.color.status_checkin)
+        }
 
         holder.LLInvestment.setOnClickListener {
 

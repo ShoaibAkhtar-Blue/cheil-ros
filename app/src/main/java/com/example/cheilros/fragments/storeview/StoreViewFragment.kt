@@ -39,7 +39,11 @@ class StoreViewFragment : BaseFragment() {
 
         configureToolbar("${arguments?.getString("StoreName")}", true)
 
-        StoreView_SubTitle
+        //region Reset Sessions
+        CSP.delData("sess_last_update_element_id")
+        //endregion
+
+        //StoreView_SubTitle
         //region Set Labels
         view.StoreView_SubTitle.text = settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }.get(0).labelName
         //endregion

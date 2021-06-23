@@ -48,9 +48,9 @@ class RecentActivityAdapter(
         holder.ActivityDescription.text = filterList[position].ActivityDescription
         holder.txtDate.text = filterList[position].ActivityDateTime
 
-        if(filterList[position].ActivityTypeID == 2)
+        if(filterList[position].ActivityTypeID == 20)
             holder.RLrecentactivity.setBackgroundColor(Color.RED)
-        else if(filterList[position].ActivityTypeID == 3)
+        else if(filterList[position].ActivityTypeID > 20)
             holder.RLrecentactivity.setBackgroundColor(Color.parseColor("#ffa500"))
 
         holder.LLrecentactivity.setOnClickListener {

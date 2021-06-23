@@ -412,6 +412,7 @@ class DashboardFragment : BaseFragment() {
 
     fun fetchTaskAssignedData(url: String){
         val client = OkHttpClient()
+        println(url)
 
         val request = Request.Builder()
             .url(url)

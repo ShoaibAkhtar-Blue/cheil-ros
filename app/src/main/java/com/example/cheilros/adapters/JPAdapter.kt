@@ -128,8 +128,8 @@ class JPAdapter(
 
         }
         else if (itemList[position].VisitStatusID === 2){
-            holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkin))
-            holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkin))
+            holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkout))
+            holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkout))
             holder.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CheckoutButton" }.get(0).labelName
             holder.btnCancel.text = settingData.filter { it.fixedLabelName == "JourneyPlan_ViewButton" }.get(0).labelName
 //            holder.btnCancel.isEnabled = false
@@ -137,8 +137,8 @@ class JPAdapter(
         }
 
         else if (itemList[position].VisitStatusID === 3){
-            holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkout))
-            holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkout))
+            holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkin))
+            holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkin))
             holder.btnCancel.text = settingData.filter { it.fixedLabelName == "JourneyPlan_ViewButton" }.get(0).labelName
             holder.btnAccept.setTextColor(Color.GRAY)
 
@@ -302,6 +302,7 @@ class JPAdapter(
                     dialog.setContentView(promptsView)
                     dialog.setCancelable(false)
                     dialog.setCanceledOnTouchOutside(true)
+
 
                     dialog.txtTitle.text = settingData.filter { it.fixedLabelName == "JourneyPlan_Title" }.get(0).labelName
                     dialog.txtQuestion.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CancelTitle" }.get(0).labelName
