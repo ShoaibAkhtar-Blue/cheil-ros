@@ -35,6 +35,21 @@
             android:textColor="@android:color/white"
             android:textSize="14dp" />
 
+        <TextView
+
+            android:id="@+id/txtTitleDate"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/txtTitleHeader"
+            android:fontFamily="@font/samsungsharpsans_regular"
+            android:gravity="center"
+            android:lines="1"
+            android:maxLength="30"
+            android:maxLines="1"
+            android:text=""
+            android:textColor="@android:color/white"
+            android:textSize="14dp" />
+
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="24dp"

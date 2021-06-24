@@ -1,5 +1,6 @@
 package com.example.cheilros.adapters
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.Dialog
@@ -75,6 +76,7 @@ class ChecklistDetailAdapter(
         return ViewHolder(view)
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.txtTitle.text = itemList[position].Question
@@ -83,7 +85,7 @@ class ChecklistDetailAdapter(
             holder.txtAnswer.text = "Answer: ${itemList[position].CheckListStatus}"
             holder.txtAnswer.visibility = View.VISIBLE
             if (checklistAnswer.indexOf(checklistAnswer.find { it.CheckListID == itemList[position].ChecklistID }) != -1) {
-                holder.RLcolor.setBackgroundColor(Color.RED)
+                holder.RLcolor.setBackgroundColor(Color.parseColor("#5c802a"))
             }
         }
 
@@ -99,10 +101,11 @@ class ChecklistDetailAdapter(
 
             dialog.txtTitle.text = "Question"
             dialog.txtQuestion.text = itemList[position].Question
-
+            println("InputTypeID: ${itemList[position].InputTypeID}")
             //region Generate Answer Section
             if (itemList[position].InputTypeID == 1) {
-                dialog.checkBox.visibility = View.VISIBLE
+                println("InputTypeID: ${itemList[position].InputTypeID}")
+                dialog.llCheckbox.visibility = View.VISIBLE
             }
 
             if (itemList[position].InputTypeID == 2) {
@@ -238,7 +241,7 @@ class ChecklistDetailAdapter(
             }
 
             if (itemList[position].InputTypeID == 4) {
-                dialog.btnDate.visibility = View.VISIBLE
+                dialog.llDate.visibility = View.VISIBLE
 
                 dialog.btnDate.setOnClickListener {
                     val calendar = Calendar.getInstance()

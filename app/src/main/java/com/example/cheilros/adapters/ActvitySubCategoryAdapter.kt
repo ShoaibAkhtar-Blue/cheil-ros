@@ -71,7 +71,7 @@ class ActivitySubCategoryAdapter(val context: Context, val itemList: List<Activi
                 } else {
                     val resultList = ArrayList<ActivityCategoryData>()
                     for (row in itemList) {
-                        if (row.ActivityTypeName.toLowerCase()
+                        if (row.ActivityCategoryName.toLowerCase()
                                 .contains(constraint.toString().toLowerCase())
                         ) {
                             resultList.add(row)

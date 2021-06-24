@@ -116,6 +116,7 @@ class InvestmentModel(val status: Int, val data: List<InvestmentData>)
 class InvestmentData(
     val ElementID: Int,
     val ElementTitle: String,
+    val ElementUpdateDate: String,
     val Brands: List<BrandsData>
 )
 

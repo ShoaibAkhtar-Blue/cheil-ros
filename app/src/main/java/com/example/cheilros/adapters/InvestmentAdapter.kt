@@ -26,6 +26,7 @@ class InvestmentAdapter(val context: Context, val itemList: List<InvestmentData>
         var RLHeader : RelativeLayout = view.findViewById(R.id.RLHeader)
         var LLInvestment : LinearLayout = view.findViewById(R.id.LLInvestment)
         var txtTitleHeader : TextView = view.findViewById(R.id.txtTitleHeader)
+        var txtTitleDate : TextView = view.findViewById(R.id.txtTitleDate)
         var LLtable : LinearLayout = view.findViewById(R.id.LLtable)
     }
 
@@ -41,9 +42,14 @@ class InvestmentAdapter(val context: Context, val itemList: List<InvestmentData>
     @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtTitleHeader.text = itemList[position].ElementTitle
+        holder.txtTitleDate.text = "  (${itemList[position].ElementUpdateDate})"
+
+        if(itemList[position].ElementUpdateDate == "")
+            holder.txtTitleDate.visibility = View.GONE
+
 
         if(CSP.getData("sess_last_update_element_id") == itemList[position].ElementID.toString()){
-            holder.RLHeader.setBackgroundColor(R.color.status_checkin)
+            holder.RLHeader.setBackgroundColor(Color.parseColor("#5c802a"))
         }
 
         holder.LLInvestment.setOnClickListener {
@@ -107,4 +113,6 @@ class InvestmentAdapter(val context: Context, val itemList: List<InvestmentData>
     override fun getItemCount(): Int {
         return itemList.size
     }
+
+    override fun getItemViewType(position: Int): Int = position
 }

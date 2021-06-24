@@ -81,15 +81,28 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <CheckBox
-            android:gravity="center"
-            android:id="@+id/checkBox"
+        <LinearLayout
+            android:id="@+id/llCheckbox"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_weight="1"
-            android:text="Yes"
-            android:visibility="gone" />
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone">
+            <CheckBox
 
+                android:id="@+id/checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Yes" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone">
             <Button
                 android:id="@+id/btnDate"
                 android:layout_width="match_parent"
@@ -97,8 +110,8 @@
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_baseline_calendar_today_24"
                 android:text="00-00-0000"
-                android:visibility="gone" />
-
+                 />
+        </LinearLayout>
         <!--</LinearLayout>-->
 
         <LinearLayout

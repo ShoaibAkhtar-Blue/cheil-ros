@@ -74,6 +74,13 @@ open class BaseFragment : Fragment() {
         super.onResume()
         val fragmentLabel = findNavController().currentDestination!!.label
 
+        //region Remove SearchView Focus
+        activity?.toolbar_search?.isIconified = true
+        activity?.toolbar_search?.clearFocus()
+        activity?.toolbar_search?.setQuery("", false);
+        activity?.toolbar_search?.onActionViewCollapsed();
+        //endregion
+
         println(fragmentLabel)
         if (fragmentLabel == "dashboard") {
             configureToolbar(settingData.filter { it.fixedLabelName == "Dashbord_Title" }
