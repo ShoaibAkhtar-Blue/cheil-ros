@@ -176,14 +176,13 @@ tools:context=".fragments.storeview.TrainingDetailFragment">
                             android:textColor="@android:color/white"
                             android:textSize="14dp" />
 
-
-
                     </RelativeLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvAttendees"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:minHeight="150dp"
                         android:background="@drawable/border_grey" />
 
                 </LinearLayout>

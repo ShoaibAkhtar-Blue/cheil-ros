@@ -149,8 +149,8 @@ class JourneyPlanFragment : BaseFragment() {
         dataSet.selectionShift = 5f
 
         val colorFirst = context?.let { ContextCompat.getColor(it, R.color.status_checkin) }
-        val colorSecond = context?.let { ContextCompat.getColor(it, R.color.status_checkout) }
-        val colorThird = context?.let { ContextCompat.getColor(it, R.color.status_cancel) }
+        val colorSecond = context?.let { ContextCompat.getColor(it, R.color.status_cancel) }
+        val colorThird = context?.let { ContextCompat.getColor(it, R.color.status_checkout) }
         val colorForth = context?.let { ContextCompat.getColor(it, R.color.status_none) }
 
         dataSet.colors = mutableListOf(colorFirst, colorSecond, colorThird, colorForth)

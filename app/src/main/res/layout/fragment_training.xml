@@ -60,22 +60,24 @@
                 android:padding="16dp">
 
                 <androidx.cardview.widget.CardView
+                    android:layout_weight="1"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="match_parent"
                     app:cardCornerRadius="4dp">
 
                     <com.example.cheilros.activities.customobj.EmptyRecyclerView
                         android:id="@+id/rvTraining"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:padding="8dp" />
 
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:layout_weight="1"
                     android:layout_marginTop="8dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     app:cardCornerRadius="4dp">
 
                     <LinearLayout
@@ -96,7 +98,7 @@
                         <com.example.cheilros.activities.customobj.EmptyRecyclerView
                             android:id="@+id/rvRecentTraining"
                             android:layout_width="match_parent"
-                            android:layout_height="300dp" />
+                            android:layout_height="match_parent" />
 
                     </LinearLayout>
 

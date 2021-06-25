@@ -73,7 +73,7 @@ class BaseUrlFragment : Fragment() {
                 }
             })
 
-            Glide.with(this).load("${CSP.getData("base_url")}/AppImages/ROS_Logo.png").into(object :
+            /*Glide.with(this).load("${CSP.getData("base_url")}/AppImages/ROS_Logo.png").into(object :
                 CustomTarget<Drawable>() {
                 override fun onLoadCleared(placeholder: Drawable?) {
                 }
@@ -84,7 +84,7 @@ class BaseUrlFragment : Fragment() {
                 ) {
                     view.imgLogo.background=resource
                 }
-            })
+            })*/
         }catch (ex: Exception){
             Log.e("Error_", "CLlogin: ${ex.message.toString()}")
         }

@@ -99,11 +99,13 @@ class DashboardFragment : BaseFragment() {
         var menuDataList: List<AppSetting> = emptyList()
         try {
             menuDataList = settingData.filter { it.screenName == "Menu" }
+            menuDataList.sortedBy { it.labelID }
             println(menuDataList)
             menuData!!.clear()
             for (m in menuDataList) {
                 println(m.labelName)
                 val menu = MenuNavigationModel()
+                menu.labelid = m.labelID
                 menu.menuName = m.labelName
                 menu.menuImage = m.imagePath
                 menu.fixedLabel = m.fixedLabelName
@@ -112,6 +114,8 @@ class DashboardFragment : BaseFragment() {
         } catch (ex: Exception) {
 
         }
+        menuData!!.sortedBy { it.labelid }
+
 
         gridView = view.gridview
         adapter = MenuNavigationAdapter(requireContext(), menuData!!)
@@ -441,7 +445,8 @@ class DashboardFragment : BaseFragment() {
                         rvAssignedTask.setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(requireContext())
                         rvAssignedTask.layoutManager = layoutManager
-                        recylcerAdapter = TaskAssignedAdapter(requireContext(), apiData.data)
+                        recylcerAdapter = TaskAssignedAdapter(requireContext(),
+                            apiData.data as MutableList<DashboardTaskAssignedData>, this@DashboardFragment)
                         rvAssignedTask.adapter = recylcerAdapter
                     })
                 }else{

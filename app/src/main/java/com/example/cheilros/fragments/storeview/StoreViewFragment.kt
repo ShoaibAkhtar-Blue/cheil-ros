@@ -53,7 +53,7 @@ class StoreViewFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //var menuDataList: List<AppSetting> = settingData.filter { it.screenName == "StoreView" }
-        storemenuAdapter = StoreMenuAdapter(requireContext(), settingData.filter { it.screenName == "StoreView" }, arguments)
+        storemenuAdapter = StoreMenuAdapter(requireContext(), settingData.filter { it.screenName == "StoreView" }.sortedBy { it.labelID }, arguments)
         rvStoreMenu!!.adapter = storemenuAdapter
 
         fetchRecentActivities("${CSP.getData("base_url")}/OperMarketActivities.asmx/ViewMarketActivityList?StoreID=${arguments?.getInt("StoreID").toString()}&ActivityCategoryID=0&ActivityTypeID=0&BrandID=0&TeamMemberID=${CSP.getData("user_id")}")

@@ -86,6 +86,12 @@ class AcrivityDetailFragment : BaseFragment() {
         txtStoreSubName.text = arguments?.getString("ActivityTypeName")
         txtTitleHeader.text = arguments?.getString("ActivityCategoryName")
 
+        if(arguments?.getInt("ActivityTypeID")!! > 20){
+            LLScanBarcode.visibility = View.VISIBLE
+        }else{
+            LLScanBarcode.visibility = View.INVISIBLE
+        }
+
         try{
             rvActivityPictures.setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext(),RecyclerView.HORIZONTAL, false)
