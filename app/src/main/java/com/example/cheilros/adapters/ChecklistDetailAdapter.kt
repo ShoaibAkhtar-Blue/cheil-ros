@@ -276,7 +276,7 @@ class ChecklistDetailAdapter(
                 } else if (itemList[position].InputTypeID == 4) {
                     answer = dialog.btnDate.text.toString()
                 } else if (itemList[position].InputTypeID == 1) {
-                    answer = if (dialog.checkBox.isChecked) "1" else "0"
+                    answer = if (dialog.checkBox.isChecked) "Yes" else "No"
                 }
 
                 updateItem(

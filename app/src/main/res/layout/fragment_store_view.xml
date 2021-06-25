@@ -15,6 +15,7 @@
         android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
+            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="4dp">
@@ -22,7 +23,7 @@
             <GridView
                 android:id="@+id/rvStoreMenu"
                 android:layout_width="match_parent"
-                android:layout_height="310dp"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="0dp"
                 android:layout_marginRight="0dp"
                 android:columnWidth="100dp"
@@ -37,6 +38,7 @@
 
 
         <androidx.cardview.widget.CardView
+            android:layout_weight="1"
             android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -61,7 +63,7 @@
                 <com.example.cheilros.activities.customobj.EmptyRecyclerView
                     android:id="@+id/rvRecentActivities"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp" />
+                    android:layout_height="match_parent" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
