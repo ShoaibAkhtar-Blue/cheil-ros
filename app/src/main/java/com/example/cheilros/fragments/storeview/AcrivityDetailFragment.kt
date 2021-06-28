@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.MainActivity
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.CapturedPictureAdapter
 import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.helpers.CoreHelperMethods
@@ -115,9 +116,26 @@ class AcrivityDetailFragment : BaseFragment() {
         }
 
         btnTakePicture.setOnClickListener {
-            CSP.saveData("fragName", "ActivityDetail")
-            val bundle = bundleOf("fragName" to "ActivityDetailFragment")
-            findNavController().navigate(R.id.action_acrivityDetailFragment_to_cameraActivity, bundle)
+
+            val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Choose...")
+            builder.setMessage("Please select one of the options")
+
+            builder.setPositiveButton("Camera") { dialog, which ->
+                CSP.saveData("fragName", "ActivityDetail")
+                val bundle = bundleOf("fragName" to "ActivityDetailFragment")
+                findNavController().navigate(R.id.action_acrivityDetailFragment_to_cameraActivity, bundle)
+            }
+
+            builder.setNegativeButton("Gallery") { dialog, which ->
+                val activity = requireActivity() as NewDashboardActivity
+                activity.pickFromGallery()
+            }
+
+            builder.setNeutralButton("Cancel") { dialog, which ->
+                dialog.dismiss()
+            }
+            builder.show()
         }
 
         btnSubmit.setOnClickListener {
@@ -129,7 +147,15 @@ class AcrivityDetailFragment : BaseFragment() {
 
                 builder.addFormDataPart("SerialNumbers", CSP.getData("activity_barcodes").toString())
 
-                if(!CSP.getData("ActivityDetail_SESSION_IMAGE_SET").equals("")){
+                for (paths in capturedPicturesList) {
+                    println(paths)
+                    val sourceFile = File(paths)
+                    val mimeType = CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
+                    val fileName: String = sourceFile.name
+                    builder.addFormDataPart("ActivityPictures", fileName,sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull()))
+                }
+
+                /*if(!CSP.getData("ActivityDetail_SESSION_IMAGE_SET").equals("")){
                     val imgPaths = CSP.getData("ActivityDetail_SESSION_IMAGE_SET")?.split(",")
                     if (imgPaths != null) {
                         for (paths in imgPaths){
@@ -140,7 +166,7 @@ class AcrivityDetailFragment : BaseFragment() {
                             builder.addFormDataPart("ActivityPictures", fileName,sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull()))
                         }
                     }
-                }
+                }*/
 
                /* val requestBody: RequestBody =
                     MultipartBody.Builder().setType(MultipartBody.FORM)
@@ -221,6 +247,18 @@ class AcrivityDetailFragment : BaseFragment() {
                     "${CSP.getData("ActivityDetail_SESSION_IMAGE_SET")},${CSP.getData("ActivityDetail_SESSION_IMAGE")}"
                 )
                 CSP.delData("ActivityDetail_SESSION_IMAGE")
+            }
+        }else if(!CSP.getData("sess_gallery_img").equals("")){
+            try {
+                Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                    .setTitle("Success!!")
+                    .setMessage("Image Added to this session!")
+                    .sneakSuccess()
+
+                recylcerAdapter.addNewItem(CSP.getData("sess_gallery_img").toString())
+                CSP.delData("sess_gallery_img")
+            }catch (ex: Exception){
+
             }
         }
     }

@@ -74,6 +74,10 @@ class SplashFragment : Fragment() {
             Log.e("Error_", "CLlogin: ${ex.message.toString()}")
         }
 
+        //region reset session
+        CSP.delData("sess_gallery_img")
+        //endregion
+
         return view
     }
 

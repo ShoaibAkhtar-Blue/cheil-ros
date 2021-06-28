@@ -1,6 +1,7 @@
 package com.example.cheilros.adapters
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,10 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.fragments.DashboardFragment
 import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.helpers.CustomSharedPref
@@ -32,7 +35,8 @@ import java.io.IOException
 class TaskAssignedAdapter(
     val context: Context,
     val itemList: MutableList<DashboardTaskAssignedData>,
-    val fragment: DashboardFragment
+    val fragment: DashboardFragment,
+    val activity: NewDashboardActivity
 ) : RecyclerView.Adapter<TaskAssignedAdapter.ViewHolder>() {
 
     lateinit var CSP: CustomSharedPref
@@ -58,7 +62,7 @@ class TaskAssignedAdapter(
         return ViewHolder(view)
     }
 
-    fun navToCam(){
+    fun navToCam() {
 
     }
 
@@ -82,7 +86,7 @@ class TaskAssignedAdapter(
             dialog.txtQuestion.text = itemList[position].TaskDescription
 
             dialog.rvTaskPictures.setHasFixedSize(true)
-            layoutManagerPA = LinearLayoutManager(context,RecyclerView.HORIZONTAL, false)
+            layoutManagerPA = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             dialog.rvTaskPictures.layoutManager = layoutManagerPA
             capturedPicturesList.clear()
             recylcerAdapterPA = CapturedPictureAdapter(context, capturedPicturesList)
@@ -90,35 +94,46 @@ class TaskAssignedAdapter(
 
 
             dialog.btnTakePictureTask.setOnClickListener {
-                CSP.saveData("fragName", "Dashboard")
-                Navigation.findNavController(view)
-                    .navigate(R.id.action_dashboardFragment_to_cameraActivity)
+
+                val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+                builder.setTitle("Choose...")
+                builder.setMessage("Please select one of the options")
+
+                builder.setPositiveButton("Camera") { dialog, which ->
+                    CSP.saveData("fragName", "Dashboard")
+                    Navigation.findNavController(view)
+                        .navigate(R.id.action_dashboardFragment_to_cameraActivity)
+                }
+
+                builder.setNegativeButton("Gallery") { dialog, which ->
+                    activity.pickFromGallery()
+                }
+
+                builder.setNeutralButton("Cancel") { dialog, which ->
+                    dialog.dismiss()
+                }
+                builder.show()
             }
 
             dialog.btnCancel.setOnClickListener {
+
 
                 val client = OkHttpClient()
                 try {
                     val builder: MultipartBody.Builder =
                         MultipartBody.Builder().setType(MultipartBody.FORM)
 
-
-                    if (!CSP.getData("Dashboard_SESSION_IMAGE_SET").equals("")) {
-                        val imgPaths = CSP.getData("Dashboard_SESSION_IMAGE_SET")?.split(",")
-                        if (imgPaths != null) {
-                            for (paths in imgPaths) {
-                                println(paths)
-                                val sourceFile = File(paths)
-                                val mimeType =
-                                    CoreHelperMethods(context as Activity).getMimeType(sourceFile)
-                                val fileName: String = sourceFile.name
-                                builder.addFormDataPart(
-                                    "TaskPicture",
-                                    fileName,
-                                    sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
-                                )
-                            }
-                        }
+                    for (paths in capturedPicturesList) {
+                        println(paths)
+                        val sourceFile = File(paths)
+                        val mimeType =
+                            CoreHelperMethods(context as Activity).getMimeType(sourceFile)
+                        val fileName: String = sourceFile.name
+                        builder.addFormDataPart(
+                            "TaskPicture",
+                            fileName,
+                            sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
+                        )
                     }
 
                     builder.addFormDataPart(
@@ -184,22 +199,17 @@ class TaskAssignedAdapter(
                     val builder: MultipartBody.Builder =
                         MultipartBody.Builder().setType(MultipartBody.FORM)
 
-                    if (!CSP.getData("Dashboard_SESSION_IMAGE_SET").equals("")) {
-                        val imgPaths = CSP.getData("Dashboard_SESSION_IMAGE_SET")?.split(",")
-                        if (imgPaths != null) {
-                            for (paths in imgPaths) {
-                                println(paths)
-                                val sourceFile = File(paths)
-                                val mimeType =
-                                    CoreHelperMethods(context as Activity).getMimeType(sourceFile)
-                                val fileName: String = sourceFile.name
-                                builder.addFormDataPart(
-                                    "TaskPicture",
-                                    fileName,
-                                    sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
-                                )
-                            }
-                        }
+                    for (paths in capturedPicturesList) {
+                        println(paths)
+                        val sourceFile = File(paths)
+                        val mimeType =
+                            CoreHelperMethods(context as Activity).getMimeType(sourceFile)
+                        val fileName: String = sourceFile.name
+                        builder.addFormDataPart(
+                            "TaskPicture",
+                            fileName,
+                            sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
+                        )
                     }
 
                     builder.addFormDataPart(
@@ -269,7 +279,7 @@ class TaskAssignedAdapter(
         return itemList.size
     }
 
-    fun addNewItem(imgPath: String){
+    fun addNewItem(imgPath: String) {
         recylcerAdapterPA.addNewItem(imgPath)
     }
 

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cheilros.MainActivity
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.MenuNavigationAdapter
 import com.example.cheilros.adapters.TaskAssignedAdapter
 import com.example.cheilros.data.AppSetting
@@ -284,6 +285,7 @@ class DashboardFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
+        println("onResume Dash Frag")
         if(!CSP.getData("Dashboard_SESSION_IMAGE").equals("")){
             Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                 .setTitle("Success!!")
@@ -306,6 +308,18 @@ class DashboardFragment : BaseFragment() {
                     )
                     CSP.delData("Dashboard_SESSION_IMAGE")
                 }
+            }catch (ex: Exception){
+
+            }
+        }else if(!CSP.getData("sess_gallery_img").equals("")){
+            try {
+                Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                    .setTitle("Success!!")
+                    .setMessage("Image Added to this session!")
+                    .sneakSuccess()
+
+                recylcerAdapter.addNewItem(CSP.getData("sess_gallery_img").toString())
+                CSP.delData("sess_gallery_img")
             }catch (ex: Exception){
 
             }
@@ -446,7 +460,9 @@ class DashboardFragment : BaseFragment() {
                         layoutManager = LinearLayoutManager(requireContext())
                         rvAssignedTask.layoutManager = layoutManager
                         recylcerAdapter = TaskAssignedAdapter(requireContext(),
-                            apiData.data as MutableList<DashboardTaskAssignedData>, this@DashboardFragment)
+                            apiData.data as MutableList<DashboardTaskAssignedData>, this@DashboardFragment,
+                            requireActivity() as NewDashboardActivity
+                        )
                         rvAssignedTask.adapter = recylcerAdapter
                     })
                 }else{

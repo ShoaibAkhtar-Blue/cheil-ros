@@ -12,9 +12,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.CapturedPictureAdapter
 import com.example.cheilros.adapters.TrainingAttendeesAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.TeamMemberData
 import com.example.cheilros.models.TeamMemberModel
@@ -27,7 +29,6 @@ import kotlinx.android.synthetic.main.dialog_add_visit.btnCancel
 import kotlinx.android.synthetic.main.dialog_add_visit.txtQuestion
 import kotlinx.android.synthetic.main.dialog_add_visit.txtTitle
 import kotlinx.android.synthetic.main.dialog_training_attendee.*
-import kotlinx.android.synthetic.main.fragment_acrivity_detail.*
 import kotlinx.android.synthetic.main.fragment_acrivity_detail.txtTitleHeader
 import kotlinx.android.synthetic.main.fragment_checklist_category.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
@@ -36,6 +37,9 @@ import kotlinx.android.synthetic.main.fragment_training.*
 import kotlinx.android.synthetic.main.fragment_training_detail.*
 import kotlinx.android.synthetic.main.fragment_training_detail.view.*
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import java.io.IOException
 
 class TrainingDetailFragment : BaseFragment() {
@@ -114,12 +118,29 @@ class TrainingDetailFragment : BaseFragment() {
         }
 
         btnTakePictureTraining.setOnClickListener {
-            CSP.saveData("fragName", "TrainingDetail")
-            val bundle = bundleOf("fragName" to "TrainingDetailFragment")
-            findNavController().navigate(R.id.action_trainingDetailFragment_to_cameraActivity, bundle)
+
+            val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Choose...")
+            builder.setMessage("Please select one of the options")
+
+            builder.setPositiveButton("Camera") { dialog, which ->
+                CSP.saveData("fragName", "TrainingDetail")
+                val bundle = bundleOf("fragName" to "TrainingDetailFragment")
+                findNavController().navigate(R.id.action_trainingDetailFragment_to_cameraActivity, bundle)
+            }
+
+            builder.setNegativeButton("Gallery") { dialog, which ->
+                val activity = requireActivity() as NewDashboardActivity
+                activity.pickFromGallery()
+            }
+
+            builder.setNeutralButton("Cancel") { dialog, which ->
+                dialog.dismiss()
+            }
+            builder.show()
         }
 
-        /*btnSubmit.setOnClickListener {
+        btnSubmit.setOnClickListener {
             val client = OkHttpClient()
 
             try {
@@ -133,7 +154,15 @@ class TrainingDetailFragment : BaseFragment() {
                     )
                 }
 
-                if (!CSP.getData("TrainingDetail_SESSION_IMAGE_SET").equals("")) {
+                for (paths in capturedPicturesList) {
+                    println(paths)
+                    val sourceFile = File(paths)
+                    val mimeType = CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
+                    val fileName: String = sourceFile.name
+                    builder.addFormDataPart("TrainingPictures", fileName,sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull()))
+                }
+
+                /*if (!CSP.getData("TrainingDetail_SESSION_IMAGE_SET").equals("")) {
                     val imgPaths = CSP.getData("TrainingDetail_SESSION_IMAGE_SET")?.split(",")
                     if (imgPaths != null) {
                         for (paths in imgPaths) {
@@ -149,7 +178,7 @@ class TrainingDetailFragment : BaseFragment() {
                             )
                         }
                     }
-                }
+                }*/
                 println("${CSP.getData("base_url")}/Training.asmx/OperTrainingDetail?TrainingModelID=${
                     arguments?.getInt(
                         "TrainingModelID"
@@ -212,7 +241,7 @@ class TrainingDetailFragment : BaseFragment() {
 
 
             }
-        }*/
+        }
 
     }
 
@@ -236,6 +265,18 @@ class TrainingDetailFragment : BaseFragment() {
                     "${CSP.getData("TrainingDetail_SESSION_IMAGE_SET")},${CSP.getData("TrainingDetail_SESSION_IMAGE")}"
                 )
                 CSP.delData("TrainingDetail_SESSION_IMAGE")
+            }
+        }else if(!CSP.getData("sess_gallery_img").equals("")){
+            try {
+                Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                    .setTitle("Success!!")
+                    .setMessage("Image Added to this session!")
+                    .sneakSuccess()
+
+                recylcerAdapterPA.addNewItem(CSP.getData("sess_gallery_img").toString())
+                CSP.delData("sess_gallery_img")
+            }catch (ex: Exception){
+
             }
         }
     }
