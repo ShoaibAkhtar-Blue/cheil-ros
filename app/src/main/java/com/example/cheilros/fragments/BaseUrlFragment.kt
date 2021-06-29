@@ -59,6 +59,7 @@ class BaseUrlFragment : Fragment() {
         mAppSettingViewModel.nukeTable()
 
 
+
         try {
             Glide.with(this).load("${CSP.getData("base_url")}/AppImages/Background.jpg").into(object :
                 CustomTarget<Drawable>() {
@@ -93,6 +94,7 @@ class BaseUrlFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        etBaseUrl.setText(CSP.getData("base_url").toString())
 
         val items = listOf("English", "Korean", "Turkish", "Chinese")
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
@@ -119,8 +121,20 @@ class BaseUrlFragment : Fragment() {
                     }
                 })
             }else{
-                CSP.saveData("base_url", etBaseUrl.text.toString())
-                fetchData("${etBaseUrl.text.toString()}/Webservice.asmx/AppSettings?LanguageID=${CSP.getData("lang_id")}")
+
+                try{
+                    fetchData("${etBaseUrl.text.toString()}/Webservice.asmx/AppSettings?LanguageID=${CSP.getData("lang_id")}")
+                }catch (ex: Exception){
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage("Invalid URL!")
+                                .sneakError()
+                        }
+                    })
+                }
+
             }
 
         }
@@ -160,6 +174,7 @@ class BaseUrlFragment : Fragment() {
 
                 try {
                     if (apiData.status == 200) {
+                        CSP.saveData("base_url", etBaseUrl.text.toString())
                         for (data in apiData.data) {
                             println(data.ROS_Screen)
 

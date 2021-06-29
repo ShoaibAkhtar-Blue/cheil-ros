@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
@@ -16,6 +17,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.cheilros.R
 import com.example.cheilros.helpers.CustomSharedPref
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import kotlinx.android.synthetic.main.activity_new_dashboard.view.*
 
 
@@ -23,9 +27,12 @@ class NewDashboardActivity : AppCompatActivity() {
 
     private lateinit var toolbar: Toolbar
     lateinit var CSP: CustomSharedPref
+    private val UPDATE_REQUEST_CODE = 1500
+
     companion object {
         //image pick code
         private val IMAGE_PICK_CODE = 1000;
+
         //Permission code
         private val PERMISSION_CODE = 1001;
     }
@@ -34,30 +41,60 @@ class NewDashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_dashboard)
         CSP = CustomSharedPref(this)
+        inAppUpdatesCheck()
         //setupToolbar()
     }
 
-    fun setupToolbar(title: String = "Title"){
-        toolbar= findViewById(R.id.main_toolbar)
+    override fun onResume() {
+        super.onResume()
+        inAppUpdatesCheck()
+    }
+
+    fun setupToolbar(title: String = "Title") {
+        toolbar = findViewById(R.id.main_toolbar)
         setSupportActionBar(toolbar)
         toolbar.toolbar_title.text = title
     }
 
-    fun pickFromGallery(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+    fun inAppUpdatesCheck() {
+        val appUpdateManager = AppUpdateManagerFactory.create(this)
+
+        // Returns an intent object that you use to check for an update.
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+
+        // Checks that the platform will allow the specified type of update.
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                // This example applies an immediate update. To apply a flexible update
+                // instead, pass in AppUpdateType.FLEXIBLE
+                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
+            ) {
+                // Request the update.
+                    try {
+                        appUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.IMMEDIATE, this@NewDashboardActivity, UPDATE_REQUEST_CODE)
+                    }catch (ex: IntentSender.SendIntentException){
+                        Log.e("Error_", ex.message.toString())
+                    }
+
+            }
+        }
+
+    }
+
+    fun pickFromGallery() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                PackageManager.PERMISSION_DENIED){
+                PackageManager.PERMISSION_DENIED
+            ) {
                 //permission denied
                 val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE);
                 //show popup to request runtime permission
                 requestPermissions(permissions, PERMISSION_CODE);
-            }
-            else{
+            } else {
                 //permission already granted
                 pickImageFromGallery();
             }
-        }
-        else{
+        } else {
             //system OS is < Marshmallow
             pickImageFromGallery();
         }
@@ -71,16 +108,20 @@ class NewDashboardActivity : AppCompatActivity() {
     }
 
     //handle requested permission result
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode){
+        when (requestCode) {
             PERMISSION_CODE -> {
-                if (grantResults.size >0 && grantResults[0] ==
-                    PackageManager.PERMISSION_GRANTED){
+                if (grantResults.size > 0 && grantResults[0] ==
+                    PackageManager.PERMISSION_GRANTED
+                ) {
                     //permission from popup granted
                     pickImageFromGallery()
-                }
-                else{
+                } else {
                     //permission from popup denied
                     Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
                 }
@@ -91,7 +132,7 @@ class NewDashboardActivity : AppCompatActivity() {
     //handle result of picked image
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
+        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
             val selectedImageUri: Uri = data?.data!!
             val picturePath: String =
                 getPath(this, selectedImageUri).toString()
@@ -99,8 +140,13 @@ class NewDashboardActivity : AppCompatActivity() {
 
             CSP.saveData("sess_gallery_img", picturePath)
 
-        println("Image Added")
-        //image_view.setImageURI(data?.data)
+            println("Image Added")
+            //image_view.setImageURI(data?.data)
+        }
+        if (requestCode == UPDATE_REQUEST_CODE){
+            Toast.makeText(this, "Downloading Start", Toast.LENGTH_SHORT).show()
+            if(resultCode != RESULT_OK)
+                Log.e("Error_", "Update Flow Failed")
         }
     }
 
