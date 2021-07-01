@@ -117,6 +117,9 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:foreground="?android:attr/selectableItemBackground"
                                 android:id="@+id/cvJourneyPlan"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
@@ -247,12 +250,16 @@
                         android:orientation="horizontal">
 
                         <androidx.cardview.widget.CardView
+
                             android:id="@+id/cvCoverage"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="8dp"
                             android:layout_marginBottom="8dp"
                             android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?android:attr/selectableItemBackground"
                             app:cardBackgroundColor="#534f47"
                             app:cardCornerRadius="6dp">
 
@@ -299,6 +306,9 @@
                         </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?android:attr/selectableItemBackground"
                             android:id="@+id/cvDeployement"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

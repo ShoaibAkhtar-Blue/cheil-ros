@@ -5,7 +5,10 @@
     android:id="@+id/cvJPstatus"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:cardElevation="0dp">
+    app:cardElevation="0dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="100dp"

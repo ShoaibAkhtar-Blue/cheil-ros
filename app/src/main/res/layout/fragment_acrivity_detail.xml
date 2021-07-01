@@ -138,6 +138,9 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
                 android:orientation="horizontal">
 
                 <ImageButton
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
                     android:id="@+id/btnTakePicture"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
@@ -213,6 +216,9 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
                 </RelativeLayout>
 
                 <ImageButton
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
                     android:id="@+id/btnScanBarcode"
                     android:layout_width="100dp"
                     android:layout_height="100dp"

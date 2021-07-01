@@ -6,7 +6,10 @@
     android:layout_height="wrap_content"
     android:background="@drawable/border_grey"
     android:orientation="vertical"
-    android:layout_marginBottom="8dp">
+    android:layout_marginBottom="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <RelativeLayout
         android:id="@+id/RLHeader"

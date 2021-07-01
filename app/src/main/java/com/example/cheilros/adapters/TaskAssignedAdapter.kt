@@ -95,7 +95,8 @@ class TaskAssignedAdapter(
 
             dialog.btnTakePictureTask.setOnClickListener {
 
-                val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+                val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
+
                 builder.setTitle("Choose...")
                 builder.setMessage("Please select one of the options")
 

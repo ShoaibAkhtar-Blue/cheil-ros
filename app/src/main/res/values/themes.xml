@@ -47,4 +47,8 @@
         <item name="colorControlNormal">@android:color/black</item>-->
     </style>
 
+    <style name="AlertDialogTheme.Light" parent="ThemeOverlay.MaterialComponents.Dialog.Alert" >
+        <item name="android:buttonBarButtonStyle">@style/Widget.MaterialComponents.Button.TextButton</item>
+    </style>
+
 </resources>

@@ -13,18 +13,22 @@ class CapturedPictureAdapter(val context: Context, val itemList: MutableList<Str
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var imgCaptured: ImageView = view.findViewById(R.id.imgCaptured)
+        var btnDel: ImageView = view.findViewById(R.id.btnDel)
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): CapturedPictureAdapter.ViewHolder {
+    ): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.list_capture_picture, parent, false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: CapturedPictureAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Glide.with(context).load(itemList[position]).into(holder.imgCaptured!!)
+        holder.btnDel.setOnClickListener {
+            removeItem(position)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -34,5 +38,11 @@ class CapturedPictureAdapter(val context: Context, val itemList: MutableList<Str
     fun addNewItem(itemsNew: String?){
         itemList.add(itemsNew.toString())
         notifyDataSetChanged()
+    }
+
+    fun removeItem(position: Int){
+        itemList.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, itemCount - position)
     }
 }

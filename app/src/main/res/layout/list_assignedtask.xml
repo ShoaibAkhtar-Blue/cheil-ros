@@ -7,7 +7,10 @@
     android:baselineAligned="false"
     android:orientation="horizontal"
     android:id="@+id/LLtask"
-    android:background="@drawable/border_grey">
+    android:background="@drawable/border_grey"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
 
 
     <LinearLayout

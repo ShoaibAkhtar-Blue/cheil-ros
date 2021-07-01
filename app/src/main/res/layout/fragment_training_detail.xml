@@ -195,6 +195,9 @@ tools:context=".fragments.storeview.TrainingDetailFragment">
                     android:orientation="vertical">
 
                     <ImageButton
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
                         android:id="@+id/btnAddAttendee"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
@@ -212,6 +215,9 @@ tools:context=".fragments.storeview.TrainingDetailFragment">
                         android:orientation="horizontal">
 
                         <ImageButton
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?android:attr/selectableItemBackground"
                             android:id="@+id/btnTakePictureTraining"
                             android:layout_width="80dp"
                             android:layout_height="80dp"
