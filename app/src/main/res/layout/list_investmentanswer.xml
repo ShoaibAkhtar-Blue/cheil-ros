@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/LLInvestment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_grey"
+    android:orientation="vertical"
+    android:layout_marginBottom="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:id="@+id/RLHeader"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:background="@color/status_none"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <TextView
+            android:id="@+id/txtTitleHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentBottom="false"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/samsungsharpsans_bold"
+            android:gravity="center"
+            android:lines="1"
+            android:maxLength="30"
+            android:maxLines="1"
+            android:text="Title"
+            android:textColor="@android:color/white"
+            android:textSize="14dp" />
+
+        <TextView
+
+            android:id="@+id/txtTitleDate"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/txtTitleHeader"
+            android:fontFamily="@font/samsungsharpsans_regular"
+            android:gravity="center"
+            android:lines="1"
+            android:maxLength="30"
+            android:maxLines="1"
+            android:text=""
+            android:textColor="@android:color/white"
+            android:textSize="14dp" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="24dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/ic_arrow_right_foreground" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/LLtable"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Status" />
+
+        <TextView
+            android:id="@+id/txtStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="-" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -59,6 +59,19 @@
 
         </com.google.android.material.textfield.TextInputLayout>-->
 
+            <Button
+                android:id="@+id/btnChannelType"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/white"
+                android:backgroundTint="@color/white"
+                android:drawableRight="@drawable/btn_drawable_down_arrow"
+                android:text="Select Channel Type"
+                android:textColor="#b2b2b2"
+                app:cornerRadius="0dp"
+                app:strokeColor="#c2c2c2"
+                app:strokeWidth="2dp" />
 
             <Button
                 android:id="@+id/btnChannel"
@@ -73,6 +86,8 @@
                 app:cornerRadius="0dp"
                 app:strokeColor="#c2c2c2"
                 app:strokeWidth="2dp" />
+
+
 
         <com.example.cheilros.activities.customobj.EmptyRecyclerView
             android:id="@+id/rvCoverage"

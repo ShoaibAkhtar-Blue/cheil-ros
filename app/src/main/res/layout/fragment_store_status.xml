@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.storeview.StoreStatusFragment"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ededed"
+        android:padding="4dp">
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Update: " />
+
+        <TextView
+            android:id="@+id/btnEditChecklist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/samsungsharpsans_bold"
+            android:gravity="right"
+            android:text="Edit"
+            android:textColor="@color/black" />
+    </LinearLayout>
+    <com.example.cheilros.activities.customobj.EmptyRecyclerView
+        android:id="@+id/rvChecklistAnswer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.example.cheilros.activities.customobj.EmptyRecyclerView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#ededed"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:fontFamily="@font/samsungsharpsans_bold"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="SAMSUNG INVESTMENT"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/btnEditInvestment"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/samsungsharpsans_bold"
+            android:gravity="center|right"
+            android:text="All"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <com.example.cheilros.activities.customobj.EmptyRecyclerView
+        android:id="@+id/rvInvestmentAnswer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.example.cheilros.activities.customobj.EmptyRecyclerView>
+
+</LinearLayout>

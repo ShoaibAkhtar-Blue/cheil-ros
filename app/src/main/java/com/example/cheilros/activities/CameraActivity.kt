@@ -49,6 +49,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.roundToInt
 
 
@@ -207,6 +209,94 @@ class CameraActivity : AppCompatActivity() {
                             println(savedImagePath)
                             CSP.saveData("Dashboard_SESSION_IMAGE", savedImagePath)
                             finish()
+                        } else if (CSP.getData("fragName").equals("MyCoverage")) {
+
+                            imageView.setImageBitmap(it.bitmap)
+                            imageView.rotation = (-it.rotationDegrees).toFloat()
+
+                            val dialog = Dialog(this)
+                            dialog.setContentView(R.layout.dialog_photo_preview)
+                            dialog.setCancelable(false)
+                            dialog.setCanceledOnTouchOutside(true)
+
+                            dialog.imgPrev.setImageBitmap(it.bitmap)
+                            dialog.imgPrev.rotation = (-it.rotationDegrees).toFloat()
+
+
+                            dialog.btnUpload.setOnClickListener {
+                                dialog.btnUpload.isEnabled = false
+                                dialog.btnUpload.isClickable = false
+                                dialog.btnCancel.isEnabled = false
+                                dialog.btnCancel.isClickable = false
+
+                                dialog.btnUpload.text = "Uploading"
+
+                                //region Save File
+
+                                //region Get Location
+                                var lat: String = "0"
+                                var lng: String = "0"
+
+                                locationManager =
+                                    this@CameraActivity.getSystemService(LOCATION_SERVICE) as LocationManager
+                                if (ActivityCompat.checkSelfPermission(
+                                        this@CameraActivity,
+                                        Manifest.permission.ACCESS_FINE_LOCATION
+                                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                                        this@CameraActivity,
+                                        Manifest.permission.ACCESS_COARSE_LOCATION
+                                    ) != PackageManager.PERMISSION_GRANTED
+                                ) {
+                                    // TODO: Consider calling
+                                    //    ActivityCompat#requestPermissions
+                                    // here to request the missing permissions, and then overriding
+                                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                    //                                          int[] grantResults)
+                                    // to handle the case where the user grants the permission. See the documentation
+                                    // for ActivityCompat#requestPermissions for more details.
+                                    return@setOnClickListener
+                                }
+                                locationManager.requestLocationUpdates(
+                                    LocationManager.GPS_PROVIDER,
+                                    5000,
+                                    0F,
+                                    object :
+                                        LocationListener {
+                                        override fun onLocationChanged(location: Location) {
+                                            lat = location.latitude.toString()
+                                            lng = location.longitude.toString()
+                                            println("loc: ${location.latitude}")
+                                        }
+
+                                    })
+                                //endregion
+                                val savedImagePath: String = saveMediaToStorage(bitmapImg)
+                                var checkTypeAPI: String = if (CSP.getData("sess_visit_status_id")
+                                        .equals("1")
+                                ) "CheckIn" else "CheckOut"
+
+                                val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+                                val currentDateAndTime: String = simpleDateFormat.format(Date())
+
+                                /*val uploadImgFile:File =  File(savedImagePath)
+                                println(uploadImgFile.exists())*/
+                                //${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${CSP.getData("sess_store_id")}&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=${dialog.etRemarksJP.text}&PlanDate=${currentDateAndTime}&Longitude=$lng&Latitude=$lat&Remarks=${dialog.etRemarksJP.text}
+                                sendCheckInOutRequest(
+                                    "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
+                                        CSP.getData(
+                                            "sess_store_id"
+                                        )
+                                    }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=${dialog.etRemarksJP.text}&PlanDate=${currentDateAndTime}&Longitude=$lng&Latitude=$lat&Remarks=${dialog.etRemarksJP.text}",
+                                    savedImagePath
+                                )
+                            }
+                            dialog.btnCancel.setOnClickListener {
+                                dialog.dismiss()
+                            }
+
+                            dialog.show()
+
+
                         } else {
                             imageView.setImageBitmap(it.bitmap)
                             imageView.rotation = (-it.rotationDegrees).toFloat()

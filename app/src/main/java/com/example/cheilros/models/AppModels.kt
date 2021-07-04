@@ -6,6 +6,23 @@ import kotlinx.android.parcel.Parcelize
 
 class AddVisitPlanModel(val status: Int)
 
+
+//region Store View
+class StoreInfoModel(val status: Int, val data: List<StoreInfoData>)
+class StoreInfoData(
+    val StoreID: Int,
+    val StoreCode: String,
+    val StoreName: String,
+    val StoreTypeName: String,
+    val DistrcitName: String,
+    val RegionName: String,
+    val GradeName: String,
+    val MallName: String,
+    val Address: String,
+    val DistributorName: String
+)
+//endregion
+
 //region Team Status
 class AssignedTeamMemberModel(val status: Int, val data: List<AssignedTeamMemberData>)
 class AssignedTeamMemberData(
@@ -112,12 +129,20 @@ class DashboardTaskAssignedData(
 //endregion
 
 //region Investment
+
 class InvestmentModel(val status: Int, val data: List<InvestmentData>)
 class InvestmentData(
     val ElementID: Int,
     val ElementTitle: String,
     val ElementUpdateDate: String,
     val Brands: List<BrandsData>
+)
+
+class InvestmentAnswerModel(val status: Int, val data: List<InvestmentAnswerData>)
+class InvestmentAnswerData(
+    val ElementID: Int,
+    val ElementTitle: String,
+    val ElementStatus: String
 )
 
 @Parcelize
@@ -160,6 +185,14 @@ class CheckListJSONData(
     val StoreID: Int?,
     val CheckListStatus: String,
     val TeamMemberID: Int?
+)
+
+class CheckListAnswerModel(val status: Int, val data: List<CheckListAnswerData>)
+class CheckListAnswerData(
+    val CheckListID: Int,
+    val Question: String,
+    val StoreID: Int,
+    val CheckListStatus: String
 )
 //endregion
 
@@ -247,5 +280,11 @@ class ChannelModel(val status: Int, val data: List<ChannelData>)
 class ChannelData(
     val ChannelID: Int,
     val ChannelName: String
+)
+
+class ChannelTypeModel(val status: Int, val data: List<ChannelTypeData>)
+class ChannelTypeData(
+    val ChannelTypeID: Int,
+    val ChannelTypeName: String
 )
 //endregion

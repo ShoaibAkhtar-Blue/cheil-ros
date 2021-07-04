@@ -52,6 +52,9 @@
             android:id="@+id/action_myCoverageFragment_to_storeViewFragment"
             app:destination="@id/storeViewFragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_myCoverageFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
     </fragment>
     <activity
         android:id="@+id/cameraActivity"
@@ -287,4 +290,18 @@
         android:name="com.example.cheilros.fragments.TeamStatusFragment"
         android:label="team_status"
         tools:layout="@layout/fragment_team_status" />
+    <fragment
+        android:id="@+id/storeStatusFragment"
+        android:name="com.example.cheilros.fragments.storeview.StoreStatusFragment"
+        android:label="fragment_store_status"
+        tools:layout="@layout/fragment_store_status" >
+        <action
+            android:id="@+id/action_storeStatusFragment_to_checklistCategoryFragment"
+            app:destination="@id/checklistCategoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/storeActiveAssetsFragment"
+        android:name="com.example.cheilros.fragments.storeview.StoreActiveAssetsFragment"
+        android:label="fragment_store_active_assets"
+        tools:layout="@layout/fragment_store_active_assets" />
 </navigation>

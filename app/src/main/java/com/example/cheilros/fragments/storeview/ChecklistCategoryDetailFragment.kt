@@ -56,7 +56,7 @@ class ChecklistCategoryDetailFragment : Fragment() {
     }
 
     fun fetchChecklistDetail(url: String) {
-
+        println(url)
         val request = Request.Builder()
             .url(url)
             .build()

@@ -18,9 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.activities.customobj.EmptyRecyclerView
 import com.example.cheilros.adapters.MyCoverageAdapter
-import com.example.cheilros.models.ChannelData
-import com.example.cheilros.models.ChannelModel
-import com.example.cheilros.models.MyCoverageModel
+import com.example.cheilros.models.*
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
@@ -39,6 +37,10 @@ class MyCoverageFragment : BaseFragment() {
     lateinit var layoutManager: RecyclerView.LayoutManager
 
     lateinit var channelData:List<ChannelData>
+    lateinit var channelTypeData:List<ChannelTypeData>
+
+    var defaultChannel = "0"
+    var defaultChannelType = "0"
 
     lateinit var recylcerAdapter: MyCoverageAdapter
 
@@ -90,7 +92,8 @@ class MyCoverageFragment : BaseFragment() {
         recyclerView.setEmptyView(emptyView)
 
         fetchChannel("${CSP.getData("base_url")}/Webservice.asmx/ChannelList")
-        fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=0&SearchKeyWord=")
+        fetchChannelType("${CSP.getData("base_url")}/Webservice.asmx/ChannelTypeList")
+        fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${defaultChannel}&SearchKeyWord=&ChannelTypeID=${defaultChannelType}")
 
         btnChannel.setOnClickListener {
             // setup the alert builder
@@ -109,8 +112,38 @@ class MyCoverageFragment : BaseFragment() {
             builder.setItems(channels,
                 DialogInterface.OnClickListener { dialog, which ->
                     println(channelData[which].ChannelID)
+                    defaultChannel = channelData[which].ChannelID.toString()
                     btnChannel.text = "Selected Channel: ${channelData[which].ChannelName}"
-                    fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${channelData[which].ChannelID}&SearchKeyWord=")
+                    fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${defaultChannel}&SearchKeyWord=&ChannelTypeID=${defaultChannelType}")
+                })
+
+            // create and show the alert dialog
+
+            // create and show the alert dialog
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+
+        btnChannelType.setOnClickListener {
+            // setup the alert builder
+            // setup the alert builder
+            val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Choose an channel type")
+
+            // add a list
+
+            // add a list
+            var channels : Array<String> = arrayOf()
+            for (c in channelTypeData){
+                channels += c.ChannelTypeName
+            }
+
+            builder.setItems(channels,
+                DialogInterface.OnClickListener { dialog, which ->
+                    println(channelTypeData[which].ChannelTypeID)
+                    defaultChannelType = channelTypeData[which].ChannelTypeID.toString()
+                    btnChannelType.text = "Selected Channel: ${channelTypeData[which].ChannelTypeName}"
+                    fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${defaultChannel}&SearchKeyWord=&ChannelTypeID=${defaultChannelType}")
                 })
 
             // create and show the alert dialog
@@ -191,8 +224,59 @@ class MyCoverageFragment : BaseFragment() {
             }
         })
     }
-    fun fetchData(url: String) {
 
+    fun fetchChannelType(url: String) {
+
+        mainLoadingLayoutCoverage.setState(LoadingLayout.LOADING)
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                requireActivity().runOnUiThread(java.lang.Runnable {
+                    activity?.let { it1 ->
+                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                            .setTitle("Error!!")
+                            .setMessage(e.message.toString())
+                            .sneakError()
+                        mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                    }
+                })
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body?.string()
+                println(body)
+
+                val gson = GsonBuilder().create()
+                val apiData = gson.fromJson(body, ChannelTypeModel::class.java)
+                println(apiData.status)
+                if (apiData.status == 200) {
+                    channelTypeData = apiData.data
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                        }
+                    })
+                } else {
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage("Data not fetched.")
+                                .sneakWarning()
+                            mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                        }
+                    })
+                }
+            }
+        })
+    }
+
+    fun fetchData(url: String) {
+        println(url)
         mainLoadingLayoutCoverage.setState(LoadingLayout.LOADING)
         println(url)
         val request = Request.Builder()

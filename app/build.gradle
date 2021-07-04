@@ -18,7 +18,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
-        versionName "1.2.2"
+        versionName "1.2.4"
 
         multiDexEnabled true
 
@@ -115,5 +115,8 @@ dependencies {
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
     implementation 'com.google.android.play:core-ktx:1.8.1'
+
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+
 
 }

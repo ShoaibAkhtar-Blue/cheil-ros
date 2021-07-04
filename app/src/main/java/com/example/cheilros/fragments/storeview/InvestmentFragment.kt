@@ -41,7 +41,11 @@ class InvestmentFragment : BaseFragment() {
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
-        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Investment" }.get(0).labelName
+        try{
+            view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Investment" }.get(0).labelName
+        }catch (ex: Exception){
+
+        }
         //endregion
 
 

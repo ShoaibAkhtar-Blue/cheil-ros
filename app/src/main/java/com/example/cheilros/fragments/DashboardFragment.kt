@@ -84,7 +84,12 @@ class DashboardFragment : BaseFragment() {
 
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
-        fetchDashboardData("${CSP.getData("base_url")}/Dashboard.asmx/DashboardLabels?TeamMemberID=${userData[0].memberID}")
+        try{
+            fetchDashboardData("${CSP.getData("base_url")}/Dashboard.asmx/DashboardLabels?TeamMemberID=${userData[0].memberID}")
+        }catch (ex: Exception){
+
+        }
+
 
         Glide.with(this)
             .load("${CSP.getData("base_url")}/TeamMemberPicture/${userData[0].memberID}.png")
@@ -277,9 +282,15 @@ class DashboardFragment : BaseFragment() {
         val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
         val currentDateAndTime: String = simpleDateFormat.format(Date())
 
-        fetchTaskAssignedData("${CSP.getData("base_url")}/Dashboard.asmx/TaskAssigned?TeamMemberID=${CSP.getData("user_id")}&Status=1")
 
-        fetchChartData("${CSP.getData("base_url")}/Dashboard.asmx/DailyTrend?TeamMemberID=${CSP.getData("user_id")}&TrendDate=${currentDateAndTime}")
+
+        try{
+            fetchTaskAssignedData("${CSP.getData("base_url")}/Dashboard.asmx/TaskAssigned?TeamMemberID=${CSP.getData("user_id")}&Status=1")
+            fetchChartData("${CSP.getData("base_url")}/Dashboard.asmx/DailyTrend?TeamMemberID=${CSP.getData("user_id")}&TrendDate=${currentDateAndTime}")
+        }catch (ex:Exception){
+
+        }
+
 
     }
 
