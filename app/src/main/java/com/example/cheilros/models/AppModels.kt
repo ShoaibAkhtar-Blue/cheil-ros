@@ -21,6 +21,31 @@ class StoreInfoData(
     val Address: String,
     val DistributorName: String
 )
+
+class AssetListModel(val status: Int, val data: List<AssetListData>)
+class AssetListData(
+    val AssetID: Int,
+    val AssetTypeID: Int,
+    val AssetTypeName: String,
+    val AssetDescription: String,
+    val BrandID: Int,
+    val BrandName: String,
+    val CreationDateTime: String,
+    val TeamMemberName: String,
+    val StoreID: Int,
+    val StoreName: String
+)
+
+class AssetBrandsModel(val status: Int, val data: List<AssetBrandsData>)
+class AssetBrandsData(
+    val BrandID: Int,
+    val BrandName: String,
+    val Assets: List<AssetBrandsListData>
+)
+class AssetBrandsListData(
+    val AssetTypeID: Int,
+    val AssetTypeName: String
+)
 //endregion
 
 //region Team Status

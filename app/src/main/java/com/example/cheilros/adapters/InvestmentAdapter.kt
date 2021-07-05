@@ -63,8 +63,11 @@ class InvestmentAdapter(val context: Context, val itemList: List<InvestmentData>
                 "BrandsList" to brands
             )
 
+//            Navigation.findNavController(it)
+//                .navigate(R.id.action_investmentFragment_to_investmentDetailFragment, bundle)
+
             Navigation.findNavController(it)
-                .navigate(R.id.action_investmentFragment_to_investmentDetailFragment, bundle)
+                .navigate(R.id.action_storeViewFragment_to_investmentDetailFragment, bundle)
         }
 
         if(holder.LLtable!!.childCount == 0){

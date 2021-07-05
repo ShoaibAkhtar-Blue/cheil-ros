@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -27,6 +27,7 @@
                 android:padding="8dp">
 
                 <LinearLayout
+                    android:layout_marginBottom="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border_bottom_grey">
@@ -50,6 +51,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:layout_marginBottom="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border_bottom_grey">
@@ -97,7 +99,9 @@
                             android:textColor="@color/black" />
                     </LinearLayout>
                 </LinearLayout>
+
                 <LinearLayout
+                    android:layout_marginBottom="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border_bottom_grey">
@@ -119,7 +123,9 @@
                         android:text="-"
                         android:textColor="@color/black" />
                 </LinearLayout>
+
                 <LinearLayout
+                    android:layout_marginBottom="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border_bottom_grey">
@@ -249,4 +255,4 @@
 
     </LinearLayout>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

@@ -209,6 +209,12 @@ class CameraActivity : AppCompatActivity() {
                             println(savedImagePath)
                             CSP.saveData("Dashboard_SESSION_IMAGE", savedImagePath)
                             finish()
+                        }else if (CSP.getData("fragName").equals("StoreAsset")) {
+                            println("StoreAsset")
+                            val savedImagePath: String = saveMediaToStorage(bitmapImg)
+                            println(savedImagePath)
+                            CSP.saveData("StoreAsset_SESSION_IMAGE", savedImagePath)
+                            finish()
                         } else if (CSP.getData("fragName").equals("MyCoverage")) {
 
                             imageView.setImageBitmap(it.bitmap)

@@ -12,15 +12,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.adapters.ChecklistAdapter
 import com.example.cheilros.adapters.ChecklistAnsweredAdapter
+import com.example.cheilros.adapters.InvestmentAdapter
 import com.example.cheilros.adapters.InvestmentAnswerAdapter
 import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.models.CheckListAnswerModel
 import com.example.cheilros.models.CheckListModel
 import com.example.cheilros.models.InvestmentAnswerModel
+import com.example.cheilros.models.InvestmentModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.fragment_checklist_category.*
+import kotlinx.android.synthetic.main.fragment_checklist_category.mainLoadingLayoutCC
+import kotlinx.android.synthetic.main.fragment_investment.*
+import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import kotlinx.android.synthetic.main.fragment_store_status.*
 import okhttp3.*
 import java.io.IOException
@@ -34,6 +39,9 @@ class StoreStatusFragment : BaseFragment() {
     lateinit var layoutManagerInvest: RecyclerView.LayoutManager
     lateinit var recylcerAdapterInvest: InvestmentAnswerAdapter
 
+    lateinit var layoutManagerInvest1: RecyclerView.LayoutManager
+    lateinit var recylcerAdapterInvest1: InvestmentAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,8 +51,18 @@ class StoreStatusFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        try {
+            StoreMenu_Investment.text = settingData.filter { it.fixedLabelName == "StoreMenu_Investment" }[0].labelName
+        }catch (ex: Exception){
+
+        }
+
         fetchChecklistanswer("${CSP.getData("base_url")}/Checklist.asmx/ChecklistAnswered?StoreID=${arguments?.getInt("StoreID")}")
-        fetchInvestmentanswer("${CSP.getData("base_url")}/Storelist.asmx/StoreInvestmentElements?StoreID=${arguments?.getInt("StoreID")}")
+        //fetchInvestmentanswer("${CSP.getData("base_url")}/Storelist.asmx/StoreInvestmentElements?StoreID=${arguments?.getInt("StoreID")}")
+        fetchInvestment("${CSP.getData("base_url")}/Audit.asmx/InvestmentElement_AuditView?StoreID=${arguments?.getInt("StoreID")}")
+
+
 
         btnEditChecklist.setOnClickListener {
             val bundle = bundleOf(
@@ -53,13 +71,13 @@ class StoreStatusFragment : BaseFragment() {
             )
             findNavController().navigate(R.id.action_storeViewFragment_to_checklistCategoryFragment,bundle)
         }
-        btnEditInvestment.setOnClickListener {
+        /*btnEditInvestment.setOnClickListener {
             val bundle = bundleOf(
                 "StoreID" to arguments?.getInt("StoreID"),
                 "StoreName" to arguments?.getString("StoreName")
             )
             findNavController().navigate(R.id.action_storeViewFragment_to_investmentFragment,bundle)
-        }
+        }*/
     }
 
     fun fetchChecklistanswer(url: String){
@@ -95,7 +113,8 @@ class StoreStatusFragment : BaseFragment() {
                         rvChecklistAnswer.layoutManager = layoutManager
                         recylcerAdapter = ChecklistAnsweredAdapter(requireContext(), apiData.data, arguments)
                         rvChecklistAnswer.adapter = recylcerAdapter
-
+                        val emptyView: View = todo_list_empty_view1
+                        rvChecklistAnswer.setEmptyView(emptyView)
                     })
                 }else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
@@ -145,7 +164,8 @@ class StoreStatusFragment : BaseFragment() {
                         rvInvestmentAnswer.layoutManager = layoutManagerInvest
                         recylcerAdapterInvest = InvestmentAnswerAdapter(requireContext(), apiData.data, arguments)
                         rvInvestmentAnswer.adapter = recylcerAdapterInvest
-
+                        val emptyView: View = todo_list_empty_view2
+                        rvInvestmentAnswer.setEmptyView(emptyView)
                     })
                 }else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
@@ -156,6 +176,54 @@ class StoreStatusFragment : BaseFragment() {
                                 .sneakWarning()
                         }
 
+                    })
+                }
+            }
+        })
+    }
+
+    fun fetchInvestment(url: String){
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                requireActivity().runOnUiThread(java.lang.Runnable {
+                    activity?.let { it1 ->
+                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                            .setTitle("Error!!")
+                            .setMessage(e.message.toString())
+                            .sneakError()
+                    }
+                })
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body?.string()
+                println(body)
+                val gson = GsonBuilder().create()
+                val apiData = gson.fromJson(body, InvestmentModel::class.java)
+                if (apiData.status == 200) {
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        rvInvestmentAnswer.setHasFixedSize(true)
+                        layoutManagerInvest1 = LinearLayoutManager(requireContext())
+                        rvInvestmentAnswer.layoutManager = layoutManagerInvest1
+                        recylcerAdapterInvest1= InvestmentAdapter(requireContext(), apiData.data, arguments)
+                        rvInvestmentAnswer.adapter = recylcerAdapterInvest1
+                        val emptyView: View = todo_list_empty_view2
+                        rvInvestmentAnswer.setEmptyView(emptyView)
+                    })
+                }else {
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage("Data not fetched.")
+                                .sneakWarning()
+                        }
                     })
                 }
             }

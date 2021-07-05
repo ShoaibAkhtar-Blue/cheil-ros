@@ -72,9 +72,10 @@ class StoreViewFragment : BaseFragment() {
         //fetchRecentActivities("${CSP.getData("base_url")}/OperMarketActivities.asmx/ViewMarketActivityList?StoreID=${arguments?.getInt("StoreID").toString()}&ActivityCategoryID=0&ActivityTypeID=0&BrandID=0&TeamMemberID=${CSP.getData("user_id")}")
         fetchStoreInfo("${CSP.getData("base_url")}/Storelist.asmx/StoreInfo?StoreID=${arguments?.getInt("StoreID").toString()}")
         //region Store Tabs
-        tab_layout.setSelectedTabIndicatorColor(Color.WHITE)
+        tab_layout.setSelectedTabIndicatorColor(Color.RED)
         tab_layout.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
         tab_layout.tabTextColors = ContextCompat.getColorStateList(requireContext(), android.R.color.white)
+
 
         // Number Of Tabs
         val numberOfTabs = 2
@@ -102,11 +103,10 @@ class StoreViewFragment : BaseFragment() {
         TabLayoutMediator(tab_layout, tabs_viewpager) { tab, position ->
             when (position) {
                 0 -> {
-                    tab.text = "Store Status"
+                    tab.text = settingData.filter { it.fixedLabelName == "StoreView_SubTitleTAB1" }[0].labelName
                 }
                 1 -> {
-                    tab.text = "Active Assets"
-
+                    tab.text = settingData.filter { it.fixedLabelName == "StoreView_SubTitleTAB2" }[0].labelName
                 }
             }
             // Change color of the icons

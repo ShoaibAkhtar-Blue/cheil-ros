@@ -41,10 +41,14 @@ class InvestmentDetailFragment : BaseFragment() {
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
-        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Investment" }.get(0).labelName + " / ${arguments?.getString("ElementTitle")}"
-        view.BrandHeading.text = settingData.filter { it.fixedLabelName == "BrandHeading" }.get(0).labelName
-        view.CountHeading.text = settingData.filter { it.fixedLabelName == "CountHeading" }.get(0).labelName
-        view.btnSubmit.text = settingData.filter { it.fixedLabelName == "LoginForgetSubmitButton" }.get(0).labelName
+        try{
+            view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Investment" }.get(0).labelName + " / ${arguments?.getString("ElementTitle")}"
+            view.BrandHeading.text = settingData.filter { it.fixedLabelName == "BrandHeading" }.get(0).labelName
+            view.CountHeading.text = settingData.filter { it.fixedLabelName == "CountHeading" }.get(0).labelName
+            view.btnSubmit.text = settingData.filter { it.fixedLabelName == "LoginForgetSubmitButton" }.get(0).labelName
+        }catch (ex: Exception){
+
+        }
         //endregion
 
         println("onCreateView")

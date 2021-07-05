@@ -92,6 +92,12 @@
         <action
             android:id="@+id/action_storeViewFragment_to_trainingFragment"
             app:destination="@id/trainingFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_investmentDetailFragment"
+            app:destination="@id/investmentDetailFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
     </fragment>
     <fragment
         android:id="@+id/checklistCategoryFragment"
