@@ -59,7 +59,7 @@ class TrainingFragment : BaseFragment() {
         /*LLchecklist.setOnClickListener {
             findNavController().navigate(R.id.action_trainingFragment_to_trainingDetailFragment)
         }*/
-        fetchTraining("${CSP.getData("base_url")}/Training.asmx/TrainingModelsList")
+        //fetchTraining("${CSP.getData("base_url")}/Training.asmx/TrainingModelsList")
         fetchRecentTraining("${CSP.getData("base_url")}/Training.asmx/TrainingLog?StoreID=${arguments?.getInt("StoreID").toString()}&TeamMemberID=${CSP.getData("user_id")}")
 
         requireActivity().toolbar_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
@@ -76,7 +76,7 @@ class TrainingFragment : BaseFragment() {
         })
     }
 
-    fun fetchTraining(url: String){
+    /*fun fetchTraining(url: String){
         println(url)
         val request = Request.Builder()
             .url(url)
@@ -124,7 +124,7 @@ class TrainingFragment : BaseFragment() {
             }
 
         })
-    }
+    }*/
 
     fun fetchRecentTraining(url: String){
         println(url)

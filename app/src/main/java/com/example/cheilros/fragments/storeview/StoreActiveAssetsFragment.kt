@@ -66,7 +66,7 @@ class StoreActiveAssetsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         activity = requireActivity() as NewDashboardActivity
-        fetchAssetList("${CSP.getData("base_url")}/Asset.asmx/AssetList?StoreID=1")
+        fetchAssetList("${CSP.getData("base_url")}/Asset.asmx/AssetList?StoreID=${arguments?.getInt("StoreID")}")
 
         btnAddAsset.setOnClickListener {
             addAsset(null)

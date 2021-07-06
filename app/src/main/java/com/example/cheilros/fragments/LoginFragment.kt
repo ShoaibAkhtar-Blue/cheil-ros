@@ -184,6 +184,7 @@ class LoginFragment : BaseFragment() {
                 if (apiData.status == 200) {
                     println("TeamMemberID: ${apiData.data[0].TeamMemberID}")
                     CSP.saveData("user_id", apiData.data[0].TeamMemberID.toString())
+                    CSP.saveData("team_type_id", apiData.data[0].TeamTypeID.toString())
                     for (data in apiData.data) {
                         var userdata = UserData(
                             0,

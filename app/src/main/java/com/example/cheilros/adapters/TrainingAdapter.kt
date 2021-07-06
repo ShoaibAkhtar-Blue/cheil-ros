@@ -5,16 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.os.bundleOf
-import androidx.navigation.Navigation
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.TrainingModelData
+
 
 class TrainingAdapter(
     val context: Context,
@@ -33,19 +29,20 @@ class TrainingAdapter(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var LLchecklist: LinearLayout = view.findViewById(R.id.LLchecklist)
+        var LLfeatures: LinearLayout = view.findViewById(R.id.LLfeatures)
         var txtTitle: TextView = view.findViewById(R.id.txtTitle)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         CSP = CustomSharedPref(parent.context)
-        val view = LayoutInflater.from(context).inflate(R.layout.list_checklist, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.list_new_training, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtTitle.text = filterList[position].TrainingModelTitle
         holder.LLchecklist.setOnClickListener {
-            val bundle = bundleOf(
+           /* val bundle = bundleOf(
                 "DivisionID" to arguments?.getInt("DivisionID"),
                 "TrainingModelID" to itemList[position].TrainingModelID,
                 "TrainingModelTitle" to itemList[position].TrainingModelTitle,
@@ -53,7 +50,29 @@ class TrainingAdapter(
                 "StoreName" to arguments?.getString("StoreName")
             )
             Navigation.findNavController(it)
-                .navigate(R.id.action_trainingFragment_to_trainingDetailFragment, bundle)
+                .navigate(R.id.action_trainingFragment_to_trainingDetailFragment, bundle)*/
+        }
+
+        val lparams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        for (features in filterList[position].Features){
+            //println(features.TrainingModelFeatureTitle)
+
+           /* val checkbox = CheckBox(context)
+            checkbox.text = features.TrainingModelFeatureTitle
+            checkbox.tag = filterList[position].TrainingModelTitle
+            checkbox.setTextColor(Color.BLACK)
+            checkbox.layoutParams = lparams
+            holder.LLchecklist.addView(checkbox)*/
+
+
+            val tv = TextView(context)
+            tv.layoutParams = lparams
+            tv.text = "test"
+            holder.LLchecklist.addView(tv)
+
         }
     }
 

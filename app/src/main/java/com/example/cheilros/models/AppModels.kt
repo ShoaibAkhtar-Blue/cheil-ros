@@ -71,7 +71,8 @@ class TeamStatusData(
 
 //region Training
 class TrainingModel(val status: Int, val data: List<TrainingModelData>)
-class TrainingModelData(val TrainingModelID: Int, val TrainingModelTitle: String)
+class TrainingModelData(val TrainingModelID: Int, val TrainingModelTitle: String, val Features:  List<TrainingFeaturesData>)
+class TrainingFeaturesData(val TrainingModelFeatureID: Int, val TrainingModelFeatureTitle: String)
 
 class RecentTrainingModel(val status: Int, val data: List<RecentTrainingModelData>)
 class RecentTrainingModelData(
@@ -298,7 +299,8 @@ class MyCoverageData(
     val Longitude: String,
     val Latitude: String,
     val LastVisitedDate: String,
-    val VistedBy: String
+    val VistedBy: String,
+    val VisitStatusID: Int
 )
 
 class ChannelModel(val status: Int, val data: List<ChannelData>)

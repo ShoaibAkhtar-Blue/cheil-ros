@@ -51,7 +51,7 @@ class StoreStatusFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        println("onViewCreated StoreStatusFragment")
         try {
             StoreMenu_Investment.text = settingData.filter { it.fixedLabelName == "StoreMenu_Investment" }[0].labelName
         }catch (ex: Exception){
@@ -78,6 +78,14 @@ class StoreStatusFragment : BaseFragment() {
             )
             findNavController().navigate(R.id.action_storeViewFragment_to_investmentFragment,bundle)
         }*/
+    }
+
+    override fun onResume() {
+        super.onResume()
+        println("onResume StoreStatusFragment")
+        fetchChecklistanswer("${CSP.getData("base_url")}/Checklist.asmx/ChecklistAnswered?StoreID=${arguments?.getInt("StoreID")}")
+        //fetchInvestmentanswer("${CSP.getData("base_url")}/Storelist.asmx/StoreInvestmentElements?StoreID=${arguments?.getInt("StoreID")}")
+        fetchInvestment("${CSP.getData("base_url")}/Audit.asmx/InvestmentElement_AuditView?StoreID=${arguments?.getInt("StoreID")}")
     }
 
     fun fetchChecklistanswer(url: String){

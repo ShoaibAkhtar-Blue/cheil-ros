@@ -30,6 +30,8 @@ class AssetListAdapter(
         var txtSerialNo: TextView = view.findViewById(R.id.txtSerialNo)
         var txtTitle: TextView = view.findViewById(R.id.txtTitle)
         var txtDesc: TextView = view.findViewById(R.id.txtDesc)
+        var txtDate: TextView = view.findViewById(R.id.txtDate)
+        var txtUpdatedBy: TextView = view.findViewById(R.id.txtUpdatedBy)
         var imgAsset: ImageView = view.findViewById(R.id.imgAsset)
     }
 
@@ -43,6 +45,8 @@ class AssetListAdapter(
         holder.txtSerialNo.text = (position + 1).toString()
         holder.txtTitle.text = itemList[position].AssetTypeName
         holder.txtDesc.text = itemList[position].AssetDescription
+        holder.txtDate.text = "Installation Date: ${itemList[position].CreationDateTime}"
+        holder.txtUpdatedBy.text = "Updated By: ${itemList[position].TeamMemberName}"
         Glide.with(context)
             .load("${CSP.getData("base_url")}/Assets/${itemList[position].AssetID}.jpg")
             .into(holder.imgAsset!!)

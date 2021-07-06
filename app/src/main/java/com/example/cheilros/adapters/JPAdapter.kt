@@ -250,7 +250,7 @@ class JPAdapter(
             }
 
             if(itemList[position].VisitStatusID === 2){
-                if(CSP.getData("CheckIn_Camera").equals("Y")){
+                if(CSP.getData("CheckOut_Camera").equals("Y")){
                     CSP.saveData("sess_visit_id", itemList[position].VisitID.toString())
                     CSP.saveData("sess_visit_status_id", itemList[position].VisitStatusID.toString())
                     Navigation.findNavController(it).navigate(R.id.action_journeyPlanFragment_to_cameraActivity)

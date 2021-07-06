@@ -56,6 +56,10 @@ class MyCoverageFragment : BaseFragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_my_coverage, container, false)
 
+        //region Reset Sessions
+        CSP.delData("sess_last_update_element_id")
+        //endregion
+
         //region Set Labels
         view.btnChannel.text = settingData.filter { it.fixedLabelName == "StoreList_SearchBox" }.get(0).labelName
         //endregion
@@ -73,9 +77,6 @@ class MyCoverageFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-
-
 
         recyclerView= rvCoverage
         recyclerView.setHasFixedSize(true);

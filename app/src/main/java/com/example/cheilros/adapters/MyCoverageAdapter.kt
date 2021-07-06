@@ -119,7 +119,11 @@ class MyCoverageAdapter(
 
         //Update Labels
         try {
-            holder.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CheckinButton" }.get(0).labelName
+            if(filterList[position].VisitStatusID == 2)
+                holder.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CheckoutButton" }.get(0).labelName
+            else
+                holder.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CheckinButton" }.get(0).labelName
+
             holder.btnCancel.text = settingData.filter { it.fixedLabelName == "StoreList_ViewButton" }.get(0).labelName
         }catch (ex: Exception){
 
@@ -242,11 +246,22 @@ class MyCoverageAdapter(
 
             })
 
-            if(CSP.getData("CheckIn_Camera").equals("Y")){
-                CSP.saveData("fragName", "MyCoverage")
-                CSP.saveData("sess_store_id", filterList[position].StoreID.toString())
-                Navigation.findNavController(it).navigate(R.id.action_myCoverageFragment_to_cameraActivity)
+            if(filterList[position].VisitStatusID == 2){ // Checkout
+
+                if(CSP.getData("CheckOut_Camera").equals("Y")){
+                    CSP.saveData("fragName", "MyCoverage")
+                    CSP.saveData("sess_store_id", filterList[position].StoreID.toString())
+                    Navigation.findNavController(it).navigate(R.id.action_myCoverageFragment_to_cameraActivity)
+                }
+            }else{ // Checkin
+                if(CSP.getData("CheckIn_Camera").equals("Y")){
+                    CSP.saveData("fragName", "MyCoverage")
+                    CSP.saveData("sess_store_id", filterList[position].StoreID.toString())
+                    Navigation.findNavController(it).navigate(R.id.action_myCoverageFragment_to_cameraActivity)
+                }
             }
+
+
 
 
             //endregion

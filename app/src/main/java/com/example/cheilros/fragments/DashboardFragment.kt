@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.StrictMode
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,7 @@ import com.example.cheilros.adapters.MenuNavigationAdapter
 import com.example.cheilros.adapters.TaskAssignedAdapter
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.models.*
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
 import com.github.mikephil.charting.components.YAxis
@@ -59,6 +61,8 @@ class DashboardFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        //team_type = "7"
+        println("team_type: ${team_type}")
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_dashboard, container, false)
 
@@ -66,13 +70,29 @@ class DashboardFragment : BaseFragment() {
         val currentDateAndTime: String = simpleDateFormat.format(Date())
 
         //region Set Labels
-        //view.Dashboard_TodayVisit.text = settingData.filter { it.fixedLabelName == "Dashboard_TodayVisit" }.get(0).labelName
-        view.Dashboard_StorePlan.text = settingData.filter { it.fixedLabelName == "Dashboard_StorePlan" }.get(0).labelName
-        view.Dashboard_GraphTitle.text = settingData.filter { it.fixedLabelName == "Dashboard_GraphTitle" }.get(0).labelName
-        view.Dashboard_TaskTitle.text = settingData.filter { it.fixedLabelName == "Dashboard_TaskTitle" }.get(0).labelName
-        view.Dashboard_CoverageButton.text = settingData.filter { it.fixedLabelName == "Dashboard_CoverageButton" }.get(0).labelName
-        view.Dashboard_PendingButton.text = settingData.filter { it.fixedLabelName == "Dashboard_PendingButton" }.get(0).labelName
-        view.txtCurrentDate.text = currentDateAndTime
+        try {
+            //view.Dashboard_TodayVisit.text = settingData.filter { it.fixedLabelName == "Dashboard_TodayVisit" }.get(0).labelName
+            view.Dashboard_StorePlan.text = settingData.filter { it.fixedLabelName == "Dashboard_StorePlan" }.get(0).labelName
+            view.Dashboard_GraphTitle.text = settingData.filter { it.fixedLabelName == "Dashboard_GraphTitle" }.get(0).labelName
+            view.Dashboard_TaskTitle.text = settingData.filter { it.fixedLabelName == "Dashboard_TaskTitle" }.get(0).labelName
+            view.Dashboard_CoverageButton.text = settingData.filter { it.fixedLabelName == "Dashboard_CoverageButton" }.get(0).labelName
+            view.Dashboard_PendingButton.text = settingData.filter { it.fixedLabelName == "Dashboard_PendingButton" }.get(0).labelName
+            view.txtCurrentDate.text = currentDateAndTime
+
+            view.LLGraphTwo.visibility = View.GONE
+
+            if(team_type == "7"){
+                view.Dashboard_GraphTitle.text = settingData.filter { it.fixedLabelName == "DashboadPromoter_Visit" }.get(0).labelName
+                view.DashboadPromoter_Performance.text = settingData.filter { it.fixedLabelName == "DashboadPromoter_Performance" }.get(0).labelName
+                view.LLGraphTwo.visibility = View.VISIBLE
+                view.txtTodayVisitCount.visibility = View.GONE
+                view.Dashboard_StorePlan.visibility = View.GONE
+                view.LLTask.visibility = View.GONE
+                view.gridview.visibility = View.GONE
+            }
+        }catch (ex: Exception){
+            Log.e("Error_", ex.message.toString())
+        }
         //endregion
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
@@ -100,59 +120,32 @@ class DashboardFragment : BaseFragment() {
         view.txtUserregion.text = userData[0].regionName
 
         //region Menu Grid
-
-        menuData = java.util.ArrayList<MenuNavigationModel>()
-        var menuDataList: List<AppSetting> = emptyList()
-        try {
-            menuDataList = settingData.filter { it.screenName == "Menu" }
-            menuDataList.sortedBy { it.labelID }
-            println(menuDataList)
-            menuData!!.clear()
-            for (m in menuDataList) {
-                println(m.labelName)
-                val menu = MenuNavigationModel()
-                menu.labelid = m.labelID
-                menu.menuName = m.labelName
-                menu.menuImage = m.imagePath
-                menu.fixedLabel = m.fixedLabelName
-                menuData!!.add(menu)
-            }
-        } catch (ex: Exception) {
-
-        }
-        menuData!!.sortedBy { it.labelid }
-
-
-        gridView = view.gridview
-        adapter = MenuNavigationAdapter(requireContext(), menuData!!)
-        gridView!!.adapter = adapter
-
-
-
-        /*gridView!!.onItemClickListener = OnItemClickListener { parent, v, i, id ->
-            //Toast.makeText(this, "menu " + menuDataList.get(i).fixedLabelName + " clicked! $i", Toast.LENGTH_SHORT).show()
-            val navController = findNavController(R.id.main_nav_fragment)
+        if (team_type != "7"){
+            menuData = java.util.ArrayList<MenuNavigationModel>()
+            var menuDataList: List<AppSetting> = emptyList()
             try {
-                if (menuDataList.get(i).fixedLabelName == "MenuTitle3") {
-                    CSP.delData("sess_visit_id")
-                    CSP.delData("sess_visit_status_id")
-
-                    navController.navigateUp()
-                    findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
-                    //toolbar.visibility = View.GONE
+                menuDataList = settingData.filter { it.screenName == "Menu" }
+                menuDataList.sortedBy { it.labelID }
+                println(menuDataList)
+                menuData!!.clear()
+                for (m in menuDataList) {
+                    println(m.labelName)
+                    val menu = MenuNavigationModel()
+                    menu.labelid = m.labelID
+                    menu.menuName = m.labelName
+                    menu.menuImage = m.imagePath
+                    menu.fixedLabel = m.fixedLabelName
+                    menuData!!.add(menu)
                 }
+            } catch (ex: Exception) {
 
-                if (menuDataList.get(i).fixedLabelName == "MenuTitle2") {
-                    navController.navigateUp()
-                    findNavController(R.id.main_nav_fragment).navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
-                }
-
-            } catch (e: Exception) {
-                Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
-                Log.e("Error_Nav", e.message.toString())
             }
-        }*/
+            menuData!!.sortedBy { it.labelid }
 
+            gridView = view.gridview
+            adapter = MenuNavigationAdapter(requireContext(), menuData!!)
+            gridView!!.adapter = adapter
+        }
         //endregion
 
 
@@ -209,7 +202,8 @@ class DashboardFragment : BaseFragment() {
         }
 
         cvJourneyPlan.setOnClickListener {
-            findNavController().navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
+            if(team_type != "7")
+                findNavController().navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
         }
 
         cvDeployement.setOnClickListener {
@@ -285,7 +279,9 @@ class DashboardFragment : BaseFragment() {
 
 
         try{
-            fetchTaskAssignedData("${CSP.getData("base_url")}/Dashboard.asmx/TaskAssigned?TeamMemberID=${CSP.getData("user_id")}&Status=1")
+            if(team_type != "7")
+                fetchTaskAssignedData("${CSP.getData("base_url")}/Dashboard.asmx/TaskAssigned?TeamMemberID=${CSP.getData("user_id")}&Status=1")
+
             fetchChartData("${CSP.getData("base_url")}/Dashboard.asmx/DailyTrend?TeamMemberID=${CSP.getData("user_id")}&TrendDate=${currentDateAndTime}")
         }catch (ex:Exception){
 
@@ -421,8 +417,13 @@ class DashboardFragment : BaseFragment() {
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         val data = createChartData(apiData.data)
-                        configureChartAppearance(apiData.data)
-                        data?.let { prepareChartData(it) }
+                        configureChartAppearance(apiData.data, chartDailyStatus)
+                        data?.let { prepareChartData(it, chartDailyStatus) }
+
+                        if(team_type == "7"){
+                            configureChartAppearance(apiData.data, chartDailyStatusTwo)
+                            data?.let { prepareChartData(it, chartDailyStatusTwo) }
+                        }
                     })
                 }else{
                     requireActivity().runOnUiThread(java.lang.Runnable {
@@ -532,18 +533,18 @@ class DashboardFragment : BaseFragment() {
         chartDailyStatus.invalidate()
     }
 
-    private fun prepareChartData(data: BarData) {
+    private fun prepareChartData(data: BarData, chart: BarChart) {
         data.setValueTextSize(0f)
         data.barWidth = 0.5f
 
-        chartDailyStatus.setData(data)
-        chartDailyStatus.invalidate()
+        chart.data = data
+        chart.invalidate()
     }
 
-    private fun configureChartAppearance(data: List<DashboardBarChartData>) {
-        chartDailyStatus.getDescription().setEnabled(false)
-        chartDailyStatus.setDrawValueAboveBar(false)
-        val xAxis: XAxis = chartDailyStatus.getXAxis()
+    private fun configureChartAppearance(data: List<DashboardBarChartData>, chart: BarChart) {
+        chart.getDescription().setEnabled(false)
+        chart.setDrawValueAboveBar(false)
+        val xAxis: XAxis = chart.getXAxis()
         xAxis.position = XAxisPosition.BOTTOM
         /*xAxis.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
@@ -571,17 +572,17 @@ class DashboardFragment : BaseFragment() {
         //xAxis.axisLineColor = Color.WHITE;
         //xAxis.axisMinimum = 1f
 
-        chartDailyStatus.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisLabels)
+        chart.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisLabels)
 
-        chartDailyStatus.legend.isEnabled = false
-        chartDailyStatus.axisLeft.setDrawGridLines(false)
-        chartDailyStatus.xAxis.setDrawGridLines(false)
-//        chartDailyStatus.axisLeft.setDrawLabels(false);
-//        chartDailyStatus.axisRight.setDrawLabels(false);
-        val axisLeft: YAxis = chartDailyStatus.axisLeft
+        chart.legend.isEnabled = false
+        chart.axisLeft.setDrawGridLines(false)
+        chart.xAxis.setDrawGridLines(false)
+//        chart.axisLeft.setDrawLabels(false);
+//        chart.axisRight.setDrawLabels(false);
+        val axisLeft: YAxis = chart.axisLeft
         axisLeft.granularity = 0f
         axisLeft.axisMinimum = 0f
-        val axisRight: YAxis = chartDailyStatus.axisRight
+        val axisRight: YAxis = chart.axisRight
         axisRight.granularity = 0f
         axisRight.axisMinimum = 0f
     }

@@ -32,6 +32,8 @@ open class BaseFragment : Fragment() {
 
     lateinit var CSP: CustomSharedPref
 
+    lateinit var team_type: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
@@ -42,6 +44,7 @@ open class BaseFragment : Fragment() {
         userData = mUserDataViewModel.getAllUser
 
         CSP = CustomSharedPref(requireContext())
+        team_type = CSP.getData("team_type_id").toString()
 
     }
 

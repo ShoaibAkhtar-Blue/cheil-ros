@@ -2,10 +2,10 @@ package com.example.cheilros.fragments.storeview
 
 import android.app.Dialog
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
@@ -14,12 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.CapturedPictureAdapter
+import com.example.cheilros.adapters.TrainingAdapter
 import com.example.cheilros.adapters.TrainingAttendeesAdapter
 import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.helpers.CoreHelperMethods
-import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.TeamMemberData
 import com.example.cheilros.models.TeamMemberModel
+import com.example.cheilros.models.TrainingModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
@@ -29,8 +30,8 @@ import kotlinx.android.synthetic.main.dialog_add_visit.btnCancel
 import kotlinx.android.synthetic.main.dialog_add_visit.txtQuestion
 import kotlinx.android.synthetic.main.dialog_add_visit.txtTitle
 import kotlinx.android.synthetic.main.dialog_training_attendee.*
-import kotlinx.android.synthetic.main.fragment_acrivity_detail.txtTitleHeader
 import kotlinx.android.synthetic.main.fragment_checklist_category.*
+import kotlinx.android.synthetic.main.fragment_checklist_category.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
 import kotlinx.android.synthetic.main.fragment_training.*
@@ -41,10 +42,11 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
-class TrainingDetailFragment : BaseFragment() {
 
-    private val client = OkHttpClient()
+class TrainingNewFragment : BaseFragment() {
 
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: TrainingAttendeesAdapter
@@ -52,8 +54,10 @@ class TrainingDetailFragment : BaseFragment() {
     lateinit var layoutManagerPA: RecyclerView.LayoutManager
     lateinit var recylcerAdapterPA: CapturedPictureAdapter
 
-    var capturedPicturesList: MutableList<String> = arrayListOf()
+    lateinit var layoutManagerTL: RecyclerView.LayoutManager
+    lateinit var recylcerAdapterTL: TrainingAdapter
 
+    var capturedPicturesList: MutableList<String> = arrayListOf()
 
 
     override fun onCreateView(
@@ -61,23 +65,20 @@ class TrainingDetailFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_training_detail, container, false)
+        val view =  inflater.inflate(R.layout.fragment_training_new, container, false)
 
         //region Set Labels
-        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Training" }.get(0).labelName
-        view.txtTrainingDescription.hint = settingData.filter { it.fixedLabelName == "ActivityDescription" }.get(0).labelName
-        view.PromoterName.text = settingData.filter { it.fixedLabelName == "PromoterName" }.get(0).labelName
-        view.PromoterAttend.text = settingData.filter { it.fixedLabelName == "PromoterAttend" }.get(0).labelName
+        try {
+            //view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Training" }.get(0).labelName
+        }catch (ex: Exception){
+
+        }
         //endregion
-
-
 
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        txtTitleHeader.text = arguments?.getString("TrainingModelTitle")
-
         try{
             rvTrainingPictures.setHasFixedSize(true)
             layoutManagerPA = LinearLayoutManager(requireContext(),RecyclerView.HORIZONTAL, false)
@@ -88,7 +89,9 @@ class TrainingDetailFragment : BaseFragment() {
 
         }
 
-        //fetchAttendees("${CSP.getData("base_url")}/Training.asmx/StoreTeamMemberForTraining?StoreID=${arguments?.getInt("StoreID")}")
+        fetchTraining("${CSP.getData("base_url")}/Training.asmx/TrainingModelsList")
+
+        fetchAttendees("${CSP.getData("base_url")}/Training.asmx/StoreTeamMemberForTraining?StoreID=${arguments?.getInt("StoreID")}")
 
         btnAddAttendee.setOnClickListener {
 
@@ -144,6 +147,10 @@ class TrainingDetailFragment : BaseFragment() {
             val client = OkHttpClient()
 
             try {
+
+                val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+                val currentDateAndTime: String = simpleDateFormat.format(Date())
+
                 val builder: MultipartBody.Builder =
                     MultipartBody.Builder().setType(MultipartBody.FORM)
 
@@ -162,32 +169,15 @@ class TrainingDetailFragment : BaseFragment() {
                     builder.addFormDataPart("TrainingPictures", fileName,sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull()))
                 }
 
-                /*if (!CSP.getData("TrainingDetail_SESSION_IMAGE_SET").equals("")) {
-                    val imgPaths = CSP.getData("TrainingDetail_SESSION_IMAGE_SET")?.split(",")
-                    if (imgPaths != null) {
-                        for (paths in imgPaths) {
-                            println(paths)
-                            val sourceFile = File(paths)
-                            val mimeType =
-                                CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
-                            val fileName: String = sourceFile.name
-                            builder.addFormDataPart(
-                                "TrainingPictures",
-                                fileName,
-                                sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
-                            )
-                        }
-                    }
-                }*/
                 println("${CSP.getData("base_url")}/Training.asmx/OperTrainingDetail?TrainingModelID=${
                     arguments?.getInt(
                         "TrainingModelID"
                     )
-                }&StoreID=${arguments?.getInt("StoreID")}&Description=${txtTrainingDescription.text}&TeamMemberID=${
+                }&StoreID=${arguments?.getInt("StoreID")}&Description=-&TeamMemberID=${
                     CSP.getData(
                         "user_id"
                     )
-                }&TrainingDateTime=2021-05-06")
+                }&TrainingDateTime=${currentDateAndTime}")
                 val requestBody = builder.build()
                 val request: Request = Request.Builder()
                     .url(
@@ -195,11 +185,11 @@ class TrainingDetailFragment : BaseFragment() {
                             arguments?.getInt(
                                 "TrainingModelID"
                             )
-                        }&StoreID=${arguments?.getInt("StoreID")}&Description=${txtTrainingDescription.text}&TeamMemberID=${
+                        }&StoreID=${arguments?.getInt("StoreID")}&Description=-&TeamMemberID=${
                             CSP.getData(
                                 "user_id"
                             )
-                        }&TrainingDateTime=2021-05-06"
+                        }&TrainingDateTime=${currentDateAndTime}"
                     )
                     .post(requestBody)
                     .build()
@@ -281,7 +271,58 @@ class TrainingDetailFragment : BaseFragment() {
         }
     }
 
-    /*fun fetchAttendees(url: String){
+    fun fetchTraining(url: String){
+        val client = OkHttpClient()
+        println(url)
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                requireActivity().runOnUiThread(java.lang.Runnable {
+                    activity?.let { it1 ->
+                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                            .setTitle("Error!!")
+                            .setMessage(e.message.toString())
+                            .sneakError()
+                    }
+                    //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                })
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body?.string()
+                println(body)
+                val gson = GsonBuilder().create()
+                val apiData = gson.fromJson(body, TrainingModel::class.java)
+
+                if (apiData.status == 200) {
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        rvTraining.setHasFixedSize(true)
+                        layoutManagerTL = LinearLayoutManager(requireContext())
+                        rvTraining.layoutManager = layoutManagerTL
+                        recylcerAdapterTL = TrainingAdapter(requireContext(), apiData.data, arguments)
+                        rvTraining.adapter = recylcerAdapterTL
+                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                    })
+                }else{
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage("Data not fetched.")
+                                .sneakWarning()
+                        }
+                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                    })
+                }
+            }
+
+        })
+    }
+
+    fun fetchAttendees(url: String){
         val client = OkHttpClient()
         println(url)
         val request = Request.Builder()
@@ -313,7 +354,7 @@ class TrainingDetailFragment : BaseFragment() {
                         layoutManager = LinearLayoutManager(requireContext())
                         rvAttendees.layoutManager = layoutManager
                         recylcerAdapter = TrainingAttendeesAdapter(requireContext(),
-                            apiData.data as MutableList<TeamMemberData>, this@TrainingDetailFragment, arguments)
+                            apiData.data as MutableList<TeamMemberData>, this@TrainingNewFragment, arguments)
                         rvAttendees.adapter = recylcerAdapter
                         mainLoadingLayoutTD.setState(LoadingLayout.COMPLETE)
                     })
@@ -332,5 +373,5 @@ class TrainingDetailFragment : BaseFragment() {
             }
 
         })
-    }*/
+    }
 }

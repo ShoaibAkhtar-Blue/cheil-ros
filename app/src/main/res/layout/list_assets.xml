@@ -74,6 +74,26 @@
                     android:textColor="@color/black"
                     android:textSize="12dp" />
 
+                <TextView
+                    android:id="@+id/txtDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/samsungsharpsans_medium"
+                    android:text="Store Name"
+                    android:textColor="@color/black"
+                    android:textSize="10dp" />
+
+                <TextView
+                    android:id="@+id/txtUpdatedBy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/samsungsharpsans_medium"
+                    android:text="Store Name"
+                    android:textColor="@color/black"
+                    android:textSize="12dp" />
+
 
             </LinearLayout>
         </RelativeLayout>

@@ -12,6 +12,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.fragments.storeview.TrainingDetailFragment
+import com.example.cheilros.fragments.storeview.TrainingNewFragment
 import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.InvestmentJSONData
@@ -29,7 +30,7 @@ import java.util.*
 class TrainingAttendeesAdapter(
     val context: Context,
     val itemList: MutableList<TeamMemberData>,
-    val fragment: TrainingDetailFragment,
+    val fragment: TrainingNewFragment,
     val arguments: Bundle?
 ) :
     RecyclerView.Adapter<TrainingAttendeesAdapter.ViewHolder>() {

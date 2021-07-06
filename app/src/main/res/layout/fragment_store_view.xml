@@ -217,7 +217,7 @@
 
 
                 <androidx.viewpager2.widget.ViewPager2
-                    android:minHeight="200dp"
+                    android:minHeight="600dp"
                     android:id="@+id/tabs_viewpager"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

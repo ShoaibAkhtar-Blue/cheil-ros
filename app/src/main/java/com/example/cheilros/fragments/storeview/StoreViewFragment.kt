@@ -48,7 +48,7 @@ class StoreViewFragment : BaseFragment() {
         configureToolbar("${arguments?.getString("StoreName")}", true)
 
         //region Reset Sessions
-        CSP.delData("sess_last_update_element_id")
+        //CSP.delData("sess_last_update_element_id")
         //endregion
 
         //StoreView_SubTitle
@@ -61,6 +61,7 @@ class StoreViewFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        println("onViewCreated")
         //var menuDataList: List<AppSetting> = settingData.filter { it.screenName == "StoreView" }
         storemenuAdapter = StoreMenuAdapter(
             requireContext(),
@@ -71,6 +72,15 @@ class StoreViewFragment : BaseFragment() {
 
         //fetchRecentActivities("${CSP.getData("base_url")}/OperMarketActivities.asmx/ViewMarketActivityList?StoreID=${arguments?.getInt("StoreID").toString()}&ActivityCategoryID=0&ActivityTypeID=0&BrandID=0&TeamMemberID=${CSP.getData("user_id")}")
         fetchStoreInfo("${CSP.getData("base_url")}/Storelist.asmx/StoreInfo?StoreID=${arguments?.getInt("StoreID").toString()}")
+
+        genTabs()
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
+    private fun genTabs(){
         //region Store Tabs
         tab_layout.setSelectedTabIndicatorColor(Color.RED)
         tab_layout.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
@@ -92,6 +102,10 @@ class StoreViewFragment : BaseFragment() {
         // Set the ViewPager Adapter
         val adapter = StoreViewTabsPagerAdapter(requireActivity().supportFragmentManager, lifecycle, numberOfTabs, arguments)
         tabs_viewpager.adapter = adapter
+
+        tabs_viewpager.
+
+        tabs_viewpager.currentItem = 1
 
         // Enable Swipe
         tabs_viewpager.isUserInputEnabled = true
@@ -118,9 +132,7 @@ class StoreViewFragment : BaseFragment() {
         }.attach()
 
         setCustomTabTitles()
-
         //endregion
-
     }
 
     private fun setCustomTabTitles() {
