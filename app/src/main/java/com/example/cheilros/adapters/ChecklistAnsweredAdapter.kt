@@ -16,7 +16,7 @@ import com.example.cheilros.models.CheckListAnswerData
 import com.example.cheilros.models.CheckListData
 
 
-class ChecklistAnsweredAdapter(val context: Context, val itemList: List<CheckListAnswerData>, val arguments: Bundle?): RecyclerView.Adapter<ChecklistAnsweredAdapter.ViewHolder>() {
+class ChecklistAnsweredAdapter(val context: Context, val itemList: List<CheckListAnswerData>): RecyclerView.Adapter<ChecklistAnsweredAdapter.ViewHolder>() {
 
     lateinit var CSP: CustomSharedPref
 

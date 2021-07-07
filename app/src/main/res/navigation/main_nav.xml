@@ -318,5 +318,9 @@
         android:id="@+id/trainingNewFragment"
         android:name="com.example.cheilros.fragments.storeview.TrainingNewFragment"
         android:label="fragment_training_new"
-        tools:layout="@layout/fragment_training_new" />
+        tools:layout="@layout/fragment_training_new" >
+        <action
+            android:id="@+id/action_trainingNewFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
+    </fragment>
 </navigation>

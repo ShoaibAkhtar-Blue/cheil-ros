@@ -3,25 +3,23 @@ package com.example.cheilros.adapters
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager.widget.PagerAdapter.POSITION_NONE
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.cheilros.fragments.storeview.StoreActiveAssetsFragment
-import com.example.cheilros.fragments.storeview.StoreStatusFragment
 
 
 class StoreViewTabsPagerAdapter(
     val fm: FragmentManager,
     lifecycle: Lifecycle,
     private var numberOfTabs: Int,
-    val arguments: Bundle?
+    val arguments: Bundle?,
+    val fr_list: MutableList<Fragment>,
+    BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT: Int
 ) : FragmentStateAdapter(fm, lifecycle) {
 
 
-
     override fun createFragment(position: Int): Fragment {
-        when (position) {
+        /*when (position) {
             0 -> {
                 val bundle = Bundle()
                 arguments?.getInt("StoreID")?.let { bundle.putInt("StoreID", it) }
@@ -38,8 +36,12 @@ class StoreViewTabsPagerAdapter(
                 storeActiveAssetsFragment.arguments = bundle
                 return storeActiveAssetsFragment
             }
-            else -> return StoreStatusFragment()
-        }
+            else -> return StoreStatusFragment(
+                arguments?.getInt("StoreID")?.let { bundle.putInt("StoreID", it) },
+                arguments?.getString("StoreName")?.let { bundle.putString("StoreName", it) })
+        }*/
+
+        return fr_list[position]
     }
 
     fun getItemPosition(`object`: Any?): Int {
@@ -47,10 +49,10 @@ class StoreViewTabsPagerAdapter(
     }
 
     override fun getItemCount(): Int {
-        return numberOfTabs
+        return fr_list.size
     }
 
-    fun refresh(){
+    fun refresh() {
         /*val ft: FragmentTransaction = fm.beginTransaction()
         ft.detach(StoreStatusFragment()).attach(StoreStatusFragment()).commit()*/
     }

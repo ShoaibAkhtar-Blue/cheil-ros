@@ -35,8 +35,10 @@ class AcrivityDetailFragment : BaseFragment() {
 
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: CapturedPictureAdapter
+    lateinit var recylcerAdapterAfter: CapturedPictureAdapter
 
     var capturedPicturesList: MutableList<String> = arrayListOf()
+    var capturedPicturesListAfter: MutableList<String> = arrayListOf()
 
 
     override fun onCreateView(
@@ -52,6 +54,8 @@ class AcrivityDetailFragment : BaseFragment() {
         view.txtBrandQuantity.hint = settingData.filter { it.fixedLabelName == "Activity_Qty" }.get(0).labelName
         view.ScanCode.text = settingData.filter { it.fixedLabelName == "ScanCode" }.get(0).labelName
         view.btnSubmit.text = settingData.filter { it.fixedLabelName == "LoginForgetSubmitButton" }.get(0).labelName
+        view.ActivityScreen_Before.text = settingData.filter { it.fixedLabelName == "ActivityScreen_Before" }.get(0).labelName
+        view.ActivityScreen_After.text = settingData.filter { it.fixedLabelName == "ActivityScreen_After" }.get(0).labelName
         //endregion
 
         val callback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
@@ -99,6 +103,12 @@ class AcrivityDetailFragment : BaseFragment() {
             rvActivityPictures.layoutManager = layoutManager
             recylcerAdapter = CapturedPictureAdapter(requireContext(), capturedPicturesList)
             rvActivityPictures.adapter = recylcerAdapter
+
+            rvActivityPicturesAfter.setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(requireContext(),RecyclerView.HORIZONTAL, false)
+            rvActivityPicturesAfter.layoutManager = layoutManager
+            recylcerAdapterAfter = CapturedPictureAdapter(requireContext(), capturedPicturesListAfter)
+            rvActivityPicturesAfter.adapter = recylcerAdapterAfter
         }catch (ex: Exception){
 
         }
@@ -123,6 +133,31 @@ class AcrivityDetailFragment : BaseFragment() {
 
             builder.setPositiveButton("Camera") { dialog, which ->
                 CSP.saveData("fragName", "ActivityDetail")
+                CSP.saveData("imgType", "before")
+                val bundle = bundleOf("fragName" to "ActivityDetailFragment")
+                findNavController().navigate(R.id.action_acrivityDetailFragment_to_cameraActivity, bundle)
+            }
+
+            builder.setNegativeButton("Gallery") { dialog, which ->
+                val activity = requireActivity() as NewDashboardActivity
+                activity.pickFromGallery()
+            }
+
+            builder.setNeutralButton("Cancel") { dialog, which ->
+                dialog.dismiss()
+            }
+            builder.show()
+        }
+
+        btnTakePictureAfter.setOnClickListener {
+
+            val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Choose...")
+            builder.setMessage("Please select one of the options")
+
+            builder.setPositiveButton("Camera") { dialog, which ->
+                CSP.saveData("fragName", "ActivityDetail")
+                CSP.saveData("imgType", "after")
                 val bundle = bundleOf("fragName" to "ActivityDetailFragment")
                 findNavController().navigate(R.id.action_acrivityDetailFragment_to_cameraActivity, bundle)
             }
@@ -140,9 +175,7 @@ class AcrivityDetailFragment : BaseFragment() {
 
         btnSubmit.setOnClickListener {
             val client = OkHttpClient()
-
             try {
-
                 val builder: MultipartBody.Builder  =  MultipartBody.Builder().setType(MultipartBody.FORM)
 
                 builder.addFormDataPart("SerialNumbers", CSP.getData("activity_barcodes").toString())
@@ -152,7 +185,15 @@ class AcrivityDetailFragment : BaseFragment() {
                     val sourceFile = File(paths)
                     val mimeType = CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
                     val fileName: String = sourceFile.name
-                    builder.addFormDataPart("ActivityPictures", fileName,sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull()))
+                    builder.addFormDataPart("BeforeActivityPicture", fileName,sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull()))
+                }
+
+                for (paths in capturedPicturesListAfter) {
+                    println(paths)
+                    val sourceFile = File(paths)
+                    val mimeType = CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
+                    val fileName: String = sourceFile.name
+                    builder.addFormDataPart("AfterActivityPicture", fileName,sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull()))
                 }
 
                 /*if(!CSP.getData("ActivityDetail_SESSION_IMAGE_SET").equals("")){
@@ -237,11 +278,19 @@ class AcrivityDetailFragment : BaseFragment() {
                 .sneakSuccess()
 
             if (CSP.getData("ActivityDetail_SESSION_IMAGE_SET").equals("")) {
-                recylcerAdapter.addNewItem(CSP.getData("ActivityDetail_SESSION_IMAGE"))
+                if(CSP.getData("imgType") == "before")
+                    recylcerAdapter.addNewItem(CSP.getData("ActivityDetail_SESSION_IMAGE"))
+                else
+                    recylcerAdapterAfter.addNewItem(CSP.getData("ActivityDetail_SESSION_IMAGE"))
+
                 CSP.saveData("ActivityDetail_SESSION_IMAGE_SET", CSP.getData("ActivityDetail_SESSION_IMAGE"))
                 CSP.delData("ActivityDetail_SESSION_IMAGE")
             } else {
-                recylcerAdapter.addNewItem(CSP.getData("ActivityDetail_SESSION_IMAGE"))
+                if(CSP.getData("imgType") == "before")
+                    recylcerAdapter.addNewItem(CSP.getData("ActivityDetail_SESSION_IMAGE"))
+                else
+                    recylcerAdapterAfter.addNewItem(CSP.getData("ActivityDetail_SESSION_IMAGE"))
+
                 CSP.saveData(
                     "ActivityDetail_SESSION_IMAGE_SET",
                     "${CSP.getData("ActivityDetail_SESSION_IMAGE_SET")},${CSP.getData("ActivityDetail_SESSION_IMAGE")}"
@@ -255,7 +304,11 @@ class AcrivityDetailFragment : BaseFragment() {
                     .setMessage("Image Added to this session!")
                     .sneakSuccess()
 
-                recylcerAdapter.addNewItem(CSP.getData("sess_gallery_img").toString())
+                if(CSP.getData("imgType") == "before")
+                    recylcerAdapter.addNewItem(CSP.getData("sess_gallery_img").toString())
+                else
+                    recylcerAdapterAfter.addNewItem(CSP.getData("sess_gallery_img").toString())
+
                 CSP.delData("sess_gallery_img")
             }catch (ex: Exception){
 

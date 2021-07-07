@@ -129,7 +129,7 @@ class TrainingNewFragment : BaseFragment() {
             builder.setPositiveButton("Camera") { dialog, which ->
                 CSP.saveData("fragName", "TrainingDetail")
                 val bundle = bundleOf("fragName" to "TrainingDetailFragment")
-                findNavController().navigate(R.id.action_trainingDetailFragment_to_cameraActivity, bundle)
+                findNavController().navigate(R.id.action_trainingNewFragment_to_cameraActivity, bundle)
             }
 
             builder.setNegativeButton("Gallery") { dialog, which ->
@@ -157,6 +157,13 @@ class TrainingNewFragment : BaseFragment() {
                 CSP.getData("training_attendees")?.let { it1 ->
                     builder.addFormDataPart(
                         "Attendees",
+                        it1
+                    )
+                }
+
+                CSP.getData("sess_selected_training_features")?.let { it1 ->
+                    builder.addFormDataPart(
+                        "TrainingModel",
                         it1
                     )
                 }
@@ -218,6 +225,7 @@ class TrainingNewFragment : BaseFragment() {
                                     .sneakSuccess()
                             }
                             CSP.delData("training_attendees")
+                            CSP.delData("sess_selected_training_features")
                             CSP.delData("TrainingDetail_SESSION_IMAGE")
                             CSP.delData("TrainingDetail_SESSION_IMAGE_SET")
 

@@ -13,6 +13,7 @@
     <!-- LEFT TITLE PART -->
     <!-- RIGHT TITLE PART -->
     <RelativeLayout
+        android:id="@+id/RLnum"
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:layout_weight="12"

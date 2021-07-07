@@ -91,7 +91,7 @@ class InvestmentFragment : BaseFragment() {
                         rvInvestment.setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(requireContext())
                         rvInvestment.layoutManager = layoutManager
-                        recylcerAdapter = InvestmentAdapter(requireContext(), apiData.data, arguments)
+                        recylcerAdapter = InvestmentAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"))
                         rvInvestment.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })

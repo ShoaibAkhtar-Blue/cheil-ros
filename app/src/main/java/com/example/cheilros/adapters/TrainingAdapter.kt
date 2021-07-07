@@ -1,7 +1,9 @@
 package com.example.cheilros.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +11,7 @@ import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.helpers.CustomSharedPref
+import com.example.cheilros.models.TrainingFeaturesData
 import com.example.cheilros.models.TrainingModelData
 
 
@@ -20,6 +23,8 @@ class TrainingAdapter(
     Filterable {
 
     lateinit var CSP: CustomSharedPref
+
+    var selectedFeatures: MutableList<String> = arrayListOf()
 
     var filterList = ArrayList<TrainingModelData>()
 
@@ -60,19 +65,24 @@ class TrainingAdapter(
         for (features in filterList[position].Features){
             //println(features.TrainingModelFeatureTitle)
 
-           /* val checkbox = CheckBox(context)
+            val checkbox = CheckBox(context)
             checkbox.text = features.TrainingModelFeatureTitle
             checkbox.tag = filterList[position].TrainingModelTitle
             checkbox.setTextColor(Color.BLACK)
             checkbox.layoutParams = lparams
-            holder.LLchecklist.addView(checkbox)*/
+            checkbox.layoutDirection = View.LAYOUT_DIRECTION_RTL
 
+            checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked){
+                    selectedFeatures.add("${filterList[position].TrainingModelID}:${features.TrainingModelFeatureID}")
 
-            val tv = TextView(context)
-            tv.layoutParams = lparams
-            tv.text = "test"
-            holder.LLchecklist.addView(tv)
+                }else{
 
+                }
+                CSP.saveData("sess_selected_training_features", selectedFeatures.joinToString(","))
+            }
+
+            holder.LLfeatures.addView(checkbox)
         }
     }
 

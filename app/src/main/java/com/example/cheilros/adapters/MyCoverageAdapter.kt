@@ -1,12 +1,14 @@
 package com.example.cheilros.adapters
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -84,6 +86,7 @@ class MyCoverageAdapter(
         var btnClose  : RelativeLayout = view.findViewById(R.id.RLHeader)
         var btnAccept  : Button = view.findViewById(R.id.btnAccept)
         var btnCancel  : Button = view.findViewById(R.id.btnCancel)
+        var RLnum  : RelativeLayout = view.findViewById(R.id.RLnum)
         //var btnClose  : MaterialButton = view.findViewById(R.id.btnCancel)
 
     }
@@ -98,6 +101,7 @@ class MyCoverageAdapter(
         return ViewHolder(view)
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.txtSerialNo.text = (position+1).toString()
@@ -119,9 +123,10 @@ class MyCoverageAdapter(
 
         //Update Labels
         try {
-            if(filterList[position].VisitStatusID == 2)
+            if(filterList[position].VisitStatusID == 2){
+                holder.RLnum.setBackgroundColor(Color.parseColor("#d4eb0e"))
                 holder.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CheckoutButton" }.get(0).labelName
-            else
+            }else
                 holder.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CheckinButton" }.get(0).labelName
 
             holder.btnCancel.text = settingData.filter { it.fixedLabelName == "StoreList_ViewButton" }.get(0).labelName

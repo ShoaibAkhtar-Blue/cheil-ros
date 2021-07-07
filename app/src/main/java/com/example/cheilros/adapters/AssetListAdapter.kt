@@ -19,7 +19,6 @@ import com.example.cheilros.models.AssetListData
 class AssetListAdapter(
     val context: Context,
     val itemList: List<AssetListData>,
-    val arguments: Bundle?,
     val fragment: StoreActiveAssetsFragment
 ) : RecyclerView.Adapter<AssetListAdapter.ViewHolder>() {
 

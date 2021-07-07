@@ -18,7 +18,7 @@ import com.example.cheilros.models.BrandsData
 import com.example.cheilros.models.InvestmentData
 
 
-class InvestmentAdapter(val context: Context, val itemList: List<InvestmentData>, val arguments: Bundle?): RecyclerView.Adapter<InvestmentAdapter.ViewHolder>() {
+class InvestmentAdapter(val context: Context, val itemList: List<InvestmentData>, val StoreID: Int?): RecyclerView.Adapter<InvestmentAdapter.ViewHolder>() {
 
     lateinit var CSP: CustomSharedPref
 
@@ -57,7 +57,7 @@ class InvestmentAdapter(val context: Context, val itemList: List<InvestmentData>
             val brands: ArrayList<BrandsData> = itemList[position].Brands as ArrayList<BrandsData>
 
             val bundle = bundleOf(
-                "StoreID" to arguments?.getInt("StoreID"),
+                "StoreID" to StoreID,
                 "ElementID" to itemList[position].ElementID,
                 "ElementTitle" to itemList[position].ElementTitle,
                 "BrandsList" to brands

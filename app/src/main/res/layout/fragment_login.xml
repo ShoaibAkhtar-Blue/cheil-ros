@@ -125,13 +125,15 @@
 
     <ImageButton
         android:id="@+id/btnSetting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_gravity="right"
         android:layout_marginTop="60dp"
         android:layout_marginBottom="8dp"
+        android:adjustViewBounds="true"
         android:backgroundTint="@android:color/transparent"
-        android:src="@android:drawable/ic_menu_preferences"
+        android:scaleType="fitCenter"
+        android:src="@drawable/settings_icon"
         app:layout_constraintBottom_toTopOf="@+id/txtCopyright"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

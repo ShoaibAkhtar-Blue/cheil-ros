@@ -77,8 +77,8 @@ class StoreMenuAdapter(
             if (ListData[position].fixedLabelName.equals("StoreMenu_Training")) {
                 /*Navigation.findNavController(it)
                     .navigate(R.id.action_storeViewFragment_to_trainingFragment, bundle)*/
-                /*Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_trainingNewFragment, bundle)*/
+                Navigation.findNavController(it)
+                    .navigate(R.id.action_storeViewFragment_to_trainingNewFragment, bundle)
             }
         }
 

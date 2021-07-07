@@ -38,7 +38,7 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 
-class StoreActiveAssetsFragment : BaseFragment() {
+class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : BaseFragment() {
 
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: AssetListAdapter
@@ -66,7 +66,7 @@ class StoreActiveAssetsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         activity = requireActivity() as NewDashboardActivity
-        fetchAssetList("${CSP.getData("base_url")}/Asset.asmx/AssetList?StoreID=${arguments?.getInt("StoreID")}")
+        fetchAssetList("${CSP.getData("base_url")}/Asset.asmx/AssetList?StoreID=$StoreID")
 
         btnAddAsset.setOnClickListener {
             addAsset(null)
@@ -153,7 +153,11 @@ class StoreActiveAssetsFragment : BaseFragment() {
                         layoutManager = LinearLayoutManager(requireContext())
                         rvAssetsList.layoutManager = layoutManager
                         recylcerAdapter =
-                            AssetListAdapter(requireContext(), apiData.data, arguments, this@StoreActiveAssetsFragment)
+                            AssetListAdapter(
+                                requireContext(),
+                                apiData.data,
+                                this@StoreActiveAssetsFragment
+                            )
                         rvAssetsList.adapter = recylcerAdapter
                         val emptyView: View = todo_list_empty_view3
                         rvAssetsList.setEmptyView(emptyView)
@@ -244,7 +248,7 @@ class StoreActiveAssetsFragment : BaseFragment() {
         val btnBrands = dialog.btnBrands
         val btnAsset = dialog.btnAsset
 
-        if(updatedList != null){
+        if (updatedList != null) {
             assetMethod = "UpdateAsset"
             defaultBrand = updatedList.BrandID.toString()
             btnBrands.text = updatedList.BrandName
@@ -375,10 +379,12 @@ class StoreActiveAssetsFragment : BaseFragment() {
                 val request: Request = Request.Builder()
                     .url(
                         "${CSP.getData("base_url")}/Asset.asmx/${assetMethod}?AssetTypeID=${defaultAsset}&BrandID=${defaultBrand}&StoreID=${
-                            arguments?.getInt(
-                                "StoreID"
+                            StoreID
+                        }&AssetDescription=${dialog.etdescription.text}&ActiveStatus=${status}&TeamMemberID=${
+                            CSP.getData(
+                                "user_id"
                             )
-                        }&AssetDescription=${dialog.etdescription.text}&ActiveStatus=${status}&TeamMemberID=${CSP.getData("user_id")}"
+                        }"
                     )
                     .post(requestBody)
                     .build()
@@ -396,6 +402,7 @@ class StoreActiveAssetsFragment : BaseFragment() {
                             dialog.dismiss()
                         })
                     }
+
                     override fun onResponse(call: Call, response: Response) {
                         (requireActivity().runOnUiThread {
                             activity?.let { it1 ->

@@ -10,6 +10,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
@@ -78,6 +80,7 @@ class StoreViewFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
+
     }
 
     private fun genTabs(){
@@ -99,13 +102,24 @@ class StoreViewFragment : BaseFragment() {
         // Set Tab icons next to the text, instead above the text
         tab_layout.isInlineLabel = true
 
+        var fr_list: MutableList<Fragment> = emptyArray<Fragment>().toMutableList()
+        fr_list.clear()
+        fr_list.add(StoreStatusFragment(
+            arguments?.getInt("StoreID"),
+            arguments?.getString("StoreName"))
+        )
+        fr_list.add(StoreActiveAssetsFragment(
+            arguments?.getInt("StoreID"),
+            arguments?.getString("StoreName"))
+        )
+
         // Set the ViewPager Adapter
-        val adapter = StoreViewTabsPagerAdapter(requireActivity().supportFragmentManager, lifecycle, numberOfTabs, arguments)
+        tabs_viewpager.adapter = null
+        val adapter = StoreViewTabsPagerAdapter(requireActivity().supportFragmentManager, lifecycle, numberOfTabs, arguments, fr_list, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
         tabs_viewpager.adapter = adapter
 
-        tabs_viewpager.
 
-        tabs_viewpager.currentItem = 1
+        //tabs_viewpager.currentItem = 1
 
         // Enable Swipe
         tabs_viewpager.isUserInputEnabled = true
@@ -132,6 +146,7 @@ class StoreViewFragment : BaseFragment() {
         }.attach()
 
         setCustomTabTitles()
+
         //endregion
     }
 

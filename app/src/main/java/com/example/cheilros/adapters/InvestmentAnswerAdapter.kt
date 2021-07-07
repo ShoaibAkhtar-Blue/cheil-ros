@@ -13,7 +13,7 @@ import com.example.cheilros.models.CheckListAnswerData
 import com.example.cheilros.models.InvestmentAnswerData
 
 
-class InvestmentAnswerAdapter(val context: Context, val itemList: List<InvestmentAnswerData>, val arguments: Bundle?): RecyclerView.Adapter<InvestmentAnswerAdapter.ViewHolder>() {
+class InvestmentAnswerAdapter(val context: Context, val itemList: List<InvestmentAnswerData>): RecyclerView.Adapter<InvestmentAnswerAdapter.ViewHolder>() {
 
     lateinit var CSP: CustomSharedPref
 

@@ -1,7 +1,6 @@
 package com.example.cheilros.fragments.storeview
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,28 +9,21 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
-import com.example.cheilros.adapters.ChecklistAdapter
 import com.example.cheilros.adapters.ChecklistAnsweredAdapter
 import com.example.cheilros.adapters.InvestmentAdapter
 import com.example.cheilros.adapters.InvestmentAnswerAdapter
 import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.models.CheckListAnswerModel
-import com.example.cheilros.models.CheckListModel
 import com.example.cheilros.models.InvestmentAnswerModel
 import com.example.cheilros.models.InvestmentModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
-import com.valartech.loadinglayout.LoadingLayout
-import kotlinx.android.synthetic.main.fragment_checklist_category.*
-import kotlinx.android.synthetic.main.fragment_checklist_category.mainLoadingLayoutCC
-import kotlinx.android.synthetic.main.fragment_investment.*
-import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import kotlinx.android.synthetic.main.fragment_store_status.*
 import okhttp3.*
 import java.io.IOException
 
 
-class StoreStatusFragment : BaseFragment() {
+class StoreStatusFragment(val StoreID: Int?, val StoreName: String?) : BaseFragment() {
 
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: ChecklistAnsweredAdapter
@@ -58,16 +50,16 @@ class StoreStatusFragment : BaseFragment() {
 
         }
 
-        fetchChecklistanswer("${CSP.getData("base_url")}/Checklist.asmx/ChecklistAnswered?StoreID=${arguments?.getInt("StoreID")}")
+        fetchChecklistanswer("${CSP.getData("base_url")}/Checklist.asmx/ChecklistAnswered?StoreID=$StoreID")
         //fetchInvestmentanswer("${CSP.getData("base_url")}/Storelist.asmx/StoreInvestmentElements?StoreID=${arguments?.getInt("StoreID")}")
-        fetchInvestment("${CSP.getData("base_url")}/Audit.asmx/InvestmentElement_AuditView?StoreID=${arguments?.getInt("StoreID")}")
+        fetchInvestment("${CSP.getData("base_url")}/Audit.asmx/InvestmentElement_AuditView?StoreID=$StoreID")
 
 
 
         btnEditChecklist.setOnClickListener {
             val bundle = bundleOf(
-                "StoreID" to arguments?.getInt("StoreID"),
-                "StoreName" to arguments?.getString("StoreName")
+                "StoreID" to StoreID,
+                "StoreName" to StoreName
             )
             findNavController().navigate(R.id.action_storeViewFragment_to_checklistCategoryFragment,bundle)
         }
@@ -80,12 +72,18 @@ class StoreStatusFragment : BaseFragment() {
         }*/
     }
 
+    public fun refresh(){
+
+    }
+
+
+
     override fun onResume() {
         super.onResume()
-        println("onResume StoreStatusFragment")
-        fetchChecklistanswer("${CSP.getData("base_url")}/Checklist.asmx/ChecklistAnswered?StoreID=${arguments?.getInt("StoreID")}")
+        /*println("onResume StoreStatusFragment")
+        fetchChecklistanswer("${CSP.getData("base_url")}/Checklist.asmx/ChecklistAnswered?StoreID=$StoreID")
         //fetchInvestmentanswer("${CSP.getData("base_url")}/Storelist.asmx/StoreInvestmentElements?StoreID=${arguments?.getInt("StoreID")}")
-        fetchInvestment("${CSP.getData("base_url")}/Audit.asmx/InvestmentElement_AuditView?StoreID=${arguments?.getInt("StoreID")}")
+        fetchInvestment("${CSP.getData("base_url")}/Audit.asmx/InvestmentElement_AuditView?StoreID=$StoreID")*/
     }
 
     fun fetchChecklistanswer(url: String){
@@ -119,7 +117,7 @@ class StoreStatusFragment : BaseFragment() {
                         rvChecklistAnswer.setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(requireContext())
                         rvChecklistAnswer.layoutManager = layoutManager
-                        recylcerAdapter = ChecklistAnsweredAdapter(requireContext(), apiData.data, arguments)
+                        recylcerAdapter = ChecklistAnsweredAdapter(requireContext(), apiData.data)
                         rvChecklistAnswer.adapter = recylcerAdapter
                         val emptyView: View = todo_list_empty_view1
                         rvChecklistAnswer.setEmptyView(emptyView)
@@ -170,7 +168,7 @@ class StoreStatusFragment : BaseFragment() {
                         rvInvestmentAnswer.setHasFixedSize(true)
                         layoutManagerInvest = LinearLayoutManager(requireContext())
                         rvInvestmentAnswer.layoutManager = layoutManagerInvest
-                        recylcerAdapterInvest = InvestmentAnswerAdapter(requireContext(), apiData.data, arguments)
+                        recylcerAdapterInvest = InvestmentAnswerAdapter(requireContext(), apiData.data)
                         rvInvestmentAnswer.adapter = recylcerAdapterInvest
                         val emptyView: View = todo_list_empty_view2
                         rvInvestmentAnswer.setEmptyView(emptyView)
@@ -191,6 +189,7 @@ class StoreStatusFragment : BaseFragment() {
     }
 
     fun fetchInvestment(url: String){
+        println(url)
         val client = OkHttpClient()
 
         val request = Request.Builder()
@@ -219,7 +218,7 @@ class StoreStatusFragment : BaseFragment() {
                         rvInvestmentAnswer.setHasFixedSize(true)
                         layoutManagerInvest1 = LinearLayoutManager(requireContext())
                         rvInvestmentAnswer.layoutManager = layoutManagerInvest1
-                        recylcerAdapterInvest1= InvestmentAdapter(requireContext(), apiData.data, arguments)
+                        recylcerAdapterInvest1= InvestmentAdapter(requireContext(), apiData.data, StoreID)
                         rvInvestmentAnswer.adapter = recylcerAdapterInvest1
                         val emptyView: View = todo_list_empty_view2
                         rvInvestmentAnswer.setEmptyView(emptyView)
@@ -237,6 +236,4 @@ class StoreStatusFragment : BaseFragment() {
             }
         })
     }
-
-
 }
