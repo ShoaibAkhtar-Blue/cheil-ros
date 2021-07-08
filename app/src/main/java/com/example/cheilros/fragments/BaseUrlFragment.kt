@@ -169,10 +169,12 @@ class BaseUrlFragment : Fragment() {
                 val body = response.body?.string()
                 println(body)
 
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, AppSettingModel::class.java)
+
 
                 try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, AppSettingModel::class.java)
+
                     if (apiData.status == 200) {
                         CSP.saveData("base_url", etBaseUrl.text.toString())
                         for (data in apiData.data) {
@@ -195,7 +197,14 @@ class BaseUrlFragment : Fragment() {
 
                     }
                 }catch (ex: Exception){
-
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage("Invalid URL")
+                                .sneakError()
+                        }
+                    })
                 }
 
 

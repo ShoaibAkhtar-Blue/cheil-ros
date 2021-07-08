@@ -2,6 +2,7 @@ package com.example.cheilros.fragments.storeview
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -154,6 +155,8 @@ class TrainingNewFragment : BaseFragment() {
                 val builder: MultipartBody.Builder =
                     MultipartBody.Builder().setType(MultipartBody.FORM)
 
+                println(CSP.getData("training_attendees"))
+
                 CSP.getData("training_attendees")?.let { it1 ->
                     builder.addFormDataPart(
                         "Attendees",
@@ -236,8 +239,7 @@ class TrainingNewFragment : BaseFragment() {
                 })
 
             } catch (ex: Exception) {
-
-
+                Log.e("Error_", ex.message.toString())
             }
         }
 

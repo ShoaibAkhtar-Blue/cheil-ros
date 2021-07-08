@@ -123,7 +123,7 @@ class MyCoverageAdapter(
 
         //Update Labels
         try {
-            if(filterList[position].VisitStatusID == 2){
+            if(filterList[position].VisitStatusID != 0){
                 holder.RLnum.setBackgroundColor(Color.parseColor("#d4eb0e"))
                 holder.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CheckoutButton" }.get(0).labelName
             }else
@@ -251,17 +251,20 @@ class MyCoverageAdapter(
 
             })
 
-            if(filterList[position].VisitStatusID == 2){ // Checkout
+            if(filterList[position].VisitStatusID != 0){ // Checkout
 
                 if(CSP.getData("CheckOut_Camera").equals("Y")){
                     CSP.saveData("fragName", "MyCoverage")
                     CSP.saveData("sess_store_id", filterList[position].StoreID.toString())
+                    CSP.saveData("sess_visit_status_id", filterList[position].VisitStatusID.toString())
+                    CSP.saveData("sess_visit_id", filterList[position].VisitStatusID.toString())
                     Navigation.findNavController(it).navigate(R.id.action_myCoverageFragment_to_cameraActivity)
                 }
             }else{ // Checkin
                 if(CSP.getData("CheckIn_Camera").equals("Y")){
                     CSP.saveData("fragName", "MyCoverage")
                     CSP.saveData("sess_store_id", filterList[position].StoreID.toString())
+                    CSP.saveData("sess_visit_status_id", filterList[position].VisitStatusID.toString())
                     Navigation.findNavController(it).navigate(R.id.action_myCoverageFragment_to_cameraActivity)
                 }
             }
@@ -272,10 +275,6 @@ class MyCoverageAdapter(
             //endregion
 
         }
-    }
-
-    override fun getItemCount(): Int {
-        return filterList.size
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -307,8 +306,6 @@ class MyCoverageAdapter(
 
 
     }
-
-
 
     private fun sendVisitRequest(url: String) {
         val request = Request.Builder()
@@ -383,4 +380,10 @@ class MyCoverageAdapter(
             }
         }
     }
+
+    override fun getItemCount(): Int {
+        return filterList.size
+    }
+
+    override fun getItemViewType(position: Int): Int = position
 }

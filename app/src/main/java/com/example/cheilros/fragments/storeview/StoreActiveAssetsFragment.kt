@@ -84,6 +84,8 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
                 .setMessage("Image Added to this session!")
                 .sneakSuccess()
 
+            println("StoreAsset_SESSION_IMAGE: ${CSP.getData("StoreAsset_SESSION_IMAGE").toString()}")
+
             try {
                 recylcerAdapterPA.addNewItem(CSP.getData("StoreAsset_SESSION_IMAGE").toString())
                 CSP.delData("StoreAsset_SESSION_IMAGE")
@@ -416,7 +418,7 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
                             CSP.delData("StoreAsset_SESSION_IMAGE")
                             CSP.delData("StoreAsset_SESSION_IMAGE_SET")
 
-                            fetchAssetList("${CSP.getData("base_url")}/Asset.asmx/AssetList?StoreID=1")
+                            fetchAssetList("${CSP.getData("base_url")}/Asset.asmx/AssetList?StoreID=$StoreID")
 
                             dialog.dismiss()
                         })

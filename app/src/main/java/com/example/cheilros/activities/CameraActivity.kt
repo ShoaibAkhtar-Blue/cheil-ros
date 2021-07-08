@@ -2,38 +2,31 @@ package com.example.cheilros.activities
 
 import android.Manifest
 import android.app.Dialog
-import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.StrictMode
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.navigation.findNavController
 import com.example.cheilros.R
 import com.example.cheilros.helpers.*
 import com.example.cheilros.models.CheckInOutModel
-import com.example.cheilros.models.HookBin
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import io.fotoapparat.Fotoapparat
 import io.fotoapparat.configuration.CameraConfiguration
 import io.fotoapparat.configuration.UpdateConfiguration
 import io.fotoapparat.log.logcat
-import io.fotoapparat.parameter.Flash
 import io.fotoapparat.parameter.Zoom
 import io.fotoapparat.result.transformer.scaled
 import io.fotoapparat.selector.*
@@ -42,7 +35,6 @@ import kotlinx.android.synthetic.main.dialog_add_visit.*
 import kotlinx.android.synthetic.main.dialog_photo_preview.*
 import kotlinx.android.synthetic.main.dialog_photo_preview.btnCancel
 import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
@@ -51,7 +43,6 @@ import java.io.IOException
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.roundToInt
 
 
 class CameraActivity : AppCompatActivity() {
@@ -70,6 +61,9 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var fotoapparat: Fotoapparat
     private lateinit var cameraZoom: Zoom.VariableZoom
 
+    var lat: String = "0"
+    var lng: String = "0"
+
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +73,58 @@ class CameraActivity : AppCompatActivity() {
         StrictMode.setThreadPolicy(policy)
 
         CSP = CustomSharedPref(this)
+
+        //region Get Location
+        try {
+            locationManager =
+                this@CameraActivity.getSystemService(LOCATION_SERVICE) as LocationManager
+            if (ActivityCompat.checkSelfPermission(
+                    this@CameraActivity,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    this@CameraActivity,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return
+            }
+            if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    5000,
+                    0F,
+                    object :
+                        LocationListener {
+                        override fun onLocationChanged(location: Location) {
+                            lat = location.latitude.toString()
+                            lng = location.longitude.toString()
+                            println("loc: ${location.latitude}")
+                        }
+
+                        override fun onProviderEnabled(provider: String) {}
+
+                        override fun onProviderDisabled(provider: String) {}
+
+                        override fun onStatusChanged(
+                            provider: String?,
+                            status: Int,
+                            extras: Bundle?
+                        ) {
+                        }
+
+                    })
+            }
+        } catch (ex: Exception) {
+            Log.e("Error_", ex.message.toString())
+        }
+        //endregion
 
         permissionsGranted = permissionsDelegate.hasCameraPermission()
 
@@ -157,7 +203,7 @@ class CameraActivity : AppCompatActivity() {
 
             // Finally writing the bitmap to the output stream that we opened
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
-            Toast.makeText(this, "Captured View and saved to Gallery", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "Captured View and saved to Gallery", Toast.LENGTH_SHORT).show()
         }
         return "${imagesDir.absolutePath}/$filename"
     }
@@ -209,14 +255,17 @@ class CameraActivity : AppCompatActivity() {
                             println(savedImagePath)
                             CSP.saveData("Dashboard_SESSION_IMAGE", savedImagePath)
                             finish()
-                        }else if (CSP.getData("fragName").equals("StoreAsset")) {
+                        } else if (CSP.getData("fragName").equals("StoreAsset")) {
                             println("StoreAsset")
                             val savedImagePath: String = saveMediaToStorage(bitmapImg)
                             println(savedImagePath)
                             CSP.saveData("StoreAsset_SESSION_IMAGE", savedImagePath)
                             finish()
-                        } else if (CSP.getData("fragName").equals("MyCoverage")) {
-
+                        } else if (CSP.getData("fragName")
+                                .equals("MyCoverage") && CSP.getData("sess_visit_status_id")
+                                .equals("0")
+                        ) {
+                            Log.d("CameraActivity", "Else if statement")
                             imageView.setImageBitmap(it.bitmap)
                             imageView.rotation = (-it.rotationDegrees).toFloat()
 
@@ -240,7 +289,7 @@ class CameraActivity : AppCompatActivity() {
                                 //region Save File
 
                                 //region Get Location
-                                var lat: String = "0"
+                                /*var lat: String = "0"
                                 var lng: String = "0"
 
                                 locationManager =
@@ -274,7 +323,7 @@ class CameraActivity : AppCompatActivity() {
                                             println("loc: ${location.latitude}")
                                         }
 
-                                    })
+                                    })*/
                                 //endregion
                                 val savedImagePath: String = saveMediaToStorage(bitmapImg)
                                 var checkTypeAPI: String = if (CSP.getData("sess_visit_status_id")
@@ -304,6 +353,7 @@ class CameraActivity : AppCompatActivity() {
 
 
                         } else {
+                            Log.d("CameraActivity", "Else statement")
                             imageView.setImageBitmap(it.bitmap)
                             imageView.rotation = (-it.rotationDegrees).toFloat()
 
@@ -352,7 +402,7 @@ class CameraActivity : AppCompatActivity() {
                                 //endregion
 
                                 //region Get Location
-                                var lat: String = "0"
+                                /*var lat: String = "0"
                                 var lng: String = "0"
 
                                 locationManager =
@@ -386,15 +436,22 @@ class CameraActivity : AppCompatActivity() {
                                             println("loc: ${location.latitude}")
                                         }
 
-                                    })
+                                    })*/
                                 //endregion
                                 val savedImagePath: String = saveMediaToStorage(bitmapImg)
                                 var checkTypeAPI: String = if (CSP.getData("sess_visit_status_id")
-                                        .equals("1")
+                                        .equals("0")
                                 ) "CheckIn" else "CheckOut"
 
                                 /*val uploadImgFile:File =  File(savedImagePath)
                                 println(uploadImgFile.exists())*/
+                                println(
+                                    "${CSP.getData("base_url")}/${checkTypeAPI}.asmx/${checkTypeAPI}Img?VisitID=${
+                                        CSP.getData(
+                                            "sess_visit_id"
+                                        )
+                                    }&Longitude=$lng&Latitude=$lat&Remarks=${dialog.etRemarksJP.text}"
+                                )
 
                                 sendCheckInOutRequest(
                                     "${CSP.getData("base_url")}/${checkTypeAPI}.asmx/${checkTypeAPI}Img?VisitID=${
@@ -529,7 +586,7 @@ class CameraActivity : AppCompatActivity() {
     fun sendCheckInOutRequest(url: String, imgPath: String) {
 
         var checkType: String =
-            if (CSP.getData("sess_visit_status_id").equals("1")) "CheckInImage" else "CheckOutImage"
+            if (CSP.getData("sess_visit_status_id").equals("0")) "CheckInImg" else "CheckOutImage"
 
         println(checkType)
 

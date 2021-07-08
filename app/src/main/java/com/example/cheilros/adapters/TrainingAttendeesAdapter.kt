@@ -70,10 +70,11 @@ class TrainingAttendeesAdapter(
                     )
                 }
             }
+            println("training_attendees: ${CSP.getData("training_attendees")}")
         }
 
 
-        fragment.btnSubmit.setOnClickListener {
+        /*fragment.btnSubmit.setOnClickListener {
 
             val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
             val currentDateAndTime: String = simpleDateFormat.format(Date())
@@ -160,7 +161,7 @@ class TrainingAttendeesAdapter(
             } catch (ex: Exception) {
 
             }
-        }
+        }*/
     }
 
     override fun getItemCount(): Int {

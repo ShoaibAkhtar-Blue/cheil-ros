@@ -36,8 +36,12 @@ class CapturedPictureAdapter(val context: Context, val itemList: MutableList<Str
     }
 
     fun addNewItem(itemsNew: String?){
-        itemList.add(itemsNew.toString())
-        notifyDataSetChanged()
+        println("addNewItem: ${itemsNew.toString()}")
+        if(itemsNew != ""){
+            itemList.add(itemsNew.toString())
+            notifyDataSetChanged()
+        }
+
     }
 
     fun removeItem(position: Int){
