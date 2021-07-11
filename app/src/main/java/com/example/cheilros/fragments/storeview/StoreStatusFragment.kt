@@ -44,25 +44,21 @@ class StoreStatusFragment(val StoreID: Int?, val StoreName: String?) : BaseFragm
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         println("onViewCreated StoreStatusFragment")
-        try {
-            StoreMenu_Investment.text = settingData.filter { it.fixedLabelName == "StoreMenu_Investment" }[0].labelName
-        }catch (ex: Exception){
 
-        }
 
-        fetchChecklistanswer("${CSP.getData("base_url")}/Checklist.asmx/ChecklistAnswered?StoreID=$StoreID")
+        //fetchChecklistanswer("${CSP.getData("base_url")}/Checklist.asmx/ChecklistAnswered?StoreID=$StoreID")
         //fetchInvestmentanswer("${CSP.getData("base_url")}/Storelist.asmx/StoreInvestmentElements?StoreID=${arguments?.getInt("StoreID")}")
         fetchInvestment("${CSP.getData("base_url")}/Audit.asmx/InvestmentElement_AuditView?StoreID=$StoreID")
 
 
 
-        btnEditChecklist.setOnClickListener {
+        /*btnEditChecklist.setOnClickListener {
             val bundle = bundleOf(
                 "StoreID" to StoreID,
                 "StoreName" to StoreName
             )
             findNavController().navigate(R.id.action_storeViewFragment_to_checklistCategoryFragment,bundle)
-        }
+        }*/
         /*btnEditInvestment.setOnClickListener {
             val bundle = bundleOf(
                 "StoreID" to arguments?.getInt("StoreID"),
@@ -86,7 +82,7 @@ class StoreStatusFragment(val StoreID: Int?, val StoreName: String?) : BaseFragm
         fetchInvestment("${CSP.getData("base_url")}/Audit.asmx/InvestmentElement_AuditView?StoreID=$StoreID")*/
     }
 
-    fun fetchChecklistanswer(url: String){
+    /*fun fetchChecklistanswer(url: String){
 
         val client = OkHttpClient()
 
@@ -135,7 +131,7 @@ class StoreStatusFragment(val StoreID: Int?, val StoreName: String?) : BaseFragm
                 }
             }
         })
-    }
+    }*/
 
     fun fetchInvestmentanswer(url: String){
 

@@ -75,7 +75,7 @@ class ActivitySubCategoryFragment : BaseFragment() {
             }&ActivityTypeID=${arguments?.getInt("ActivityTypeID")}"
         )
 
-        fetchRecentActivities("${CSP.getData("base_url")}/OperMarketActivities.asmx/ViewMarketActivityList?StoreID=${arguments?.getInt("StoreID").toString()}&ActivityCategoryID=0&ActivityTypeID=${arguments?.getInt("ActivityTypeID")}&BrandID=0&TeamMemberID=${CSP.getData("user_id")}")
+        //fetchRecentActivities("${CSP.getData("base_url")}/OperMarketActivities.asmx/ViewMarketActivityList?StoreID=${arguments?.getInt("StoreID").toString()}&ActivityCategoryID=0&ActivityTypeID=${arguments?.getInt("ActivityTypeID")}&BrandID=0&TeamMemberID=${CSP.getData("user_id")}")
 
         requireActivity().toolbar_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             android.widget.SearchView.OnQueryTextListener {

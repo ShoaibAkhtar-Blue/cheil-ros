@@ -87,6 +87,7 @@ tools:context=".fragments.storeview.ActivitySubCategoryFragment">
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:visibility="gone"
             android:layout_weight="1"
             android:layout_marginTop="8dp"
             android:layout_width="match_parent"
@@ -94,6 +95,7 @@ tools:context=".fragments.storeview.ActivitySubCategoryFragment">
             app:cardCornerRadius="4dp">
 
             <LinearLayout
+
                 android:orientation="vertical"
                 android:padding="8dp"
                 android:layout_width="match_parent"

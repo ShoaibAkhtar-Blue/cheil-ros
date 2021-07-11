@@ -439,9 +439,20 @@ class CameraActivity : AppCompatActivity() {
                                     })*/
                                 //endregion
                                 val savedImagePath: String = saveMediaToStorage(bitmapImg)
-                                var checkTypeAPI: String = if (CSP.getData("sess_visit_status_id")
-                                        .equals("0")
-                                ) "CheckIn" else "CheckOut"
+
+                                var checkTypeAPI = "CheckIn"
+
+                                if (CSP.getData("fragName") == "JP") {
+                                    checkTypeAPI = if (CSP.getData("sess_visit_status_id")
+
+                                            .equals("1")
+
+                                    ) "CheckIn" else "CheckOut"
+                                } else {
+                                    checkTypeAPI = if (CSP.getData("sess_visit_status_id")
+                                            .equals("0")
+                                    ) "CheckIn" else "CheckOut"
+                                }
 
                                 /*val uploadImgFile:File =  File(savedImagePath)
                                 println(uploadImgFile.exists())*/
@@ -584,9 +595,17 @@ class CameraActivity : AppCompatActivity() {
 
 
     fun sendCheckInOutRequest(url: String, imgPath: String) {
-
-        var checkType: String =
-            if (CSP.getData("sess_visit_status_id").equals("0")) "CheckInImg" else "CheckOutImage"
+        var checkType = "CheckInImg"
+        if (CSP.getData("fragName") == "JP") {
+            checkType = if (CSP.getData("sess_visit_status_id")
+                    .equals("1")
+            ) "CheckInImage" else "CheckOutImage"
+        } else {
+            checkType =
+                if (CSP.getData("sess_visit_status_id")
+                        .equals("0")
+                ) "CheckInImg" else "CheckOutImage"
+        }
 
         println(checkType)
 

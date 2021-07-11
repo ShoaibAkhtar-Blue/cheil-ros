@@ -6,6 +6,7 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -369,14 +370,20 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
                     )
                 }
 
-                builder.addFormDataPart(
-                    "test",
-                    "test"
-                )
+                builder.addFormDataPart("test", "test")
+
 
                 val requestBody = builder.build()
 
-                val status = if (dialog.checkBox.isChecked) "Active" else "In-Active"
+                val status = if (dialog.checkBox.isChecked) "1" else "0"
+
+                println("${CSP.getData("base_url")}/Asset.asmx/${assetMethod}?AssetTypeID=${defaultAsset}&BrandID=${defaultBrand}&StoreID=${
+                    StoreID
+                }&AssetDescription=${dialog.etdescription.text}&ActiveStatus=${status}&TeamMemberID=${
+                    CSP.getData(
+                        "user_id"
+                    )
+                }")
 
                 val request: Request = Request.Builder()
                     .url(
@@ -406,6 +413,7 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
                     }
 
                     override fun onResponse(call: Call, response: Response) {
+
                         (requireActivity().runOnUiThread {
                             activity?.let { it1 ->
                                 Sneaker.with(it1) // Activity, Fragment or ViewGroup
@@ -428,7 +436,7 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
 
 
             } catch (ex: Exception) {
-
+                Log.e("Error_", ex.message.toString())
             }
         }
 

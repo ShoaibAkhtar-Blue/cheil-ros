@@ -243,6 +243,8 @@ class JPAdapter(
                 if(CSP.getData("CheckIn_Camera").equals("Y")){
                     CSP.saveData("sess_visit_id", itemList[position].VisitID.toString())
                     CSP.saveData("sess_visit_status_id", itemList[position].VisitStatusID.toString())
+                    CSP.saveData("fragName", "JP")
+
                     Navigation.findNavController(it).navigate(R.id.action_journeyPlanFragment_to_cameraActivity)
                 }else{
                     sendCheckInOutRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/CheckIn?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=-")
@@ -253,6 +255,7 @@ class JPAdapter(
                 if(CSP.getData("CheckOut_Camera").equals("Y")){
                     CSP.saveData("sess_visit_id", itemList[position].VisitID.toString())
                     CSP.saveData("sess_visit_status_id", itemList[position].VisitStatusID.toString())
+                    CSP.saveData("fragName", "JP")
                     Navigation.findNavController(it).navigate(R.id.action_journeyPlanFragment_to_cameraActivity)
                 }else{
                     sendCheckInOutRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=-")

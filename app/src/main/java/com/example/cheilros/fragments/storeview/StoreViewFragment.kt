@@ -10,15 +10,19 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.adapters.ChecklistAnsweredAdapter
 import com.example.cheilros.adapters.RecentActivityAdapter
 import com.example.cheilros.adapters.StoreMenuAdapter
 import com.example.cheilros.adapters.StoreViewTabsPagerAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.models.CheckListAnswerModel
 import com.example.cheilros.models.RecentActivityModel
 import com.example.cheilros.models.StoreInfoModel
 import com.google.android.material.tabs.TabLayout
@@ -40,6 +44,9 @@ class StoreViewFragment : BaseFragment() {
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: RecentActivityAdapter
 
+    lateinit var layoutManagerCL: RecyclerView.LayoutManager
+    lateinit var recylcerAdapterCL: ChecklistAnsweredAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,8 +62,15 @@ class StoreViewFragment : BaseFragment() {
 
         //StoreView_SubTitle
         //region Set Labels
-        view.StoreView_SubTitle.text =
-            settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }.get(0).labelName
+        try {
+            view.StoreMenu_Investment.text =
+                settingData.filter { it.fixedLabelName == "StoreMenu_Investment" }[0].labelName
+            view.StoreView_SubTitle.text =
+                settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }.get(0).labelName
+        } catch (ex: Exception) {
+
+        }
+
         //endregion
 
         return view
@@ -72,8 +86,32 @@ class StoreViewFragment : BaseFragment() {
         )
         rvStoreMenu!!.adapter = storemenuAdapter
 
+        fetchChecklistanswer(
+            "${CSP.getData("base_url")}/Checklist.asmx/ChecklistAnswered?StoreID=${
+                arguments?.getInt(
+                    "StoreID"
+                ).toString()
+            }"
+        )
         //fetchRecentActivities("${CSP.getData("base_url")}/OperMarketActivities.asmx/ViewMarketActivityList?StoreID=${arguments?.getInt("StoreID").toString()}&ActivityCategoryID=0&ActivityTypeID=0&BrandID=0&TeamMemberID=${CSP.getData("user_id")}")
-        fetchStoreInfo("${CSP.getData("base_url")}/Storelist.asmx/StoreInfo?StoreID=${arguments?.getInt("StoreID").toString()}")
+        fetchStoreInfo(
+            "${CSP.getData("base_url")}/Storelist.asmx/StoreInfo?StoreID=${
+                arguments?.getInt(
+                    "StoreID"
+                ).toString()
+            }"
+        )
+
+        btnEditChecklist.setOnClickListener {
+            val bundle = bundleOf(
+                "StoreID" to arguments?.getInt("StoreID"),
+                "StoreName" to arguments?.getString("StoreName")
+            )
+            findNavController().navigate(
+                R.id.action_storeViewFragment_to_checklistCategoryFragment,
+                bundle
+            )
+        }
 
         genTabs()
     }
@@ -83,11 +121,12 @@ class StoreViewFragment : BaseFragment() {
 
     }
 
-    private fun genTabs(){
+    private fun genTabs() {
         //region Store Tabs
         tab_layout.setSelectedTabIndicatorColor(Color.RED)
         tab_layout.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
-        tab_layout.tabTextColors = ContextCompat.getColorStateList(requireContext(), android.R.color.white)
+        tab_layout.tabTextColors =
+            ContextCompat.getColorStateList(requireContext(), android.R.color.white)
 
 
         // Number Of Tabs
@@ -104,18 +143,29 @@ class StoreViewFragment : BaseFragment() {
 
         var fr_list: MutableList<Fragment> = emptyArray<Fragment>().toMutableList()
         fr_list.clear()
-        fr_list.add(StoreStatusFragment(
-            arguments?.getInt("StoreID"),
-            arguments?.getString("StoreName"))
+        fr_list.add(
+            StoreStatusFragment(
+                arguments?.getInt("StoreID"),
+                arguments?.getString("StoreName")
+            )
         )
-        fr_list.add(StoreActiveAssetsFragment(
-            arguments?.getInt("StoreID"),
-            arguments?.getString("StoreName"))
+        fr_list.add(
+            StoreActiveAssetsFragment(
+                arguments?.getInt("StoreID"),
+                arguments?.getString("StoreName")
+            )
         )
 
         // Set the ViewPager Adapter
         tabs_viewpager.adapter = null
-        val adapter = StoreViewTabsPagerAdapter(requireActivity().supportFragmentManager, lifecycle, numberOfTabs, arguments, fr_list, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT)
+        val adapter = StoreViewTabsPagerAdapter(
+            requireActivity().supportFragmentManager,
+            lifecycle,
+            numberOfTabs,
+            arguments,
+            fr_list,
+            BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+        )
         tabs_viewpager.adapter = adapter
 
 
@@ -131,10 +181,12 @@ class StoreViewFragment : BaseFragment() {
         TabLayoutMediator(tab_layout, tabs_viewpager) { tab, position ->
             when (position) {
                 0 -> {
-                    tab.text = settingData.filter { it.fixedLabelName == "StoreView_SubTitleTAB1" }[0].labelName
+                    tab.text =
+                        settingData.filter { it.fixedLabelName == "StoreView_SubTitleTAB1" }[0].labelName
                 }
                 1 -> {
-                    tab.text = settingData.filter { it.fixedLabelName == "StoreView_SubTitleTAB2" }[0].labelName
+                    tab.text =
+                        settingData.filter { it.fixedLabelName == "StoreView_SubTitleTAB2" }[0].labelName
                 }
             }
             // Change color of the icons
@@ -274,6 +326,57 @@ class StoreViewFragment : BaseFragment() {
                 }
             }
 
+        })
+    }
+
+    fun fetchChecklistanswer(url: String) {
+
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                requireActivity().runOnUiThread(java.lang.Runnable {
+                    activity?.let { it1 ->
+                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                            .setTitle("Error!!")
+                            .setMessage(e.message.toString())
+                            .sneakError()
+                    }
+
+                })
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body?.string()
+                println(body)
+                val gson = GsonBuilder().create()
+                val apiData = gson.fromJson(body, CheckListAnswerModel::class.java)
+                if (apiData.status == 200) {
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        rvChecklistAnswer.setHasFixedSize(true)
+                        layoutManagerCL = LinearLayoutManager(requireContext())
+                        rvChecklistAnswer.layoutManager = layoutManagerCL
+                        recylcerAdapterCL = ChecklistAnsweredAdapter(requireContext(), apiData.data)
+                        rvChecklistAnswer.adapter = recylcerAdapterCL
+                        val emptyView: View = todo_list_empty_view1
+                        rvChecklistAnswer.setEmptyView(emptyView)
+                    })
+                } else {
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage("Data not fetched.")
+                                .sneakWarning()
+                        }
+
+                    })
+                }
+            }
         })
     }
 }

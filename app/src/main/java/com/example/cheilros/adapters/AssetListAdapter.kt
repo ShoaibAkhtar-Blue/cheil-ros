@@ -42,7 +42,7 @@ class AssetListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtSerialNo.text = (position + 1).toString()
-        holder.txtTitle.text = itemList[position].AssetTypeName
+        holder.txtTitle.text = "${itemList[position].AssetTypeName} / ${itemList[position].BrandName}"
         holder.txtDesc.text = itemList[position].AssetDescription
         holder.txtDate.text = "Installation Date: ${itemList[position].CreationDateTime}"
         holder.txtUpdatedBy.text = "Updated By: ${itemList[position].TeamMemberName}"

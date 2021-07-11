@@ -7,7 +7,7 @@
     tools:context=".fragments.storeview.StoreStatusFragment"
     android:orientation="vertical">
 
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -40,8 +40,8 @@
         android:layout_height="wrap_content">
 
     </com.example.cheilros.activities.customobj.EmptyRecyclerView>
-    <!-- Added an empty view which will be shown when the EmptyRecyclerView
-             is empty -->
+    &lt;!&ndash; Added an empty view which will be shown when the EmptyRecyclerView
+             is empty &ndash;&gt;
     <LinearLayout
         android:id="@+id/todo_list_empty_view1"
         android:layout_width="match_parent"
@@ -66,29 +66,10 @@
             android:textColor="#534f47"
             android:textSize="16sp" />
 
-    </LinearLayout>
+    </LinearLayout>-->
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="#ededed"
-        android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/StoreMenu_Investment"
-            android:fontFamily="@font/samsungsharpsans_bold"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="SAMSUNG INVESTMENT"
-            android:textColor="@color/black"
-            android:textSize="20dp" />
-
-    </LinearLayout>
 
     <com.example.cheilros.activities.customobj.EmptyRecyclerView
         android:id="@+id/rvInvestmentAnswer"

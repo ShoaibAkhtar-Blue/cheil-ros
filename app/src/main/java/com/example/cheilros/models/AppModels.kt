@@ -161,6 +161,7 @@ class InvestmentData(
     val ElementID: Int,
     val ElementTitle: String,
     val ElementUpdateDate: String,
+    val InvestmentTypeID: Int,
     val Brands: List<BrandsData>
 )
 

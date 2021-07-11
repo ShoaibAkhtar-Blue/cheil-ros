@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#e2e2e2"
+    android:orientation="vertical"
     android:padding="16dp"
     tools:context=".fragments.storeview.StoreViewFragment">
 
@@ -27,9 +27,9 @@
                 android:padding="8dp">
 
                 <LinearLayout
-                    android:layout_marginBottom="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:background="@drawable/border_bottom_grey">
 
                     <TextView
@@ -51,15 +51,16 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginBottom="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:background="@drawable/border_bottom_grey">
 
                     <LinearLayout
-                        android:layout_weight="1"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -77,10 +78,12 @@
                             android:text="-"
                             android:textColor="@color/black" />
                     </LinearLayout>
+
                     <LinearLayout
-                        android:layout_weight="1"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -101,9 +104,9 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginBottom="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:background="@drawable/border_bottom_grey">
 
                     <TextView
@@ -125,9 +128,9 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_marginBottom="8dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:background="@drawable/border_bottom_grey">
 
                     <TextView
@@ -154,9 +157,9 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="210dp"
+            android:layout_marginTop="8dp"
             app:cardCornerRadius="4dp">
 
             <GridView
@@ -177,34 +180,122 @@
 
 
         <androidx.cardview.widget.CardView
-            android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
             app:cardCornerRadius="4dp">
 
             <LinearLayout
-                android:orientation="vertical"
-                android:padding="8dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
 
                 <TextView
-                    android:visibility="gone"
-                    android:layout_marginBottom="8dp"
                     android:id="@+id/StoreView_SubTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:fontFamily="@font/samsungsharpsans_bold"
                     android:text="Pending Deployments"
                     android:textColor="@color/black"
-                    android:textSize="20dp" />
+                    android:textSize="20dp"
+                    android:visibility="gone" />
 
                 <com.example.cheilros.activities.customobj.EmptyRecyclerView
-                    android:visibility="gone"
                     android:id="@+id/rvRecentActivities"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
 
+
+                <!--Checklist Answer-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="#ededed"
+                    android:gravity="center"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:fontFamily="@font/samsungsharpsans_bold"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Checklist" />
+
+                    <ImageButton
+                        android:id="@+id/btnEditChecklist"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:backgroundTint="@android:color/transparent"
+                        android:padding="0dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/edit_icon" />
+
+
+                </LinearLayout>
+                <com.example.cheilros.activities.customobj.EmptyRecyclerView
+                    android:id="@+id/rvChecklistAnswer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.example.cheilros.activities.customobj.EmptyRecyclerView>
+                <!-- Added an empty view which will be shown when the EmptyRecyclerView
+                         is empty -->
+                <LinearLayout
+                    android:id="@+id/todo_list_empty_view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:textAlignment="center">
+
+                    <ImageView
+                        android:id="@+id/imageView5"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/no_record" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/samsungsharpsans_bold"
+                        android:padding="16dp"
+                        android:text="NO RECORD FOUND"
+                        android:textColor="#534f47"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+                <!--END-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="#ededed"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/StoreMenu_Investment"
+                        android:fontFamily="@font/samsungsharpsans_bold"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="SAMSUNG INVESTMENT"
+                        android:textColor="@color/black"
+                        android:textSize="20dp" />
+
+                </LinearLayout>
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tab_layout"
@@ -217,11 +308,11 @@
 
 
                 <androidx.viewpager2.widget.ViewPager2
-                    android:minHeight="600dp"
                     android:id="@+id/tabs_viewpager"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:minHeight="600dp" />
 
 
             </LinearLayout>
@@ -230,16 +321,17 @@
 
 
         <androidx.cardview.widget.CardView
-            android:visibility="gone"
-            android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="300dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
             app:cardCornerRadius="4dp">
 
             <LinearLayout
-                android:padding="8dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -250,7 +342,6 @@
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
-
 
 
     </LinearLayout>
