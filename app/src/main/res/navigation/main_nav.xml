@@ -102,6 +102,9 @@
         <action
             android:id="@+id/action_storeViewFragment_to_trainingNewFragment"
             app:destination="@id/trainingNewFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_installationFragment"
+            app:destination="@id/installationFragment" />
     </fragment>
     <fragment
         android:id="@+id/checklistCategoryFragment"
@@ -322,5 +325,14 @@
         <action
             android:id="@+id/action_trainingNewFragment_to_cameraActivity"
             app:destination="@id/cameraActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/installationFragment"
+        android:name="com.example.cheilros.fragments.storeview.InstallationFragment"
+        android:label="fragment_installation"
+        tools:layout="@layout/fragment_installation" >
+        <action
+            android:id="@+id/action_installationFragment_to_acrivityDetailFragment"
+            app:destination="@id/acrivityDetailFragment" />
     </fragment>
 </navigation>

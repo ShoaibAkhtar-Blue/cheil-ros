@@ -6,13 +6,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.cheilros.R
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.RecentActivityData
+import kotlinx.android.synthetic.main.item_jpstatus.view.*
 
 class RecentActivityAdapter(
     val context: Context,
@@ -34,6 +37,8 @@ class RecentActivityAdapter(
         var ActivityTypeName: TextView = view.findViewById(R.id.ActivityTypeName)
         var ActivityDescription: TextView = view.findViewById(R.id.ActivityDescription)
         var txtDate: TextView = view.findViewById(R.id.txtDate)
+        var imgActivity: ImageView = view.findViewById(R.id.imgActivity)
+        var RLimgActivity: RelativeLayout = view.findViewById(R.id.RLimgActivity)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -47,6 +52,10 @@ class RecentActivityAdapter(
         holder.ActivityTypeName.text = filterList[position].ActivityTypeName
         holder.ActivityDescription.text = filterList[position].ActivityDescription
         holder.txtDate.text = filterList[position].ActivityDateTime
+        if(filterList[position].ImageActivity != "" && filterList[position].ImageActivity != null)
+            Glide.with(context).load("${CSP.getData("base_url")}/${filterList[position].ImageActivity}").into(holder.imgActivity!!)
+        else
+            holder.RLimgActivity.visibility = View.GONE
 
         if(filterList[position].ActivityTypeID == 20)
             holder.RLrecentactivity.setBackgroundColor(Color.RED)

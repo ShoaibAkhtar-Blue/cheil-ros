@@ -19,6 +19,7 @@ import com.example.cheilros.MainActivity
 import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.MenuNavigationAdapter
+import com.example.cheilros.adapters.RecentActivityAdapter
 import com.example.cheilros.adapters.TaskAssignedAdapter
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.models.*
@@ -37,8 +38,12 @@ import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.activity_dashboard.view.gridview
 import kotlinx.android.synthetic.main.activity_dashboard.view.imgUser
 import kotlinx.android.synthetic.main.activity_dashboard.view.txtUsername
+import kotlinx.android.synthetic.main.fragment_activity.view.*
 import kotlinx.android.synthetic.main.fragment_dashboard.*
+import kotlinx.android.synthetic.main.fragment_dashboard.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_dashboard.view.*
+import kotlinx.android.synthetic.main.fragment_dashboard.view.StoreView_SubTitle
+import kotlinx.android.synthetic.main.fragment_dashboard.view.mainLoadingLayoutCC
 import okhttp3.*
 import java.io.IOException
 import java.text.DecimalFormat
@@ -56,6 +61,9 @@ class DashboardFragment : BaseFragment() {
 
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: TaskAssignedAdapter
+
+    lateinit var layoutManagerRecent: RecyclerView.LayoutManager
+    lateinit var recylcerAdapterRecent: RecentActivityAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,8 +86,11 @@ class DashboardFragment : BaseFragment() {
             view.Dashboard_CoverageButton.text = settingData.filter { it.fixedLabelName == "Dashboard_CoverageButton" }.get(0).labelName
             view.Dashboard_PendingButton.text = settingData.filter { it.fixedLabelName == "Dashboard_PendingButton" }.get(0).labelName
             view.txtCurrentDate.text = currentDateAndTime
+            view.StoreView_SubTitle.text = settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }.get(0).labelName
 
             view.LLGraphTwo.visibility = View.GONE
+
+            view.LLTask.visibility = View.GONE
 
             if(team_type == "7"){
                 view.Dashboard_GraphTitle.text = settingData.filter { it.fixedLabelName == "DashboadPromoter_Visit" }.get(0).labelName
@@ -88,6 +99,7 @@ class DashboardFragment : BaseFragment() {
                 view.txtTodayVisitCount.visibility = View.GONE
                 view.Dashboard_StorePlan.visibility = View.GONE
                 view.LLTask.visibility = View.GONE
+                view.LLRecentActivity.visibility = View.GONE
                 view.gridview.visibility = View.GONE
             }
         }catch (ex: Exception){
@@ -106,6 +118,8 @@ class DashboardFragment : BaseFragment() {
 
         try{
             fetchDashboardData("${CSP.getData("base_url")}/Dashboard.asmx/DashboardLabels?TeamMemberID=${userData[0].memberID}")
+            if(team_type != "7")
+                fetchRecentActivities("${CSP.getData("base_url")}/OperMarketActivities.asmx/ViewMarketActivityList?StoreID=0&ActivityCategoryID=0&ActivityTypeID=20&BrandID=0&TeamMemberID=${CSP.getData("user_id")}")
         }catch (ex: Exception){
 
         }
@@ -489,6 +503,58 @@ class DashboardFragment : BaseFragment() {
                     })
                 }
             }
+        })
+    }
+
+    fun fetchRecentActivities(url: String){
+        println(url)
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        val client = OkHttpClient()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                requireActivity().runOnUiThread(java.lang.Runnable {
+                    activity?.let { it1 ->
+                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                            .setTitle("Error!!")
+                            .setMessage(e.message.toString())
+                            .sneakError()
+                    }
+                    mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                })
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body?.string()
+                println(body)
+                val gson = GsonBuilder().create()
+                val apiData = gson.fromJson(body, RecentActivityModel::class.java)
+
+                if (apiData.status == 200) {
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        rvRecentSubActivities.setHasFixedSize(true)
+                        layoutManagerRecent = LinearLayoutManager(requireContext())
+                        rvRecentSubActivities.layoutManager = layoutManagerRecent
+                        recylcerAdapterRecent = RecentActivityAdapter(requireContext(), apiData.data, arguments)
+                        rvRecentSubActivities.adapter = recylcerAdapterRecent
+
+                    })
+                }else{
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage("Data not fetched.")
+                                .sneakWarning()
+                        }
+                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                    })
+                }
+            }
+
         })
     }
 

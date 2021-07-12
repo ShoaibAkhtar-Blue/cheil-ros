@@ -45,7 +45,7 @@ class StoreMenuAdapter(
         Glide.with(context).load(ListData[position].imagePath).into(convertView.imgStatus!!)
         convertView.txtLabel.text = ListData[position].labelName
 
-        if (ListData[position].fixedLabelName == "StoreMenu_Checklist" || ListData[position].fixedLabelName == "StoreMenu_Investment" || ListData[position].fixedLabelName == "StoreMenu_Activity" || ListData[position].fixedLabelName == "StoreMenu_Training") {
+        if (ListData[position].fixedLabelName == "StoreMenu_Checklist" || ListData[position].fixedLabelName == "StoreMenu_Investment" || ListData[position].fixedLabelName == "StoreMenu_Activity" || ListData[position].fixedLabelName == "StoreMenu_Training"|| ListData[position].fixedLabelName == "StoreMenu_Installation") {
 
         } else {
             convertView.cvStoreMenu.setCardBackgroundColor(Color.GRAY)
@@ -79,6 +79,13 @@ class StoreMenuAdapter(
                     .navigate(R.id.action_storeViewFragment_to_trainingFragment, bundle)*/
                 Navigation.findNavController(it)
                     .navigate(R.id.action_storeViewFragment_to_trainingNewFragment, bundle)
+            }
+
+            if (ListData[position].fixedLabelName.equals("StoreMenu_Installation")) {
+                /*Navigation.findNavController(it)
+                    .navigate(R.id.action_storeViewFragment_to_trainingFragment, bundle)*/
+                Navigation.findNavController(it)
+                    .navigate(R.id.action_storeViewFragment_to_installationFragment, bundle)
             }
         }
 

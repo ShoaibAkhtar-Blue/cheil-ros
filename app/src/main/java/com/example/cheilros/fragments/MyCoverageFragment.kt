@@ -1,20 +1,21 @@
 package com.example.cheilros.fragments
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Context
 import android.content.DialogInterface
+import android.content.DialogInterface.OnMultiChoiceClickListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.widget.SearchView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.example.cheilros.R
 import com.example.cheilros.activities.customobj.EmptyRecyclerView
 import com.example.cheilros.adapters.MyCoverageAdapter
@@ -97,7 +98,7 @@ class MyCoverageFragment : BaseFragment() {
         fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${defaultChannel}&SearchKeyWord=&ChannelTypeID=${defaultChannelType}")
 
         btnChannel.setOnClickListener {
-            // setup the alert builder
+            /*// setup the alert builder
             // setup the alert builder
             val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
             builder.setTitle("Choose an channel")
@@ -122,6 +123,94 @@ class MyCoverageFragment : BaseFragment() {
 
             // create and show the alert dialog
             val dialog: AlertDialog = builder.create()
+            dialog.show()*/
+
+            val colorList: ArrayList<ColorVO> = ArrayList<ColorVO>()
+            // String array for alert dialog multi choice items
+            // String array for alert dialog multi choice items
+            val colors = arrayOf(
+                "Red",
+                "Green",
+                "Blue",
+                "Purple",
+                "Olive"
+            )
+            // Boolean array for initial selected items
+            // Boolean array for initial selected items
+            val checkedColors = booleanArrayOf(
+                false,  // Red
+                false,  // Green
+                false,  // Blue
+                false,  // Purple
+                false // Olive
+            )
+
+            val builder = AlertDialog.Builder(requireContext())
+
+            // make a list to hold state of every color
+
+            // make a list to hold state of every color
+            for (i in colors.indices) {
+                val colorVO = ColorVO()
+                colorVO.setName(colors.get(i))
+                colorVO.setSelected(checkedColors.get(i))
+                colorList.add(colorVO)
+            }
+
+            // Do something here to pass only arraylist on this both arrays ('colors' & 'checkedColors')
+
+            // Do something here to pass only arraylist on this both arrays ('colors' & 'checkedColors')
+            builder.setMultiChoiceItems(colors, checkedColors,
+                OnMultiChoiceClickListener { dialog, which, isChecked -> // set state to vo in list
+                    colorList.get(which).setSelected(isChecked)
+                    Toast.makeText(
+                        ApplicationProvider.getApplicationContext(),
+                        colorList.get(which).getName().toString() + " " + isChecked,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
+
+            builder.setCancelable(false)
+
+            builder.setTitle("Your preferred colors?")
+
+            builder.setPositiveButton(
+                "OK"
+            ) { dialog, which ->
+                txtSelected.setText("Your preferred colors..... \n")
+
+                // save state of selected vos
+                val selectedList: ArrayList<ColorVO> = ArrayList()
+                for (i in 0 until colorList.size()) {
+                    val colorVO: ColorVO = colorList.get(i)
+                    colors.get(i) = colorVO.getName()
+                    checkedColors.get(i) = colorVO.isSelected()
+                    if (colorVO.isSelected()) {
+                        selectedList.add(colorVO)
+                    }
+                }
+                for (i in 0 until selectedList.size()) {
+                    // if element is last then not attach comma or attach it
+                    if (i != selectedList.size() - 1) txtSelected.setText(
+                        txtSelected.getText() + selectedList[i].getName().toString() + " ,"
+                    ) else txtSelected.setText(txtSelected.getText() + selectedList[i].getName())
+                }
+                colorList.clear()
+            }
+
+            builder.setNegativeButton(
+                "No"
+            ) { dialog, which -> // make sure to clear list that duplication dont formed here
+                colorList.clear()
+            }
+
+            builder.setNeutralButton(
+                "Cancel"
+            ) { dialog, which -> // make sure to clear list that duplication dont formed here
+                colorList.clear()
+            }
+
+            val dialog = builder.create()
             dialog.show()
         }
 
