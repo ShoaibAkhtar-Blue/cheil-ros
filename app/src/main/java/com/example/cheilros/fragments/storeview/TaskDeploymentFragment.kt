@@ -20,8 +20,6 @@ import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.activity_new_dashboard.*
 import kotlinx.android.synthetic.main.fragment_activity.view.*
 import kotlinx.android.synthetic.main.fragment_activity_sub_category.*
-import kotlinx.android.synthetic.main.fragment_activity_sub_category.mainLoadingLayoutCC
-import kotlinx.android.synthetic.main.fragment_checklist_category.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
@@ -29,7 +27,7 @@ import okhttp3.*
 import java.io.IOException
 
 
-class InstallationFragment : BaseFragment() {
+class TaskDeploymentFragment : BaseFragment() {
 
     private val client = OkHttpClient()
 
@@ -44,12 +42,12 @@ class InstallationFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_installation, container, false)
+        val view =  inflater.inflate(R.layout.fragment_task_deployment, container, false)
 
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
-        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Ticket" }.get(0).labelName
+        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Installation" }.get(0).labelName
         view.StoreView_SubTitle.text = settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }.get(0).labelName
         //endregion
 
@@ -63,9 +61,9 @@ class InstallationFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         txtStoreSubName.text = arguments?.getString("ActivityTypeName")
 
-        fetchRecentActivities("${CSP.getData("base_url")}/OperMarketActivities.asmx/ViewMarketActivityList?StoreID=${arguments?.getInt("StoreID").toString()}&ActivityCategoryID=0&ActivityTypeID=20&BrandID=0&TeamMemberID=${CSP.getData("user_id")}")
+        fetchRecentActivities("${CSP.getData("base_url")}/OperMarketActivities.asmx/ViewMarketActivityList?StoreID=${arguments?.getInt("StoreID").toString()}&ActivityCategoryID=0&ActivityTypeID=21&BrandID=0&TeamMemberID=${CSP.getData("user_id")}")
         fetchActivityDetail(
-            "${CSP.getData("base_url")}/Activity.asmx/ActivityCategoryList?DivisionID=1&ActivityTypeID=20"
+            "${CSP.getData("base_url")}/Activity.asmx/ActivityCategoryList?DivisionID=1&ActivityTypeID=21"
         )
 
         requireActivity().toolbar_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,

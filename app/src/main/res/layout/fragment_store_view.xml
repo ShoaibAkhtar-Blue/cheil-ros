@@ -219,6 +219,7 @@
                     android:padding="8dp">
 
                     <TextView
+                        android:id="@+id/StoreView_ChecklistSubTitle"
                         android:fontFamily="@font/samsungsharpsans_bold"
                         android:gravity="center"
                         android:padding="8dp"

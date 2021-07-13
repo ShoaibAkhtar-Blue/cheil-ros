@@ -105,6 +105,12 @@
         <action
             android:id="@+id/action_storeViewFragment_to_installationFragment"
             app:destination="@id/installationFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_taskDeploymentFragment"
+            app:destination="@id/taskDeploymentFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_displayCountFragment"
+            app:destination="@id/displayCountFragment" />
     </fragment>
     <fragment
         android:id="@+id/checklistCategoryFragment"
@@ -334,5 +340,44 @@
         <action
             android:id="@+id/action_installationFragment_to_acrivityDetailFragment"
             app:destination="@id/acrivityDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/taskDeploymentFragment"
+        android:name="com.example.cheilros.fragments.storeview.TaskDeploymentFragment"
+        android:label="fragment_task_deployment"
+        tools:layout="@layout/fragment_task_deployment" >
+        <action
+            android:id="@+id/action_taskDeploymentFragment_to_acrivityDetailFragment"
+            app:destination="@id/acrivityDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/displayCountFragment"
+        android:name="com.example.cheilros.fragments.storeview.DisplayCountFragment"
+        android:label="fragment_display_count"
+        tools:layout="@layout/fragment_display_count" >
+        <action
+            android:id="@+id/action_displayCountFragment_to_displayCountDetailFragment"
+            app:destination="@id/displayCountDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/displayCountDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.DisplayCountDetailFragment"
+        android:label="fragment_display_count_detail"
+        tools:layout="@layout/fragment_display_count_detail" >
+        <argument
+            android:name="StoreID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="BrandID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="ProductCategoryName"
+            app:argType="string" />
+        <argument
+            android:name="ProductCategoryID"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
 </navigation>

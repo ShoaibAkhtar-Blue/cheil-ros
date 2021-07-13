@@ -64,9 +64,11 @@ class StoreViewFragment : BaseFragment() {
         //region Set Labels
         try {
             view.StoreMenu_Investment.text =
-                settingData.filter { it.fixedLabelName == "StoreMenu_Investment" }[0].labelName
+                settingData.filter { it.fixedLabelName == "StoreView_InvesmentSubTitle" }[0].labelName
             view.StoreView_SubTitle.text =
                 settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }.get(0).labelName
+            view.StoreView_SubTitle.text =
+                settingData.filter { it.fixedLabelName == "StoreView_ChecklistSubTitle" }.get(0).labelName
         } catch (ex: Exception) {
 
         }

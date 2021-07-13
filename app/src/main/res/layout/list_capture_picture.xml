@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
-    <ImageView
-        android:layout_marginRight="16dp"
-        android:id="@+id/imgCaptured"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    >
+    <LinearLayout
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:adjustViewBounds="true"
-        android:backgroundTint="@android:color/transparent"
-        android:cropToPadding="true"
-        android:padding="0dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/camera_btn" />
+        android:background="@color/darkgrey">
+        <ImageView
+            android:id="@+id/imgCaptured"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:adjustViewBounds="true"
+            android:backgroundTint="@android:color/transparent"
+            android:cropToPadding="true"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/camera_btn" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/btnDel"
@@ -26,4 +31,4 @@
         android:scaleType="fitStart"
         app:srcCompat="@android:drawable/btn_dialog" />
 
-</FrameLayout >
+</FrameLayout>

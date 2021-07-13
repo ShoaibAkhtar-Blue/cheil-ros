@@ -1,89 +1,96 @@
 package com.example.cheilros.fragments.storeview
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
-import com.example.cheilros.adapters.InstallationAdapter
-import com.example.cheilros.adapters.RecentActivityAdapter
+import com.example.cheilros.adapters.ChecklistDetailAdapter
+import com.example.cheilros.adapters.DisplayCountDetailAdapter
 import com.example.cheilros.fragments.BaseFragment
-import com.example.cheilros.models.ActivityCategoryModel
-import com.example.cheilros.models.RecentActivityModel
+import com.example.cheilros.models.*
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
-import kotlinx.android.synthetic.main.activity_new_dashboard.*
-import kotlinx.android.synthetic.main.fragment_activity.view.*
-import kotlinx.android.synthetic.main.fragment_activity_sub_category.*
-import kotlinx.android.synthetic.main.fragment_activity_sub_category.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_checklist_category.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
-import kotlinx.android.synthetic.main.fragment_checklist_category.view.mainLoadingLayoutCC
-import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
+import kotlinx.android.synthetic.main.fragment_checklist_category_detail.*
+import kotlinx.android.synthetic.main.fragment_display_count_detail.*
+import kotlinx.android.synthetic.main.fragment_display_count_detail.mainLoadingLayoutCC
+import kotlinx.android.synthetic.main.fragment_my_coverage.*
 import okhttp3.*
 import java.io.IOException
 
 
-class InstallationFragment : BaseFragment() {
-
-    private val client = OkHttpClient()
+class DisplayCountDetailFragment : BaseFragment() {
 
     lateinit var layoutManager: RecyclerView.LayoutManager
-    lateinit var recylcerAdapter: InstallationAdapter
+    lateinit var recylcerAdapter: DisplayCountDetailAdapter
 
-    lateinit var layoutManagerRecent: RecyclerView.LayoutManager
-    lateinit var recylcerAdapterRecent: RecentActivityAdapter
+    var defaultChannel = "0"
+
+    lateinit var productCategoryData: List<DisplayProductCategoryData>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_installation, container, false)
+        val view = inflater.inflate(R.layout.fragment_display_count_detail, container, false)
 
-        view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
+        //view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
-        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Ticket" }.get(0).labelName
-        view.StoreView_SubTitle.text = settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }.get(0).labelName
-        //endregion
+        try {
+            view.txtStoreName.text =
+                settingData.filter { it.fixedLabelName == "StoreMenu_ModelCount" }
+                    .get(0).labelName + " / " + arguments?.getString("ProductCategoryName")
+        } catch (ex: Exception) {
 
-        CSP.delData("activity_barcodes")
-        CSP.delData("ActivityDetail_SESSION_IMAGE")
-        CSP.delData("ActivityDetail_SESSION_IMAGE_SET")
+        }
+        //endregion
 
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        txtStoreSubName.text = arguments?.getString("ActivityTypeName")
+        fetchCategory("${CSP.getData("base_url")}/DisplayCount.asmx/ProductCategoryList")
+        fetchDisplayCountDetail("${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountView?BrandID=${arguments?.getInt("BrandID")}&ProductCategoryID=${arguments?.getInt("ProductCategoryID")}&StoreID=${arguments?.getInt("StoreID")}")
 
-        fetchRecentActivities("${CSP.getData("base_url")}/OperMarketActivities.asmx/ViewMarketActivityList?StoreID=${arguments?.getInt("StoreID").toString()}&ActivityCategoryID=0&ActivityTypeID=20&BrandID=0&TeamMemberID=${CSP.getData("user_id")}")
-        fetchActivityDetail(
-            "${CSP.getData("base_url")}/Activity.asmx/ActivityCategoryList?DivisionID=1&ActivityTypeID=20"
-        )
+        btnProductCategory.setOnClickListener {
+            val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Choose Category")
 
-        requireActivity().toolbar_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
-            android.widget.SearchView.OnQueryTextListener {
+            // add a list
 
-            override fun onQueryTextChange(qString: String): Boolean {
-                recylcerAdapter?.filter?.filter(qString)
-                return true
+            // add a list
+            var channels: Array<String> = arrayOf()
+            for (c in productCategoryData) {
+                channels += c.ProductCategoryName
             }
-            override fun onQueryTextSubmit(qString: String): Boolean {
 
-                return true
-            }
-        })
+            builder.setItems(channels,
+                DialogInterface.OnClickListener { dialog, which ->
+                    println(productCategoryData[which].ProductCategoryName)
+                    defaultChannel = productCategoryData[which].ProductCategoryID.toString()
+                    btnProductCategory.text =
+                        "Selected Category: ${productCategoryData[which].ProductCategoryName}"
+                    fetchDisplayCountDetail("${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountView?BrandID=${arguments?.getInt("BrandID")}&ProductCategoryID=${defaultChannel}&StoreID=${arguments?.getInt("StoreID")}")
+                })
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
     }
 
-    fun fetchActivityDetail(url: String) {
-        println(url)
+    fun fetchDisplayCountDetail(url: String){
+        val ref = this
+        val client = OkHttpClient()
+
         val request = Request.Builder()
             .url(url)
             .build()
@@ -97,7 +104,7 @@ class InstallationFragment : BaseFragment() {
                             .setMessage(e.message.toString())
                             .sneakError()
                     }
-                    mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                    //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                 })
             }
 
@@ -105,16 +112,17 @@ class InstallationFragment : BaseFragment() {
                 val body = response.body?.string()
                 println(body)
                 val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, ActivityCategoryModel::class.java)
+                val apiData = gson.fromJson(body, DisplayCountViewModel::class.java)
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvActivityDetail.setHasFixedSize(true)
+                        rvDisplayCountDetail.setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(requireContext())
-                        rvActivityDetail.layoutManager = layoutManager
+                        rvDisplayCountDetail.layoutManager = layoutManager
                         recylcerAdapter =
-                            InstallationAdapter(requireContext(), apiData.data, arguments)
-                        rvActivityDetail.adapter = recylcerAdapter
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                            DisplayCountDetailAdapter(requireContext(),
+                                apiData.data as MutableList<DisplayCountViewData>, ref, arguments)
+                        rvDisplayCountDetail.adapter = recylcerAdapter
+                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
                 } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
@@ -124,20 +132,20 @@ class InstallationFragment : BaseFragment() {
                                 .setMessage("Data not fetched.")
                                 .sneakWarning()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
                 }
             }
         })
     }
 
-    fun fetchRecentActivities(url: String){
-        println(url)
+    fun fetchCategory(url: String) {
+
+        val client = OkHttpClient()
+
         val request = Request.Builder()
             .url(url)
             .build()
-
-        val client = OkHttpClient()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -147,40 +155,40 @@ class InstallationFragment : BaseFragment() {
                             .setTitle("Error!!")
                             .setMessage(e.message.toString())
                             .sneakError()
+                        //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
                     }
-                    mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                 })
             }
 
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
+
                 val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, RecentActivityModel::class.java)
+                val apiData = gson.fromJson(body, DisplayProductCategoryModel::class.java)
 
                 if (apiData.status == 200) {
+                    productCategoryData = apiData.data
                     requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvRecentSubActivities.setHasFixedSize(true)
-                        layoutManagerRecent = LinearLayoutManager(requireContext())
-                        rvRecentSubActivities.layoutManager = layoutManagerRecent
-                        recylcerAdapterRecent = RecentActivityAdapter(requireContext(), apiData.data, arguments)
-                        rvRecentSubActivities.adapter = recylcerAdapterRecent
-
+                        activity?.let { it1 ->
+                            //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                        }
                     })
-                }else{
+                } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
                                 .setMessage("Data not fetched.")
                                 .sneakWarning()
+                            //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
                 }
             }
 
         })
     }
+
 
 }

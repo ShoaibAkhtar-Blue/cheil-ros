@@ -15,7 +15,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.example.cheilros.R
 import com.example.cheilros.activities.customobj.EmptyRecyclerView
 import com.example.cheilros.adapters.MyCoverageAdapter
@@ -98,7 +97,7 @@ class MyCoverageFragment : BaseFragment() {
         fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${defaultChannel}&SearchKeyWord=&ChannelTypeID=${defaultChannelType}")
 
         btnChannel.setOnClickListener {
-            /*// setup the alert builder
+            // setup the alert builder
             // setup the alert builder
             val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
             builder.setTitle("Choose an channel")
@@ -123,9 +122,9 @@ class MyCoverageFragment : BaseFragment() {
 
             // create and show the alert dialog
             val dialog: AlertDialog = builder.create()
-            dialog.show()*/
+            dialog.show()
 
-            val colorList: ArrayList<ColorVO> = ArrayList<ColorVO>()
+            /*val colorList: ArrayList<ColorVO> = ArrayList<ColorVO>()
             // String array for alert dialog multi choice items
             // String array for alert dialog multi choice items
             val colors = arrayOf(
@@ -211,7 +210,7 @@ class MyCoverageFragment : BaseFragment() {
             }
 
             val dialog = builder.create()
-            dialog.show()
+            dialog.show()*/
         }
 
         btnChannelType.setOnClickListener {

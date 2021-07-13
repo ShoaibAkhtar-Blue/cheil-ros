@@ -155,6 +155,49 @@ class DashboardTaskAssignedData(
 )
 //endregion
 
+//region DisplayCount
+class DisplayCountModel(val status: Int, val data: List<DisplayCountData>)
+class DisplayCountData(
+    val BrandID: Int,
+    val BrandName: String,
+    val Products: List<DisplayProductData>
+)
+class DisplayProductData(
+    val ProductCategoryID: Int,
+    val ProductCategoryName: String,
+    val DisplayCount: String
+)
+
+class DisplayProductCategoryModel(val status: Int, val data: List<DisplayProductCategoryData>)
+class DisplayProductCategoryData(
+    val ProductCategoryID: Int,
+    val ProductCategoryName: String
+)
+
+class DisplayCountViewModel(val status: Int, val data: List<DisplayCountViewData>)
+class DisplayCountViewData(
+    val ProductID: Int,
+    val ShortName: String,
+    val DisplayCount: Int
+)
+
+class DisplayCountJSON(val data: List<DisplayCountJSONData>)
+class DisplayCountJSONData(
+    val ProductID: Int,
+    val StoreID: Int?,
+    val DisplayCount: Int?,
+    val TeamMemberID: Int?
+)
+
+@Parcelize
+data class DisplayCountProductsData(
+    val ProductID: Int,
+    val ShortName: String,
+    val DisplayCount: Int
+) : Parcelable
+
+//endregion
+
 //region Investment
 
 class InvestmentModel(val status: Int, val data: List<InvestmentData>)
