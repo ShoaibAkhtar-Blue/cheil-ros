@@ -111,6 +111,9 @@
         <action
             android:id="@+id/action_storeViewFragment_to_displayCountFragment"
             app:destination="@id/displayCountFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_priceFragment"
+            app:destination="@id/priceFragment" />
     </fragment>
     <fragment
         android:id="@+id/checklistCategoryFragment"
@@ -375,6 +378,33 @@
         <argument
             android:name="ProductCategoryName"
             app:argType="string" />
+        <argument
+            android:name="ProductCategoryID"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/priceFragment"
+        android:name="com.example.cheilros.fragments.storeview.PriceFragment"
+        android:label="fragment_price"
+        tools:layout="@layout/fragment_price" >
+        <action
+            android:id="@+id/action_priceFragment_to_priceDetailFragment"
+            app:destination="@id/priceDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/priceDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.PriceDetailFragment"
+        android:label="fragment_price_detail"
+        tools:layout="@layout/fragment_price_detail" >
+        <argument
+            android:name="StoreID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="BrandID"
+            app:argType="integer"
+            android:defaultValue="0" />
         <argument
             android:name="ProductCategoryID"
             app:argType="integer"

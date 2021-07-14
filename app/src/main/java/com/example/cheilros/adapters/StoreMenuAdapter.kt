@@ -45,7 +45,7 @@ class StoreMenuAdapter(
         Glide.with(context).load(ListData[position].imagePath).into(convertView.imgStatus!!)
         convertView.txtLabel.text = ListData[position].labelName
 
-        if (ListData[position].fixedLabelName == "StoreMenu_Checklist" || ListData[position].fixedLabelName == "StoreMenu_Investment" || ListData[position].fixedLabelName == "StoreMenu_Activity" || ListData[position].fixedLabelName == "StoreMenu_Training" || ListData[position].fixedLabelName == "StoreMenu_Ticket" || ListData[position].fixedLabelName == "StoreMenu_Installation" || ListData[position].fixedLabelName == "StoreMenu_ModelCount") {
+        if (ListData[position].fixedLabelName == "StoreMenu_Checklist" || ListData[position].fixedLabelName == "StoreMenu_Investment" || ListData[position].fixedLabelName == "StoreMenu_Activity" || ListData[position].fixedLabelName == "StoreMenu_Training" || ListData[position].fixedLabelName == "StoreMenu_Ticket" || ListData[position].fixedLabelName == "StoreMenu_Installation" || ListData[position].fixedLabelName == "StoreMenu_ModelCount" || ListData[position].fixedLabelName == "StoreMenu_PricePromotions") {
 
         } else {
             convertView.cvStoreMenu.setCardBackgroundColor(Color.GRAY)
@@ -94,6 +94,10 @@ class StoreMenuAdapter(
             if (ListData[position].fixedLabelName.equals("StoreMenu_ModelCount")) {
             Navigation.findNavController(it)
                 .navigate(R.id.action_storeViewFragment_to_displayCountFragment, bundle)
+        }
+            if (ListData[position].fixedLabelName.equals("StoreMenu_PricePromotions")) {
+            Navigation.findNavController(it)
+                .navigate(R.id.action_storeViewFragment_to_priceFragment, bundle)
         }
         }
 

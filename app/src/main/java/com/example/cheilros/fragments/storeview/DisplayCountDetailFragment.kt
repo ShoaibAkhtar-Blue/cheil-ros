@@ -19,9 +19,11 @@ import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.fragment_checklist_category.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
+import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
 import kotlinx.android.synthetic.main.fragment_checklist_category_detail.*
 import kotlinx.android.synthetic.main.fragment_display_count_detail.*
 import kotlinx.android.synthetic.main.fragment_display_count_detail.mainLoadingLayoutCC
+import kotlinx.android.synthetic.main.fragment_display_count_detail.view.*
 import kotlinx.android.synthetic.main.fragment_my_coverage.*
 import okhttp3.*
 import java.io.IOException
@@ -50,6 +52,12 @@ class DisplayCountDetailFragment : BaseFragment() {
             view.txtStoreName.text =
                 settingData.filter { it.fixedLabelName == "StoreMenu_ModelCount" }
                     .get(0).labelName + " / " + arguments?.getString("ProductCategoryName")
+            view.BrandHeading.text =
+                settingData.filter { it.fixedLabelName == "DisplayCount_Model" }
+                    .get(0).labelName
+            view.CountHeading.text =
+                settingData.filter { it.fixedLabelName == "DisplayCount_Display" }
+                    .get(0).labelName
         } catch (ex: Exception) {
 
         }
@@ -60,7 +68,17 @@ class DisplayCountDetailFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         fetchCategory("${CSP.getData("base_url")}/DisplayCount.asmx/ProductCategoryList")
-        fetchDisplayCountDetail("${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountView?BrandID=${arguments?.getInt("BrandID")}&ProductCategoryID=${arguments?.getInt("ProductCategoryID")}&StoreID=${arguments?.getInt("StoreID")}")
+        fetchDisplayCountDetail(
+            "${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountView?BrandID=${
+                arguments?.getInt(
+                    "BrandID"
+                )
+            }&ProductCategoryID=${arguments?.getInt("ProductCategoryID")}&StoreID=${
+                arguments?.getInt(
+                    "StoreID"
+                )
+            }"
+        )
 
         btnProductCategory.setOnClickListener {
             val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
@@ -80,14 +98,20 @@ class DisplayCountDetailFragment : BaseFragment() {
                     defaultChannel = productCategoryData[which].ProductCategoryID.toString()
                     btnProductCategory.text =
                         "Selected Category: ${productCategoryData[which].ProductCategoryName}"
-                    fetchDisplayCountDetail("${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountView?BrandID=${arguments?.getInt("BrandID")}&ProductCategoryID=${defaultChannel}&StoreID=${arguments?.getInt("StoreID")}")
+                    fetchDisplayCountDetail(
+                        "${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountView?BrandID=${
+                            arguments?.getInt(
+                                "BrandID"
+                            )
+                        }&ProductCategoryID=${defaultChannel}&StoreID=${arguments?.getInt("StoreID")}"
+                    )
                 })
             val dialog: AlertDialog = builder.create()
             dialog.show()
         }
     }
 
-    fun fetchDisplayCountDetail(url: String){
+    fun fetchDisplayCountDetail(url: String) {
         val ref = this
         val client = OkHttpClient()
 
@@ -119,8 +143,10 @@ class DisplayCountDetailFragment : BaseFragment() {
                         layoutManager = LinearLayoutManager(requireContext())
                         rvDisplayCountDetail.layoutManager = layoutManager
                         recylcerAdapter =
-                            DisplayCountDetailAdapter(requireContext(),
-                                apiData.data as MutableList<DisplayCountViewData>, ref, arguments)
+                            DisplayCountDetailAdapter(
+                                requireContext(),
+                                apiData.data as MutableList<DisplayCountViewData>, ref, arguments
+                            )
                         rvDisplayCountDetail.adapter = recylcerAdapter
                         //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })

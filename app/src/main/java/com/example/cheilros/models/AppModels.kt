@@ -155,6 +155,29 @@ class DashboardTaskAssignedData(
 )
 //endregion
 
+//region Price
+class PriceModel(val status: Int, val data: List<PriceData>)
+class PriceData(
+    val BrandID: Int,
+    val ProductCategoryID: Int,
+    val BrandName: String,
+    val ProductCategoryName: String,
+    val NoOfModels: List<PriceModelData>
+)
+class PriceModelData(
+    val NoOfModels: Int
+)
+
+class PriceDetailModel(val status: Int, val data: List<PriceDetailData>)
+class PriceDetailData(
+    val ProductID: Int,
+    val ShortName: String,
+    val BrandName: String,
+    val ProductCategoryName: String,
+    val NoOfModels: List<PriceModelData>
+)
+//endregion
+
 //region DisplayCount
 class DisplayCountModel(val status: Int, val data: List<DisplayCountData>)
 class DisplayCountData(

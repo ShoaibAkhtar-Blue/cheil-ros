@@ -14,15 +14,14 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.helpers.CustomSharedPref
-import com.example.cheilros.models.BrandsData
 import com.example.cheilros.models.DisplayCountData
-import com.example.cheilros.models.InvestmentData
+import com.example.cheilros.models.PriceData
 
-class DisplayCountAdapter(
+class PriceAdapter(
     val context: Context,
-    val itemList: List<DisplayCountData>,
+    val itemList: List<PriceData>,
     val StoreID: Int?
-) : RecyclerView.Adapter<DisplayCountAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<PriceAdapter.ViewHolder>() {
 
     lateinit var CSP: CustomSharedPref
 
@@ -51,62 +50,28 @@ class DisplayCountAdapter(
 
         holder.imgArrowRight.visibility = View.GONE
 
-
-        /*holder.LLInvestment.setOnClickListener {
-
-            *//*if (itemList[position].InvestmentTypeID != 1) {
-                val brands: ArrayList<BrandsData> =
-                    itemList[position].Brands as ArrayList<BrandsData>
-
-                val bundle = bundleOf(
-                    "StoreID" to StoreID,
-                    "ElementID" to itemList[position].ElementID,
-                    "ElementTitle" to itemList[position].ElementTitle,
-                    "BrandsList" to brands
-                )
-
-//            Navigation.findNavController(it)
-//                .navigate(R.id.action_investmentFragment_to_investmentDetailFragment, bundle)
-
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_investmentDetailFragment, bundle)
-            }*//*
-
-        }*/
-
         if (holder.LLtable!!.childCount == 0) {
 
             try {
                 var table = TableLayout(context)
 
-                val numRows: Int = itemList[position].Products.size
+                val numRows: Int = itemList[position].NoOfModels.size
                 var brandIndex = 0
 
                 for (i in 0 until numRows) { //Rows
                     val row = TableRow(context)
-                    for (j in 0 until 2) { //Column
+                    for (j in 0 until 1) { //Column
                         println("j: $j")
                         val value: Int = (100..200).random()
                         val tv = TextView(context)
                         tv.setTextColor(Color.BLACK)
                         tv.textSize = 20.0f
 
-                        val productName = itemList[position].Products[brandIndex].ProductCategoryName
-                        val productID = itemList[position].Products[brandIndex].ProductCategoryID
-
-                        if (j % 2 == 0) {
-                            tv!!.typeface = ResourcesCompat.getFont(context!!, R.font.samsungsharpsans_bold)
-                            tv.setTextColor(Color.parseColor("#4c4c4c"))
-                            tv.text = itemList[position].Products[brandIndex].ProductCategoryName
-
-                        } else {
-                            tv.gravity = Gravity.RIGHT
-                            tv.tag = itemList[position].Products[brandIndex].ProductCategoryID
-                            tv.text =
-                                if (itemList[position].Products[brandIndex].DisplayCount == "") "0" else itemList[position].Products[brandIndex].DisplayCount
-                            brandIndex++
-                        }
-
+                        val productName = itemList[position].NoOfModels[brandIndex].NoOfModels
+                        tv!!.typeface =
+                            ResourcesCompat.getFont(context!!, R.font.samsungsharpsans_bold)
+                        tv.setTextColor(Color.parseColor("#4c4c4c"))
+                        tv.text = productName.toString()
 
                         val tableRowParams = TableRow.LayoutParams(
                             TableRow.LayoutParams.MATCH_PARENT,
@@ -118,21 +83,16 @@ class DisplayCountAdapter(
                         row.addView(tv, tableRowParams)
 
                         row.setOnClickListener {
-                            println("${itemList[position].BrandID}-${productName}-${productID}-${StoreID}")
+                            println("${itemList[position].BrandID}-${productName}-${itemList[position].ProductCategoryID}-${StoreID}")
                             val bundle = bundleOf(
                                 "StoreID" to StoreID,
                                 "BrandID" to itemList[position].BrandID,
-                                "ProductCategoryName" to productName,
-                                "ProductCategoryID" to productID
+                                "ProductCategoryID" to itemList[position].ProductCategoryID
                             )
                             Navigation.findNavController(it)
-                                .navigate(R.id.action_displayCountFragment_to_displayCountDetailFragment, bundle)
+                                .navigate(R.id.action_priceFragment_to_priceDetailFragment, bundle)
                         }
-
-
                     }
-
-
                     table.addView(row)
                 }
 
@@ -141,8 +101,6 @@ class DisplayCountAdapter(
 
             }
         }
-
-
     }
 
     override fun getItemCount(): Int {
