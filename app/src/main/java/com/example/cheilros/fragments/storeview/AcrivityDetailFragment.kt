@@ -84,7 +84,7 @@ class AcrivityDetailFragment : BaseFragment() {
                 val dialog: AlertDialog = builder.create()
                 dialog.show()
             }catch (ex: Exception){
-                findNavController().backStack
+                //findNavController().backStack
             }
         }
 

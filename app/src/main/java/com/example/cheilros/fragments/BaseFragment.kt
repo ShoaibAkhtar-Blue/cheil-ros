@@ -99,7 +99,7 @@ open class BaseFragment : Fragment() {
                 .get(0).labelName, true, true)
         } else if (fragmentLabel == "activity_detail") {
             arguments?.getString("StoreName")?.let { configureToolbar(it, true) }
-        } else if (fragmentLabel == "training" || fragmentLabel == "activity_category" || fragmentLabel == "store_view" || fragmentLabel == "activity") {
+        } else if (fragmentLabel == "training" || fragmentLabel == "activity_category" || fragmentLabel == "store_view" || fragmentLabel == "activity" || fragmentLabel == "task_deployment" || fragmentLabel == "display_count" || fragmentLabel == "fragment_installation") {
             val callback =
                 requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
                     findNavController().popBackStack()

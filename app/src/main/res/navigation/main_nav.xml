@@ -347,8 +347,8 @@
     <fragment
         android:id="@+id/taskDeploymentFragment"
         android:name="com.example.cheilros.fragments.storeview.TaskDeploymentFragment"
-        android:label="fragment_task_deployment"
-        tools:layout="@layout/fragment_task_deployment" >
+        android:label="task_deployment"
+        tools:layout="@layout/fragment_task_deployment">
         <action
             android:id="@+id/action_taskDeploymentFragment_to_acrivityDetailFragment"
             app:destination="@id/acrivityDetailFragment" />
@@ -356,7 +356,7 @@
     <fragment
         android:id="@+id/displayCountFragment"
         android:name="com.example.cheilros.fragments.storeview.DisplayCountFragment"
-        android:label="fragment_display_count"
+        android:label="display_count"
         tools:layout="@layout/fragment_display_count" >
         <action
             android:id="@+id/action_displayCountFragment_to_displayCountDetailFragment"
