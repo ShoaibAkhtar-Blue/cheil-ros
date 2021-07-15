@@ -53,8 +53,14 @@ class InstallationAdapter(val context: Context, val itemList: List<ActivityCateg
                 "StoreName" to arguments?.getString("StoreName")
             )
 
-            Navigation.findNavController(it)
-                .navigate(R.id.action_installationFragment_to_acrivityDetailFragment, bundle)
+            try {
+                Navigation.findNavController(it)
+                    .navigate(R.id.action_installationFragment_to_acrivityDetailFragment, bundle)
+            }catch (ex: Exception){
+                Navigation.findNavController(it)
+                    .navigate(R.id.action_taskDeploymentFragment_to_acrivityDetailFragment, bundle)
+            }
+
         }
     }
 

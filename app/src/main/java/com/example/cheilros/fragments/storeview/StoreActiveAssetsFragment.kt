@@ -330,25 +330,26 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
         }
 
         dialog.btnTakePicture.setOnClickListener {
+            if(capturedPicturesList.size == 0){
+                val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
 
-            val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
+                builder.setTitle("Choose...")
+                builder.setMessage("Please select one of the options")
 
-            builder.setTitle("Choose...")
-            builder.setMessage("Please select one of the options")
+                builder.setPositiveButton("Camera") { dialog, which ->
+                    CSP.saveData("fragName", "StoreAsset")
+                    findNavController().navigate(R.id.action_storeViewFragment_to_cameraActivity)
+                }
 
-            builder.setPositiveButton("Camera") { dialog, which ->
-                CSP.saveData("fragName", "StoreAsset")
-                findNavController().navigate(R.id.action_storeViewFragment_to_cameraActivity)
+                builder.setNegativeButton("Gallery") { dialog, which ->
+                    activity.pickFromGallery()
+                }
+
+                builder.setNeutralButton("Cancel") { dialog, which ->
+                    dialog.dismiss()
+                }
+                builder.show()
             }
-
-            builder.setNegativeButton("Gallery") { dialog, which ->
-                activity.pickFromGallery()
-            }
-
-            builder.setNeutralButton("Cancel") { dialog, which ->
-                dialog.dismiss()
-            }
-            builder.show()
         }
 
         dialog.btnAcceptAsset.setOnClickListener {

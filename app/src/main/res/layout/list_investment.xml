@@ -65,6 +65,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:foreground="?attr/selectableItemBackground"
         android:id="@+id/LLtable"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

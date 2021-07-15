@@ -255,6 +255,12 @@ class CameraActivity : AppCompatActivity() {
                             println(savedImagePath)
                             CSP.saveData("Dashboard_SESSION_IMAGE", savedImagePath)
                             finish()
+                        }else if (CSP.getData("fragName").equals("PriceDetail")) {
+                            println("PriceDetail")
+                            val savedImagePath: String = saveMediaToStorage(bitmapImg)
+                            println(savedImagePath)
+                            CSP.saveData("PriceDetail_SESSION_IMAGE", savedImagePath)
+                            finish()
                         } else if (CSP.getData("fragName").equals("StoreAsset")) {
                             println("StoreAsset")
                             val savedImagePath: String = saveMediaToStorage(bitmapImg)

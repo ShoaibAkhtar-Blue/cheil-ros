@@ -158,7 +158,11 @@ open class BaseFragment : Fragment() {
             activity.btnLeftMenu.visibility = View.VISIBLE
             activity.btnLeftMenu.setImageResource(R.drawable.back)
             activity.btnLeftMenu.setOnClickListener {
-                findNavController().popBackStack()
+                try {
+                    findNavController().popBackStack()
+                }catch (ex: Exception){
+
+                }
             }
         } else {
             activity.btnLeftMenu.visibility = View.INVISIBLE

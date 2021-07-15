@@ -1,5 +1,6 @@
 package com.example.cheilros.fragments.storeview
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -41,6 +42,7 @@ class AcrivityDetailFragment : BaseFragment() {
     var capturedPicturesListAfter: MutableList<String> = arrayListOf()
 
 
+    @SuppressLint("RestrictedApi")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,27 +61,31 @@ class AcrivityDetailFragment : BaseFragment() {
         //endregion
 
         val callback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
-            // Handle the back button event
-            println("callback")
-            // setup the alert builder
-            val builder: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
-            builder.setTitle("Close Session")
-            builder.setMessage("Are You Sure you want to close current session?")
+            try{
+                // Handle the back button event
+                println("callback")
+                // setup the alert builder
+                val builder: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
+                builder.setTitle("Close Session")
+                builder.setMessage("Are You Sure you want to close current session?")
 
-            // add the buttons
+                // add the buttons
 
-            // add the buttons
-            builder.setPositiveButton("Ok") { dialogInterface, which ->
-                findNavController().popBackStack()
+                // add the buttons
+                builder.setPositiveButton("Ok") { dialogInterface, which ->
+                    findNavController().popBackStack()
+                }
+
+                builder.setNegativeButton("Cancel", null)
+
+                // create and show the alert dialog
+
+                // create and show the alert dialog
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            }catch (ex: Exception){
+                findNavController().backStack
             }
-
-            builder.setNegativeButton("Cancel", null)
-
-            // create and show the alert dialog
-
-            // create and show the alert dialog
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
         }
 
 

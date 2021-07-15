@@ -3,19 +3,22 @@ package com.example.cheilros.adapters
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.view.Gravity
+import android.os.Build
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.helpers.CustomSharedPref
-import com.example.cheilros.models.DisplayCountData
 import com.example.cheilros.models.PriceData
+import java.security.AccessController.getContext
+
 
 class PriceAdapter(
     val context: Context,
@@ -43,7 +46,8 @@ class PriceAdapter(
         return ViewHolder(view)
     }
 
-    @SuppressLint("ResourceAsColor", "WrongConstant")
+    @RequiresApi(Build.VERSION_CODES.M)
+    @SuppressLint("ResourceAsColor", "WrongConstant", "ResourceType")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtTitleHeader.text = itemList[position].BrandName
         holder.txtTitleDate.text = ""
@@ -55,7 +59,7 @@ class PriceAdapter(
             try {
                 var table = TableLayout(context)
 
-                val numRows: Int = itemList[position].NoOfModels.size
+                val numRows: Int = itemList[position].Products.size
                 var brandIndex = 0
 
                 for (i in 0 until numRows) { //Rows
@@ -67,7 +71,8 @@ class PriceAdapter(
                         tv.setTextColor(Color.BLACK)
                         tv.textSize = 20.0f
 
-                        val productName = itemList[position].NoOfModels[brandIndex].NoOfModels
+                        val productName = itemList[position].Products[brandIndex].ProductCategoryName
+                        val productID = itemList[position].Products[brandIndex].ProductCategoryID
                         tv!!.typeface =
                             ResourcesCompat.getFont(context!!, R.font.samsungsharpsans_bold)
                         tv.setTextColor(Color.parseColor("#4c4c4c"))
@@ -82,12 +87,25 @@ class PriceAdapter(
                         row.setBackgroundResource(R.drawable.row_border)
                         row.addView(tv, tableRowParams)
 
+                        /*val outValue = TypedValue()
+                        context.theme.resolveAttribute(
+                            android.R.attr.selectableItemBackground,
+                            outValue,
+                            true
+                        )
+                        row.setBackgroundResource(outValue.resourceId)*/
+
+                        //row.setForeground(android.R.attr.selectableItemBackground)
+                        //row.setBackgroundResource(android.R.attr.selectableItemBackground)
+
                         row.setOnClickListener {
-                            println("${itemList[position].BrandID}-${productName}-${itemList[position].ProductCategoryID}-${StoreID}")
+                            println("${itemList[position].BrandID}-${productName}-${productID}-${StoreID}")
                             val bundle = bundleOf(
                                 "StoreID" to StoreID,
+                                "BrandName" to itemList[position].BrandName,
                                 "BrandID" to itemList[position].BrandID,
-                                "ProductCategoryID" to itemList[position].ProductCategoryID
+                                "ProductCategoryID" to productID,
+                                "ProductCategory" to productName.toString()
                             )
                             Navigation.findNavController(it)
                                 .navigate(R.id.action_priceFragment_to_priceDetailFragment, bundle)

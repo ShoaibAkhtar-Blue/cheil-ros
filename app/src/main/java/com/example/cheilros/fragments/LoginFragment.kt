@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.example.cheilros.BuildConfig
 import com.example.cheilros.MainActivity
 import com.example.cheilros.R
 import com.example.cheilros.data.UserData
@@ -48,6 +49,8 @@ class LoginFragment : BaseFragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
+
+
         //Remove User Data & Permissions
         mUserDataViewModel.nukeTable()
         mUserPermissionViewModel.nukeTable()
@@ -56,6 +59,7 @@ class LoginFragment : BaseFragment() {
 
         //Set Labels
         try {
+            view.txtAppVersion.text = BuildConfig.VERSION_NAME
             view.OTFUsername.hint =
                 settingData.filter { it.fixedLabelName == "Login_UserName" }?.get(0).labelName
             view.OTFPassword.hint =

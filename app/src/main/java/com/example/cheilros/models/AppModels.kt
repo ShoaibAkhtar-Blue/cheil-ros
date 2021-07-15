@@ -159,12 +159,12 @@ class DashboardTaskAssignedData(
 class PriceModel(val status: Int, val data: List<PriceData>)
 class PriceData(
     val BrandID: Int,
-    val ProductCategoryID: Int,
     val BrandName: String,
-    val ProductCategoryName: String,
-    val NoOfModels: List<PriceModelData>
+    val Products: List<PriceModelData>
 )
 class PriceModelData(
+    val ProductCategoryID: Int,
+    val ProductCategoryName: String,
     val NoOfModels: Int
 )
 
@@ -172,9 +172,10 @@ class PriceDetailModel(val status: Int, val data: List<PriceDetailData>)
 class PriceDetailData(
     val ProductID: Int,
     val ShortName: String,
-    val BrandName: String,
-    val ProductCategoryName: String,
-    val NoOfModels: List<PriceModelData>
+    val NetPrice: String,
+    val Price: String,
+    val Promotion: String,
+    val PiceTagPictureID: String
 )
 //endregion
 
