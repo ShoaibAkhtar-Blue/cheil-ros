@@ -3,6 +3,7 @@ package com.example.cheilros.fragments.storeview
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -49,17 +50,20 @@ class DisplayCountDetailFragment : BaseFragment() {
 
         //region Set Labels
         try {
+
             view.txtStoreName.text =
                 settingData.filter { it.fixedLabelName == "StoreMenu_ModelCount" }
-                    .get(0).labelName + " / " + arguments?.getString("ProductCategoryName")
+                    .get(0).labelName + " / " + arguments?.getString("BrandName")
             view.BrandHeading.text =
                 settingData.filter { it.fixedLabelName == "DisplayCount_Model" }
                     .get(0).labelName
             view.CountHeading.text =
                 settingData.filter { it.fixedLabelName == "DisplayCount_Display" }
                     .get(0).labelName
+            view.btnProductCategory.text =
+                "Selected Category: ${arguments?.getString("ProductCategoryName")}"
         } catch (ex: Exception) {
-
+            Log.e("Error_", ex.message.toString())
         }
         //endregion
 

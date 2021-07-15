@@ -122,6 +122,7 @@ class DisplayCountAdapter(
                             val bundle = bundleOf(
                                 "StoreID" to StoreID,
                                 "BrandID" to itemList[position].BrandID,
+                                "BrandName" to itemList[position].BrandName,
                                 "ProductCategoryName" to productName,
                                 "ProductCategoryID" to productID
                             )

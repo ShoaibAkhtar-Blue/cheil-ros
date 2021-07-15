@@ -382,6 +382,9 @@
             android:name="ProductCategoryID"
             app:argType="integer"
             android:defaultValue="0" />
+        <argument
+            android:name="BrandName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/priceFragment"
