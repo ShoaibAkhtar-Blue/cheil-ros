@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
@@ -18,6 +19,7 @@ import com.example.cheilros.models.*
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
+import kotlinx.android.synthetic.main.activity_new_dashboard.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
@@ -113,6 +115,19 @@ class DisplayCountDetailFragment : BaseFragment() {
             val dialog: AlertDialog = builder.create()
             dialog.show()
         }
+
+        requireActivity().toolbar_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            android.widget.SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(qString: String): Boolean {
+                recylcerAdapter?.filter?.filter(qString)
+                return true
+            }
+            override fun onQueryTextSubmit(qString: String): Boolean {
+
+                return true
+            }
+        })
     }
 
     fun fetchDisplayCountDetail(url: String) {

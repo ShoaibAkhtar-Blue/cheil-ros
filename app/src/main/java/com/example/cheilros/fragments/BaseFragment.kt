@@ -94,11 +94,14 @@ open class BaseFragment : Fragment() {
         } else if (fragmentLabel == "mycoverage") {
             configureToolbar(settingData.filter { it.fixedLabelName == "StoreList_Title" }
                 .get(0).labelName, true, true)
-        }else if (fragmentLabel == "team_status") {
+        } else if (fragmentLabel == "team_status") {
             configureToolbar(settingData.filter { it.fixedLabelName == "MenuTitle5" }
                 .get(0).labelName, true, true)
         } else if (fragmentLabel == "activity_detail") {
             arguments?.getString("StoreName")?.let { configureToolbar(it, true) }
+        } else if (fragmentLabel == "display_count_detail") {
+            //arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
+            configureToolbar("Display", true, true)
         } else if (fragmentLabel == "training" || fragmentLabel == "activity_category" || fragmentLabel == "store_view" || fragmentLabel == "activity" || fragmentLabel == "task_deployment" || fragmentLabel == "display_count" || fragmentLabel == "fragment_installation") {
             val callback =
                 requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
@@ -160,7 +163,7 @@ open class BaseFragment : Fragment() {
             activity.btnLeftMenu.setOnClickListener {
                 try {
                     findNavController().popBackStack()
-                }catch (ex: Exception){
+                } catch (ex: Exception) {
 
                 }
             }

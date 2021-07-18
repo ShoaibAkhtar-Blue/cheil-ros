@@ -110,7 +110,7 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
                 <EditText
                     android:id="@+id/txtBrandDescription"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="100dp"
                     android:background="@drawable/border_grey"
                     android:ems="10"
                     android:gravity="start|top"
@@ -194,6 +194,7 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
                     android:visibility="gone" />
 
                 <LinearLayout
+                    android:id="@+id/LLAfter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
@@ -230,6 +231,7 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
                 android:orientation="vertical">
 
                 <RelativeLayout
+                    android:id="@+id/RLbarcode"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="@color/status_none"

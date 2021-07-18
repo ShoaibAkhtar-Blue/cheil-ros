@@ -365,23 +365,23 @@
     <fragment
         android:id="@+id/displayCountDetailFragment"
         android:name="com.example.cheilros.fragments.storeview.DisplayCountDetailFragment"
-        android:label="fragment_display_count_detail"
-        tools:layout="@layout/fragment_display_count_detail" >
+        android:label="display_count_detail"
+        tools:layout="@layout/fragment_display_count_detail">
         <argument
             android:name="StoreID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="BrandID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="ProductCategoryName"
             app:argType="string" />
         <argument
             android:name="ProductCategoryID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="BrandName"
             app:argType="string" />

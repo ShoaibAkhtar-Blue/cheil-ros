@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.Navigation
@@ -36,11 +38,17 @@ class DisplayCountDetailAdapter(
     val fragment: DisplayCountDetailFragment,
     val arguments: Bundle?
 ) :
-RecyclerView.Adapter<DisplayCountDetailAdapter.ViewHolder>() {
+RecyclerView.Adapter<DisplayCountDetailAdapter.ViewHolder>(),
+    Filterable {
 
     lateinit var CSP: CustomSharedPref
     var displayCountData: MutableList<DisplayCountJSONData> = mutableListOf()
 
+    var filterList = ArrayList<DisplayCountViewData>()
+
+    init {
+        filterList = itemList as ArrayList<DisplayCountViewData>
+    }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         lateinit var onTextUpdated: (String) -> Unit
@@ -72,8 +80,6 @@ RecyclerView.Adapter<DisplayCountDetailAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtNum.text = (position + 1).toString()
         holder.txtBrand.text = itemList[position].ShortName
-
-
 
         holder.onTextUpdated = { text ->
             val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
@@ -132,9 +138,6 @@ RecyclerView.Adapter<DisplayCountDetailAdapter.ViewHolder>() {
 
         holder.txtAttend.setText(itemList[position].DisplayCount.toString())
 
-
-
-
         fragment.btnSubmit.setOnClickListener {
 
             fragment.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
@@ -185,10 +188,38 @@ RecyclerView.Adapter<DisplayCountDetailAdapter.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return itemList.size
+        return filterList.size
     }
 
     override fun getItemViewType(position: Int): Int = position
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                if (charSearch.isEmpty()) {
+                    filterList = itemList as ArrayList<DisplayCountViewData>
+                } else {
+                    val resultList = ArrayList<DisplayCountViewData>()
+                    for (row in itemList) {
+                        if (row.ShortName.toLowerCase()
+                                .contains(constraint.toString().toLowerCase())
+                        ) {
+                            resultList.add(row)
+                        }
+                    }
+                    filterList = resultList
+                }
+                val filterResults = FilterResults()
+                filterResults.values = filterList
+                return filterResults
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                filterList = results?.values as ArrayList<DisplayCountViewData>
+                notifyDataSetChanged()
+            }
+        }
+    }
 
     /*fun updateItem(position: Int, item: DisplayCountProductsData) {
         itemList[position] = item

@@ -112,6 +112,7 @@ class PriceAdapter(
                         }
                     }
                     table.addView(row)
+                    brandIndex++
                 }
 
                 holder.LLtable.addView(table)

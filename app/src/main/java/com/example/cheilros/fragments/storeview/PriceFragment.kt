@@ -58,6 +58,7 @@ class PriceFragment : BaseFragment() {
 
 
     fun fetchPrices(url: String){
+        println(url)
         val request = Request.Builder()
             .url(url)
             .build()
