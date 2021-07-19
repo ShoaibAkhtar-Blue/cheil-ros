@@ -80,6 +80,7 @@ class TrainingNewFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        mainLoadingLayoutTD.setState(LoadingLayout.LOADING)
         try{
             rvTrainingPictures.setHasFixedSize(true)
             layoutManagerPA = LinearLayoutManager(requireContext(),RecyclerView.HORIZONTAL, false)
@@ -242,6 +243,7 @@ class TrainingNewFragment : BaseFragment() {
                 Log.e("Error_", ex.message.toString())
             }
         }
+
 
     }
 

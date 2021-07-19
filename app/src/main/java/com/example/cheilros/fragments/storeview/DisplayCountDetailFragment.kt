@@ -167,7 +167,7 @@ class DisplayCountDetailFragment : BaseFragment() {
                                 apiData.data as MutableList<DisplayCountViewData>, ref, arguments
                             )
                         rvDisplayCountDetail.adapter = recylcerAdapter
-                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
                 } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
@@ -185,7 +185,7 @@ class DisplayCountDetailFragment : BaseFragment() {
     }
 
     fun fetchCategory(url: String) {
-
+        mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
         val client = OkHttpClient()
 
         val request = Request.Builder()

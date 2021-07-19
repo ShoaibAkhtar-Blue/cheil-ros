@@ -296,7 +296,7 @@ class MyCoverageFragment : BaseFragment() {
                     channelData = apiData.data
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
-                            mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                            //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
                         }
                     })
                 } else {
@@ -346,7 +346,7 @@ class MyCoverageFragment : BaseFragment() {
                     channelTypeData = apiData.data
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
-                            mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                            //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
                         }
                     })
                 } else {

@@ -199,7 +199,7 @@ class DashboardFragment : BaseFragment() {
             dialog.show()
         }
 
-        view.mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+        //view.mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
 
         return view
     }
@@ -300,7 +300,7 @@ class DashboardFragment : BaseFragment() {
         }catch (ex:Exception){
 
         }
-
+        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
 
     }
 
@@ -447,7 +447,7 @@ class DashboardFragment : BaseFragment() {
                                 .setMessage("Data not fetched.")
                                 .sneakWarning()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
                 }
             }
@@ -499,7 +499,7 @@ class DashboardFragment : BaseFragment() {
                                 .setMessage("Data not fetched.")
                                 .sneakWarning()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
                 }
             }

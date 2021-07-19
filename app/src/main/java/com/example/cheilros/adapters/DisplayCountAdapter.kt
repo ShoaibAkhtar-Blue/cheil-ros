@@ -91,13 +91,16 @@ class DisplayCountAdapter(
                         tv.setTextColor(Color.BLACK)
                         tv.textSize = 20.0f
 
-                        val productName = itemList[position].Products[brandIndex].ProductCategoryName
+                        val productName =
+                            itemList[position].Products[brandIndex].ProductCategoryName
                         val productID = itemList[position].Products[brandIndex].ProductCategoryID
 
                         if (j % 2 == 0) {
-                            tv!!.typeface = ResourcesCompat.getFont(context!!, R.font.samsungsharpsans_bold)
+                            tv!!.typeface =
+                                ResourcesCompat.getFont(context!!, R.font.samsungsharpsans_bold)
                             tv.setTextColor(Color.parseColor("#4c4c4c"))
                             tv.text = itemList[position].Products[brandIndex].ProductCategoryName
+                            //brandIndex++
 
                         } else {
                             tv.gravity = Gravity.RIGHT
@@ -127,14 +130,18 @@ class DisplayCountAdapter(
                                 "ProductCategoryID" to productID
                             )
                             Navigation.findNavController(it)
-                                .navigate(R.id.action_displayCountFragment_to_displayCountDetailFragment, bundle)
+                                .navigate(
+                                    R.id.action_displayCountFragment_to_displayCountDetailFragment,
+                                    bundle
+                                )
                         }
 
-
+                        //brandIndex++
                     }
 
 
                     table.addView(row)
+
                 }
 
                 holder.LLtable.addView(table)
