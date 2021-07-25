@@ -125,6 +125,7 @@ class StoreViewFragment : BaseFragment() {
 
     private fun genTabs() {
         //region Store Tabs
+
         tab_layout.setSelectedTabIndicatorColor(Color.RED)
         tab_layout.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
         tab_layout.tabTextColors =

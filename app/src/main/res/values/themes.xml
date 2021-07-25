@@ -51,4 +51,51 @@
         <item name="android:buttonBarButtonStyle">@style/Widget.MaterialComponents.Button.TextButton</item>
     </style>
 
+    <style name="ButtonList" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:drawableRight">@drawable/btn_drawable_down_arrow</item>
+        <item name="android:textColor">#090909</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="cornerRadius">0dp</item>
+        <item name="strokeColor">#c2c2c2</item>
+        <item name="strokeWidth">2dp</item>
+    </style>
+
+    <style name="ButtonDate" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:drawableRight">@drawable/btn_drawable_calendar</item>
+        <item name="android:textColor">#090909</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="cornerRadius">0dp</item>
+        <item name="strokeColor">#c2c2c2</item>
+        <item name="strokeWidth">2dp</item>
+    </style>
+
+    <style name="editTextSimple" parent="@style/Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">#FFF</item>
+        <item name="android:ems">10</item>
+        <item name="android:gravity">start|top</item>
+        <item name="android:padding">8dp</item>
+    </style>
+
+    <style name="SwitchButtonStyle">
+        <item name="kswThumbColor">@color/white</item>
+        <item name="kswBackColor">@color/status_none</item>
+        <item name="android:color">@color/status_none</item>
+        <item name="android:colorControlActivated">@color/status_none</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
+
+
 </resources>

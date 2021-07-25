@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,10 +7,9 @@
     tools:context=".fragments.MyCoverageFragment">
 
     <com.valartech.loadinglayout.LoadingLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/mainLoadingLayoutCoverage"
-        >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <!--  Empty      -->
         <TextView
@@ -26,73 +24,54 @@
 
         <!--   Loading     -->
         <com.github.ybq.android.spinkit.SpinKitView
-            android:tag="@string/ll_loading"
             android:id="@+id/spin_kit"
             style="@style/SpinKitView.Large.CubeGrid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:tag="@string/ll_loading"
             app:SpinKit_Color="@color/black" />
 
         <!--   Completed     -->
         <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#e2e2e2"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:tag="@string/ll_complete">
-
-        <!--<com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/OTSeatch"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:hint="@string/search">
+            android:layout_height="match_parent"
+            android:background="#e2e2e2"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:tag="@string/ll_complete">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etSearch"
+            <!--<com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/OTSeatch"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:hint="@string/search">
 
-        </com.google.android.material.textfield.TextInputLayout>-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>-->
 
             <Button
                 android:id="@+id/btnChannelType"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="@color/white"
-                android:backgroundTint="@color/white"
-                android:drawableRight="@drawable/btn_drawable_down_arrow"
-                android:text="Select Channel Type"
-                android:textColor="#b2b2b2"
-                app:cornerRadius="0dp"
-                app:strokeColor="#c2c2c2"
-                app:strokeWidth="2dp" />
+                style="@style/ButtonList"
+                android:text="Select Channel Type" />
 
             <Button
                 android:id="@+id/btnChannel"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                style="@style/ButtonList"
+                android:text="Select Channel" />
+
+
+            <com.example.cheilros.activities.customobj.EmptyRecyclerView
+                android:id="@+id/rvCoverage"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="@color/white"
-                android:backgroundTint="@color/white"
-                android:drawableRight="@drawable/btn_drawable_down_arrow"
-                android:text="Select Channel"
-                android:textColor="#b2b2b2"
-                app:cornerRadius="0dp"
-                app:strokeColor="#c2c2c2"
-                app:strokeWidth="2dp" />
-
-
-
-        <com.example.cheilros.activities.customobj.EmptyRecyclerView
-            android:id="@+id/rvCoverage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+                android:layout_height="match_parent" />
 
             <!-- Added an empty view which will be shown when the EmptyRecyclerView
          is empty -->
@@ -100,9 +79,9 @@
                 android:id="@+id/todo_list_empty_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center"
                 android:orientation="vertical"
-                android:textAlignment="center"
-                android:gravity="center">
+                android:textAlignment="center">
 
                 <ImageView
                     android:id="@+id/imageView5"
@@ -122,7 +101,7 @@
 
             </LinearLayout>
 
-    </LinearLayout>
+        </LinearLayout>
 
         <!--    Error    -->
         <TextView

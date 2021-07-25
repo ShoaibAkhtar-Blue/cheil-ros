@@ -39,269 +39,277 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
         android:orientation="vertical"
         android:tag="@string/ll_complete">
 
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
-            android:id="@+id/txtStoreName"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ededed"
-            android:fontFamily="@font/samsungsharpsans_bold"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="NEW ACTIVITY"
-            android:textColor="@color/black"
-            android:textSize="20dp" />
-
-        <TextView
-            android:visibility="gone"
-            android:id="@+id/txtStoreSubName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/samsungsharpsans_bold"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="ACTIVITY CATEGORY"
-            android:textColor="@color/black"
-            android:textSize="14dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
-
+            android:layout_height="match_parent">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
+                <TextView
+                    android:id="@+id/txtStoreName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#ededed"
+                    android:fontFamily="@font/samsungsharpsans_bold"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="NEW ACTIVITY"
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/txtStoreSubName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/samsungsharpsans_bold"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="ACTIVITY CATEGORY"
+                    android:textColor="@color/black"
+                    android:textSize="14dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                    <RelativeLayout
-                        android:id="@+id/RLHeader"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@color/status_none"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:id="@+id/RLHeader"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:background="@color/status_none"
+                                android:paddingLeft="8dp"
+                                android:paddingRight="8dp">
+
+                                <TextView
+                                    android:id="@+id/txtTitleHeader"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentStart="false"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_alignParentEnd="false"
+                                    android:layout_alignParentBottom="false"
+                                    android:layout_centerInParent="true"
+                                    android:fontFamily="@font/samsungsharpsans_bold"
+                                    android:gravity="center"
+                                    android:text="Brand"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="14dp" />
+
+                            </RelativeLayout>
+                        </LinearLayout>
+
+                        <EditText
+                            android:id="@+id/txtBrandDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:background="@drawable/border_grey"
+                            android:ems="10"
+                            android:gravity="start|top"
+                            android:hint="Description"
+                            android:inputType="textMultiLine"
+                            android:padding="8dp" />
+                        <EditText
+                            android:id="@+id/txtBrandQuantity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border_grey"
+                            android:maxLength="5"
+                            android:gravity="start|top"
+                            android:hint="Quantity"
+                            android:inputType="number"
+                            android:padding="8dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="8dp">
 
                         <TextView
-                            android:id="@+id/txtTitleHeader"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentStart="false"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_alignParentEnd="false"
-                            android:layout_alignParentBottom="false"
-                            android:layout_centerInParent="true"
+                            android:id="@+id/ActivityScreen_Before"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/status_none"
                             android:fontFamily="@font/samsungsharpsans_bold"
-                            android:gravity="center"
-                            android:text="Brand"
-                            android:textColor="@android:color/white"
-                            android:textSize="14dp" />
+                            android:padding="8dp"
+                            android:layout_marginBottom="4dp"
+                            android:text="BEFORE IMAGES"
+                            android:textColor="@color/white"
+                            android:textSize="18dp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:orientation="horizontal">
 
-                    </RelativeLayout>
-                </LinearLayout>
+                            <ImageButton
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:foreground="?android:attr/selectableItemBackground"
+                                android:id="@+id/btnTakePicture"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:adjustViewBounds="true"
+                                android:backgroundTint="@android:color/transparent"
+                                android:cropToPadding="true"
+                                android:padding="0dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/camera_btn" />
 
-                <EditText
-                    android:id="@+id/txtBrandDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:background="@drawable/border_grey"
-                    android:ems="10"
-                    android:gravity="start|top"
-                    android:hint="Description"
-                    android:inputType="textMultiLine"
-                    android:padding="8dp" />
-                <EditText
-                    android:id="@+id/txtBrandQuantity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/border_grey"
-                    android:maxLength="5"
-                    android:gravity="start|top"
-                    android:hint="Quantity"
-                    android:inputType="number"
-                    android:padding="8dp" />
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvActivityPictures"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="8dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="8dp">
-
-                <TextView
-                    android:id="@+id/ActivityScreen_Before"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#ededed"
-                    android:fontFamily="@font/samsungsharpsans_bold"
-                    android:padding="8dp"
-                    android:text="BEFORE"
-                    android:textColor="@color/black"
-                    android:textSize="18dp"
-                    android:visibility="gone" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:orientation="horizontal">
-
-                    <ImageButton
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
-                        android:id="@+id/btnTakePicture"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:adjustViewBounds="true"
-                        android:backgroundTint="@android:color/transparent"
-                        android:cropToPadding="true"
-                        android:padding="0dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/camera_btn" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvActivityPictures"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="8dp"/>
-                </LinearLayout>
-            </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="8dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="8dp">
+                        <TextView
+                            android:id="@+id/ActivityScreen_After"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/status_none"
+                            android:fontFamily="@font/samsungsharpsans_bold"
+                            android:padding="8dp"
+                            android:layout_marginBottom="4dp"
+                            android:text="AFTER IMAGES"
+                            android:textColor="@color/white"
+                            android:textSize="18dp"
+                            android:visibility="gone"/>
 
-                <TextView
-                    android:id="@+id/ActivityScreen_After"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#ededed"
-                    android:fontFamily="@font/samsungsharpsans_bold"
-                    android:padding="8dp"
-                    android:text="AFTER"
-                    android:textColor="@color/black"
-                    android:textSize="18dp"
-                    android:visibility="gone" />
+                        <LinearLayout
+                            android:id="@+id/LLAfter"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
 
-                <LinearLayout
-                    android:id="@+id/LLAfter"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                            <ImageButton
+                                android:id="@+id/btnTakePictureAfter"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:adjustViewBounds="true"
+                                android:backgroundTint="@android:color/transparent"
+                                android:clickable="true"
+                                android:cropToPadding="true"
+                                android:focusable="true"
+                                android:foreground="?android:attr/selectableItemBackground"
+                                android:padding="0dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/camera_btn" />
 
-                    <ImageButton
-                        android:id="@+id/btnTakePictureAfter"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:adjustViewBounds="true"
-                        android:backgroundTint="@android:color/transparent"
-                        android:clickable="true"
-                        android:cropToPadding="true"
-                        android:focusable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
-                        android:padding="0dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/camera_btn" />
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvActivityPicturesAfter"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="8dp" />
+                        </LinearLayout>
+                    </LinearLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvActivityPicturesAfter"
+                    <LinearLayout
+                        android:id="@+id/LLScanBarcode"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="8dp" />
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:id="@+id/RLbarcode"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@color/status_none"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp">
+
+                            <TextView
+                                android:id="@+id/ScanCode"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentStart="false"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_alignParentEnd="false"
+                                android:layout_alignParentBottom="false"
+                                android:layout_centerInParent="true"
+                                android:fontFamily="@font/samsungsharpsans_bold"
+                                android:gravity="center"
+                                android:text="SCAN BARCODE / QR CODE"
+                                android:textColor="@android:color/white"
+                                android:textSize="14dp" />
+
+                            <TextView
+                                android:id="@+id/txtBarcodeCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="0dp"
+                                android:layout_toStartOf="@+id/imageView3"
+                                android:fontFamily="@font/samsungsharpsans_bold"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@android:color/white"
+                                android:textSize="14dp" />
+
+                            <ImageView
+                                android:id="@+id/imageView3"
+                                android:layout_width="24dp"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:adjustViewBounds="true"
+                                app:srcCompat="@drawable/ic_arrow_right_foreground"
+                                tools:ignore="VectorDrawableCompat" />
+
+                        </RelativeLayout>
+
+                        <ImageButton
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:id="@+id/btnScanBarcode"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="16dp"
+                            android:backgroundTint="@android:color/transparent"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/barcode_logo" />
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnSubmit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Submit" />
+
                 </LinearLayout>
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/LLScanBarcode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:id="@+id/RLbarcode"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@color/status_none"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp">
-
-                    <TextView
-                        android:id="@+id/ScanCode"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentStart="false"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="false"
-                        android:layout_alignParentBottom="false"
-                        android:layout_centerInParent="true"
-                        android:fontFamily="@font/samsungsharpsans_bold"
-                        android:gravity="center"
-                        android:text="SCAN BARCODE / QR CODE"
-                        android:textColor="@android:color/white"
-                        android:textSize="14dp" />
-
-                    <TextView
-                        android:id="@+id/txtBarcodeCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="0dp"
-                        android:layout_toStartOf="@+id/imageView3"
-                        android:fontFamily="@font/samsungsharpsans_bold"
-                        android:gravity="center"
-                        android:text="0"
-                        android:textColor="@android:color/white"
-                        android:textSize="14dp" />
-
-                    <ImageView
-                        android:id="@+id/imageView3"
-                        android:layout_width="24dp"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:adjustViewBounds="true"
-                        app:srcCompat="@drawable/ic_arrow_right_foreground"
-                        tools:ignore="VectorDrawableCompat" />
-
-                </RelativeLayout>
-
-                <ImageButton
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:id="@+id/btnScanBarcode"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="16dp"
-                    android:backgroundTint="@android:color/transparent"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/barcode_logo" />
-
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btnSubmit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Submit" />
-
-        </LinearLayout>
-
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 
     <!-- Error -->

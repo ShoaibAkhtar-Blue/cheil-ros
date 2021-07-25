@@ -51,8 +51,9 @@ class PriceDetailAdapter(
     var capturedPicturesList: MutableList<String> = arrayListOf()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var RLHeader: RelativeLayout = view.findViewById(R.id.RLHeader)
+        //var RLHeader: RelativeLayout = view.findViewById(R.id.RLHeader)
         var LLPriceDetail: LinearLayout = view.findViewById(R.id.LLPriceDetail)
+        var txtCount: TextView = view.findViewById(R.id.txtCount)
         var txtTitleHeader: TextView = view.findViewById(R.id.txtTitleHeader)
         var txtNetPrice: TextView = view.findViewById(R.id.txtNetPrice)
         var txtPrice: TextView = view.findViewById(R.id.txtPrice)
@@ -71,6 +72,7 @@ class PriceDetailAdapter(
 
     @SuppressLint("ResourceAsColor", "WrongConstant")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.txtCount.text = (position+1).toString()
         holder.txtTitleHeader.text = itemList[position].ShortName
         holder.txtNetPrice.text = itemList[position].NetPrice
         holder.txtPrice.text = itemList[position].Price

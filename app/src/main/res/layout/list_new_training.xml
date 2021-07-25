@@ -4,8 +4,6 @@
     android:id="@+id/LLchecklist"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    android:background="@drawable/border_grey"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
@@ -18,17 +16,20 @@
         android:layout_margin="2dp"
         android:background="#FFF"
         android:orientation="vertical">
+
         <TextView
-            android:padding="16dp"
-            android:background="#5A5959"
             android:id="@+id/txtTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/top_radius"
             android:fontFamily="@font/samsungsharpsans_bold"
+            android:gravity="center"
+            android:padding="8dp"
             android:text="TextView"
             android:textColor="@color/white" />
 
         <LinearLayout
+            android:background="@drawable/bottom_radius"
             android:id="@+id/LLfeatures"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

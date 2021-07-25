@@ -107,6 +107,7 @@ class AcrivityDetailFragment : BaseFragment() {
         if (arguments?.getInt("ActivityTypeID")!! > 20) {
             LLScanBarcode.visibility = View.VISIBLE
             LLAfter.visibility = View.VISIBLE
+            ActivityScreen_After.visibility = View.VISIBLE
         } else {
             LLScanBarcode.visibility = View.INVISIBLE
         }

@@ -17,7 +17,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
-        versionName "1.2.15"
+        versionName "1.2.16"
 
         multiDexEnabled true
 
@@ -117,5 +117,6 @@ dependencies {
 
     implementation "androidx.viewpager2:viewpager2:1.0.0"
 
+    implementation 'com.kyleduo.switchbutton:library:2.1.0'
 
 }
