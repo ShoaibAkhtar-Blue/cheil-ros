@@ -88,7 +88,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/black"
-                    android:text="Submit" />
+                    android:text="Submit"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 

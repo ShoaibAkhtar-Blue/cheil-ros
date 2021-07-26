@@ -114,6 +114,9 @@
         <action
             android:id="@+id/action_storeViewFragment_to_priceFragment"
             app:destination="@id/priceFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_salesFragment"
+            app:destination="@id/salesFragment" />
     </fragment>
     <fragment
         android:id="@+id/checklistCategoryFragment"
@@ -134,22 +137,25 @@
     <fragment
         android:id="@+id/checklistCategoryDetailFragment"
         android:name="com.example.cheilros.fragments.storeview.ChecklistCategoryDetailFragment"
-        android:label="fragment_checklist_category_detail"
-        tools:layout="@layout/fragment_checklist_category_detail" >
+        android:label="checklist_category_detail"
+        tools:layout="@layout/fragment_checklist_category_detail">
         <argument
             android:name="StoreID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="StoreName"
             app:argType="string" />
         <argument
             android:name="ChecklistID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="ChecklistName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_checklistCategoryDetailFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
     </fragment>
     <fragment
         android:id="@+id/investmentFragment"
@@ -420,6 +426,39 @@
             app:argType="string" />
         <argument
             android:name="ProductCategory"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/salesFragment"
+        android:name="com.example.cheilros.fragments.storeview.SalesFragment"
+        android:label="fragment_sales"
+        tools:layout="@layout/fragment_sales" >
+        <action
+            android:id="@+id/action_salesFragment_to_salesDetailFragment"
+            app:destination="@id/salesDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/salesDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.SalesDetailFragment"
+        android:label="fragment_sales_detail"
+        tools:layout="@layout/fragment_sales_detail" >
+        <argument
+            android:name="StoreID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="BrandID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="ProductCategoryID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="BrandName"
+            app:argType="string" />
+        <argument
+            android:name="ProductCategoryName"
             app:argType="string" />
     </fragment>
 </navigation>

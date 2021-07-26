@@ -108,7 +108,9 @@ class AcrivityDetailFragment : BaseFragment() {
             LLScanBarcode.visibility = View.VISIBLE
             LLAfter.visibility = View.VISIBLE
             ActivityScreen_After.visibility = View.VISIBLE
+            ActivityScreen_Before.visibility = View.VISIBLE
         } else {
+            ActivityScreen_Before.visibility = View.GONE
             LLScanBarcode.visibility = View.INVISIBLE
         }
 

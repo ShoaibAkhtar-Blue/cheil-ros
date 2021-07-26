@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.ChecklistDetailAdapter
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.CheckListDetailData
@@ -51,8 +52,47 @@ class ChecklistCategoryDetailFragment : Fragment() {
         fetchChecklistDetail("${CSP.getData("base_url")}/Audit.asmx/CheckList_Audit?CheckListCategoryID=${arguments?.getInt("ChecklistID").toString()}&StoreID=${arguments?.getInt("StoreID").toString()}")
     }
 
-    companion object {
+    override fun onResume() {
+        super.onResume()
+        println("onResume Checklist Frag")
+        if(!CSP.getData("Checklist_SESSION_IMAGE").equals("")){
+            Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                .setTitle("Success!!")
+                .setMessage("Image Added to this session!")
+                .sneakSuccess()
 
+            try {
+                recylcerAdapter.addNewItem(CSP.getData("Checklist_SESSION_IMAGE").toString())
+                CSP.delData("Checklist_SESSION_IMAGE")
+
+                if (CSP.getData("Checklist_SESSION_IMAGE").equals("")) {
+                    recylcerAdapter.addNewItem(CSP.getData("Checklist_SESSION_IMAGE").toString())
+                    CSP.saveData("Checklist_SESSION_IMAGE_SET", CSP.getData("Checklist_SESSION_IMAGE"))
+                    CSP.delData("Checklist_SESSION_IMAGE")
+                } else {
+                    recylcerAdapter.addNewItem(CSP.getData("Checklist_SESSION_IMAGE").toString())
+                    CSP.saveData(
+                        "Checklist_SESSION_IMAGE_SET",
+                        "${CSP.getData("Checklist_SESSION_IMAGE_SET")},${CSP.getData("Checklist_SESSION_IMAGE")}"
+                    )
+                    CSP.delData("Checklist_SESSION_IMAGE")
+                }
+            }catch (ex: Exception){
+
+            }
+        }else if(!CSP.getData("sess_gallery_img").equals("")){
+            try {
+                Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                    .setTitle("Success!!")
+                    .setMessage("Image Added to this session!")
+                    .sneakSuccess()
+
+                recylcerAdapter.addNewItem(CSP.getData("sess_gallery_img").toString())
+                CSP.delData("sess_gallery_img")
+            }catch (ex: Exception){
+
+            }
+        }
     }
 
     fun fetchChecklistDetail(url: String) {
@@ -86,7 +126,9 @@ class ChecklistCategoryDetailFragment : Fragment() {
                         rvChecklistDetail.layoutManager = layoutManager
                         recylcerAdapter =
                             ChecklistDetailAdapter(requireContext(),
-                                apiData.data as MutableList<CheckListDetailData>, arguments, this@ChecklistCategoryDetailFragment)
+                                apiData.data as MutableList<CheckListDetailData>, arguments, this@ChecklistCategoryDetailFragment,
+                                requireActivity() as NewDashboardActivity
+                            )
                         rvChecklistDetail.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })

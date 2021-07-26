@@ -1,6 +1,7 @@
 package com.example.cheilros.models
 
 import android.os.Parcelable
+import android.text.Editable
 import kotlinx.android.parcel.Parcelize
 
 
@@ -178,6 +179,38 @@ class PriceDetailData(
     val PiceTagPictureID: String
 )
 //endregion
+
+//region Sales
+class SalesModel(val status: Int, val data: List<SalesData>)
+class SalesData(
+    val BrandID: Int,
+    val BrandName: String,
+    val Products: List<SalesProductData>
+)
+class SalesProductData(
+    val ProductCategoryID: Int,
+    val ProductCategoryName: String,
+    val SaleQuantity: Int,
+    val SaleValue: Int
+)
+class SalesDetailModel(val status: Int, val data: List<SalesDetailData>)
+class SalesDetailData(
+    val ProductID: Int,
+    val ShortName: String,
+    val SaleQuantity: Int,
+    val SaleValue: Int
+)
+
+class SalesJSON(val data: List<SalesJSONData>)
+class SalesJSONData(
+    val ProductID: Int,
+    val StoreID: Int?,
+    val SaleCount: String,
+    val SalePrice: String,
+    val TeamMemberID: Int?
+)
+//endregion
+
 
 //region DisplayCount
 class DisplayCountModel(val status: Int, val data: List<DisplayCountData>)
