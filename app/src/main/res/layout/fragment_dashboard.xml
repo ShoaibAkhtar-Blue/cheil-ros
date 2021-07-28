@@ -385,13 +385,8 @@
 
                         <TextView
                             android:id="@+id/Dashboard_GraphTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/samsungsharpsans_bold"
-                            android:paddingBottom="8dp"
-                            android:text="Daily Visit Status"
-                            android:textColor="@color/black"
-                            android:textSize="20dp" />
+                            style="@style/headingStyle"
+                            android:text="Daily Visit Status" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -416,13 +411,8 @@
 
                         <TextView
                             android:id="@+id/DashboadPromoter_Performance"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/samsungsharpsans_bold"
-                            android:paddingBottom="8dp"
-                            android:text="Daily Visit Status"
-                            android:textColor="@color/black"
-                            android:textSize="20dp" />
+                            style="@style/headingStyle"
+                            android:text="Daily Visit Status" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -447,14 +437,8 @@
 
                         <TextView
                             android:id="@+id/Dashboard_TaskTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/samsungsharpsans_bold"
-                            android:paddingTop="8dp"
-                            android:paddingBottom="8dp"
-                            android:text="Assigned Task and Status"
-                            android:textColor="@color/black"
-                            android:textSize="20dp" />
+                            style="@style/headingStyle"
+                            android:text="Assigned Task and Status" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvAssignedTask"
@@ -466,21 +450,16 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:paddingTop="8dp"
                         android:id="@+id/LLRecentActivity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:paddingTop="8dp">
 
                         <TextView
-                            android:layout_marginBottom="8dp"
                             android:id="@+id/StoreView_SubTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/samsungsharpsans_bold"
-                            android:text="Pending Deployments"
-                            android:textColor="@color/black"
-                            android:textSize="20dp" />
+                            style="@style/headingStyle"
+                            android:text="Pending Deployments" />
 
                         <com.example.cheilros.activities.customobj.EmptyRecyclerView
                             android:id="@+id/rvRecentSubActivities"

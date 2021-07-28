@@ -97,5 +97,16 @@
         <item name="android:paddingBottom">4dp</item>
     </style>
 
+    <style name="headingStyle" parent="@style/Widget.AppCompat.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">#ededed</item>
+        <item name="android:fontFamily">@font/samsungsharpsans_bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
 
 </resources>

@@ -219,16 +219,10 @@
                     android:padding="8dp">
 
                     <TextView
+                        style="@style/headingStyle"
                         android:id="@+id/StoreView_ChecklistSubTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="@font/samsungsharpsans_bold"
-                        android:gravity="center"
-                        android:padding="4dp"
-                        android:text="Checklist"
-                        android:textColor="@color/black"
-                        android:textSize="20dp" />
+                        android:text="Checklist" />
 
                     <ImageButton
 
@@ -288,16 +282,10 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        style="@style/headingStyle"
                         android:id="@+id/StoreMenu_Investment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="@font/samsungsharpsans_bold"
-                        android:gravity="center"
-                        android:padding="8dp"
-                        android:text="SAMSUNG INVESTMENT"
-                        android:textColor="@color/black"
-                        android:textSize="20dp" />
+                        android:text="SAMSUNG INVESTMENT" />
 
                 </LinearLayout>
 

@@ -53,7 +53,7 @@ class DisplayCountFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        fetchDisplayCount("${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountSummary")
+        fetchDisplayCount("${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountSummary?StoreID=${arguments?.getInt("StoreID")}")
     }
 
 
@@ -85,7 +85,7 @@ class DisplayCountFragment : BaseFragment() {
                         rvDisplayCount.setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(requireContext())
                         rvDisplayCount.layoutManager = layoutManager
-                        recylcerAdapter = DisplayCountAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"))
+                        recylcerAdapter = DisplayCountAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"), arguments?.getString("StoreName"))
                         rvDisplayCount.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })

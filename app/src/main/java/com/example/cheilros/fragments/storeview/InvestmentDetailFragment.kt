@@ -1,6 +1,7 @@
 package com.example.cheilros.fragments.storeview
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -42,12 +43,12 @@ class InvestmentDetailFragment : BaseFragment() {
 
         //region Set Labels
         try{
-            view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Investment" }.get(0).labelName + " / ${arguments?.getString("ElementTitle")}"
+            view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreView_InvesmentSubTitle" }.get(0).labelName + " / ${arguments?.getString("ElementTitle")}"
             view.BrandHeading.text = settingData.filter { it.fixedLabelName == "BrandHeading" }.get(0).labelName
             view.CountHeading.text = settingData.filter { it.fixedLabelName == "CountHeading" }.get(0).labelName
             view.btnSubmit.text = settingData.filter { it.fixedLabelName == "LoginForgetSubmitButton" }.get(0).labelName
         }catch (ex: Exception){
-
+            Log.e("Error_", ex.message.toString())
         }
         //endregion
 

@@ -101,14 +101,10 @@ tools:context=".fragments.storeview.TaskDeploymentFragment">
                     android:layout_height="match_parent">
 
                     <TextView
+                        style="@style/headingStyle"
                         android:layout_marginBottom="8dp"
                         android:id="@+id/StoreView_SubTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/samsungsharpsans_bold"
-                        android:text="Pending Deployments"
-                        android:textColor="@color/black"
-                        android:textSize="20dp" />
+                        android:text="Pending Deployments" />
 
                     <com.example.cheilros.activities.customobj.EmptyRecyclerView
                         android:id="@+id/rvRecentSubActivities"

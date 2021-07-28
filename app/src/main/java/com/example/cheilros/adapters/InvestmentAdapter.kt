@@ -70,6 +70,7 @@ class InvestmentAdapter(
                 val brands: ArrayList<BrandsData> =
                     itemList[position].Brands as ArrayList<BrandsData>
 
+                println("ElementTitle: ${itemList[position].ElementTitle}")
                 val bundle = bundleOf(
                     "StoreID" to StoreID,
                     "ElementID" to itemList[position].ElementID,

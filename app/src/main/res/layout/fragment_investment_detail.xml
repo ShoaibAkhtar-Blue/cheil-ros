@@ -47,7 +47,6 @@ tools:context=".fragments.storeview.InvestmentDetailFragment">
             android:background="#ededed"
             android:fontFamily="@font/samsungsharpsans_bold"
             android:gravity="center"
-            android:maxLines="1"
             android:padding="8dp"
             android:text="INVESTMENT"
             android:textColor="@color/black"
