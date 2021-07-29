@@ -417,3 +417,7 @@ class ChannelTypeData(
     val ChannelTypeName: String
 )
 //endregion
+
+//region Generic
+class GenericModel(val status: Int)
+//endregion

@@ -23,6 +23,7 @@ import com.example.cheilros.adapters.StoreMenuAdapter
 import com.example.cheilros.adapters.StoreViewTabsPagerAdapter
 import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.models.CheckListAnswerModel
+import com.example.cheilros.models.RecentActivityData
 import com.example.cheilros.models.RecentActivityModel
 import com.example.cheilros.models.StoreInfoModel
 import com.google.android.material.tabs.TabLayout
@@ -312,7 +313,8 @@ class StoreViewFragment : BaseFragment() {
                         layoutManager = LinearLayoutManager(requireContext())
                         rvRecentActivities.layoutManager = layoutManager
                         recylcerAdapter =
-                            RecentActivityAdapter(requireContext(), apiData.data, arguments)
+                            RecentActivityAdapter(requireContext(),
+                                apiData.data as MutableList<RecentActivityData>, arguments)
                         rvRecentActivities.adapter = recylcerAdapter
 
                     })

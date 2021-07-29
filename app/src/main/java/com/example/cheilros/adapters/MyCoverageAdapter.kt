@@ -3,27 +3,32 @@ package com.example.cheilros.adapters
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.DatePickerDialog
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Criteria
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.data.AppSetting
+import com.example.cheilros.fragments.JourneyPlanFragment
+import com.example.cheilros.fragments.MyCoverageFragment
+import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.helpers.CustomSharedPref
+import com.example.cheilros.models.CheckInOutModel
 import com.example.cheilros.models.MyCoverageData
 import com.example.cheilros.models.MyCoverageModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -35,14 +40,11 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.ramotion.foldingcell.FoldingCell
-import kotlinx.android.synthetic.main.dialog_add_visit.*
-import kotlinx.android.synthetic.main.dialog_add_visit.btnAccept
-import kotlinx.android.synthetic.main.dialog_add_visit.btnCancel
-import kotlinx.android.synthetic.main.dialog_add_visit.btnDate
-import kotlinx.android.synthetic.main.dialog_add_visit.txtQuestion
-import kotlinx.android.synthetic.main.dialog_add_visit.txtTitle
-import kotlinx.android.synthetic.main.dialog_checklist.*
+import kotlinx.android.synthetic.main.dialog_photo_preview.*
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -54,8 +56,9 @@ class MyCoverageAdapter(
     val itemList: List<MyCoverageData>,
     val settingData: List<AppSetting>,
     val latitude: String,
-    val longitude: String
-): RecyclerView.Adapter<MyCoverageAdapter.ViewHolder>(),
+    val longitude: String,
+    fragment: MyCoverageFragment
+) : RecyclerView.Adapter<MyCoverageAdapter.ViewHolder>(),
     OnMapReadyCallback, Filterable {
 
 
@@ -64,53 +67,94 @@ class MyCoverageAdapter(
     lateinit var locationManager: LocationManager
 
     var curPos: Int = 0
+    var lat: String = "0"
+    var lng: String = "0"
+    var minDistance = 750.0
+    private val frag: MyCoverageFragment
 
     var filterList = ArrayList<MyCoverageData>()
 
     init {
+        frag = fragment
         filterList = itemList as ArrayList<MyCoverageData>
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var txtSerialNo: TextView = view.findViewById(R.id.txtSerialNo)
-        var mapView : MapView = view.findViewById(R.id.mapView)
-        var txtCode : TextView = view.findViewById(R.id.txtCode)
-        var txtTitle : TextView = view.findViewById(R.id.txtTitle)
-        var txtTitleHeader : TextView = view.findViewById(R.id.txtTitleHeader)
-        var txtTitleContent : TextView = view.findViewById(R.id.txtTitleContent)
-        var txtRemarksContent : TextView = view.findViewById(R.id.txtRemarksContent)
+        var mapView: MapView = view.findViewById(R.id.mapView)
+        var txtCode: TextView = view.findViewById(R.id.txtCode)
+        var txtTitle: TextView = view.findViewById(R.id.txtTitle)
+        var txtTitleHeader: TextView = view.findViewById(R.id.txtTitleHeader)
+        var txtTitleContent: TextView = view.findViewById(R.id.txtTitleContent)
+        var txtRemarksContent: TextView = view.findViewById(R.id.txtRemarksContent)
         var txtRegion: TextView = view.findViewById(R.id.txtRegion)
         var txtAddress: TextView = view.findViewById(R.id.txtAddress)
-        var fc : FoldingCell = view.findViewById(R.id.folding_cell)
-        var btnSee  : LinearLayout = view.findViewById(R.id.LLjp)
-        var btnClose  : RelativeLayout = view.findViewById(R.id.RLHeader)
-        var btnAccept  : Button = view.findViewById(R.id.btnAccept)
-        var btnCancel  : Button = view.findViewById(R.id.btnCancel)
-        var RLnum  : RelativeLayout = view.findViewById(R.id.RLnum)
+        var fc: FoldingCell = view.findViewById(R.id.folding_cell)
+        var btnSee: LinearLayout = view.findViewById(R.id.LLjp)
+        var btnClose: RelativeLayout = view.findViewById(R.id.RLHeader)
+        var btnAccept: Button = view.findViewById(R.id.btnAccept)
+        var btnCancel: Button = view.findViewById(R.id.btnCancel)
+        var RLnum: RelativeLayout = view.findViewById(R.id.RLnum)
         //var btnClose  : MaterialButton = view.findViewById(R.id.btnCancel)
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view= LayoutInflater.from(parent.context).inflate(
+        val view = LayoutInflater.from(parent.context).inflate(
             R.layout.mycoverage_cell,
             parent,
             false
         )
         CSP = CustomSharedPref(parent.context)
+
+
+        try {
+            locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+
+            }
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F, object :
+                LocationListener {
+                override fun onLocationChanged(location: Location) {
+                    lat = location.latitude.toString()
+                    lng = location.longitude.toString()
+                    println("loc: ${location.latitude}")
+
+                }
+            })
+        } catch (ex: Exception) {
+            Log.e("Error_", ex.message.toString())
+        }
+
         return ViewHolder(view)
     }
 
     @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        holder.txtSerialNo.text = (position+1).toString()
+        holder.txtSerialNo.text = (position + 1).toString()
 
         holder.txtCode.text = filterList[position].StoreCode
         holder.txtTitle.text = filterList[position].StoreName
-        holder.txtTitleHeader.text = "${filterList[position].StoreCode} - ${filterList[position].StoreName}"
+        holder.txtTitleHeader.text =
+            "${filterList[position].StoreCode} - ${filterList[position].StoreName}"
         holder.txtTitleContent.text = filterList[position].Address
-        holder.txtRemarksContent.text = "Last Visit: ${filterList[position].LastVisitedDate} (${filterList[position].VistedBy})"
+        holder.txtRemarksContent.text =
+            "Last Visit: ${filterList[position].LastVisitedDate} (${filterList[position].VistedBy})"
 
         holder.txtRegion.text = filterList[position].RegionName
         holder.txtAddress.text = filterList[position].Address
@@ -123,14 +167,19 @@ class MyCoverageAdapter(
 
         //Update Labels
         try {
-            if(filterList[position].VisitStatusID != 0){
+            if (filterList[position].VisitStatusID != 0) {
                 holder.RLnum.setBackgroundColor(Color.parseColor("#d4eb0e"))
-                holder.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CheckoutButton" }.get(0).labelName
-            }else
-                holder.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CheckinButton" }.get(0).labelName
+                holder.btnAccept.text =
+                    settingData.filter { it.fixedLabelName == "JourneyPlan_CheckoutButton" }
+                        .get(0).labelName
+            } else
+                holder.btnAccept.text =
+                    settingData.filter { it.fixedLabelName == "JourneyPlan_CheckinButton" }
+                        .get(0).labelName
 
-            holder.btnCancel.text = settingData.filter { it.fixedLabelName == "StoreList_ViewButton" }.get(0).labelName
-        }catch (ex: Exception){
+            holder.btnCancel.text =
+                settingData.filter { it.fixedLabelName == "StoreList_ViewButton" }.get(0).labelName
+        } catch (ex: Exception) {
 
         }
 
@@ -152,8 +201,12 @@ class MyCoverageAdapter(
         }
 
         holder.btnCancel.setOnClickListener {
-            val bundle = bundleOf("StoreID" to filterList[position].StoreID, "StoreName" to filterList[position].StoreName)
-            Navigation.findNavController(it).navigate(R.id.action_myCoverageFragment_to_storeViewFragment, bundle)
+            val bundle = bundleOf(
+                "StoreID" to filterList[position].StoreID,
+                "StoreName" to filterList[position].StoreName
+            )
+            Navigation.findNavController(it)
+                .navigate(R.id.action_myCoverageFragment_to_storeViewFragment, bundle)
         }
 
         holder.btnAccept.setOnClickListener {
@@ -220,10 +273,9 @@ class MyCoverageAdapter(
 
 
             //region Checkin
-            var lat: String = "0"
-            var lng: String = "0"
 
-            locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+            /*locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
             if (ActivityCompat.checkSelfPermission(
                     context,
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -249,32 +301,211 @@ class MyCoverageAdapter(
                     println("loc: ${location.latitude}")
                 }
 
-            })
+            })*/
 
-            if(filterList[position].VisitStatusID != 0){ // Checkout
+            try {
+                println("Location: $lat-$lng")
+                val myLocation = Location("")
 
-                if(CSP.getData("CheckOut_Camera").equals("Y")){
-                    CSP.saveData("fragName", "MyCoverage")
-                    CSP.saveData("sess_store_id", filterList[position].StoreID.toString())
-                    CSP.saveData("sess_visit_status_id", filterList[position].VisitStatusID.toString())
-                    CSP.saveData("sess_visit_id", filterList[position].VisitStatusID.toString())
-                    Navigation.findNavController(it).navigate(R.id.action_myCoverageFragment_to_cameraActivity)
+                myLocation.latitude = lat.toDouble()
+                myLocation.longitude = lng.toDouble()
+
+                val storeLocation = Location("")
+
+                try {
+                    storeLocation.latitude = filterList[position].Latitude.toDouble()
+                    storeLocation.longitude = filterList[position].Longitude.toDouble()
+                }catch (ex: Exception){
+                    storeLocation.latitude = 0.0
+                    storeLocation.longitude = 0.0
                 }
-            }else{ // Checkin
-                if(CSP.getData("CheckIn_Camera").equals("Y")){
-                    CSP.saveData("fragName", "MyCoverage")
-                    CSP.saveData("sess_store_id", filterList[position].StoreID.toString())
-                    CSP.saveData("sess_visit_status_id", filterList[position].VisitStatusID.toString())
-                    Navigation.findNavController(it).navigate(R.id.action_myCoverageFragment_to_cameraActivity)
+
+
+
+                val distanceInMeters: Float = myLocation.distanceTo(storeLocation)
+                println("distanceInMeters: ${distanceInMeters}")
+
+
+                if (CSP.getData("LocationLimit").equals("Y")) {
+                    if (distanceInMeters >= minDistance) {
+                        println("distanceInMeters: Distance is greater")
+                        (context as Activity).runOnUiThread {
+                            context?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Out of Range!!")
+                                    .setMessage("Your Current Location is greater than $minDistance meters!")
+                                    .sneakWarning()
+                            }
+                        }
+                    } else {
+                        if (filterList[position].VisitStatusID != 0) { // Checkout
+
+                            if (CSP.getData("CheckOut_Camera").equals("Y")) {
+                                CSP.saveData("fragName", "MyCoverage")
+                                CSP.saveData(
+                                    "sess_store_id",
+                                    filterList[position].StoreID.toString()
+                                )
+                                CSP.saveData(
+                                    "sess_visit_status_id",
+                                    filterList[position].VisitStatusID.toString()
+                                )
+                                CSP.saveData(
+                                    "sess_visit_id",
+                                    filterList[position].VisitStatusID.toString()
+                                )
+                                Navigation.findNavController(it)
+                                    .navigate(R.id.action_myCoverageFragment_to_cameraActivity)
+                            }
+                        } else { // Checkin
+                            if (CSP.getData("CheckIn_Camera").equals("Y")) {
+                                CSP.saveData("fragName", "MyCoverage")
+                                CSP.saveData(
+                                    "sess_store_id",
+                                    filterList[position].StoreID.toString()
+                                )
+                                CSP.saveData(
+                                    "sess_visit_status_id",
+                                    filterList[position].VisitStatusID.toString()
+                                )
+                                Navigation.findNavController(it)
+                                    .navigate(R.id.action_myCoverageFragment_to_cameraActivity)
+                            }
+                        }
+                    }
+                } else {
+                    println("Else")
+                    if (filterList[position].VisitStatusID != 0) { // Checkout
+
+                        if (CSP.getData("CheckOut_Camera").equals("Y")) {
+                            CSP.saveData("fragName", "MyCoverage")
+                            CSP.saveData("sess_store_id", filterList[position].StoreID.toString())
+                            CSP.saveData(
+                                "sess_visit_status_id",
+                                filterList[position].VisitStatusID.toString()
+                            )
+                            CSP.saveData(
+                                "sess_visit_id",
+                                filterList[position].VisitStatusID.toString()
+                            )
+                            Navigation.findNavController(it)
+                                .navigate(R.id.action_myCoverageFragment_to_cameraActivity)
+                        } else {
+                            CSP.saveData(
+                                "sess_visit_status_id",
+                                filterList[position].VisitStatusID.toString()
+                            )
+                            CSP.saveData(
+                                "sess_visit_id",
+                                filterList[position].VisitStatusID.toString()
+                            )
+
+                            val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+                            val currentDateAndTime: String = simpleDateFormat.format(Date())
+                            sendVisitRequest(
+                                "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
+                                    filterList[position].StoreID
+                                }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=$lng&Latitude=$lat&Remarks=-"
+                            )
+                        }
+                    } else { // Checkin
+                        println("Checkin")
+                        if (CSP.getData("CheckIn_Camera").equals("Y")) {
+                            CSP.saveData("fragName", "MyCoverage")
+                            CSP.saveData("sess_store_id", filterList[position].StoreID.toString())
+                            CSP.saveData(
+                                "sess_visit_status_id",
+                                filterList[position].VisitStatusID.toString()
+                            )
+                            Navigation.findNavController(it)
+                                .navigate(R.id.action_myCoverageFragment_to_cameraActivity)
+                        }else{
+                            CSP.saveData(
+                                "sess_visit_status_id",
+                                filterList[position].VisitStatusID.toString()
+                            )
+                            CSP.saveData(
+                                "sess_visit_id",
+                                filterList[position].VisitStatusID.toString()
+                            )
+
+                            val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+                            val currentDateAndTime: String = simpleDateFormat.format(Date())
+
+                            println("${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
+                                filterList[position].StoreID
+                            }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=$lng&Latitude=$lat&Remarks=-")
+
+                            sendVisitRequest(
+                                "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
+                                    filterList[position].StoreID
+                                }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=$lng&Latitude=$lat&Remarks=-"
+                            )
+                        }
+                    }
                 }
+            } catch (ex: Exception) {
+                Log.e("Error_", ex.message.toString())
             }
-
-
-
-
             //endregion
 
         }
+    }
+
+    private fun getLocation() {
+        // Get LocationManager object
+        // Get LocationManager object
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+
+        // Create a criteria object to retrieve provider
+
+        // Create a criteria object to retrieve provider
+        val criteria = Criteria()
+
+        // Get the name of the best provider
+
+        // Get the name of the best provider
+        val provider = locationManager!!.getBestProvider(criteria, true)
+
+        // Get Current Location
+
+        // Get Current Location
+        val myLocation = locationManager!!.getLastKnownLocation(provider!!)
+
+        //latitude of location
+
+        //latitude of location
+        val myLatitude = myLocation!!.latitude
+
+        //longitude og location
+
+        //longitude og location
+        val myLongitude = myLocation!!.longitude
+
+        lat = myLatitude.toString()
+        lng = myLongitude.toString()
+
+        println("lat: ${myLatitude.toString()}")
+        println("lng: ${myLongitude.toString()}")
+
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
@@ -282,9 +513,12 @@ class MyCoverageAdapter(
             //val myLocation: Location = googleMap!!.myLocation
 
             println("onMapReady-${itemList[curPos].Latitude}-${itemList[curPos].Longitude}")
-            val sydney = LatLng(itemList[curPos].Latitude.toDouble(), itemList[curPos].Longitude.toDouble())
-            googleMap!!.addMarker(MarkerOptions().position(sydney).title(itemList[curPos].StoreName))
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,20.5f))
+            val sydney =
+                LatLng(itemList[curPos].Latitude.toDouble(), itemList[curPos].Longitude.toDouble())
+            googleMap!!.addMarker(
+                MarkerOptions().position(sydney).title(itemList[curPos].StoreName)
+            )
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 20.5f))
 
             googleMap!!.setOnMapClickListener {
                 try {
@@ -293,22 +527,96 @@ class MyCoverageAdapter(
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
                     intent.setPackage("com.google.android.apps.maps")
                     context.startActivity(intent)
-                }catch (ex: Exception){
+                } catch (ex: Exception) {
 
                 }
             }
 
-        }catch (ex: Exception){
+        } catch (ex: Exception) {
             val sydney = LatLng(0.0, 0.0)
-            googleMap!!.addMarker(MarkerOptions().position(sydney).title(itemList[curPos].StoreName))
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,20.5f))
+            googleMap!!.addMarker(
+                MarkerOptions().position(sydney).title(itemList[curPos].StoreName)
+            )
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 20.5f))
         }
 
 
     }
 
     private fun sendVisitRequest(url: String) {
-        val request = Request.Builder()
+
+        var checkType =
+                if (CSP.getData("sess_visit_status_id")
+                        .equals("0")
+                ) "CheckInImg" else "CheckOutImage"
+
+
+        println(checkType)
+
+        val client = OkHttpClient()
+
+        try {
+            val requestBody: RequestBody =
+                MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart(
+                        "test",
+                        "test"
+                    )
+                    .build()
+
+            val request: Request = Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    (context as Activity).runOnUiThread {
+                        context?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage(e.message.toString())
+                                .sneakWarning()
+
+                        }
+                    }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val body = response.body?.string()
+                    println(body)
+
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, CheckInOutModel::class.java)
+                    println(apiData)
+                    if (apiData.status == 200) {
+                        (context as Activity).runOnUiThread {
+                            context?.let { it1 ->
+                                Sneaker.with(it1) //Activity, Fragment or ViewGroup
+                                    .setTitle("Success!!")
+                                    .setMessage("Data Updated")
+                                    .sneakSuccess()
+                                frag.reloadCoverage()
+                            }
+                        }
+                    } else {
+                        (context as Activity).runOnUiThread {
+                            context?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not Updated.")
+                                    .sneakWarning()
+                            }
+                        }
+                    }
+                }
+            })
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            Log.e("File upload", "failed")
+        }
+
+        /*val request = Request.Builder()
             .url(url)
             .build()
 
@@ -351,7 +659,7 @@ class MyCoverageAdapter(
                     }
                 }
             }
-        })
+        })*/
     }
 
     override fun getFilter(): Filter {
@@ -363,7 +671,9 @@ class MyCoverageAdapter(
                 } else {
                     val resultList = ArrayList<MyCoverageData>()
                     for (row in itemList) {
-                        if (row.StoreName.toLowerCase().contains(constraint.toString().toLowerCase())) {
+                        if (row.StoreName.toLowerCase()
+                                .contains(constraint.toString().toLowerCase())
+                        ) {
                             resultList.add(row)
                         }
                     }

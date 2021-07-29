@@ -16,6 +16,7 @@ import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.ActivityTypeModel
 import com.example.cheilros.models.CheckListModel
+import com.example.cheilros.models.RecentActivityData
 import com.example.cheilros.models.RecentActivityModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
@@ -161,7 +162,8 @@ class ActivityFragment : BaseFragment() {
                         rvRecentActivities.setHasFixedSize(true)
                         layoutManagerRecent = LinearLayoutManager(requireContext())
                         rvRecentActivities.layoutManager = layoutManagerRecent
-                        recylcerAdapterRecent = RecentActivityAdapter(requireContext(), apiData.data, arguments)
+                        recylcerAdapterRecent = RecentActivityAdapter(requireContext(),
+                            apiData.data as MutableList<RecentActivityData>, arguments)
                         rvRecentActivities.adapter = recylcerAdapterRecent
 
                     })

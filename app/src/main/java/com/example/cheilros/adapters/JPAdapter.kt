@@ -13,6 +13,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,7 +51,7 @@ class JPAdapter(
     fragment: JourneyPlanFragment,
     isCurrentDate: Boolean,
     val settingData: List<AppSetting>
-): RecyclerView.Adapter<JPAdapter.ViewHolder>(), OnMapReadyCallback {
+) : RecyclerView.Adapter<JPAdapter.ViewHolder>(), OnMapReadyCallback {
 
     lateinit var CSP: CustomSharedPref
 
@@ -63,31 +64,35 @@ class JPAdapter(
     private val frag: JourneyPlanFragment
     private val isCurrDt: Boolean
 
+    var lat: String = "0"
+    var lng: String = "0"
+    var minDistance = 750.0
+
     init {
         frag = fragment
         isCurrDt = isCurrentDate
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var imgStatus : ImageView = view.findViewById(R.id.imgStatus)
-        var txtCode : TextView = view.findViewById(R.id.txtCode)
-        var mapView : MapView = view.findViewById(R.id.mapView)
-        var txtTitle : TextView = view.findViewById(R.id.txtTitle)
-        var txtTitleHeader : TextView = view.findViewById(R.id.txtTitleHeader)
-        var txtTitleContent : TextView = view.findViewById(R.id.txtTitleContent)
-        var txtRemarks : TextView = view.findViewById(R.id.txtRemarks)
-        var txtRemarksContent : TextView = view.findViewById(R.id.txtRemarksContent)
-        var txtTime : TextView = view.findViewById(R.id.txtTime)
+        var imgStatus: ImageView = view.findViewById(R.id.imgStatus)
+        var txtCode: TextView = view.findViewById(R.id.txtCode)
+        var mapView: MapView = view.findViewById(R.id.mapView)
+        var txtTitle: TextView = view.findViewById(R.id.txtTitle)
+        var txtTitleHeader: TextView = view.findViewById(R.id.txtTitleHeader)
+        var txtTitleContent: TextView = view.findViewById(R.id.txtTitleContent)
+        var txtRemarks: TextView = view.findViewById(R.id.txtRemarks)
+        var txtRemarksContent: TextView = view.findViewById(R.id.txtRemarksContent)
+        var txtTime: TextView = view.findViewById(R.id.txtTime)
 
-        var RLStatus : RelativeLayout = view.findViewById(R.id.RLStatus)
-        var RLHeader : RelativeLayout = view.findViewById(R.id.RLHeader)
+        var RLStatus: RelativeLayout = view.findViewById(R.id.RLStatus)
+        var RLHeader: RelativeLayout = view.findViewById(R.id.RLHeader)
 
-        var fc : FoldingCell = view.findViewById(R.id.folding_cell)
-        var btnSee  : LinearLayout = view.findViewById(R.id.LLjp)
-        var btnClose  : RelativeLayout = view.findViewById(R.id.RLHeader)
+        var fc: FoldingCell = view.findViewById(R.id.folding_cell)
+        var btnSee: LinearLayout = view.findViewById(R.id.LLjp)
+        var btnClose: RelativeLayout = view.findViewById(R.id.RLHeader)
 
-        var btnAccept  : Button = view.findViewById(R.id.btnAccept)
-        var btnCancel  : Button = view.findViewById(R.id.btnCancel)
+        var btnAccept: Button = view.findViewById(R.id.btnAccept)
+        var btnCancel: Button = view.findViewById(R.id.btnCancel)
 
 
     }
@@ -95,7 +100,41 @@ class JPAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         ctx = parent.context;
         CSP = CustomSharedPref(parent.context)
-        val view= LayoutInflater.from(ctx).inflate(R.layout.journy_plan_cell, parent, false)
+        val view = LayoutInflater.from(ctx).inflate(R.layout.journy_plan_cell, parent, false)
+
+        try {
+            locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+
+            }
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F, object :
+                LocationListener {
+                override fun onLocationChanged(location: Location) {
+                    lat = location.latitude.toString()
+                    lng = location.longitude.toString()
+                    println("loc: ${location.latitude}")
+
+                }
+            })
+        } catch (ex: Exception) {
+            Log.e("Error_", ex.message.toString())
+        }
+
+
         return ViewHolder(view)
     }
 
@@ -105,41 +144,68 @@ class JPAdapter(
         holder.txtCode.visibility = View.GONE
 
         holder.txtTitle.text = itemList[position].StoreName
-        holder.txtTitleHeader.text = "${itemList[position].StoreCode} - ${itemList[position].StoreName}"
+        holder.txtTitleHeader.text =
+            "${itemList[position].StoreCode} - ${itemList[position].StoreName}"
         holder.txtTitleContent.text = itemList[position].Address
 
         holder.txtRemarks.text = itemList[position].VisitRemarks
         holder.txtRemarksContent.text = itemList[position].VisitRemarks
 
-        holder.txtTime.text = "\uD83D\uDD65 In: ${itemList[position].CheckInTime} | \uD83D\uDD65 Out: ${itemList[position].CheckOutTime}"
+        holder.txtTime.text =
+            "\uD83D\uDD65 In: ${itemList[position].CheckInTime} | \uD83D\uDD65 Out: ${itemList[position].CheckOutTime}"
 
         Glide.with(context).load(itemList[position].ImageLocation).into(holder.imgStatus!!)
 
-        if(itemList[position].VisitRemarks == null)
+        if (itemList[position].VisitRemarks == null)
             holder.txtRemarks.text = "No Remarks"
 
-        holder.btnCancel.text = settingData.filter { it.fixedLabelName == "JuorneyPlan_CancelButton" }.get(0).labelName
-        holder.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CheckinButton" }.get(0).labelName
+        holder.btnCancel.text =
+            settingData.filter { it.fixedLabelName == "JuorneyPlan_CancelButton" }.get(0).labelName
+        holder.btnAccept.text =
+            settingData.filter { it.fixedLabelName == "JourneyPlan_CheckinButton" }.get(0).labelName
 
-        if(itemList[position].VisitStatusID === 1){
-            holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.status_none))
-            holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context,R.color.status_none))
-            holder.txtTime.visibility =  View.GONE
+        if (itemList[position].VisitStatusID === 1) {
+            holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.status_none))
+            holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.status_none))
+            holder.txtTime.visibility = View.GONE
 
-        }
-        else if (itemList[position].VisitStatusID === 2){
-            holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkout))
-            holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkout))
-            holder.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CheckoutButton" }.get(0).labelName
-            holder.btnCancel.text = settingData.filter { it.fixedLabelName == "JourneyPlan_ViewButton" }.get(0).labelName
+        } else if (itemList[position].VisitStatusID === 2) {
+            holder.RLStatus.setBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.status_checkout
+                )
+            )
+            holder.RLHeader.setBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.status_checkout
+                )
+            )
+            holder.btnAccept.text =
+                settingData.filter { it.fixedLabelName == "JourneyPlan_CheckoutButton" }
+                    .get(0).labelName
+            holder.btnCancel.text =
+                settingData.filter { it.fixedLabelName == "JourneyPlan_ViewButton" }
+                    .get(0).labelName
 //            holder.btnCancel.isEnabled = false
 //            holder.btnCancel.isClickable = false
-        }
-
-        else if (itemList[position].VisitStatusID === 3){
-            holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkin))
-            holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context,R.color.status_checkin))
-            holder.btnCancel.text = settingData.filter { it.fixedLabelName == "JourneyPlan_ViewButton" }.get(0).labelName
+        } else if (itemList[position].VisitStatusID === 3) {
+            holder.RLStatus.setBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.status_checkin
+                )
+            )
+            holder.RLHeader.setBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.status_checkin
+                )
+            )
+            holder.btnCancel.text =
+                settingData.filter { it.fixedLabelName == "JourneyPlan_ViewButton" }
+                    .get(0).labelName
             holder.btnAccept.setTextColor(Color.GRAY)
 
             holder.btnAccept.isEnabled = false
@@ -149,12 +215,22 @@ class JPAdapter(
 
             //holder.btnCancel.isEnabled = false
             //holder.btnCancel.isClickable = false
-        }
-
-        else if (itemList[position].VisitStatusID === 4){
-            holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.status_cancel))
-            holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context,R.color.status_cancel))
-            holder.btnCancel.text = settingData.filter { it.fixedLabelName == "JourneyPlan_ViewButton" }.get(0).labelName
+        } else if (itemList[position].VisitStatusID === 4) {
+            holder.RLStatus.setBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.status_cancel
+                )
+            )
+            holder.RLHeader.setBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.status_cancel
+                )
+            )
+            holder.btnCancel.text =
+                settingData.filter { it.fixedLabelName == "JourneyPlan_ViewButton" }
+                    .get(0).labelName
             holder.btnAccept.setTextColor(Color.GRAY)
 
             holder.btnAccept.isEnabled = false
@@ -167,7 +243,7 @@ class JPAdapter(
 //            holder.btnCancel.isClickable = false
         }
 
-        if(!isCurrDt){
+        if (!isCurrDt) {
             holder.btnAccept.setTextColor(Color.GRAY)
             holder.btnCancel.setTextColor(Color.GRAY)
 
@@ -201,12 +277,10 @@ class JPAdapter(
             holder.fc.toggle(false)
         }
 
-        holder.btnAccept.setOnClickListener{
+        holder.btnAccept.setOnClickListener {
 
-            var lat: String = "0"
-            var lng: String = "0"
 
-            locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
+            /*locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
             if (ActivityCompat.checkSelfPermission(
                     context,
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -231,7 +305,7 @@ class JPAdapter(
                     println("loc: ${location.latitude}")
                 }
 
-            })
+            })*/
             //val bundle = bundleOf("visit_id" to itemList[position].VisitID)
 
 
@@ -239,34 +313,101 @@ class JPAdapter(
 //            myactivity.addFlags(FLAG_ACTIVITY_FORWARD_RESULT)
 //            context.applicationContext.startActivity(myactivity)
 
-            if(itemList[position].VisitStatusID === 1){
-                if(CSP.getData("CheckIn_Camera").equals("Y")){
-                    CSP.saveData("sess_visit_id", itemList[position].VisitID.toString())
-                    CSP.saveData("sess_visit_status_id", itemList[position].VisitStatusID.toString())
-                    CSP.saveData("fragName", "JP")
 
-                    Navigation.findNavController(it).navigate(R.id.action_journeyPlanFragment_to_cameraActivity)
+            try {
+                println("Location: $lat-$lng")
+                val myLocation = Location("")
+
+                myLocation.latitude = lat.toDouble()
+                myLocation.longitude = lng.toDouble()
+
+                val storeLocation = Location("")
+                storeLocation.latitude = itemList[position].Latitude.toDouble()
+                storeLocation.longitude = itemList[position].Longitude.toDouble()
+
+                val distanceInMeters: Float = myLocation.distanceTo(storeLocation)
+                println("distanceInMeters: ${distanceInMeters}")
+
+                if (CSP.getData("LocationLimit").equals("Y")) {
+                    if (distanceInMeters >= minDistance) {
+                        println("distanceInMeters: Distance is greater")
+                        (context as Activity).runOnUiThread {
+                            context?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Out of Range!!")
+                                    .setMessage("Your Current Location is greater than $minDistance meters!")
+                                    .sneakWarning()
+                            }
+                        }
+                    }else{
+                        if(itemList[position].VisitStatusID === 1){
+                            if(CSP.getData("CheckIn_Camera").equals("Y")){
+                                CSP.saveData("sess_visit_id", itemList[position].VisitID.toString())
+                                CSP.saveData("sess_visit_status_id", itemList[position].VisitStatusID.toString())
+                                CSP.saveData("fragName", "JP")
+
+                                Navigation.findNavController(it).navigate(R.id.action_journeyPlanFragment_to_cameraActivity)
+                            }else{
+                                sendCheckInOutRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/CheckIn?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=-")
+                            }
+                        }
+
+                        if(itemList[position].VisitStatusID === 2){
+                            if(CSP.getData("CheckOut_Camera").equals("Y")){
+                                CSP.saveData("sess_visit_id", itemList[position].VisitID.toString())
+                                CSP.saveData("sess_visit_status_id", itemList[position].VisitStatusID.toString())
+                                CSP.saveData("fragName", "JP")
+                                Navigation.findNavController(it).navigate(R.id.action_journeyPlanFragment_to_cameraActivity)
+                            }else{
+                                sendCheckInOutRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=-")
+                            }
+                        }
+                    }
                 }else{
-                    sendCheckInOutRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/CheckIn?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=-")
+                    if (itemList[position].VisitStatusID === 1) {
+                        if (CSP.getData("CheckIn_Camera").equals("Y")) {
+                            CSP.saveData("sess_visit_id", itemList[position].VisitID.toString())
+                            CSP.saveData(
+                                "sess_visit_status_id",
+                                itemList[position].VisitStatusID.toString()
+                            )
+                            CSP.saveData("fragName", "JP")
+
+                            Navigation.findNavController(it)
+                                .navigate(R.id.action_journeyPlanFragment_to_cameraActivity)
+                        } else {
+                            sendCheckInOutRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/CheckIn?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=-")
+                        }
+                    }
+
+                    if (itemList[position].VisitStatusID === 2) {
+                        if (CSP.getData("CheckOut_Camera").equals("Y")) {
+                            CSP.saveData("sess_visit_id", itemList[position].VisitID.toString())
+                            CSP.saveData(
+                                "sess_visit_status_id",
+                                itemList[position].VisitStatusID.toString()
+                            )
+                            CSP.saveData("fragName", "JP")
+                            Navigation.findNavController(it)
+                                .navigate(R.id.action_journeyPlanFragment_to_cameraActivity)
+                        } else {
+                            sendCheckInOutRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=-")
+                        }
+                    }
                 }
+
+            } catch (ex: Exception) {
+
             }
 
-            if(itemList[position].VisitStatusID === 2){
-                if(CSP.getData("CheckOut_Camera").equals("Y")){
-                    CSP.saveData("sess_visit_id", itemList[position].VisitID.toString())
-                    CSP.saveData("sess_visit_status_id", itemList[position].VisitStatusID.toString())
-                    CSP.saveData("fragName", "JP")
-                    Navigation.findNavController(it).navigate(R.id.action_journeyPlanFragment_to_cameraActivity)
-                }else{
-                    sendCheckInOutRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=-")
-                }
-            }
+
+
 
         }
 
         holder.btnCancel.setOnClickListener {
-            if(itemList[position].VisitStatusID === 1){
-                if(CSP.getData("CancelVisit").equals("Y")){
+            if (itemList[position].VisitStatusID === 1) {
+                if (CSP.getData("CancelVisit").equals("Y")) {
                     var lat: String = "0"
                     var lng: String = "0"
 
@@ -289,14 +430,18 @@ class JPAdapter(
                         // for ActivityCompat#requestPermissions for more details.
                         return@setOnClickListener
                     }
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,5000, 0F,object : LocationListener{
-                        override fun onLocationChanged(location: Location) {
-                            lat = location.latitude.toString()
-                            lng = location.longitude.toString()
-                            println("loc: ${location.latitude}")
-                        }
+                    locationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER,
+                        5000,
+                        0F,
+                        object : LocationListener {
+                            override fun onLocationChanged(location: Location) {
+                                lat = location.latitude.toString()
+                                lng = location.longitude.toString()
+                                println("loc: ${location.latitude}")
+                            }
 
-                    })
+                        })
 
                     val li = LayoutInflater.from(context)
                     val promptsView: View = li.inflate(R.layout.dialog_add_visit, null)
@@ -307,22 +452,30 @@ class JPAdapter(
                     dialog.setCanceledOnTouchOutside(true)
 
 
-                    dialog.txtTitle.text = settingData.filter { it.fixedLabelName == "JourneyPlan_Title" }.get(0).labelName
-                    dialog.txtQuestion.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CancelTitle" }.get(0).labelName
+                    dialog.txtTitle.text =
+                        settingData.filter { it.fixedLabelName == "JourneyPlan_Title" }
+                            .get(0).labelName
+                    dialog.txtQuestion.text =
+                        settingData.filter { it.fixedLabelName == "JourneyPlan_CancelTitle" }
+                            .get(0).labelName
 
-                    dialog.btnCancel.text = settingData.filter { it.fixedLabelName == "StoreList_PopupCancel" }.get(0).labelName
+                    dialog.btnCancel.text =
+                        settingData.filter { it.fixedLabelName == "StoreList_PopupCancel" }
+                            .get(0).labelName
                     dialog.btnCancel.setOnClickListener {
                         dialog.dismiss()
                     }
 
-                    dialog.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CancelSave" }.get(0).labelName
+                    dialog.btnAccept.text =
+                        settingData.filter { it.fixedLabelName == "JourneyPlan_CancelSave" }
+                            .get(0).labelName
                     dialog.btnAccept.setOnClickListener {
                         cancelJP("${CSP.getData("base_url")}/JourneyPlan.asmx/CancelVisit?VisitID=${itemList[position].VisitID}&Longitude=$lng&Latitude=$lat&Remarks=${dialog.etRemarks.text}")
                         dialog.dismiss()
                     }
                     dialog.show()
 
-                }else{
+                } else {
                     (context as Activity).runOnUiThread {
                         context?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
@@ -332,10 +485,14 @@ class JPAdapter(
                         }
                     }
                 }
-            }else{
+            } else {
                 // If type is view
-                val bundle = bundleOf("StoreID" to itemList[position].StoreID, "StoreName" to itemList[position].StoreName)
-                Navigation.findNavController(it).navigate(R.id.action_journeyPlanFragment_to_storeViewFragment, bundle)
+                val bundle = bundleOf(
+                    "StoreID" to itemList[position].StoreID,
+                    "StoreName" to itemList[position].StoreName
+                )
+                Navigation.findNavController(it)
+                    .navigate(R.id.action_journeyPlanFragment_to_storeViewFragment, bundle)
             }
         }
 
@@ -349,9 +506,12 @@ class JPAdapter(
         //val location: Location = locations.get(getAdapterPosition())
         try {
             println("onMapReady-${itemList[curPos].Latitude}-${itemList[curPos].Longitude}")
-            val sydney = LatLng(itemList[curPos].Latitude.toDouble(), itemList[curPos].Longitude.toDouble())
-            googleMap!!.addMarker(MarkerOptions().position(sydney).title(itemList[curPos].StoreName))
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,20.5f))
+            val sydney =
+                LatLng(itemList[curPos].Latitude.toDouble(), itemList[curPos].Longitude.toDouble())
+            googleMap!!.addMarker(
+                MarkerOptions().position(sydney).title(itemList[curPos].StoreName)
+            )
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 20.5f))
 
             googleMap!!.setOnMapClickListener {
                 try {
@@ -360,15 +520,17 @@ class JPAdapter(
                     val intent = Intent(ACTION_VIEW, Uri.parse(uri))
                     intent.setPackage("com.google.android.apps.maps")
                     context.startActivity(intent)
-                }catch (ex: Exception){
+                } catch (ex: Exception) {
 
                 }
             }
 
-        }catch (ex: Exception){
+        } catch (ex: Exception) {
             val sydney = LatLng(0.0, 0.0)
-            googleMap!!.addMarker(MarkerOptions().position(sydney).title(itemList[curPos].StoreName))
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,20.5f))
+            googleMap!!.addMarker(
+                MarkerOptions().position(sydney).title(itemList[curPos].StoreName)
+            )
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 20.5f))
         }
 
     }

@@ -2,6 +2,7 @@ package com.example.cheilros.fragments
 
 import android.content.Intent
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
@@ -40,7 +41,6 @@ import kotlinx.android.synthetic.main.activity_dashboard.view.imgUser
 import kotlinx.android.synthetic.main.activity_dashboard.view.txtUsername
 import kotlinx.android.synthetic.main.fragment_activity.view.*
 import kotlinx.android.synthetic.main.fragment_dashboard.*
-import kotlinx.android.synthetic.main.fragment_dashboard.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_dashboard.view.*
 import kotlinx.android.synthetic.main.fragment_dashboard.view.StoreView_SubTitle
 import kotlinx.android.synthetic.main.fragment_dashboard.view.mainLoadingLayoutCC
@@ -207,9 +207,11 @@ class DashboardFragment : BaseFragment() {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-
         //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+
+        CSP.saveData("CheckIn_Camera", "N")
+        CSP.saveData("CheckOut_Camera", "N")
+        CSP.saveData("LocationLimit", "N")
 
         cvCoverage.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
@@ -538,7 +540,8 @@ class DashboardFragment : BaseFragment() {
                         rvRecentSubActivities.setHasFixedSize(true)
                         layoutManagerRecent = LinearLayoutManager(requireContext())
                         rvRecentSubActivities.layoutManager = layoutManagerRecent
-                        recylcerAdapterRecent = RecentActivityAdapter(requireContext(), apiData.data, arguments)
+                        recylcerAdapterRecent = RecentActivityAdapter(requireContext(),
+                            apiData.data as MutableList<RecentActivityData>, arguments)
                         rvRecentSubActivities.adapter = recylcerAdapterRecent
 
                     })

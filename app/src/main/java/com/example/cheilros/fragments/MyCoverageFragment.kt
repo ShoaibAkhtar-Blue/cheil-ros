@@ -260,8 +260,11 @@ class MyCoverageFragment : BaseFragment() {
         }*/
     }
 
-    companion object {
-
+    fun reloadCoverage(){
+        println("reloadCoverage")
+        fetchChannel("${CSP.getData("base_url")}/Webservice.asmx/ChannelList")
+        fetchChannelType("${CSP.getData("base_url")}/Webservice.asmx/ChannelTypeList")
+        fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${defaultChannel}&SearchKeyWord=&ChannelTypeID=${defaultChannelType}")
     }
 
     fun fetchChannel(url: String) {
@@ -394,7 +397,7 @@ class MyCoverageFragment : BaseFragment() {
                 println(apiData.status)
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
-                        recylcerAdapter = MyCoverageAdapter(requireContext(), apiData.data, settingData, latitude, longitude)
+                        recylcerAdapter = MyCoverageAdapter(requireContext(), apiData.data, settingData, latitude, longitude,this@MyCoverageFragment)
                         recyclerView.adapter = recylcerAdapter
                         mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
                     })
