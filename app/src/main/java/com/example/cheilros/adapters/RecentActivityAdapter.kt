@@ -55,6 +55,7 @@ class RecentActivityAdapter(
         var ActivityDescription: TextView = view.findViewById(R.id.ActivityDescription)
         var txtDate: TextView = view.findViewById(R.id.txtDate)
         var imgActivity: ImageView = view.findViewById(R.id.imgActivity)
+        var imgActivity2: ImageView = view.findViewById(R.id.imgActivity2)
         var btnCancel: Button = view.findViewById(R.id.btnCancel)
         var btnAccept: Button = view.findViewById(R.id.btnAccept)
         //var RLimgActivity: RelativeLayout = view.findViewById(R.id.RLimgActivity)
@@ -75,6 +76,13 @@ class RecentActivityAdapter(
             Glide.with(context)
                 .load("${CSP.getData("base_url")}/${filterList[position].ImageActivity}")
                 .into(holder.imgActivity!!)
+        else
+            holder.imgActivity.visibility = View.GONE
+
+        if (filterList[position].ImageActivity2 != "" && filterList[position].ImageActivity2 != null)
+            Glide.with(context)
+                .load("${CSP.getData("base_url")}/${filterList[position].ImageActivity2}")
+                .into(holder.imgActivity2!!)
         else
             holder.imgActivity.visibility = View.GONE
 

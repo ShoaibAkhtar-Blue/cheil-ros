@@ -101,6 +101,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginRight="4dp"
             android:layout_weight="2"
             android:gravity="center_horizontal"
             android:orientation="vertical">
@@ -109,6 +110,7 @@
                 android:id="@+id/imgAsset"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scaleType="fitCenter"
                 tools:srcCompat="@tools:sample/avatars" />
         </RelativeLayout>
     </LinearLayout>

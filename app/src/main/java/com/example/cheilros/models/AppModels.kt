@@ -111,7 +111,8 @@ class RecentActivityData(
     val StoreID: Int,
     val StoreCode: String,
     val StoreName: String,
-    val ImageActivity: String
+    val ImageActivity: String,
+    val ImageActivity2: String
 )
 
 class ActivityTypeModel(val status: Int, val data: List<ActivityTypeData>)

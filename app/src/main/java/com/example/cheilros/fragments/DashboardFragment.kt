@@ -209,9 +209,22 @@ class DashboardFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
 
-        CSP.saveData("CheckIn_Camera", "N")
-        CSP.saveData("CheckOut_Camera", "N")
-        CSP.saveData("LocationLimit", "N")
+//        CSP.saveData("CheckIn_Camera", "N")
+//        CSP.saveData("CheckOut_Camera", "N")
+//        CSP.saveData("LocationLimit", "N")
+
+        /*val myLocation = Location("")
+
+        myLocation.latitude = 25.308398
+        myLocation.longitude = 55.372896
+
+        val storeLocation = Location("")
+        storeLocation.latitude = 25.198800
+        storeLocation.longitude = 55.279600
+
+
+        val distanceInMeters: Float = myLocation.distanceTo(storeLocation)
+        println("distanceInMeters: ${distanceInMeters}")*/
 
         cvCoverage.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_myCoverageFragment)

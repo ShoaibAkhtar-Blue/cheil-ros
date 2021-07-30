@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.cheilros.R
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.fragments.JourneyPlanFragment
@@ -95,6 +96,9 @@ class MyCoverageAdapter(
         var btnAccept: Button = view.findViewById(R.id.btnAccept)
         var btnCancel: Button = view.findViewById(R.id.btnCancel)
         var RLnum: RelativeLayout = view.findViewById(R.id.RLnum)
+        var imgMap: ImageView = view.findViewById(R.id.imgMap)
+        var btnLocation: ImageButton = view.findViewById(R.id.btnLocation)
+
         //var btnClose  : MaterialButton = view.findViewById(R.id.btnCancel)
 
     }
@@ -146,6 +150,34 @@ class MyCoverageAdapter(
     @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
+        holder.btnLocation.setOnClickListener {
+            try {
+                println("http://maps.google.com/maps?daddr=${itemList[position].Latitude},${itemList[position].Longitude}")
+                val uri =
+                    "http://maps.google.com/maps?daddr=${itemList[position].Latitude},${itemList[position].Longitude}"
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+                intent.setPackage("com.google.android.apps.maps")
+                context.startActivity(intent)
+            } catch (ex: Exception) {
+
+            }
+        }
+
+        /*Glide
+            .with(context)
+            .load("http://maps.google.com/maps/api/staticmap?center=" +
+                    lat +
+                    "," +
+                    lng +
+                    "&zoom=15&size=200x200&sensor=false" +
+                    "&markers=color:red%7Clabel:C%" +
+                    markerLat +
+                    "," +
+                    markerLlng)
+            .centerCrop()
+            .into(myImageView);*/
+
+
         holder.txtSerialNo.text = (position + 1).toString()
 
         holder.txtCode.text = filterList[position].StoreCode
@@ -181,14 +213,6 @@ class MyCoverageAdapter(
                 settingData.filter { it.fixedLabelName == "StoreList_ViewButton" }.get(0).labelName
         } catch (ex: Exception) {
 
-        }
-
-        if (mapView != null) {
-            // Initialise the MapView
-            mapView.onCreate(null)
-            mapView.onResume();  //Probably U r missing this
-            // Set the map ready callback to receive the GoogleMap object
-            mapView.getMapAsync(this)
         }
 
         holder.btnSee.setOnClickListener {
@@ -450,6 +474,15 @@ class MyCoverageAdapter(
             //endregion
 
         }
+
+        if (mapView != null) {
+            // Initialise the MapView
+            mapView.onCreate(null)
+            mapView.onResume();  //Probably U r missing this
+            // Set the map ready callback to receive the GoogleMap object
+            mapView.getMapAsync(this)
+
+        }
     }
 
     private fun getLocation() {
@@ -510,9 +543,13 @@ class MyCoverageAdapter(
 
     override fun onMapReady(googleMap: GoogleMap?) {
         try {
+            //var curPos = CSP.getData("mapPos")?.toInt()
             //val myLocation: Location = googleMap!!.myLocation
 
             println("onMapReady-${itemList[curPos].Latitude}-${itemList[curPos].Longitude}")
+            /*val sydney =
+                LatLng(itemList[curPos].Latitude.toDouble(), itemList[curPos].Longitude.toDouble())*/
+
             val sydney =
                 LatLng(itemList[curPos].Latitude.toDouble(), itemList[curPos].Longitude.toDouble())
             googleMap!!.addMarker(
@@ -533,6 +570,7 @@ class MyCoverageAdapter(
             }
 
         } catch (ex: Exception) {
+            Log.e("Error_", ex.message.toString())
             val sydney = LatLng(0.0, 0.0)
             googleMap!!.addMarker(
                 MarkerOptions().position(sydney).title(itemList[curPos].StoreName)
@@ -696,4 +734,7 @@ class MyCoverageAdapter(
     }
 
     override fun getItemViewType(position: Int): Int = position
+    fun getCurrentPosition(position: Int) {
+
+    }
 }
