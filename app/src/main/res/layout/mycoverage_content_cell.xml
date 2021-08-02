@@ -48,12 +48,18 @@
         android:layout_width="match_parent"
         android:layout_height="400dp">
 
-        <ImageView
+        <!--<ImageView
             android:visibility="gone"
             android:id="@+id/imgMap"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            tools:srcCompat="@tools:sample/avatars" />
+            tools:srcCompat="@tools:sample/avatars" />-->
+
+
+        <!--<com.example.cheilros.helpers.MyFrameLayout
+            android:id="@+id/place_map"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />-->
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
@@ -70,16 +76,6 @@
             android:paddingStart="4dp"
             android:paddingLeft="4dp"
             android:paddingRight="4dp">
-
-            <ImageButton
-                android:id="@+id/btnLocation"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="4dp"
-                android:backgroundTint="@android:color/transparent"
-                android:scaleType="center"
-                app:srcCompat="@drawable/map_icon_color" />
-
 
             <Button
                 android:id="@+id/btnAccept"
