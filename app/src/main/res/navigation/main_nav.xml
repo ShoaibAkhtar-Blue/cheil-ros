@@ -260,6 +260,9 @@
         <action
             android:id="@+id/action_acrivityDetailFragment_to_cameraActivity"
             app:destination="@id/cameraActivity" />
+        <action
+            android:id="@+id/action_acrivityDetailFragment_to_barcodeActivity"
+            app:destination="@id/barcodeActivity" />
     </fragment>
     <fragment
         android:id="@+id/barcodeFragment"
@@ -391,6 +394,12 @@
         <argument
             android:name="BrandName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_displayCountDetailFragment_to_barcodeFragment"
+            app:destination="@id/barcodeFragment" />
+        <action
+            android:id="@+id/action_displayCountDetailFragment_to_barcodeActivity"
+            app:destination="@id/barcodeActivity" />
     </fragment>
     <fragment
         android:id="@+id/priceFragment"
@@ -461,4 +470,9 @@
             android:name="ProductCategoryName"
             app:argType="string" />
     </fragment>
+    <activity
+        android:id="@+id/barcodeActivity"
+        android:name="com.example.cheilros.activities.BarcodeActivity"
+        android:label="activity_barcode"
+        tools:layout="@layout/activity_barcode" />
 </navigation>

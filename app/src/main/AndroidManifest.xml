@@ -27,7 +27,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CheilROS"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.NewDashboardActivity" android:screenOrientation = "portrait"></activity>
+        <activity
+            android:name=".activities.BarcodeActivity"
+            android:screenOrientation="portrait"
+            android:exported="true" />
+        <activity
+            android:name=".activities.NewDashboardActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.PhotoPreviewActivity"
             android:screenOrientation="portrait" />

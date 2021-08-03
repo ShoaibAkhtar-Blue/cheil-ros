@@ -100,7 +100,7 @@ class ChecklistDetailAdapter(
             .into(holder.imgChecklist!!)
 
         if (itemList[position].CheckListStatus != "") {
-            holder.txtAnswer.text = "Answer: 3${itemList[position].CheckListStatus}"
+            holder.txtAnswer.text = "Answer: ${itemList[position].CheckListStatus}"
             holder.txtAnswer.visibility = View.VISIBLE
             if (checklistAnswer.indexOf(checklistAnswer.find { it.CheckListID == itemList[position].ChecklistID }) != -1) {
                 holder.RLcolor.setBackgroundColor(Color.parseColor("#5c802a"))
@@ -406,9 +406,9 @@ class ChecklistDetailAdapter(
                                         .setMessage("Checklist updated!")
                                         .sneakSuccess()
                                 }
-                                itemList.removeAt(position)
+                                /*itemList.removeAt(position)
                                 notifyItemRemoved(position)
-                                notifyItemRangeChanged(position, itemCount - position)
+                                notifyItemRangeChanged(position, itemCount - position)*/
 
                                 CSP.delData("fragName")
                                 CSP.delData("Checklist_SESSION_IMAGE")

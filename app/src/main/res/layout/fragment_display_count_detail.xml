@@ -106,6 +106,8 @@
                         android:layout_height="match_parent"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
+                        android:layout_marginEnd="85dp"
+                        android:layout_marginRight="85dp"
                         android:fontFamily="@font/samsungsharpsans_bold"
                         android:gravity="center"
                         android:text="Display"

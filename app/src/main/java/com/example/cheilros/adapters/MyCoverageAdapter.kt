@@ -157,7 +157,6 @@ class MyCoverageAdapter(
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
-
             }
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F, object :
                 LocationListener {
@@ -225,14 +224,17 @@ class MyCoverageAdapter(
                         println("Location: $lat-$lng")
                         val myLocation = Location("")
 
+                        /*myLocation.latitude = 31.513813030475678
+                        myLocation.longitude = 74.34433225759757*/
+
                         myLocation.latitude = lat.toDouble()
                         myLocation.longitude = lng.toDouble()
 
                         val storeLocation = Location("")
 
                         try {
-                            storeLocation.latitude = itemData.Latitude.toDouble()
-                            storeLocation.longitude = itemData.Longitude.toDouble()
+                            storeLocation.latitude = itemData.Longitude.toDouble()
+                            storeLocation.longitude = itemData.Latitude.toDouble()
                         } catch (ex: Exception) {
                             storeLocation.latitude = 0.0
                             storeLocation.longitude = 0.0
@@ -240,10 +242,16 @@ class MyCoverageAdapter(
 
 
                         val distanceInMeters: Float = myLocation.distanceTo(storeLocation)
-                        println("distanceInMeters: ${distanceInMeters}")
+                        println("distanceInMeters: ${distanceInMeters} Location: $lat-$lng")
 
 
                         if (CSP.getData("LocationLimit").equals("Y")) {
+                            println("LocationLimit: $lat-$lng")
+                            println(
+                                "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
+                                    itemData.StoreID
+                                }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=&Longitude=$lng&Latitude=$lat&Remarks=-"
+                            )
                             if (distanceInMeters >= minDistance) {
                                 println("distanceInMeters: Distance is greater")
                                 (context as Activity).runOnUiThread {

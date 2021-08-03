@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/border_bottom_grey"
+        android:paddingLeft="16dp"
+        android:paddingTop="4dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="4dp">
+
+        <TextView
+            android:id="@+id/txtNum"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="24dp"
+            android:fontFamily="@font/samsungsharpsans_medium"
+            android:gravity="center"
+            android:text="00"
+            android:textColor="#4c4c4c"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/txtBrand"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toStartOf="@+id/txtAttend"
+            android:layout_toEndOf="@+id/txtNum"
+            android:layout_weight="1"
+            android:fontFamily="@font/samsungsharpsans_medium"
+            android:gravity="center|left"
+            android:maxLines="1"
+            android:text="BRAND"
+            android:textColor="#4c4c4c"
+            android:textSize="14dp" />
+
+        <EditText
+            android:id="@+id/txtAttend"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/border_grey"
+            android:ems="10"
+            android:inputType="number"
+            android:maxLength="4"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textAlignment="center" />
+
+        <ImageButton
+            android:id="@+id/btnBarCode"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="8dp"
+            android:layout_toEndOf="@+id/txtAttend"
+            android:backgroundTint="@android:color/transparent"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/barcode_code" />
+
+        <!--<TextView
+            android:id="@+id/txtAttend"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:fontFamily="@font/samsungsharpsans_bold"
+            android:gravity="center"
+            android:text="COUNT"
+            android:textColor="#4c4c4c"
+            android:textSize="14dp" />-->
+    </LinearLayout>
+
+</LinearLayout>

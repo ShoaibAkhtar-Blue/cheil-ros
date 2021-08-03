@@ -8,10 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.Filter
-import android.widget.Filterable
-import android.widget.TextView
+import android.widget.*
 import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -56,6 +53,7 @@ RecyclerView.Adapter<DisplayCountDetailAdapter.ViewHolder>(),
         var txtNum: TextView = view.findViewById(R.id.txtNum)
         var txtBrand: TextView = view.findViewById(R.id.txtBrand)
         var txtAttend: EditText = view.findViewById(R.id.txtAttend)
+        var btnBarCode: ImageButton = view.findViewById(R.id.btnBarCode)
         var watcher: TextWatcher? = null
 
         init { // TextChanged listener added only once.
@@ -73,13 +71,20 @@ RecyclerView.Adapter<DisplayCountDetailAdapter.ViewHolder>(),
     ): ViewHolder {
         CSP = CustomSharedPref(parent.context)
         val view =
-            LayoutInflater.from(context).inflate(R.layout.list_investmentdetail, parent, false)
+            LayoutInflater.from(context).inflate(R.layout.list_displaycountdetail, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtNum.text = (position + 1).toString()
         holder.txtBrand.text = itemList[position].ShortName
+
+        holder.btnBarCode.setOnClickListener{
+//            Navigation.findNavController(it)
+//                .navigate(R.id.action_displayCountDetailFragment_to_barcodeFragment)
+            Navigation.findNavController(it)
+                .navigate(R.id.action_displayCountDetailFragment_to_barcodeActivity)
+        }
 
         holder.onTextUpdated = { text ->
             val simpleDateFormat = SimpleDateFormat("yyyy-M-d")

@@ -215,12 +215,12 @@ class DashboardFragment : BaseFragment() {
 
         /*val myLocation = Location("")
 
-        myLocation.latitude = 25.308398
-        myLocation.longitude = 55.372896
+        myLocation.latitude = 41.037917
+        myLocation.longitude = 28.932340
 
         val storeLocation = Location("")
-        storeLocation.latitude = 25.198800
-        storeLocation.longitude = 55.279600
+        storeLocation.latitude = 41.03787872940302
+        storeLocation.longitude = 28.93203486688435
 
 
         val distanceInMeters: Float = myLocation.distanceTo(storeLocation)

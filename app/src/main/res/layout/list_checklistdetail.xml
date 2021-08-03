@@ -17,7 +17,7 @@
         <RelativeLayout
             android:id="@+id/RLcolor"
             android:layout_width="25dp"
-            android:layout_height="80dp"
+            android:layout_height="100dp"
             android:background="@color/status_none"
             android:gravity="center_horizontal"
             android:orientation="vertical">
@@ -75,10 +75,11 @@
 
         <RelativeLayout
             android:id="@+id/RLimgChecklist"
-            android:layout_width="100dp"
+            android:layout_width="90dp"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:orientation="vertical">
+
             <ImageView
                 android:id="@+id/imgChecklist"
                 android:layout_width="match_parent"

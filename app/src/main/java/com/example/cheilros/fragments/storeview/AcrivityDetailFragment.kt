@@ -172,7 +172,8 @@ class AcrivityDetailFragment : BaseFragment() {
         }
 
         btnScanBarcode.setOnClickListener {
-            findNavController().navigate(R.id.action_acrivityDetailFragment_to_barcodeFragment)
+            //findNavController().navigate(R.id.action_acrivityDetailFragment_to_barcodeFragment)
+            findNavController().navigate(R.id.action_acrivityDetailFragment_to_barcodeActivity)
         }
 
         btnTakePicture.setOnClickListener {
