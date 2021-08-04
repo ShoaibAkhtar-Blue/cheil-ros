@@ -58,71 +58,236 @@
                     ></TextView>
 
                 <EditText
-                    android:layout_height="100dp"
+                    android:layout_height="50dp"
                     style="@style/editTextSimple"
                     android:hint=""
                     android:id="@+id/etdescription"
                     android:inputType="text" />
             </LinearLayout>
 
-            <Button
-                style="@style/ButtonList"
-                android:id="@+id/btnBrands"
-                android:text="Select Brand"
-                 />
-
-            <Button
-                style="@style/ButtonList"
-                android:id="@+id/btnAsset"
-                android:text="Select Asset"
-                 />
-
-            <Button
-                style="@style/ButtonDate"
-                android:id="@+id/btnDate"
-                android:text="00-00-0000" />
-
-           <!-- <CheckBox
-                android:id="@+id/checkBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Status" />-->
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:background="@drawable/border_grey_withbg"
-                android:padding="8dp">
-
-                <TextView
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/samsungsharpsans_medium"
-                    android:textSize="14dp"
-                    android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Status"></TextView>
+                    android:orientation="vertical"
+                    android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_marginBottom="4dp"
+                        android:textSize="16dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/samsungsharpsans_bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Width:"
+                        ></TextView>
 
-                <com.kyleduo.switchbutton.SwitchButton
-                    android:id="@+id/checkBox"
-                    style="@style/SwitchButtonStyle"
-                    android:layout_width="wrap_content"
+                    <EditText
+
+                        android:layout_height="50dp"
+                        style="@style/editTextSimple"
+                        android:hint=""
+                        android:inputType="number" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_marginBottom="4dp"
+                        android:textSize="16dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/samsungsharpsans_bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Depth:"
+                        ></TextView>
+
+                    <EditText
+                        android:layout_height="50dp"
+                        style="@style/editTextSimple"
+                        android:hint=""
+                        android:inputType="number" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginLeft="4dp"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_marginBottom="4dp"
+                        android:textSize="16dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/samsungsharpsans_bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Height:"
+                        ></TextView>
+
+                    <EditText
+
+                        android:layout_height="50dp"
+                        style="@style/editTextSimple"
+                        android:hint=""
+                        android:inputType="number" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_marginBottom="4dp"
+                        android:textSize="16dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/samsungsharpsans_bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Area:"
+                        ></TextView>
+
+                    <EditText
+                        android:layout_height="50dp"
+                        style="@style/editTextSimple"
+                        android:hint=""
+                        android:inputType="number" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_marginBottom="4dp"
+                        android:textSize="16dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/samsungsharpsans_bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Capacity:"
+                        ></TextView>
+
+                    <EditText
+
+                        android:layout_height="50dp"
+                        style="@style/editTextSimple"
+                        android:hint=""
+                        android:inputType="number" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginLeft="4dp"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_marginBottom="4dp"
+                        android:textSize="16dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/samsungsharpsans_bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Quantity:"
+                        ></TextView>
+
+                    <EditText
+                        android:layout_height="50dp"
+                        style="@style/editTextSimple"
+                        android:hint=""
+                        android:inputType="number" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:layout_weight="1"
+                    style="@style/ButtonList"
+                    android:id="@+id/btnBrands"
+                    android:text="Select Brand"
                     />
 
-            </androidx.appcompat.widget.LinearLayoutCompat>
+                <Button
+                    android:layout_weight="1"
+                    style="@style/ButtonList"
+                    android:id="@+id/btnAsset"
+                    android:text="Select Asset"
+                    />
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:layout_weight="1"
+                    style="@style/ButtonDate"
+                    android:id="@+id/btnDate"
+                    android:text="00-00-0000" />
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_marginTop="6dp"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/border_grey_withbg"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/samsungsharpsans_medium"
+                        android:textSize="14dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Status"></TextView>
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/checkBox"
+                        style="@style/SwitchButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_height="90dp"
             android:layout_marginBottom="16dp"
-            android:orientation="vertical">
+            android:layout_marginTop="16dp">
 
             <ImageButton
                 android:id="@+id/btnTakePicture"
@@ -134,14 +299,12 @@
                 android:cropToPadding="true"
                 android:padding="0dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/camera_btn"
-                android:layout_marginBottom="8dp"/>
+                android:src="@drawable/camera_btn"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvTaskPictures"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp" />
+                android:layout_height="90dp" />
         </LinearLayout>
 
         <LinearLayout

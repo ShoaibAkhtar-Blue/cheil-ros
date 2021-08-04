@@ -7,6 +7,9 @@ import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.database.Cursor
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,6 +18,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
 import com.example.cheilros.R
 import com.example.cheilros.helpers.CustomSharedPref
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -25,6 +29,7 @@ import kotlinx.android.synthetic.main.activity_new_dashboard.view.*
 
 class NewDashboardActivity : AppCompatActivity() {
 
+    lateinit var userLocation: Location
     private lateinit var toolbar: Toolbar
     lateinit var CSP: CustomSharedPref
     private val UPDATE_REQUEST_CODE = 1500
@@ -37,12 +42,66 @@ class NewDashboardActivity : AppCompatActivity() {
         private val PERMISSION_CODE = 1001;
     }
 
+    val TAG = "MainActivity"
+
+    // Storage Permissions
+    private val REQUEST_LOCATION = 1
+    private val PERMISSIONS_LOCATION = arrayOf<String>(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
+
+    // inside a basic activity
+    private var locationManager : LocationManager? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_dashboard)
+
+        verifyLocationPermissions(this)
+        // Create persistent LocationManager reference
+        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
+
+        getLocation()
         CSP = CustomSharedPref(this)
         inAppUpdatesCheck()
         //setupToolbar()
+    }
+
+    fun getLocation(){
+        try {
+            // Request location updates
+            Log.d(TAG,"setOnClickListener")
+            locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
+
+
+
+        } catch(ex: SecurityException) {
+            ex.printStackTrace()
+            Log.d(TAG, "Security Exception, no location available")
+        }
+    }
+
+    //define the listener
+    private val locationListener: LocationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            Log.d(TAG, "onLocationChanged()")
+            userLocation = location
+//            posc_lat.text = ("lat: " + location.latitude)
+//            posc_long.text = ("lon:" + location.longitude)
+        }
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
+            Log.d(TAG, "onStatusChanged()")
+
+        }
+        override fun onProviderEnabled(provider: String) {
+            Log.d(TAG, "onProviderEnabled()")
+
+        }
+        override fun onProviderDisabled(provider: String) {
+            Log.d(TAG, "onProviderDisabled()")
+
+        }
     }
 
     override fun onResume() {
@@ -126,6 +185,28 @@ class NewDashboardActivity : AppCompatActivity() {
                     Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
                 }
             }
+            REQUEST_LOCATION -> {
+
+                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+
+                    Log.i(TAG, "Permission has been denied by user")
+                } else {
+                    Log.i(TAG, "Permission has been granted by user")
+                }
+            }
+        }
+    }
+
+    private fun verifyLocationPermissions(activity: Activity?) {
+        // Check if we have write permission
+        val permission: Int = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                this,
+                PERMISSIONS_LOCATION,
+                REQUEST_LOCATION
+            )
         }
     }
 

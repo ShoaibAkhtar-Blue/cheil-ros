@@ -20,6 +20,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
@@ -28,6 +29,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.fragments.MyCoverageFragment
 import com.example.cheilros.helpers.CustomSharedPref
@@ -54,7 +56,8 @@ class MyCoverageAdapter(
     val settingData: List<AppSetting>,
     val latitude: String,
     val longitude: String,
-    fragment: MyCoverageFragment
+    fragment: MyCoverageFragment,
+    val activity: NewDashboardActivity
 ) : RecyclerView.Adapter<MyCoverageAdapter.ViewHolder>(), Filterable {
 
 
@@ -221,14 +224,16 @@ class MyCoverageAdapter(
 
                 holder.btnAccept.setOnClickListener {
                     try {
-                        println("Location: $lat-$lng")
+                        val uLocation =  activity.userLocation
+                        println("Location: ${uLocation.latitude.toDouble()}-${uLocation.longitude.toDouble()}")
                         val myLocation = Location("")
 
                         /*myLocation.latitude = 31.513813030475678
                         myLocation.longitude = 74.34433225759757*/
 
-                        myLocation.latitude = lat.toDouble()
-                        myLocation.longitude = lng.toDouble()
+
+                        myLocation.latitude = uLocation.latitude.toDouble()
+                        myLocation.longitude = uLocation.longitude.toDouble()
 
                         val storeLocation = Location("")
 
@@ -242,8 +247,19 @@ class MyCoverageAdapter(
 
 
                         val distanceInMeters: Float = myLocation.distanceTo(storeLocation)
-                        println("distanceInMeters: ${distanceInMeters} Location: $lat-$lng")
+                        println("distanceInMeters: ${distanceInMeters} Location: $lat - $lng")
+                        //activity.getLocation()
 
+
+
+                        /*val builder = AlertDialog.Builder(context)
+                        builder.setMessage("ULocation:${uLocation.latitude.toDouble()} - ${uLocation.longitude.toDouble()} \n Your Location: $lat - $lng \n Store Location: ${itemData.Longitude.toDouble()} - ${itemData.Latitude.toDouble()} \n Distance: $distanceInMeters")
+
+                        builder.setPositiveButton("Ok") { dialog, which ->
+
+                        }
+
+                        builder.show()*/
 
                         if (CSP.getData("LocationLimit").equals("Y")) {
                             println("LocationLimit: $lat-$lng")
@@ -360,13 +376,13 @@ class MyCoverageAdapter(
                                     println(
                                         "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
                                             itemData.StoreID
-                                        }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=$lng&Latitude=$lat&Remarks=-"
+                                        }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}&Remarks=-"
                                     )
 
                                     sendVisitRequest(
                                         "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
                                             itemData.StoreID
-                                        }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=$lng&Latitude=$lat&Remarks=-"
+                                        }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}&Remarks=-"
                                     )
                                 }
                             }

@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/dashboardFragment">
+
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.example.cheilros.fragments.DashboardFragment"
+        android:label="dashboard"
+        tools:layout="@layout/fragment_dashboard">
+        <action
+            android:id="@+id/action_dashboardFragment_to_journeyPlanFragment"
+            app:destination="@id/journeyPlanFragment"
+            app:launchSingleTop="false" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_myCoverageFragment"
+            app:destination="@id/myCoverageFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_teamStatusFragment"
+            app:destination="@id/teamStatusFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/journeyPlanFragment"
+        android:name="com.example.cheilros.fragments.JourneyPlanFragment"
+        android:label="journeyplan"
+        tools:layout="@layout/fragment_journey_plan">
+        <action
+            android:id="@+id/action_journeyPlanFragment_to_myCoverageFragment"
+            app:destination="@id/myCoverageFragment" />
+        <action
+            android:id="@+id/action_journeyPlanFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
+        <action
+            android:id="@+id/action_journeyPlanFragment_to_storeViewFragment"
+            app:destination="@id/storeViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myCoverageFragment"
+        android:name="com.example.cheilros.fragments.MyCoverageFragment"
+        android:label="mycoverage"
+        tools:layout="@layout/fragment_my_coverage">
+        <action
+            android:id="@+id/action_myCoverageFragment_to_journeyPlanFragment"
+            app:destination="@id/journeyPlanFragment" />
+        <action
+            android:id="@+id/action_myCoverageFragment_to_storeViewFragment"
+            app:destination="@id/storeViewFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_myCoverageFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/cameraActivity"
+        android:name="com.example.cheilros.activities.CameraActivity"
+        tools:layout="@layout/activity_camera" >
+        <argument
+            android:name="visit_id"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="fragName"
+            app:argType="string" />
+    </activity>
+    <fragment
+        android:id="@+id/storeViewFragment"
+        android:name="com.example.cheilros.fragments.storeview.StoreViewFragment"
+        android:label="store_view"
+        tools:layout="@layout/fragment_store_view">
+        <action
+            android:id="@+id/action_storeViewFragment_to_checklistCategoryFragment"
+            app:destination="@id/checklistCategoryFragment" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
+        <argument
+            android:name="StoreID"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_investmentFragment"
+            app:destination="@id/investmentFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_activityFragment"
+            app:destination="@id/activityFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_trainingFragment"
+            app:destination="@id/trainingFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_investmentDetailFragment"
+            app:destination="@id/investmentDetailFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_trainingNewFragment"
+            app:destination="@id/trainingNewFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_installationFragment"
+            app:destination="@id/installationFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_taskDeploymentFragment"
+            app:destination="@id/taskDeploymentFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_displayCountFragment"
+            app:destination="@id/displayCountFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_priceFragment"
+            app:destination="@id/priceFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_salesFragment"
+            app:destination="@id/salesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/checklistCategoryFragment"
+        android:name="com.example.cheilros.fragments.storeview.ChecklistCategoryFragment"
+        android:label="fragment_checklist_category"
+        tools:layout="@layout/fragment_checklist_category" >
+        <argument
+            android:name="StoreID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_checklistCategoryFragment_to_checklistCategoryDetailFragment"
+            app:destination="@id/checklistCategoryDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/checklistCategoryDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.ChecklistCategoryDetailFragment"
+        android:label="checklist_category_detail"
+        tools:layout="@layout/fragment_checklist_category_detail">
+        <argument
+            android:name="StoreID"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
+        <argument
+            android:name="ChecklistID"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="ChecklistName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_checklistCategoryDetailFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/investmentFragment"
+        android:name="com.example.cheilros.fragments.storeview.InvestmentFragment"
+        android:label="investment"
+        tools:layout="@layout/fragment_investment">
+        <argument
+            android:name="StoreID"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
+        <argument
+            android:name="DivisionID"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="ElementCategoryID"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_investmentFragment_to_investmentDetailFragment"
+            app:destination="@id/investmentDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/activityFragment"
+        android:name="com.example.cheilros.fragments.storeview.ActivityFragment"
+        android:label="activity"
+        tools:layout="@layout/fragment_activity">
+        <action
+            android:id="@+id/action_activityFragment_to_activityDetailFragment"
+            app:destination="@id/activityDetailFragment" />
+        <argument
+            android:name="StoreID"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
+        <argument
+            android:name="DivisionID"
+            android:defaultValue="1"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/activityDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.ActivitySubCategoryFragment"
+        android:label="activity_category"
+        tools:layout="@layout/fragment_activity_sub_category">
+        <action
+            android:id="@+id/action_activityDetailFragment_to_acrivityDetailFragment"
+            app:destination="@id/acrivityDetailFragment" />
+        <argument
+            android:name="StoreID"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
+        <argument
+            android:name="DivisionID"
+            android:defaultValue="1"
+            app:argType="integer" />
+        <argument
+            android:name="ActivityTypeID"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="ActivityTypeName"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/acrivityDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.AcrivityDetailFragment"
+        android:label="activity_detail"
+        tools:layout="@layout/fragment_acrivity_detail">
+        <action
+            android:id="@+id/action_acrivityDetailFragment_to_barcodeFragment"
+            app:destination="@id/barcodeFragment" />
+        <argument
+            android:name="StoreID"
+            app:argType="integer" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
+        <argument
+            android:name="ActivityTypeID"
+            app:argType="integer" />
+        <argument
+            android:name="ActivityCategoryID"
+            app:argType="integer" />
+        <argument
+            android:name="ActivityTypeName"
+            app:argType="string" />
+        <argument
+            android:name="ActivityCategoryName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_acrivityDetailFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
+        <action
+            android:id="@+id/action_acrivityDetailFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
+        <action
+            android:id="@+id/action_acrivityDetailFragment_to_barcodeActivity"
+            app:destination="@id/barcodeActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/barcodeFragment"
+        android:name="com.example.cheilros.fragments.BarcodeFragment"
+        android:label="fragment_barcode"
+        tools:layout="@layout/fragment_barcode" />
+    <fragment
+        android:id="@+id/trainingFragment"
+        android:name="com.example.cheilros.fragments.storeview.TrainingFragment"
+        android:label="training"
+        tools:layout="@layout/fragment_training">
+        <action
+            android:id="@+id/action_trainingFragment_to_trainingDetailFragment"
+            app:destination="@id/trainingDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/trainingDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.TrainingDetailFragment"
+        android:label="training_detail"
+        tools:layout="@layout/fragment_training_detail">
+        <action
+            android:id="@+id/action_trainingDetailFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/investmentDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.InvestmentDetailFragment"
+        android:label="fragment_investment_detail"
+        tools:layout="@layout/fragment_investment_detail" >
+        <argument
+            android:name="StoreID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="BrandsList"
+            app:argType="com.example.cheilros.models.BrandsList" />
+        <argument
+            android:name="ElementTitle"
+            app:argType="string" />
+        <argument
+            android:name="ElementID"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.example.cheilros.fragments.CameraFragment"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" >
+        <argument
+            android:name="fragName"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/teamStatusFragment"
+        android:name="com.example.cheilros.fragments.TeamStatusFragment"
+        android:label="team_status"
+        tools:layout="@layout/fragment_team_status" />
+    <fragment
+        android:id="@+id/storeStatusFragment"
+        android:name="com.example.cheilros.fragments.storeview.StoreStatusFragment"
+        android:label="fragment_store_status"
+        tools:layout="@layout/fragment_store_status" >
+        <action
+            android:id="@+id/action_storeStatusFragment_to_checklistCategoryFragment"
+            app:destination="@id/checklistCategoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/storeActiveAssetsFragment"
+        android:name="com.example.cheilros.fragments.storeview.StoreActiveAssetsFragment"
+        android:label="fragment_store_active_assets"
+        tools:layout="@layout/fragment_store_active_assets" />
+    <fragment
+        android:id="@+id/trainingNewFragment"
+        android:name="com.example.cheilros.fragments.storeview.TrainingNewFragment"
+        android:label="fragment_training_new"
+        tools:layout="@layout/fragment_training_new" >
+        <action
+            android:id="@+id/action_trainingNewFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/installationFragment"
+        android:name="com.example.cheilros.fragments.storeview.InstallationFragment"
+        android:label="fragment_installation"
+        tools:layout="@layout/fragment_installation" >
+        <action
+            android:id="@+id/action_installationFragment_to_acrivityDetailFragment"
+            app:destination="@id/acrivityDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/taskDeploymentFragment"
+        android:name="com.example.cheilros.fragments.storeview.TaskDeploymentFragment"
+        android:label="task_deployment"
+        tools:layout="@layout/fragment_task_deployment">
+        <action
+            android:id="@+id/action_taskDeploymentFragment_to_acrivityDetailFragment"
+            app:destination="@id/acrivityDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/displayCountFragment"
+        android:name="com.example.cheilros.fragments.storeview.DisplayCountFragment"
+        android:label="display_count"
+        tools:layout="@layout/fragment_display_count" >
+        <action
+            android:id="@+id/action_displayCountFragment_to_displayCountDetailFragment"
+            app:destination="@id/displayCountDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/displayCountDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.DisplayCountDetailFragment"
+        android:label="display_count_detail"
+        tools:layout="@layout/fragment_display_count_detail">
+        <argument
+            android:name="StoreID"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="BrandID"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="ProductCategoryName"
+            app:argType="string" />
+        <argument
+            android:name="ProductCategoryID"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="BrandName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_displayCountDetailFragment_to_barcodeFragment"
+            app:destination="@id/barcodeFragment" />
+        <action
+            android:id="@+id/action_displayCountDetailFragment_to_barcodeActivity"
+            app:destination="@id/barcodeActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/priceFragment"
+        android:name="com.example.cheilros.fragments.storeview.PriceFragment"
+        android:label="fragment_price"
+        tools:layout="@layout/fragment_price" >
+        <action
+            android:id="@+id/action_priceFragment_to_priceDetailFragment"
+            app:destination="@id/priceDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/priceDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.PriceDetailFragment"
+        android:label="fragment_price_detail"
+        tools:layout="@layout/fragment_price_detail" >
+        <argument
+            android:name="StoreID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="BrandID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="ProductCategoryID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_priceDetailFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
+        <argument
+            android:name="BrandName"
+            app:argType="string" />
+        <argument
+            android:name="ProductCategory"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/salesFragment"
+        android:name="com.example.cheilros.fragments.storeview.SalesFragment"
+        android:label="fragment_sales"
+        tools:layout="@layout/fragment_sales" >
+        <action
+            android:id="@+id/action_salesFragment_to_salesDetailFragment"
+            app:destination="@id/salesDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/salesDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.SalesDetailFragment"
+        android:label="fragment_sales_detail"
+        tools:layout="@layout/fragment_sales_detail" >
+        <argument
+            android:name="StoreID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="BrandID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="ProductCategoryID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="BrandName"
+            app:argType="string" />
+        <argument
+            android:name="ProductCategoryName"
+            app:argType="string" />
+    </fragment>
+    <activity
+        android:id="@+id/barcodeActivity"
+        android:name="com.example.cheilros.activities.BarcodeActivity"
+        android:label="activity_barcode"
+        tools:layout="@layout/activity_barcode" />
+</navigation>
