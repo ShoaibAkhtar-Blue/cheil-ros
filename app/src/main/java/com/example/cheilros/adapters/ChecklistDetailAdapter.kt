@@ -91,12 +91,18 @@ class ChecklistDetailAdapter(
     }
 
     @SuppressLint("ResourceAsColor")
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
 
         holder.txtTitle.text = itemList[position].Question
 
         Glide.with(context)
-            .load("${CSP.getData("base_url")}/ChecklistPictures/${itemList[position].ChecklistID}_${arguments?.getInt("StoreID")}.jpg")
+            .load(
+                "${CSP.getData("base_url")}/ChecklistPictures/${itemList[position].ChecklistID}_${
+                    arguments?.getInt(
+                        "StoreID"
+                    )
+                }.jpg"
+            )
             .into(holder.imgChecklist!!)
 
         if (itemList[position].CheckListStatus != "") {
@@ -132,7 +138,7 @@ class ChecklistDetailAdapter(
 
 
             dialog.btnTakePictureTask.setOnClickListener {
-                if(capturedPicturesList.size == 0){
+                if (capturedPicturesList.size == 0) {
                     val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
 
                     builder.setTitle("Choose...")
@@ -320,6 +326,10 @@ class ChecklistDetailAdapter(
                 dialog.dismiss()
             }
 
+            dialog.rgTypeOne.setOnClickListener {
+
+            }
+
             dialog.btnAccept.setOnClickListener {
                 var answer = ""
                 if (itemList[position].InputTypeID == 2) {
@@ -329,7 +339,16 @@ class ChecklistDetailAdapter(
                 } else if (itemList[position].InputTypeID == 4) {
                     answer = dialog.btnDate.text.toString()
                 } else if (itemList[position].InputTypeID == 1) {
-                    answer = if (dialog.checkBox.isChecked) "Yes" else "No"
+                    //answer = if (dialog.checkBox.isChecked) "Yes" else "No"
+
+                    try {
+                        val selectedOption: Int = dialog.rgTypeOne!!.checkedRadioButtonId
+                        var radioButton: RadioButton = dialog.findViewById(selectedOption)
+                        answer = radioButton.text.toString()
+                    } catch (ex: Exception) {
+                        answer = "No"
+                    }
+
                 }
 
 
@@ -360,15 +379,17 @@ class ChecklistDetailAdapter(
 
                     val requestBody = builder.build()
 
-                    println("${CSP.getData("base_url")}/Audit.asmx/CheckList_AuditAdd??TeamMemberID=${
-                        CSP.getData(
-                            "user_id"
-                        )
-                    }&CheckListID=${itemList[position].ChecklistID}&StoreID=${
-                        arguments?.getInt(
-                            "StoreID"
-                        )
-                    }&CheckListStatus=${answer}")
+                    println(
+                        "${CSP.getData("base_url")}/Audit.asmx/CheckList_AuditAdd??TeamMemberID=${
+                            CSP.getData(
+                                "user_id"
+                            )
+                        }&CheckListID=${itemList[position].ChecklistID}&StoreID=${
+                            arguments?.getInt(
+                                "StoreID"
+                            )
+                        }&CheckListStatus=${answer}"
+                    )
 
                     val request: Request = Request.Builder()
                         .url(

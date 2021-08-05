@@ -1,4 +1,3 @@
-/*
 package com.example.cheilros.adapters
 
 import android.Manifest
@@ -46,7 +45,7 @@ import okhttp3.*
 import java.io.IOException
 
 
-class JPAdaptaer(
+class JPAdapter(
     val context: Context,
     val itemList: List<JourneyPlanData>,
     fragment: JourneyPlanFragment,
@@ -281,8 +280,7 @@ class JPAdaptaer(
         holder.btnAccept.setOnClickListener {
 
 
-            */
-/*locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
+            /*locationManager = context.getSystemService(LOCATION_SERVICE) as LocationManager
             if (ActivityCompat.checkSelfPermission(
                     context,
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -307,8 +305,7 @@ class JPAdaptaer(
                     println("loc: ${location.latitude}")
                 }
 
-            })*//*
-
+            })*/
             //val bundle = bundleOf("visit_id" to itemList[position].VisitID)
 
 
@@ -636,4 +633,3 @@ class JPAdaptaer(
 
 
 }
-*/

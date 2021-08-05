@@ -179,7 +179,7 @@ class MyCoverageAdapter(
 
     @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = itemList[position]
+        val item = filterList[position]
         holder.item = item
     }
 

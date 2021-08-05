@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.JPAdapter
 import com.example.cheilros.adapters.JPCurrentWeekApdater
 import com.example.cheilros.adapters.JPStatusAdapter
@@ -379,7 +380,8 @@ class JourneyPlanFragment : BaseFragment() {
                             apiData.data,
                             this@JourneyPlanFragment,
                             isCurrentDate,
-                            settingData
+                            settingData,
+                            requireActivity() as NewDashboardActivity
                         )
                         rvJourneyPlan.adapter = recylcerAdapter
                         val emptyView: View = todo_list_empty_view

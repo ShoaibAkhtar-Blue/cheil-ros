@@ -87,14 +87,41 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:visibility="gone">
-            <CheckBox
+
+            <RadioGroup
+                android:id="@+id/rgTypeOne"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Yes"
+                    android:id="@+id/rbYes"
+                    android:layout_gravity="center_horizontal"
+                    android:checked="false"
+                    android:textSize="18dp" />
+
+                <RadioButton
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No"
+                    android:id="@+id/rbNo"
+                    android:layout_gravity="center_horizontal"
+                    android:checked="false"
+                    android:textSize="18dp" />
+            </RadioGroup>
+
+            <!--<CheckBox
 
                 android:id="@+id/checkBox"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="Yes" />
+                android:text="Yes" />-->
         </LinearLayout>
 
         <LinearLayout
