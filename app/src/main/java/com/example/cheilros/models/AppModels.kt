@@ -236,7 +236,7 @@ class DisplayCountViewModel(val status: Int, val data: List<DisplayCountViewData
 class DisplayCountViewData(
     val ProductID: Int,
     val ShortName: String,
-    val DisplayCount: Int
+    var DisplayCount: Int
 )
 
 class DisplayCountJSON(val data: List<DisplayCountJSONData>)

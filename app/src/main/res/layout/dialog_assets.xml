@@ -65,159 +65,9 @@
                     android:inputType="text" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:layout_marginRight="4dp"
-                    android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="8dp">
-                    <TextView
-                        android:layout_marginBottom="4dp"
-                        android:textSize="16dp"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/samsungsharpsans_bold"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Width:"
-                        ></TextView>
 
-                    <EditText
 
-                        android:layout_height="50dp"
-                        style="@style/editTextSimple"
-                        android:hint=""
-                        android:inputType="number" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="8dp">
-                    <TextView
-                        android:layout_marginBottom="4dp"
-                        android:textSize="16dp"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/samsungsharpsans_bold"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Depth:"
-                        ></TextView>
 
-                    <EditText
-                        android:layout_height="50dp"
-                        style="@style/editTextSimple"
-                        android:hint=""
-                        android:inputType="number" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_marginLeft="4dp"
-                    android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="8dp">
-                    <TextView
-                        android:layout_marginBottom="4dp"
-                        android:textSize="16dp"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/samsungsharpsans_bold"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Height:"
-                        ></TextView>
-
-                    <EditText
-
-                        android:layout_height="50dp"
-                        style="@style/editTextSimple"
-                        android:hint=""
-                        android:inputType="number" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_marginRight="4dp"
-                    android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="8dp">
-                    <TextView
-                        android:layout_marginBottom="4dp"
-                        android:textSize="16dp"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/samsungsharpsans_bold"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Area:"
-                        ></TextView>
-
-                    <EditText
-                        android:layout_height="50dp"
-                        style="@style/editTextSimple"
-                        android:hint=""
-                        android:inputType="number" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="8dp">
-                    <TextView
-                        android:layout_marginBottom="4dp"
-                        android:textSize="16dp"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/samsungsharpsans_bold"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Capacity:"
-                        ></TextView>
-
-                    <EditText
-
-                        android:layout_height="50dp"
-                        style="@style/editTextSimple"
-                        android:hint=""
-                        android:inputType="number" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_marginLeft="4dp"
-                    android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="8dp">
-                    <TextView
-                        android:layout_marginBottom="4dp"
-                        android:textSize="16dp"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/samsungsharpsans_bold"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Quantity:"
-                        ></TextView>
-
-                    <EditText
-                        android:layout_height="50dp"
-                        style="@style/editTextSimple"
-                        android:hint=""
-                        android:inputType="number" />
-                </LinearLayout>
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -279,6 +129,166 @@
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/LLExtraOpt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_marginRight="4dp"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="8dp">
+                        <TextView
+                            android:layout_marginBottom="4dp"
+                            android:textSize="16dp"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/samsungsharpsans_bold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Width:"
+                            ></TextView>
+
+                        <EditText
+
+                            android:layout_height="50dp"
+                            style="@style/editTextSimple"
+                            android:hint=""
+                            android:inputType="number" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="8dp">
+                        <TextView
+                            android:layout_marginBottom="4dp"
+                            android:textSize="16dp"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/samsungsharpsans_bold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Depth:"
+                            ></TextView>
+
+                        <EditText
+                            android:layout_height="50dp"
+                            style="@style/editTextSimple"
+                            android:hint=""
+                            android:inputType="number" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_marginLeft="4dp"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="8dp">
+                        <TextView
+                            android:layout_marginBottom="4dp"
+                            android:textSize="16dp"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/samsungsharpsans_bold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Height:"
+                            ></TextView>
+
+                        <EditText
+
+                            android:layout_height="50dp"
+                            style="@style/editTextSimple"
+                            android:hint=""
+                            android:inputType="number" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_marginRight="4dp"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="8dp">
+                        <TextView
+                            android:layout_marginBottom="4dp"
+                            android:textSize="16dp"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/samsungsharpsans_bold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Area:"
+                            ></TextView>
+
+                        <EditText
+                            android:layout_height="50dp"
+                            style="@style/editTextSimple"
+                            android:hint=""
+                            android:inputType="number" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="8dp">
+                        <TextView
+                            android:layout_marginBottom="4dp"
+                            android:textSize="16dp"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/samsungsharpsans_bold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Capacity:"
+                            ></TextView>
+
+                        <EditText
+
+                            android:layout_height="50dp"
+                            style="@style/editTextSimple"
+                            android:hint=""
+                            android:inputType="number" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_marginLeft="4dp"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="8dp">
+                        <TextView
+                            android:layout_marginBottom="4dp"
+                            android:textSize="16dp"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/samsungsharpsans_bold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Quantity:"
+                            ></TextView>
+
+                        <EditText
+                            android:layout_height="50dp"
+                            style="@style/editTextSimple"
+                            android:hint=""
+                            android:inputType="number" />
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

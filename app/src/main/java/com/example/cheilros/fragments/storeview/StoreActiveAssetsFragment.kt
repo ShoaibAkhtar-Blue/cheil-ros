@@ -239,6 +239,8 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
         dialog.setCancelable(false)
         dialog.setCanceledOnTouchOutside(true)
 
+        if (CSP.getData("Asset_Parameters").equals("N"))
+            dialog.LLExtraOpt.visibility = View.GONE
 
 
         dialog.rvTaskPictures.setHasFixedSize(true)
@@ -263,6 +265,8 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
             dialog.etdescription.setText(updatedList.AssetDescription)
             //dialog.checkBox.isChecked = updatedList[0].
         }
+
+
 
         btnBrands.setOnClickListener {
             val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())

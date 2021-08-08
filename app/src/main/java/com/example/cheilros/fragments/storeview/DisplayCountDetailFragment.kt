@@ -130,6 +130,30 @@ class DisplayCountDetailFragment : BaseFragment() {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!CSP.getData("activity_barcodes").equals("")) {
+            Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                .setTitle("Success!!")
+                .setMessage("Barcode Added to this session!")
+                .sneakSuccess()
+
+            if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
+                CSP.saveData("ActivityDetail_BARCODE_SET", CSP.getData("activity_barcodes"))
+                CSP.delData("activity_barcodes")
+
+                CSP.getData("dispProdID")?.let { recylcerAdapter.updateItem(it.toInt()) }
+            } else {
+                CSP.saveData(
+                    "ActivityDetail_BARCODE_SET",
+                    "${CSP.getData("ActivityDetail_BARCODE_SET")},${CSP.getData("activity_barcodes")}"
+                )
+                CSP.delData("activity_barcodes")
+                CSP.getData("dispProdID")?.let { recylcerAdapter.updateItem(it.toInt()) }
+            }
+        }
+    }
+
     fun fetchDisplayCountDetail(url: String) {
         val ref = this
         val client = OkHttpClient()

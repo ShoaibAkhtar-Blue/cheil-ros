@@ -132,8 +132,8 @@ class AcrivityDetailFragment : BaseFragment() {
         }
 
         try {
-            txtBarcodeCount.text = if (CSP.getData("activity_barcodes").equals("")) "0" else {
-                CSP.getData("activity_barcodes")?.split(",")?.size.toString()
+            txtBarcodeCount.text = if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) "0" else {
+                CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.size.toString()
             }
         } catch (ex: Exception) {
             txtBarcodeCount.text = "0"
@@ -141,8 +141,8 @@ class AcrivityDetailFragment : BaseFragment() {
 
         RLbarcode.setOnClickListener {
 
-            if(!CSP.getData("activity_barcodes").equals("")){
-                var savedBarcodes = CSP.getData("activity_barcodes")?.split(",")?.toTypedArray()
+            if(!CSP.getData("ActivityDetail_BARCODE_SET").equals("")){
+                var savedBarcodes = CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.toTypedArray()
                 //var savedBarcodes = "abc, xyz"?.split(",").toTypedArray()
 
                 val li = LayoutInflater.from(requireContext())
@@ -350,15 +350,22 @@ class AcrivityDetailFragment : BaseFragment() {
                 .setMessage("Barcode Added to this session!")
                 .sneakSuccess()
 
+            println("ActivityDetail_BARCODE_SET: ${CSP.getData("ActivityDetail_BARCODE_SET")}")
+
             if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
                 CSP.saveData("ActivityDetail_BARCODE_SET", CSP.getData("activity_barcodes"))
                 CSP.delData("activity_barcodes")
+                txtBarcodeCount.text = "1"
             } else {
                 CSP.saveData(
                     "ActivityDetail_BARCODE_SET",
                     "${CSP.getData("ActivityDetail_BARCODE_SET")},${CSP.getData("activity_barcodes")}"
                 )
                 CSP.delData("activity_barcodes")
+
+                var barcodeCount = CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.size
+                txtBarcodeCount.text = barcodeCount.toString()
+
             }
         }
 

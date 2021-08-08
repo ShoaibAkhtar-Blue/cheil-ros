@@ -20,6 +20,7 @@ import com.example.cheilros.models.*
 import com.google.gson.Gson
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
+import kotlinx.android.synthetic.main.dialog_assets.*
 import kotlinx.android.synthetic.main.fragment_investment_detail.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -35,7 +36,7 @@ class DisplayCountDetailAdapter(
     val fragment: DisplayCountDetailFragment,
     val arguments: Bundle?
 ) :
-RecyclerView.Adapter<DisplayCountDetailAdapter.ViewHolder>(),
+    RecyclerView.Adapter<DisplayCountDetailAdapter.ViewHolder>(),
     Filterable {
 
     lateinit var CSP: CustomSharedPref
@@ -79,9 +80,17 @@ RecyclerView.Adapter<DisplayCountDetailAdapter.ViewHolder>(),
         holder.txtNum.text = (position + 1).toString()
         holder.txtBrand.text = itemList[position].ShortName
 
-        holder.btnBarCode.setOnClickListener{
+        if (CSP.getData("Display_BarCode").equals("N"))
+            holder.btnBarCode.visibility = View.GONE
+        else{
+            holder.txtAttend.isEnabled = false
+            holder.txtAttend.isFocusable = false
+        }
+
+        holder.btnBarCode.setOnClickListener {
 //            Navigation.findNavController(it)
 //                .navigate(R.id.action_displayCountDetailFragment_to_barcodeFragment)
+            CSP.saveData("dispProdID", filterList[position].ProductID.toString())
             Navigation.findNavController(it)
                 .navigate(R.id.action_displayCountDetailFragment_to_barcodeActivity)
         }
@@ -141,7 +150,7 @@ RecyclerView.Adapter<DisplayCountDetailAdapter.ViewHolder>(),
             }
         }
 
-        holder.txtAttend.setText(itemList[position].DisplayCount.toString())
+        holder.txtAttend.setText(filterList[position].DisplayCount.toString())
 
         fragment.btnSubmit.setOnClickListener {
 
@@ -226,9 +235,13 @@ RecyclerView.Adapter<DisplayCountDetailAdapter.ViewHolder>(),
         }
     }
 
-    /*fun updateItem(position: Int, item: DisplayCountProductsData) {
-        itemList[position] = item
+    fun updateItem(pid: Int) {
+        val numbersOnSameIndexAsValue = filterList.indexOf(filterList.find { it.ProductID == pid })
+        filterList[numbersOnSameIndexAsValue].DisplayCount =
+            (filterList[numbersOnSameIndexAsValue].DisplayCount + 1).toInt()
+
+        println("updateItem $numbersOnSameIndexAsValue")
         //itemList[position] = item
-        //notifyDataSetChanged()
-    }*/
+        notifyDataSetChanged()
+    }
 }
