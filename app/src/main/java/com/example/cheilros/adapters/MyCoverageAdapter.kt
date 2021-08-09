@@ -235,6 +235,9 @@ class MyCoverageAdapter(
                         myLocation.latitude = uLocation.latitude.toDouble()
                         myLocation.longitude = uLocation.longitude.toDouble()
 
+                        lat = uLocation.latitude.toString()
+                        lng = uLocation.longitude.toString()
+
                         val storeLocation = Location("")
 
                         try {
@@ -297,6 +300,30 @@ class MyCoverageAdapter(
                                         )
                                         Navigation.findNavController(it)
                                             .navigate(R.id.action_myCoverageFragment_to_cameraActivity)
+                                    }else {
+                                        CSP.saveData(
+                                            "sess_visit_status_id",
+                                            itemData.VisitStatusID.toString()
+                                        )
+                                        CSP.saveData(
+                                            "sess_visit_id",
+                                            itemData.VisitStatusID.toString()
+                                        )
+
+                                        val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+                                        val currentDateAndTime: String = simpleDateFormat.format(Date())
+
+                                        println(
+                                            "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
+                                                itemData.StoreID
+                                            }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}&Remarks=-"
+                                        )
+
+                                        sendVisitRequest(
+                                            "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
+                                                itemData.StoreID
+                                            }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}&Remarks=-"
+                                        )
                                     }
                                 } else { // Checkin
                                     if (CSP.getData("CheckIn_Camera").equals("Y")) {
@@ -311,6 +338,30 @@ class MyCoverageAdapter(
                                         )
                                         Navigation.findNavController(it)
                                             .navigate(R.id.action_myCoverageFragment_to_cameraActivity)
+                                    }else {
+                                        CSP.saveData(
+                                            "sess_visit_status_id",
+                                            itemData.VisitStatusID.toString()
+                                        )
+                                        CSP.saveData(
+                                            "sess_visit_id",
+                                            itemData.VisitStatusID.toString()
+                                        )
+
+                                        val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+                                        val currentDateAndTime: String = simpleDateFormat.format(Date())
+
+                                        println(
+                                            "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
+                                                itemData.StoreID
+                                            }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}&Remarks=-"
+                                        )
+
+                                        sendVisitRequest(
+                                            "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
+                                                itemData.StoreID
+                                            }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}&Remarks=-"
+                                        )
                                     }
                                 }
                             }

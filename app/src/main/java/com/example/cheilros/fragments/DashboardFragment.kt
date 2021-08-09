@@ -208,11 +208,13 @@ class DashboardFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+
+        //CSP.saveData("CheckIn_Camera", "Y")
         //CSP.saveData("Display_BarCode", "N")
         //CSP.saveData("Asset_Parameters", "N")
-//        CSP.saveData("CheckIn_Camera", "N")
-//        CSP.saveData("CheckOut_Camera", "N")
-        //CSP.saveData("LocationLimit", "Y")
+        //CSP.saveData("CheckIn_Camera", "N")
+        //CSP.saveData("CheckOut_Camera", "N")
+        //CSP.saveData("LocationLimit", "N")
 
         /*val myLocation = Location("")
 

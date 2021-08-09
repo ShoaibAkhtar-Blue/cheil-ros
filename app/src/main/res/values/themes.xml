@@ -14,6 +14,7 @@
         <!-- Customize your theme here. -->
         <item name="android:fontFamily">@font/samsungsharpsans_medium</item>
         <item name="toolbarStyle">@style/AppTheme.Toolbar</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
 
 
