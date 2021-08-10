@@ -1,6 +1,7 @@
 package com.example.cheilros.adapters
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.text.TextWatcher
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.fragments.storeview.DisplayCountDetailFragment
@@ -21,6 +23,7 @@ import com.google.gson.Gson
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.dialog_assets.*
+import kotlinx.android.synthetic.main.dialog_barcode.*
 import kotlinx.android.synthetic.main.fragment_investment_detail.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -44,6 +47,10 @@ class DisplayCountDetailAdapter(
 
     var filterList = ArrayList<DisplayCountViewData>()
 
+    lateinit var layoutManagerBC: RecyclerView.LayoutManager
+    lateinit var recylcerAdapterBC: BarcodeAdapter
+
+
     init {
         filterList = itemList as ArrayList<DisplayCountViewData>
     }
@@ -55,6 +62,7 @@ class DisplayCountDetailAdapter(
         var txtBrand: TextView = view.findViewById(R.id.txtBrand)
         var txtAttend: EditText = view.findViewById(R.id.txtAttend)
         var btnBarCode: ImageButton = view.findViewById(R.id.btnBarCode)
+        var btnAllBarCode: ImageButton = view.findViewById(R.id.btnAllBarCode)
         var watcher: TextWatcher? = null
 
         init { // TextChanged listener added only once.
@@ -80,8 +88,10 @@ class DisplayCountDetailAdapter(
         holder.txtNum.text = (position + 1).toString()
         holder.txtBrand.text = itemList[position].ShortName
 
-        if (CSP.getData("Display_BarCode").equals("N"))
+        if (CSP.getData("Display_BarCode").equals("N")) {
             holder.btnBarCode.visibility = View.GONE
+            holder.btnAllBarCode.visibility = View.GONE
+        }
         else{
             holder.txtAttend.isEnabled = false
             holder.txtAttend.isFocusable = false
@@ -93,6 +103,43 @@ class DisplayCountDetailAdapter(
             CSP.saveData("dispProdID", filterList[position].ProductID.toString())
             Navigation.findNavController(it)
                 .navigate(R.id.action_displayCountDetailFragment_to_barcodeActivity)
+        }
+
+        holder.btnAllBarCode.setOnClickListener {
+            if(!CSP.getData("ActivityDetail_BARCODE_SET").equals("")){
+                var savedBarcodes = CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.toTypedArray()
+                var savedBarcodes1 = savedBarcodes?.filter { it.contains("_${filterList[position].ProductID}") }
+                //var savedBarcodes = "abc, xyz"?.split(",").toTypedArray()
+
+                if (savedBarcodes1 != null) {
+                    if(savedBarcodes1.isNotEmpty()){
+                        val li = LayoutInflater.from(context)
+                        val promptsView: View = li.inflate(R.layout.dialog_barcode, null)
+
+                        val dialog = Dialog(context)
+                        dialog.setContentView(promptsView)
+                        dialog.setCancelable(false)
+                        dialog.setCanceledOnTouchOutside(true)
+
+                        dialog.rvBarcode.setHasFixedSize(true)
+                        layoutManagerBC = LinearLayoutManager(context)
+                        dialog.rvBarcode.layoutManager = layoutManagerBC
+                        recylcerAdapterBC = savedBarcodes1?.toMutableList()?.let { it1 ->
+                            BarcodeAdapter(context,
+                                it1, dialog)
+                        }!!
+                        dialog.rvBarcode.adapter = recylcerAdapterBC
+
+                        dialog.show()
+                    }
+                }
+
+            } else {
+                /*Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                    .setTitle("Info!!")
+                    .setMessage("No Barcode Added to the session!")
+                    .sneakWarning()*/
+            }
         }
 
         holder.onTextUpdated = { text ->

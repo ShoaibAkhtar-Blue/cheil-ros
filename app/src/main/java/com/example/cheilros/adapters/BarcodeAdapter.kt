@@ -26,7 +26,13 @@ class BarcodeAdapter(val context: Context, val barcodeList: MutableList<String>,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.txtTitle.text = barcodeList[position].toString()
+        if(barcodeList[position].contains("_")){
+            var splitText = barcodeList[position].split("_")
+            holder.txtTitle.text = splitText[0]
+        }else{
+            holder.txtTitle.text = barcodeList[position]
+        }
+
 
         holder.btnRemove.setOnClickListener {
             barcodeList.removeAt(position)
