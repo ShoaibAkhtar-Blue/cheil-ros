@@ -85,7 +85,11 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
                 .setMessage("Image Added to this session!")
                 .sneakSuccess()
 
-            println("StoreAsset_SESSION_IMAGE: ${CSP.getData("StoreAsset_SESSION_IMAGE").toString()}")
+            println(
+                "StoreAsset_SESSION_IMAGE: ${
+                    CSP.getData("StoreAsset_SESSION_IMAGE").toString()
+                }"
+            )
 
             try {
                 recylcerAdapterPA.addNewItem(CSP.getData("StoreAsset_SESSION_IMAGE").toString())
@@ -263,7 +267,14 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
 
             dialog.btnDate.text = updatedList.CreationDateTime
             dialog.etdescription.setText(updatedList.AssetDescription)
-            //dialog.checkBox.isChecked = updatedList[0].
+
+            dialog.etWidth.setText(updatedList.Stand_Width)
+            dialog.etLength.setText(updatedList.Stand_Depth_Length)
+            dialog.etHeight.setText(updatedList.Stand_Height)
+            dialog.etArea.setText(updatedList.Stand_Sqm)
+            dialog.etCapacity.setText(updatedList.Capacity.toString())
+            dialog.etQuantity.setText(updatedList.Quantity.toString())
+            dialog.checkBox.isChecked = updatedList.ActiveStatus == 1
         }
 
 
@@ -334,7 +345,7 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
         }
 
         dialog.btnTakePicture.setOnClickListener {
-            if(capturedPicturesList.size == 0){
+            if (capturedPicturesList.size == 0) {
                 val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
 
                 builder.setTitle("Choose...")
@@ -382,13 +393,15 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
 
                 val status = if (dialog.checkBox.isChecked) "1" else "0"
 
-                println("${CSP.getData("base_url")}/Asset.asmx/${assetMethod}?AssetTypeID=${defaultAsset}&BrandID=${defaultBrand}&StoreID=${
-                    StoreID
-                }&AssetDescription=${dialog.etdescription.text}&ActiveStatus=${status}&TeamMemberID=${
-                    CSP.getData(
-                        "user_id"
-                    )
-                }")
+                println(
+                    "${CSP.getData("base_url")}/Asset.asmx/${assetMethod}?AssetTypeID=${defaultAsset}&BrandID=${defaultBrand}&StoreID=${
+                        StoreID
+                    }&AssetDescription=${dialog.etdescription.text}&ActiveStatus=${status}&TeamMemberID=${
+                        CSP.getData(
+                            "user_id"
+                        )
+                    }&InstallationDate=${dialog.btnDate.text}&Capacity=${dialog.etCapacity.text}&Quantity=${dialog.etQuantity.text}&StandTypeID=0&StandWidth=${dialog.etWidth.text}&StandDepthLength=${dialog.etLength.text}&StandHeight=${dialog.etHeight.text}&StandSqm=${dialog.etArea.text}"
+                )
 
                 val request: Request = Request.Builder()
                     .url(
@@ -398,7 +411,7 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
                             CSP.getData(
                                 "user_id"
                             )
-                        }"
+                        }&InstallationDate=${dialog.btnDate.text}&Capacity=${dialog.etCapacity.text}&Quantity=${dialog.etQuantity.text}&StandTypeID=0&StandWidth=${dialog.etWidth.text}&StandDepthLength=${dialog.etLength.text}&StandHeight=${dialog.etHeight.text}&StandSqm=${dialog.etArea.text}"
                     )
                     .post(requestBody)
                     .build()

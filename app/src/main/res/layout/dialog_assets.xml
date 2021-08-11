@@ -172,7 +172,8 @@
                             ></TextView>
 
                         <EditText
-
+                            android:id="@+id/etWidth"
+                            android:text="0"
                             android:layout_height="50dp"
                             style="@style/editTextSimple"
                             android:hint=""
@@ -197,6 +198,8 @@
                             ></TextView>
 
                         <EditText
+                            android:id="@+id/etLength"
+                            android:text="0"
                             android:layout_height="50dp"
                             style="@style/editTextSimple"
                             android:hint=""
@@ -220,7 +223,8 @@
                             ></TextView>
 
                         <EditText
-
+                            android:id="@+id/etHeight"
+                            android:text="0"
                             android:layout_height="50dp"
                             style="@style/editTextSimple"
                             android:hint=""
@@ -250,6 +254,8 @@
                             ></TextView>
 
                         <EditText
+                            android:id="@+id/etArea"
+                            android:text="0"
                             android:layout_height="50dp"
                             style="@style/editTextSimple"
                             android:hint=""
@@ -274,7 +280,8 @@
                             ></TextView>
 
                         <EditText
-
+                            android:id="@+id/etCapacity"
+                            android:text="0"
                             android:layout_height="50dp"
                             style="@style/editTextSimple"
                             android:hint=""
@@ -298,6 +305,8 @@
                             ></TextView>
 
                         <EditText
+                            android:id="@+id/etQuantity"
+                            android:text="0"
                             android:layout_height="50dp"
                             style="@style/editTextSimple"
                             android:hint=""

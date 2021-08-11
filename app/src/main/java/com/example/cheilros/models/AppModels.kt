@@ -34,7 +34,17 @@ class AssetListData(
     val CreationDateTime: String,
     val TeamMemberName: String,
     val StoreID: Int,
-    val StoreName: String
+    val StoreName: String,
+    val ActiveStatus: Int,
+    val InstallationDate: String,
+    val Quantity: Int,
+    val Capacity: Int,
+    val StandTypeID: Int,
+    val StandTypeName: String,
+    val Stand_Width: String,
+    val Stand_Depth_Length: String,
+    val Stand_Height: String,
+    val Stand_Sqm: String
 )
 
 class AssetBrandsModel(val status: Int, val data: List<AssetBrandsData>)
