@@ -624,15 +624,17 @@ class MyCoverageAdapter(
                 if (charSearch.isEmpty()) {
                     filterList = itemList as ArrayList<MyCoverageData>
                 } else {
-                    val resultList = ArrayList<MyCoverageData>()
-                    for (row in itemList) {
-                        if (row.StoreName.toLowerCase()
-                                .contains(constraint.toString().toLowerCase())
-                        ) {
-                            resultList.add(row)
+                    if(filterList.size > 0){
+                        val resultList = ArrayList<MyCoverageData>()
+                        for (row in itemList) {
+                            if (row.StoreName.toLowerCase()
+                                    .contains(constraint.toString().toLowerCase())
+                            ) {
+                                resultList.add(row)
+                            }
                         }
+                        filterList = resultList
                     }
-                    filterList = resultList
                 }
                 val filterResults = FilterResults()
                 filterResults.values = filterList

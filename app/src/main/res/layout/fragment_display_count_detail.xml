@@ -101,7 +101,6 @@
                         android:textSize="14dp" />
 
                     <TextView
-                        android:visibility="invisible"
                         android:id="@+id/CountHeading"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -113,7 +112,8 @@
                         android:gravity="center"
                         android:text="Display"
                         android:textColor="@android:color/white"
-                        android:textSize="14dp" />
+                        android:textSize="14dp"
+                        android:visibility="invisible" />
                 </RelativeLayout>
 
                 <com.example.cheilros.activities.customobj.EmptyRecyclerView

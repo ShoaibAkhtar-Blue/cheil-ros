@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.DialogInterface.OnMultiChoiceClickListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -247,7 +248,12 @@ class MyCoverageFragment : BaseFragment() {
             android.widget.SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(qString: String): Boolean {
-                recylcerAdapter?.filter?.filter(qString)
+                try {
+                    recylcerAdapter?.filter?.filter(qString)
+                }catch (ex: Exception){
+                    Log.e("Error_", ex.message.toString())
+                }
+
                 return true
             }
             override fun onQueryTextSubmit(qString: String): Boolean {

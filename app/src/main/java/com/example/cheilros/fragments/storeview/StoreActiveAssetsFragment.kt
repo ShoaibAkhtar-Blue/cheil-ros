@@ -237,6 +237,7 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
         val promptsView: View = li.inflate(R.layout.dialog_assets, null)
 
         var assetMethod = "AddNewAsset"
+        var assetID = "0"
 
         val dialog = Dialog(requireContext())
         dialog.setContentView(promptsView)
@@ -259,10 +260,11 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
 
         if (updatedList != null) {
             assetMethod = "UpdateAsset"
+            assetID = updatedList.AssetID.toString()
             defaultBrand = updatedList.BrandID.toString()
             btnBrands.text = updatedList.BrandName
 
-            defaultAsset = updatedList.AssetID.toString()
+            defaultAsset = updatedList.AssetTypeID.toString()
             btnAsset.text = updatedList.AssetTypeName
 
             dialog.btnDate.text = updatedList.CreationDateTime
@@ -394,7 +396,7 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
                 val status = if (dialog.checkBox.isChecked) "1" else "0"
 
                 println(
-                    "${CSP.getData("base_url")}/Asset.asmx/${assetMethod}?AssetTypeID=${defaultAsset}&BrandID=${defaultBrand}&StoreID=${
+                    "${CSP.getData("base_url")}/Asset.asmx/${assetMethod}?AssetTypeID=${defaultAsset}&BrandID=${defaultBrand}&AssetID=${assetID}&StoreID=${
                         StoreID
                     }&AssetDescription=${dialog.etdescription.text}&ActiveStatus=${status}&TeamMemberID=${
                         CSP.getData(
@@ -405,7 +407,7 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
 
                 val request: Request = Request.Builder()
                     .url(
-                        "${CSP.getData("base_url")}/Asset.asmx/${assetMethod}?AssetTypeID=${defaultAsset}&BrandID=${defaultBrand}&StoreID=${
+                        "${CSP.getData("base_url")}/Asset.asmx/${assetMethod}?AssetTypeID=${defaultAsset}&BrandID=${defaultBrand}&AssetID=${assetID}&StoreID=${
                             StoreID
                         }&AssetDescription=${dialog.etdescription.text}&ActiveStatus=${status}&TeamMemberID=${
                             CSP.getData(
