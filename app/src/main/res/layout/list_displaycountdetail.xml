@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="65dp"
         android:background="@drawable/border_bottom_grey"
         android:paddingLeft="16dp"
         android:paddingTop="4dp"
@@ -27,19 +27,32 @@
             android:textColor="#4c4c4c"
             android:textSize="14dp" />
 
-        <TextView
-            android:id="@+id/txtBrand"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_toStartOf="@+id/txtAttend"
-            android:layout_toEndOf="@+id/txtNum"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="@font/samsungsharpsans_medium"
-            android:gravity="center|left"
-            android:maxLines="1"
-            android:text="BRAND"
-            android:textColor="#4c4c4c"
-            android:textSize="14dp" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtBrand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/txtAttend"
+                android:layout_toEndOf="@+id/txtNum"
+
+                android:fontFamily="@font/samsungsharpsans_medium"
+                android:gravity="center|left"
+                android:maxLines="1"
+                android:text="BRAND"
+                android:textColor="#4c4c4c"
+                android:textSize="14dp" />
+
+           <!-- <com.mcdev.quantitizerlibrary.HorizontalQuantitizer
+                android:id="@+id/qpAttend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>-->
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/txtAttend"

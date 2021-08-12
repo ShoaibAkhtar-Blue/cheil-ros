@@ -63,6 +63,7 @@ class DisplayCountDetailAdapter(
         var txtAttend: EditText = view.findViewById(R.id.txtAttend)
         var btnBarCode: ImageButton = view.findViewById(R.id.btnBarCode)
         var btnAllBarCode: ImageButton = view.findViewById(R.id.btnAllBarCode)
+       // var qpAttend: HorizontalQuantitizer = view.findViewById(R.id.qpAttend)
         var watcher: TextWatcher? = null
 
         init { // TextChanged listener added only once.
@@ -91,8 +92,11 @@ class DisplayCountDetailAdapter(
         if (CSP.getData("Display_BarCode").equals("N")) {
             holder.btnBarCode.visibility = View.GONE
             holder.btnAllBarCode.visibility = View.GONE
+           // holder.qpAttend.visibility = View.GONE
         }
         else{
+
+            holder.txtAttend.visibility = View.GONE
             holder.txtAttend.isEnabled = false
             holder.txtAttend.isFocusable = false
         }
