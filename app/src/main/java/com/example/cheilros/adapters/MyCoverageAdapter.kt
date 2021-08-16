@@ -143,7 +143,7 @@ class MyCoverageAdapter(
         CSP = CustomSharedPref(parent.context)
 
 
-        try {
+       /* try {
             locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
             if (ActivityCompat.checkSelfPermission(
                     context,
@@ -172,7 +172,7 @@ class MyCoverageAdapter(
             })
         } catch (ex: Exception) {
             Log.e("Error_", ex.message.toString())
-        }
+        }*/
 
         return ViewHolder(view, parent.context)
     }
@@ -627,8 +627,7 @@ class MyCoverageAdapter(
                     if(filterList.size > 0){
                         val resultList = ArrayList<MyCoverageData>()
                         for (row in itemList) {
-                            if (row.StoreName.toLowerCase()
-                                    .contains(constraint.toString().toLowerCase())
+                            if (row.StoreName.toLowerCase().contains(constraint.toString().toLowerCase()) || row.StoreCode.toLowerCase().contains(constraint.toString().toLowerCase())
                             ) {
                                 resultList.add(row)
                             }

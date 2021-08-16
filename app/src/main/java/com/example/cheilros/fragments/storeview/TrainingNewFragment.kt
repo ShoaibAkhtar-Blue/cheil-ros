@@ -1,6 +1,8 @@
 package com.example.cheilros.fragments.storeview
 
+import android.app.DatePickerDialog
 import android.app.Dialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -28,16 +30,26 @@ import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.dialog_add_visit.*
 import kotlinx.android.synthetic.main.dialog_add_visit.btnAccept
 import kotlinx.android.synthetic.main.dialog_add_visit.btnCancel
+import kotlinx.android.synthetic.main.dialog_add_visit.btnDate
 import kotlinx.android.synthetic.main.dialog_add_visit.txtQuestion
 import kotlinx.android.synthetic.main.dialog_add_visit.txtTitle
+import kotlinx.android.synthetic.main.dialog_checklist.*
 import kotlinx.android.synthetic.main.dialog_training_attendee.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
 import kotlinx.android.synthetic.main.fragment_training.*
+import kotlinx.android.synthetic.main.fragment_training.rvTraining
 import kotlinx.android.synthetic.main.fragment_training_detail.*
+import kotlinx.android.synthetic.main.fragment_training_detail.btnAddAttendee
+import kotlinx.android.synthetic.main.fragment_training_detail.btnSubmit
+import kotlinx.android.synthetic.main.fragment_training_detail.btnTakePictureTraining
+import kotlinx.android.synthetic.main.fragment_training_detail.mainLoadingLayoutTD
+import kotlinx.android.synthetic.main.fragment_training_detail.rvAttendees
+import kotlinx.android.synthetic.main.fragment_training_detail.rvTrainingPictures
 import kotlinx.android.synthetic.main.fragment_training_detail.view.*
+import kotlinx.android.synthetic.main.fragment_training_new.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -94,6 +106,26 @@ class TrainingNewFragment : BaseFragment() {
         fetchTraining("${CSP.getData("base_url")}/Training.asmx/TrainingModelsList")
 
         fetchAttendees("${CSP.getData("base_url")}/Training.asmx/StoreTeamMemberForTraining?StoreID=${arguments?.getInt("StoreID")}")
+
+        btnCheckinTime.setOnClickListener {
+            val cal = Calendar.getInstance()
+            val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
+                cal.set(Calendar.HOUR_OF_DAY, hour)
+                cal.set(Calendar.MINUTE, minute)
+                btnCheckinTime.text = SimpleDateFormat("HH:mm:ss").format(cal.time)
+            }
+            TimePickerDialog(requireContext(), timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+        }
+
+        btnCheckoutTime.setOnClickListener {
+            val cal = Calendar.getInstance()
+            val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
+                cal.set(Calendar.HOUR_OF_DAY, hour)
+                cal.set(Calendar.MINUTE, minute)
+                btnCheckoutTime.text = SimpleDateFormat("HH:mm:ss").format(cal.time)
+            }
+            TimePickerDialog(requireContext(), timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+        }
 
         btnAddAttendee.setOnClickListener {
 
@@ -188,7 +220,7 @@ class TrainingNewFragment : BaseFragment() {
                     CSP.getData(
                         "user_id"
                     )
-                }&TrainingDateTime=${currentDateAndTime}")
+                }&TrainingDateTime=${currentDateAndTime}&StartTime=${currentDateAndTime} ${btnCheckinTime.text}&EndTime=${currentDateAndTime} ${btnCheckoutTime.text}")
                 val requestBody = builder.build()
                 val request: Request = Request.Builder()
                     .url(
@@ -200,7 +232,7 @@ class TrainingNewFragment : BaseFragment() {
                             CSP.getData(
                                 "user_id"
                             )
-                        }&TrainingDateTime=${currentDateAndTime}"
+                        }&TrainingDateTime=${currentDateAndTime}&StartTime=${currentDateAndTime} ${btnCheckinTime.text}&EndTime=${currentDateAndTime} ${btnCheckoutTime.text}"
                     )
                     .post(requestBody)
                     .build()

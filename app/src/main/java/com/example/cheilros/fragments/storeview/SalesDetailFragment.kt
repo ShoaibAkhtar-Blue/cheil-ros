@@ -53,11 +53,11 @@ class SalesDetailFragment : BaseFragment() {
             view.BrandHeading.text =
                 settingData.filter { it.fixedLabelName == "StoreMenu_DailySales" }
                     .get(0).labelName
-            view.CountHeading.text =
-                settingData.filter { it.fixedLabelName == "StoreMenu_DailySales" }
-                    .get(0).labelName
+//            view.CountHeading.text =
+//                settingData.filter { it.fixedLabelName == "StoreMenu_DailySales" }
+//                    .get(0).labelName
             view.btnProductCategory.text =
-                "Selected Category: ${arguments?.getString("ProductCategoryName")}"
+                "${arguments?.getString("ProductCategoryName")}"
         } catch (ex: Exception) {
             Log.e("Error_", ex.message.toString())
         }
@@ -82,7 +82,7 @@ class SalesDetailFragment : BaseFragment() {
 
         btnProductCategory.setOnClickListener {
             val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Choose Category")
+            builder.setTitle("")
 
             // add a list
 
@@ -97,7 +97,7 @@ class SalesDetailFragment : BaseFragment() {
                     println(productCategoryData[which].ProductCategoryName)
                     defaultChannel = productCategoryData[which].ProductCategoryID.toString()
                     btnProductCategory.text =
-                        "Selected Category: ${productCategoryData[which].ProductCategoryName}"
+                        "${productCategoryData[which].ProductCategoryName}"
                     fetchSalesDetail(
                         "${CSP.getData("base_url")}/Sales.asmx/SaleCountView?BrandID=${
                             arguments?.getInt(

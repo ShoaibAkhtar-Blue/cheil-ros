@@ -143,12 +143,8 @@ class SalesAdapter(
 
                         //brandIndex++
                     }
-
-
                     table.addView(row)
-
                 }
-
                 holder.LLtable.addView(table)
             } catch (ex: Exception) {
 

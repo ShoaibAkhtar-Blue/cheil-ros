@@ -44,7 +44,7 @@ class ChecklistCategoryFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        txtStoreName.text = arguments?.getString("StoreName")
+        //txtStoreName.text = arguments?.getString("StoreName")
         fetchChecklist("${CSP.getData("base_url")}/Audit.asmx/CheckList?StoreID=${arguments?.getInt("StoreID").toString()}")
     }
 

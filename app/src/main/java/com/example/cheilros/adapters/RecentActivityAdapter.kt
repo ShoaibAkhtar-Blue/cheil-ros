@@ -80,11 +80,14 @@ class RecentActivityAdapter(
             holder.imgActivity.visibility = View.GONE
 
         if (filterList[position].ImageActivity2 != "" && filterList[position].ImageActivity2 != null)
-            Glide.with(context)
-                .load("${CSP.getData("base_url")}/${filterList[position].ImageActivity2}")
-                .into(holder.imgActivity2!!)
+            if (filterList[position].ImageActivity != filterList[position].ImageActivity2)
+                Glide.with(context)
+                    .load("${CSP.getData("base_url")}/${filterList[position].ImageActivity2}")
+                    .into(holder.imgActivity2!!)
+            else
+                holder.imgActivity2.visibility = View.GONE
         else
-            holder.imgActivity.visibility = View.GONE
+            holder.imgActivity2.visibility = View.GONE
 
         if (filterList[position].ActivityTypeID == 20) {
             holder.btnCancel.visibility = View.GONE
@@ -255,7 +258,7 @@ class RecentActivityAdapter(
         return filterList.size
     }
 
-    fun removeItem(position: Int){
+    fun removeItem(position: Int) {
         itemList.removeAt(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, itemCount - position)

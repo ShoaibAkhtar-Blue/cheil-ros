@@ -33,6 +33,8 @@ class PriceAdapter(
         var LLInvestment: LinearLayout = view.findViewById(R.id.LLInvestment)
         var txtTitleHeader: TextView = view.findViewById(R.id.txtTitleHeader)
         var txtTitleDate: TextView = view.findViewById(R.id.txtTitleDate)
+        var QuantityHeading: TextView = view.findViewById(R.id.QuantityHeading)
+        var ValueHeading: TextView = view.findViewById(R.id.ValueHeading)
         var LLtable: LinearLayout = view.findViewById(R.id.LLtable)
         var imgArrowRight: ImageView = view.findViewById(R.id.imgArrowRight)
     }
@@ -51,6 +53,9 @@ class PriceAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtTitleHeader.text = itemList[position].BrandName
         holder.txtTitleDate.text = ""
+
+        holder.QuantityHeading.visibility = View.GONE
+        holder.ValueHeading.visibility = View.GONE
 
         holder.imgArrowRight.visibility = View.GONE
 

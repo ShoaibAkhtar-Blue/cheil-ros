@@ -78,7 +78,7 @@ class PriceDetailFragment : BaseFragment() {
         )
 
         btnProductCategory.text =
-            "Selected Category: ${arguments?.getString("ProductCategory")}"
+            "${arguments?.getString("ProductCategory")}"
 
         btnProductCategory.setOnClickListener {
             val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
@@ -97,7 +97,7 @@ class PriceDetailFragment : BaseFragment() {
                     println(productCategoryData[which].ProductCategoryName)
                     defaultChannel = productCategoryData[which].ProductCategoryID.toString()
                     btnProductCategory.text =
-                        "Selected Category: ${productCategoryData[which].ProductCategoryName}"
+                        "${productCategoryData[which].ProductCategoryName}"
                     fetchPrices(
                         "${CSP.getData("base_url")}/Prices.asmx/PricePromotionView?BrandID=${
                             arguments?.getInt(
