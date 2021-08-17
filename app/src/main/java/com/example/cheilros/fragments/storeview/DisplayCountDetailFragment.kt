@@ -63,7 +63,7 @@ class DisplayCountDetailFragment : BaseFragment() {
                 settingData.filter { it.fixedLabelName == "DisplayCount_Display" }
                     .get(0).labelName
             view.btnProductCategory.text =
-                "Selected Category: ${arguments?.getString("ProductCategoryName")}"
+                "${arguments?.getString("ProductCategoryName")}"
         } catch (ex: Exception) {
             Log.e("Error_", ex.message.toString())
         }
@@ -88,11 +88,8 @@ class DisplayCountDetailFragment : BaseFragment() {
 
         btnProductCategory.setOnClickListener {
             val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Choose Category")
+            builder.setTitle("")
 
-            // add a list
-
-            // add a list
             var channels: Array<String> = arrayOf()
             for (c in productCategoryData) {
                 channels += c.ProductCategoryName
@@ -103,7 +100,7 @@ class DisplayCountDetailFragment : BaseFragment() {
                     println(productCategoryData[which].ProductCategoryName)
                     defaultChannel = productCategoryData[which].ProductCategoryID.toString()
                     btnProductCategory.text =
-                        "Selected Category: ${productCategoryData[which].ProductCategoryName}"
+                        "${productCategoryData[which].ProductCategoryName}"
                     fetchDisplayCountDetail(
                         "${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountView?BrandID=${
                             arguments?.getInt(
@@ -138,8 +135,10 @@ class DisplayCountDetailFragment : BaseFragment() {
                 .setMessage("Barcode Added to this session!")
                 .sneakSuccess()
 
+            println("activity_barcodes: ${CSP.getData("activity_barcodes")}")
+
             if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
-                CSP.saveData("ActivityDetail_BARCODE_SET", "${CSP.getData(" activity_barcodes ")}_${CSP.getData("dispProdID")}")
+                CSP.saveData("ActivityDetail_BARCODE_SET", "${CSP.getData("activity_barcodes")}_${CSP.getData("dispProdID")}")
                 CSP.delData("activity_barcodes")
 
                 CSP.getData("dispProdID")?.let { recylcerAdapter.updateItem(it.toInt()) }

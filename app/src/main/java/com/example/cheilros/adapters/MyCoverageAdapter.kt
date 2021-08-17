@@ -314,15 +314,17 @@ class MyCoverageAdapter(
                                         val currentDateAndTime: String = simpleDateFormat.format(Date())
 
                                         println(
-                                            "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
-                                                itemData.StoreID
-                                            }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}&Remarks=-"
+                                            "${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemData.VisitStatusID}&Longitude=$lng&Latitude=$lat&Remarks=-"
                                         )
 
-                                        sendVisitRequest(
+                                        /*sendVisitRequest(
                                             "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
                                                 itemData.StoreID
                                             }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}&Remarks=-"
+                                        )*/
+
+                                        sendVisitRequest(
+                                            "${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemData.VisitStatusID}&Longitude=$lng&Latitude=$lat&Remarks=-"
                                         )
                                     }
                                 } else { // Checkin
@@ -394,10 +396,18 @@ class MyCoverageAdapter(
 
                                     val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
                                     val currentDateAndTime: String = simpleDateFormat.format(Date())
-                                    sendVisitRequest(
+                                    /*sendVisitRequest(
                                         "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
                                             itemData.StoreID
                                         }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=$lng&Latitude=$lat&Remarks=-"
+                                    )*/
+
+                                    println(
+                                        "${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemData.VisitStatusID}&Longitude=$lng&Latitude=$lat&Remarks=-"
+                                    )
+
+                                    sendVisitRequest(
+                                        "${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemData.VisitStatusID}&Longitude=$lng&Latitude=$lat&Remarks=-"
                                     )
                                 }
                             } else { // Checkin

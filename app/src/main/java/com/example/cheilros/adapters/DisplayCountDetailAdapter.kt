@@ -111,6 +111,7 @@ class DisplayCountDetailAdapter(
 
         holder.btnAllBarCode.setOnClickListener {
             if(!CSP.getData("ActivityDetail_BARCODE_SET").equals("")){
+                println("ActivityDetail_BARCODE_SET: ${CSP.getData("ActivityDetail_BARCODE_SET")}")
                 var savedBarcodes = CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.toTypedArray()
                 var savedBarcodes1 = savedBarcodes?.filter { it.contains("_${filterList[position].ProductID}") }
                 //var savedBarcodes = "abc, xyz"?.split(",").toTypedArray()

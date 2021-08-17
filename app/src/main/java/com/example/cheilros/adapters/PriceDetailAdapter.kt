@@ -71,7 +71,7 @@ class PriceDetailAdapter(
     }
 
     @SuppressLint("ResourceAsColor", "WrongConstant")
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         holder.txtCount.text = (position+1).toString()
         holder.txtTitleHeader.text = itemList[position].ShortName
         holder.txtNetPrice.text = itemList[position].NetPrice

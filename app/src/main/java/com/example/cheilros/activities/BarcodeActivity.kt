@@ -20,6 +20,10 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import kotlinx.android.synthetic.main.fragment_barcode.*
 
+import android.R.string.no
+import java.util.*
+
+
 class BarcodeActivity : AppCompatActivity() {
 
     lateinit var CSP: CustomSharedPref
@@ -32,6 +36,22 @@ class BarcodeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_barcode)
         CSP = CustomSharedPref(this)
+
+
+        //Test Case
+        /*val rnd = Random()
+        val number: Int = rnd.nextInt(999999)
+
+        if (CSP.getData("activity_barcodes").equals("")) {
+            CSP.saveData("activity_barcodes", String.format("%06d", number))
+        } else {
+            CSP.saveData(
+                "activity_barcodes",
+                "${CSP.getData("activity_barcodes")},${String.format("%06d", number)}"
+            )
+        }
+        finish()*/
+        //
 
         val builder = AlertDialog.Builder(this)
         var taskHandler = Handler()

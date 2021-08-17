@@ -2,7 +2,6 @@ package com.example.cheilros.fragments
 
 import android.content.Intent
 import android.graphics.Color
-import android.location.Location
 import android.os.Bundle
 import android.os.StrictMode
 import android.util.Log
@@ -25,12 +24,10 @@ import com.example.cheilros.adapters.TaskAssignedAdapter
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.models.*
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
 import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.google.gson.GsonBuilder
@@ -51,6 +48,8 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+
+import com.github.mikephil.charting.data.*
 
 
 class DashboardFragment : BaseFragment() {
@@ -89,6 +88,7 @@ class DashboardFragment : BaseFragment() {
             view.StoreView_SubTitle.text = settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }.get(0).labelName
 
             view.LLGraphTwo.visibility = View.GONE
+            view.LLGraphOne.visibility = View.GONE
 
             view.LLTask.visibility = View.GONE
 
@@ -204,8 +204,6 @@ class DashboardFragment : BaseFragment() {
         return view
     }
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
 
@@ -308,8 +306,6 @@ class DashboardFragment : BaseFragment() {
         val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
         val currentDateAndTime: String = simpleDateFormat.format(Date())
 
-
-
         try{
             if(team_type != "7")
                 fetchTaskAssignedData("${CSP.getData("base_url")}/Dashboard.asmx/TaskAssigned?TeamMemberID=${CSP.getData("user_id")}&Status=1")
@@ -318,6 +314,9 @@ class DashboardFragment : BaseFragment() {
         }catch (ex:Exception){
 
         }
+
+        //setupCombinedCart()
+
         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
 
     }
@@ -415,13 +414,12 @@ class DashboardFragment : BaseFragment() {
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
                 }
-
             }
-
         })
     }
 
     fun fetchChartData(url: String){
+        println(url)
         val client = OkHttpClient()
 
         val request = Request.Builder()
@@ -448,6 +446,7 @@ class DashboardFragment : BaseFragment() {
                 val apiData = gson.fromJson(body, DashboardBarChartModel::class.java)
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
+                        setupCombinedCart(apiData.data)
                         val data = createChartData(apiData.data)
                         configureChartAppearance(apiData.data, chartDailyStatus)
                         data?.let { prepareChartData(it, chartDailyStatus) }
@@ -698,7 +697,139 @@ class DashboardFragment : BaseFragment() {
         return BarData(dataSets)
     }
 
-    companion object {
+    private fun setupCombinedCart(data: List<DashboardBarChartData>) {
+        chartDailyStatusThree.description.isEnabled = false
+        chartDailyStatusThree.setBackgroundColor(Color.WHITE)
+        chartDailyStatusThree.setDrawGridBackground(false)
+        chartDailyStatusThree.setDrawBarShadow(false)
+        chartDailyStatusThree.isHighlightFullBarEnabled = false
+        chartDailyStatusThree.setTouchEnabled(false)
+        chartDailyStatusThree.isDragEnabled = false
+        chartDailyStatusThree.setScaleEnabled(false)
+        chartDailyStatusThree.setPinchZoom(false)
 
+
+        // draw bars behind lines
+        /*chartDailyStatusThree.setDrawOrder(
+            arrayOf(
+                DrawOrder.BAR, DrawOrder.BUBBLE, DrawOrder.CANDLE, DrawOrder.LINE, DrawOrder.SCATTER
+            )
+        )*/
+
+        val l: Legend = chartDailyStatusThree.getLegend()
+        l.isWordWrapEnabled = true
+        l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+        l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+        l.orientation = Legend.LegendOrientation.HORIZONTAL
+        l.setDrawInside(false)
+
+        val rightAxis: YAxis = chartDailyStatusThree.axisRight
+        rightAxis.setDrawGridLines(false)
+        rightAxis.axisMinimum = 0f // this replaces setStartAtZero(true)
+
+
+        val leftAxis: YAxis = chartDailyStatusThree.axisLeft
+        leftAxis.setDrawGridLines(false)
+        leftAxis.axisMinimum = 0f // this replaces setStartAtZero(true)
+
+
+
+
+        val xAxis: XAxis = chartDailyStatusThree.xAxis
+        xAxis.position = XAxisPosition.BOTTOM
+        xAxis.axisMinimum = 0f
+        xAxis.granularity = 1f
+        xAxis.textColor = Color.BLACK;
+        xAxis.textSize = 8f
+
+        var xAxisLabels : MutableList<String> = ArrayList()
+        var i = 0
+        for(label in data){
+            println(label.TrendDate)
+
+            xAxisLabels.add(label.TrendDate)
+            /*if(i == 0)
+                xAxisLabels.add(label.TrendDate)*/
+            i++
+        }
+        chartDailyStatusThree.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisLabels)
+
+        //xAxis.setValueFormatter(IAxisValueFormatter { value, axis -> months.get(value.toInt() % months.length) } as ValueFormatter?)
+
+        val chartData: CombinedData = CombinedData()
+
+        chartData.setData(generateLineData(data))
+        chartData.setData(generateBarData(data))
+        //chartData.setValueTypeface(tfLight)
+
+        //xAxis.axisMaximum = chartData.xMax + 0.25f
+
+        chartDailyStatusThree.data = chartData
+        chartDailyStatusThree.invalidate()
+    }
+
+    private fun generateLineData(data: List<DashboardBarChartData>): LineData? {
+        val d = LineData()
+        val r = Random()
+        val random: Float = 5 + r.nextFloat() * (50 - 5)
+        val entries = java.util.ArrayList<Entry>()
+        var index = 0
+        for(chartVal in data){
+            entries.add(Entry(index + 0.5f, chartVal.Value1.toFloat()))
+            index++
+        }
+        //for (index in 0 until 12) entries.add(Entry(index + 0.5f, 5 + r.nextFloat() * (50 - 5)))
+        val set = LineDataSet(entries, settingData.filter { it.fixedLabelName == "Dashboard_GrapheValueTitle1" }.get(0).labelName)
+        set.color = Color.rgb(255, 0, 0)
+        set.lineWidth = 2.5f
+        set.setCircleColor(Color.rgb(255, 0, 0))
+        set.circleRadius = 5f
+        set.fillColor = Color.rgb(255, 0, 0)
+        set.mode = LineDataSet.Mode.CUBIC_BEZIER
+        set.setDrawValues(true)
+        set.valueTextSize = 10f
+        set.valueTextColor = Color.rgb(255, 0, 0)
+        set.axisDependency = YAxis.AxisDependency.LEFT
+        d.addDataSet(set)
+        return d
+    }
+
+    private fun generateBarData(data: List<DashboardBarChartData>): BarData? {
+        val r = Random()
+        val random: Float = 5 + r.nextFloat() * (50 - 5)
+        val entries1: ArrayList<BarEntry> = ArrayList()
+        val entries2: ArrayList<BarEntry> = ArrayList()
+        var index = 0
+        for(chartVal in data){
+            entries1.add(BarEntry(index.toFloat(), chartVal.Value2.toFloat()))
+            index++
+        }
+        /*for (index in 0 until 12) {
+            entries1.add(BarEntry(index.toFloat(), 5 + r.nextFloat() * (50 - 5)))
+
+            // stacked
+            //entries2.add(BarEntry(index.toFloat(), floatArrayOf(random, random)))
+        }*/
+        val set1 = BarDataSet(entries1, settingData.filter { it.fixedLabelName == "Dashboard_GrapheValueTitle2" }.get(0).labelName)
+        set1.color = Color.rgb(0, 100, 0)
+        set1.valueTextColor = Color.rgb(0, 100, 0)
+        set1.valueTextSize = 10f
+        set1.axisDependency = YAxis.AxisDependency.LEFT
+        /*val set2 = BarDataSet(entries2, "")
+        set2.stackLabels = arrayOf("Stack 1", "Stack 2")
+        set2.setColors(Color.rgb(61, 165, 255), Color.rgb(23, 197, 255))
+        set2.valueTextColor = Color.rgb(61, 165, 255)
+        set2.valueTextSize = 10f
+        set2.axisDependency = YAxis.AxisDependency.LEFT*/
+        val groupSpace = 0.06f
+        val barSpace = 0.02f // x2 dataset
+        val barWidth = 0.45f // x2 dataset
+        // (0.45 + 0.02) * 2 + 0.06 = 1.00 -> interval per "group"
+        val d = BarData(set1)
+        d.barWidth = barWidth
+
+        // make this BarData object grouped
+        //d.groupBars(0f, groupSpace, barSpace) // start at x = 0
+        return d
     }
 }
