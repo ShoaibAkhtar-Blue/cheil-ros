@@ -3,7 +3,6 @@ package com.example.cheilros.fragments.storeview
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,19 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
-import com.example.cheilros.adapters.PriceAdapter
 import com.example.cheilros.adapters.PriceDetailAdapter
 import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.models.*
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
-import kotlinx.android.synthetic.main.fragment_checklist_category.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
-import kotlinx.android.synthetic.main.fragment_display_count_detail.*
-import kotlinx.android.synthetic.main.fragment_price.*
-import kotlinx.android.synthetic.main.fragment_price.rvPrice
 import kotlinx.android.synthetic.main.fragment_price_detail.*
 import kotlinx.android.synthetic.main.fragment_price_detail.btnProductCategory
 import okhttp3.*
@@ -118,41 +112,56 @@ class PriceDetailFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         println("onResume Dash Frag")
-        if(!CSP.getData("PriceDetail_SESSION_IMAGE").equals("")){
+        if (!CSP.getData("PriceDetail_SESSION_IMAGE").equals("")) {
             Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                 .setTitle("Success!!")
                 .setMessage("Image Added to this session!")
                 .sneakSuccess()
 
             try {
-                recylcerAdapter.addNewItem(CSP.getData("PriceDetail_SESSION_IMAGE").toString())
-                CSP.delData("PriceDetail_SESSION_IMAGE")
+                recylcerAdapter.addNewItem(
+                    CSP.getData("productid").toString(),
+                    CSP.getData("PriceDetail_SESSION_IMAGE").toString()
+                )
+                //CSP.delData("PriceDetail_SESSION_IMAGE")
 
                 if (CSP.getData("PriceDetail_SESSION_IMAGE").equals("")) {
-                    recylcerAdapter.addNewItem(CSP.getData("PriceDetail_SESSION_IMAGE").toString())
-                    CSP.saveData("PriceDetail_SESSION_IMAGE_SET", CSP.getData("PriceDetail_SESSION_IMAGE"))
-                    CSP.delData("PriceDetail_SESSION_IMAGE")
-                } else {
-                    recylcerAdapter.addNewItem(CSP.getData("PriceDetail_SESSION_IMAGE").toString())
+                    recylcerAdapter.addNewItem(
+                        CSP.getData("productid").toString(),
+                        CSP.getData("PriceDetail_SESSION_IMAGE").toString()
+                    )
                     CSP.saveData(
                         "PriceDetail_SESSION_IMAGE_SET",
-                        "${CSP.getData("PriceDetail_SESSION_IMAGE_SET")},${CSP.getData("PriceDetail_SESSION_IMAGE")}"
+                        CSP.getData("PriceDetail_SESSION_IMAGE")
                     )
-                    CSP.delData("PriceDetail_SESSION_IMAGE")
+                    //CSP.delData("PriceDetail_SESSION_IMAGE")
+                } else {
+                    recylcerAdapter.addNewItem(
+                        CSP.getData("productid").toString(),
+                        CSP.getData("PriceDetail_SESSION_IMAGE").toString()
+                    )
+                    CSP.saveData(
+                        "PriceDetail_SESSION_IMAGE_SET",
+                        "${CSP.getData("PriceDetail_SESSION_IMAGE")}"
+                    )
+                    //CSP.delData("PriceDetail_SESSION_IMAGE")
                 }
-            }catch (ex: Exception){
+            } catch (ex: Exception) {
 
             }
-        }else if(!CSP.getData("sess_gallery_img").equals("")){
+        } else if (!CSP.getData("sess_gallery_img").equals("")) {
             try {
                 Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                     .setTitle("Success!!")
                     .setMessage("Image Added to this session!")
                     .sneakSuccess()
 
-                recylcerAdapter.addNewItem(CSP.getData("sess_gallery_img").toString())
-                CSP.delData("sess_gallery_img")
-            }catch (ex: Exception){
+                recylcerAdapter.addNewItem(
+                    CSP.getData("productid").toString(),
+                    CSP.getData("sess_gallery_img").toString()
+                )
+                //CSP.delData("sess_gallery_img")
+            } catch (ex: Exception) {
 
             }
         }
@@ -191,7 +200,8 @@ class PriceDetailFragment : BaseFragment() {
                             requireContext(),
                             apiData.data as MutableList<PriceDetailData>,
                             arguments?.getInt("StoreID"),
-                            requireActivity() as NewDashboardActivity
+                            requireActivity() as NewDashboardActivity,
+                            settingData
                         )
                         rvPriceDetail.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
@@ -210,6 +220,7 @@ class PriceDetailFragment : BaseFragment() {
             }
         })
     }
+
     fun fetchCategory(url: String) {
 
         val client = OkHttpClient()

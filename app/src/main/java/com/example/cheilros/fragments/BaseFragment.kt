@@ -102,6 +102,8 @@ open class BaseFragment : Fragment() {
         } else if (fragmentLabel == "display_count_detail") {
             arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
             //configureToolbar("Display", true, true)
+        } else if (fragmentLabel == "price_detail") {
+           // arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
         } else if (fragmentLabel == "training" || fragmentLabel == "activity_category" || fragmentLabel == "store_view" || fragmentLabel == "activity" || fragmentLabel == "task_deployment" || fragmentLabel == "display_count" || fragmentLabel == "fragment_installation") {
             val callback =
                 requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {

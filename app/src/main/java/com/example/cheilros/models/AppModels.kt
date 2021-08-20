@@ -187,7 +187,11 @@ class PriceDetailData(
     val NetPrice: String,
     val Price: String,
     val Promotion: String,
-    val PiceTagPictureID: String
+    val Installment_3Month: String,
+    val Installment_6Month: String,
+    val Installment_12Month: String,
+    val Username: String,
+    var PiceTagPictureID: String
 )
 //endregion
 

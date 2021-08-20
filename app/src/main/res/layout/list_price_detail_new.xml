@@ -13,7 +13,6 @@
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="horizontal">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +21,7 @@
         <RelativeLayout
             android:id="@+id/RLrecentactivity"
             android:layout_width="25dp"
-            android:layout_height="100dp"
+            android:layout_height="match_parent"
             android:background="@color/status_none"
             android:gravity="center_horizontal"
             android:orientation="vertical">
@@ -39,96 +38,229 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/white">
-
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="8dp">
+                android:layout_height="match_parent">
 
-
-                <TextView
-                    android:id="@+id/txtTitleHeader"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/samsungsharpsans_bold"
-                    android:text="Store Name"
-                    android:textColor="@color/black"
-                    android:textSize="16dp" />
-
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="8dp">
+                    android:layout_height="170dp"
+                    android:layout_weight="1"
+                    android:background="@color/white">
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="8dp">
+
 
                         <TextView
-                            android:id="@+id/txtNetPrice"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
+                            android:id="@+id/txtTitleHeader"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:fontFamily="@font/samsungsharpsans_bold"
-                            android:gravity="center|left"
-                            android:text="Net Price: "
-                            android:textColor="#4f4f4f"
-                            android:textSize="12dp" />
-                        <EditText
-                            android:layout_weight="1"
-                            android:layout_height="40dp"
-                            style="@style/editTextSimple"
-                            android:hint=""
-                            android:id="@+id/etdescription"
-                            android:inputType="text" />
+                            android:text="Store Name"
+                            android:textColor="@color/black"
+                            android:textSize="16dp" />
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingTop="8dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="2dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/txtNetPrice"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/samsungsharpsans_bold"
+                                    android:gravity="center|left"
+                                    android:text="Net Price: "
+                                    android:textColor="#4f4f4f"
+                                    android:textSize="12dp" />
+
+                                <EditText
+                                    android:id="@+id/etNetPrice"
+                                    style="@style/editTextSimple"
+                                    android:layout_height="40dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/border_grey"
+                                    android:hint=""
+                                    android:inputType="text" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/txtPrice"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/samsungsharpsans_bold"
+                                    android:gravity="center|left"
+                                    android:text="Price: "
+                                    android:textColor="#4f4f4f"
+                                    android:textSize="12dp" />
+
+                                <EditText
+                                    android:id="@+id/etPrice"
+                                    style="@style/editTextSimple"
+                                    android:layout_height="40dp"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/border_grey"
+                                    android:hint=""
+                                    android:inputType="text" />
+
+                            </LinearLayout>
+
+                            <EditText
+                                android:id="@+id/etPromotion"
+                                style="@style/editTextSimple"
+                                android:layout_height="40dp"
+                                android:layout_marginTop="2dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/border_grey"
+                                android:hint="Promotion"
+                                android:inputType="text" />
+
+
+                        </LinearLayout>
                     </LinearLayout>
+                </RelativeLayout>
 
+                <LinearLayout
+                    android:id="@+id/RLimgActivity"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imgTag"
+                        android:layout_width="150dp"
+                        android:layout_height="120dp"
+                        android:layout_weight="1"
+                        android:scaleType="centerCrop"
+                        app:srcCompat="@drawable/camera_btn" />
 
                     <TextView
-                        android:id="@+id/txtPrice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:id="@+id/txtUsername"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="4dp"
                         android:fontFamily="@font/samsungsharpsans_bold"
-                        android:text="Price: "
-                        android:textColor="#4f4f4f"
-                        android:textSize="12dp" />
-                    <TextView
-                        android:id="@+id/txtPromotion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/samsungsharpsans_bold"
-                        android:text=""
-                        android:textColor="#4f4f4f"
-                        android:textSize="10dp" />
-
+                        android:gravity="center"
+                        android:text="User"
+                        android:textColor="@color/black"
+                        android:textSize="12dp"></TextView>
                 </LinearLayout>
             </LinearLayout>
-        </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/RLimgActivity"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/imgTag"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                tools:srcCompat="@tools:sample/avatars" />
-        </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/txtInstallment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/samsungsharpsans_bold"
+                    android:text="Installment"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"></TextView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/et3Month"
+                        style="@style/editTextSimple"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/border_grey"
+                        android:hint="3 Month"
+                        android:inputType="number" />
+
+                    <EditText
+                        android:id="@+id/et6Month"
+                        style="@style/editTextSimple"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/border_grey"
+                        android:hint="6 Month"
+                        android:inputType="number" />
+
+                    <EditText
+                        android:id="@+id/et12Month"
+                        style="@style/editTextSimple"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/border_grey"
+                        android:hint="12 Month"
+                        android:inputType="number" />
+
+                    <!--<CheckBox
+                        android:id="@+id/cb3Month"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="3Month"
+                        android:textSize="12dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb6Month"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="6Month"
+                        android:textSize="12dp" />
+
+                    <CheckBox
+                        android:id="@+id/cb12Month"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="12Month"
+                        android:textSize="12dp" />-->
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnAccept"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/black"
+                android:text="Save" />
+
+        </LinearLayout>
     </LinearLayout>
+
 
 </LinearLayout>

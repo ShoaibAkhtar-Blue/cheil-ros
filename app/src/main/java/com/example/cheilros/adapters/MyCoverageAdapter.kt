@@ -68,7 +68,7 @@ class MyCoverageAdapter(
     var curPos: Int = 0
     var lat: String = "0"
     var lng: String = "0"
-    var minDistance = 750.0
+    //var minDistance = 750.0
     private val frag: MyCoverageFragment
 
     var filterList = ArrayList<MyCoverageData>()
@@ -264,7 +264,9 @@ class MyCoverageAdapter(
 
                         builder.show()*/
 
-                        if (CSP.getData("LocationLimit").equals("Y")) {
+                        var minDistance = CSP.getData("LocationLimit")?.toDouble()
+
+                        if (minDistance!! >= 0) {
                             println("LocationLimit: $lat-$lng")
                             println(
                                 "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${

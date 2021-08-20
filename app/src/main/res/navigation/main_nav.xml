@@ -413,20 +413,20 @@
     <fragment
         android:id="@+id/priceDetailFragment"
         android:name="com.example.cheilros.fragments.storeview.PriceDetailFragment"
-        android:label="fragment_price_detail"
-        tools:layout="@layout/fragment_price_detail" >
+        android:label="price_detail"
+        tools:layout="@layout/fragment_price_detail">
         <argument
             android:name="StoreID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="BrandID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="ProductCategoryID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <action
             android:id="@+id/action_priceDetailFragment_to_cameraActivity"
             app:destination="@id/cameraActivity" />

@@ -85,7 +85,7 @@ class DashboardFragment : BaseFragment() {
             view.Dashboard_CoverageButton.text = settingData.filter { it.fixedLabelName == "Dashboard_CoverageButton" }.get(0).labelName
             view.Dashboard_PendingButton.text = settingData.filter { it.fixedLabelName == "Dashboard_PendingButton" }.get(0).labelName
             view.txtCurrentDate.text = currentDateAndTime
-            view.StoreView_SubTitle.text = settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }.get(0).labelName
+            view.StoreView_SubTitle.text = settingData.filter { it.fixedLabelName == "Dashboard_TaskTitle" }.get(0).labelName
 
             view.LLGraphTwo.visibility = View.GONE
             view.LLGraphOne.visibility = View.GONE
@@ -207,6 +207,7 @@ class DashboardFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
 
+        //CSP.saveData("TicketFollowup", "N")
         //CSP.saveData("CheckIn_Camera", "Y")
         //CSP.saveData("Display_BarCode", "N")
         //CSP.saveData("Asset_Parameters", "N")

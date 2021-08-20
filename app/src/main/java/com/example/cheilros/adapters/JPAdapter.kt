@@ -69,7 +69,7 @@ class JPAdapter(
 
     /*var lat: String = "0"
     var lng: String = "0"*/
-    var minDistance = 750.0
+    //var minDistance = 750.0
 
     init {
         frag = fragment
@@ -285,7 +285,10 @@ class JPAdapter(
                         val distanceInMeters: Float = myLocation.distanceTo(storeLocation)
                         println("distanceInMeters: ${distanceInMeters}")
 
-                        if (CSP.getData("LocationLimit").equals("Y")) {
+
+                        var minDistance = CSP.getData("LocationLimit")?.toDouble()
+
+                        if (minDistance!! >= 0) {
                             if (distanceInMeters >= minDistance) {
                                 println("distanceInMeters: Distance is greater")
                                 (context as Activity).runOnUiThread {

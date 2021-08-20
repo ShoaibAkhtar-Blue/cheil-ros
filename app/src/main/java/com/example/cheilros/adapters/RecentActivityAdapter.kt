@@ -1,5 +1,6 @@
 package com.example.cheilros.adapters
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
@@ -68,7 +69,7 @@ class RecentActivityAdapter(
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         holder.ActivityTypeName.text = filterList[position].ActivityTypeName
         holder.ActivityDescription.text = "Description: ${filterList[position].ActivityDescription}"
         holder.txtDate.text = filterList[position].ActivityDateTime
@@ -88,6 +89,9 @@ class RecentActivityAdapter(
                 holder.imgActivity2.visibility = View.GONE
         else
             holder.imgActivity2.visibility = View.GONE
+
+        if(CSP.getData("TicketFollowup").equals("N"))
+            holder.btnAccept.visibility = View.GONE
 
         if (filterList[position].ActivityTypeID == 20) {
             holder.btnCancel.visibility = View.GONE
