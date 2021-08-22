@@ -293,10 +293,17 @@ class JPAdapter(
                                 println("distanceInMeters: Distance is greater")
                                 (context as Activity).runOnUiThread {
                                     context?.let { it1 ->
-                                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                            .setTitle("Out of Range!!")
-                                            .setMessage("Your Current Location is greater than $minDistance meters!")
-                                            .sneakWarning()
+                                        try {
+                                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                                .setTitle(settingData.filter { it -> it.fixedLabelName == "General_OutOfRangeTitle" }[0].labelName)
+                                                .setMessage(settingData.filter { it -> it.fixedLabelName == "General_OutOfRangeMessage" }[0].labelName)
+                                                .sneakWarning()
+                                        } catch (ex: Exception) {
+                                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                                .setTitle("Out of Range!!")
+                                                .setMessage("Your Current Location is greater than $minDistance meters!")
+                                                .sneakWarning()
+                                        }
                                     }
                                 }
                             }else{

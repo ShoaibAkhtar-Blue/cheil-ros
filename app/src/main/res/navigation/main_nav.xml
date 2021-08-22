@@ -24,6 +24,9 @@
         <action
             android:id="@+id/action_dashboardFragment_to_teamStatusFragment"
             app:destination="@id/teamStatusFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_myActivitiesFragment"
+            app:destination="@id/myActivitiesFragment" />
     </fragment>
     <fragment
         android:id="@+id/journeyPlanFragment"
@@ -475,4 +478,9 @@
         android:name="com.example.cheilros.activities.BarcodeActivity"
         android:label="activity_barcode"
         tools:layout="@layout/activity_barcode" />
+    <fragment
+        android:id="@+id/myActivitiesFragment"
+        android:name="com.example.cheilros.fragments.MyActivitiesFragment"
+        android:label="my_activities"
+        tools:layout="@layout/fragment_my_activities" />
 </navigation>

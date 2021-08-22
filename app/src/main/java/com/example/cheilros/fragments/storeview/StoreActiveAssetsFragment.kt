@@ -247,6 +247,17 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
         if (CSP.getData("Asset_Parameters").equals("N"))
             dialog.LLExtraOpt.visibility = View.GONE
 
+        //region Set Label
+        try{
+            dialog.Asset_Height.text = settingData.filter { it.fixedLabelName == "Asset_Height" }[0].labelName
+            dialog.Asset_Depth.text = settingData.filter { it.fixedLabelName == "Asset_Depth" }[0].labelName
+            dialog.Asset_Width.text = settingData.filter { it.fixedLabelName == "Asset_Width" }[0].labelName
+            dialog.btnAcceptAsset.text = settingData.filter { it.fixedLabelName == "Asset_Save" }[0].labelName
+        }catch (ex: Exception){
+
+        }
+        //endregion
+
 
         dialog.rvTaskPictures.setHasFixedSize(true)
         layoutManagerPA = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
@@ -353,16 +364,16 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
                 builder.setTitle("Choose...")
                 builder.setMessage("Please select one of the options")
 
-                builder.setPositiveButton("Camera") { dialog, which ->
+                builder.setPositiveButton(settingData.filter { it.fixedLabelName == "General_Camera" }[0].labelName) { dialog, which ->
                     CSP.saveData("fragName", "StoreAsset")
                     findNavController().navigate(R.id.action_storeViewFragment_to_cameraActivity)
                 }
 
-                builder.setNegativeButton("Gallery") { dialog, which ->
+                builder.setNegativeButton(settingData.filter { it.fixedLabelName == "General_Gallery" }[0].labelName) { dialog, which ->
                     activity.pickFromGallery()
                 }
 
-                builder.setNeutralButton("Cancel") { dialog, which ->
+                builder.setNeutralButton(settingData.filter { it.fixedLabelName == "General_Cancel" }[0].labelName) { dialog, which ->
                     dialog.dismiss()
                 }
                 builder.show()

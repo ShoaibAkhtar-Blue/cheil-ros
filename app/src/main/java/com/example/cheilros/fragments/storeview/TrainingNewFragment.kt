@@ -137,9 +137,9 @@ class TrainingNewFragment : BaseFragment() {
             dialog.setCancelable(false)
             dialog.setCanceledOnTouchOutside(true)
 
-            dialog.txtTitle.text = settingData.filter { it.fixedLabelName == "AttendeeAddPopupTitle" }.get(0).labelName
-            dialog.txtQuestion.text = settingData.filter { it.fixedLabelName == "AttendeeAddPopupInfo" }.get(0).labelName
-            dialog.OTAttendeeName.hint = settingData.filter { it.fixedLabelName == "AttendeeAddPopupName" }.get(0).labelName
+            dialog.txtTitle.text = settingData.filter { it.fixedLabelName == "Training_AddAttendees" }.get(0).labelName
+            dialog.txtQuestion.text = settingData.filter { it.fixedLabelName == "Training_AddTittle" }.get(0).labelName
+            dialog.OTAttendeeName.hint = settingData.filter { it.fixedLabelName == "Training_EnterName" }.get(0).labelName
             dialog.btnCancel.text = settingData.filter { it.fixedLabelName == "Logout_Cancel" }.get(0).labelName
             dialog.btnCancel.setOnClickListener {
                 dialog.dismiss()

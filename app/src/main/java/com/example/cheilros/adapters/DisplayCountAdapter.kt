@@ -13,16 +13,16 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.data.AppSetting
 import com.example.cheilros.helpers.CustomSharedPref
-import com.example.cheilros.models.BrandsData
 import com.example.cheilros.models.DisplayCountData
-import com.example.cheilros.models.InvestmentData
 
 class DisplayCountAdapter(
     val context: Context,
     val itemList: List<DisplayCountData>,
     val StoreID: Int?,
-    val StoreName: String?
+    val StoreName: String?,
+    val settingData: List<AppSetting>
 ) : RecyclerView.Adapter<DisplayCountAdapter.ViewHolder>() {
 
     lateinit var CSP: CustomSharedPref
@@ -32,6 +32,8 @@ class DisplayCountAdapter(
         var LLInvestment: LinearLayout = view.findViewById(R.id.LLInvestment)
         var txtTitleHeader: TextView = view.findViewById(R.id.txtTitleHeader)
         var txtTitleDate: TextView = view.findViewById(R.id.txtTitleDate)
+        var QuantityHeading: TextView = view.findViewById(R.id.QuantityHeading)
+        var ValueHeading: TextView = view.findViewById(R.id.ValueHeading)
         var LLtable: LinearLayout = view.findViewById(R.id.LLtable)
         var imgArrowRight: ImageView = view.findViewById(R.id.imgArrowRight)
     }
@@ -51,6 +53,15 @@ class DisplayCountAdapter(
         holder.txtTitleDate.text = ""
 
         holder.imgArrowRight.visibility = View.GONE
+
+        //region Set Labels
+        try{
+            holder.QuantityHeading.text = settingData.filter { it.fixedLabelName == "Sale_Quantity" }[0].labelName
+            holder.ValueHeading.text = settingData.filter { it.fixedLabelName == "Sale_Value" }[0].labelName
+        }catch (ex: Exception){
+
+        }
+        //endregion
 
 
         /*holder.LLInvestment.setOnClickListener {

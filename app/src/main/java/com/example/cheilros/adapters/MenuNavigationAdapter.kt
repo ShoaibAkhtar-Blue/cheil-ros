@@ -62,6 +62,11 @@ class MenuNavigationAdapter(private val context: Context, data: ArrayList<MenuNa
                 Navigation.findNavController(it)
                     .navigate(R.id.action_dashboardFragment_to_teamStatusFragment)
             }
+
+            if(menuData[position].fixedLabel == "MenuTitle6"){
+                Navigation.findNavController(it)
+                    .navigate(R.id.action_dashboardFragment_to_myActivitiesFragment)
+            }
         }
 
         return convertView

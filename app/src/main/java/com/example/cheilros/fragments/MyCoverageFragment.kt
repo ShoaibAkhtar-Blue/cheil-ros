@@ -25,8 +25,10 @@ import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.activity_new_dashboard.*
+import kotlinx.android.synthetic.main.fragment_journey_plan.view.*
 import kotlinx.android.synthetic.main.fragment_my_coverage.*
 import kotlinx.android.synthetic.main.fragment_my_coverage.view.*
+import kotlinx.android.synthetic.main.fragment_my_coverage.view.txtNoRecord
 import okhttp3.*
 import java.io.IOException
 
@@ -63,7 +65,12 @@ class MyCoverageFragment : BaseFragment() {
         //endregion
 
         //region Set Labels
-        view.btnChannel.text = settingData.filter { it.fixedLabelName == "StoreList_SearchBox" }.get(0).labelName
+        try {
+            view.btnChannel.text = settingData.filter { it.fixedLabelName == "StoreList_SearchBox" }[0].labelName
+            view.txtNoRecord.text = settingData.filter { it.fixedLabelName == "General_NoRecordFound" }[0].labelName
+        }catch (ex: Exception){
+
+        }
         //endregion
 
         requireActivity().title = "My Coverage"
@@ -102,7 +109,7 @@ class MyCoverageFragment : BaseFragment() {
             // setup the alert builder
             // setup the alert builder
             val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Choose an channel")
+            builder.setTitle("")
 
             // add a list
 
@@ -116,7 +123,7 @@ class MyCoverageFragment : BaseFragment() {
                 DialogInterface.OnClickListener { dialog, which ->
                     println(channelData[which].ChannelID)
                     defaultChannel = channelData[which].ChannelID.toString()
-                    btnChannel.text = "Selected Channel: ${channelData[which].ChannelName}"
+                    btnChannel.text = "${channelData[which].ChannelName}"
                     fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${defaultChannel}&SearchKeyWord=&ChannelTypeID=${defaultChannelType}")
                 })
 
@@ -219,7 +226,7 @@ class MyCoverageFragment : BaseFragment() {
             // setup the alert builder
             // setup the alert builder
             val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Choose an channel type")
+            builder.setTitle("")
 
             // add a list
 
@@ -233,7 +240,7 @@ class MyCoverageFragment : BaseFragment() {
                 DialogInterface.OnClickListener { dialog, which ->
                     println(channelTypeData[which].ChannelTypeID)
                     defaultChannelType = channelTypeData[which].ChannelTypeID.toString()
-                    btnChannelType.text = "Selected Channel: ${channelTypeData[which].ChannelTypeName}"
+                    btnChannelType.text = "${channelTypeData[which].ChannelTypeName}"
                     fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${defaultChannel}&SearchKeyWord=&ChannelTypeID=${defaultChannelType}")
                 })
 

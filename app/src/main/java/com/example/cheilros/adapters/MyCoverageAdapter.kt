@@ -68,6 +68,7 @@ class MyCoverageAdapter(
     var curPos: Int = 0
     var lat: String = "0"
     var lng: String = "0"
+
     //var minDistance = 750.0
     private val frag: MyCoverageFragment
 
@@ -143,36 +144,36 @@ class MyCoverageAdapter(
         CSP = CustomSharedPref(parent.context)
 
 
-       /* try {
-            locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            if (ActivityCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-            }
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F, object :
-                LocationListener {
-                override fun onLocationChanged(location: Location) {
-                    lat = location.latitude.toString()
-                    lng = location.longitude.toString()
-                    println("loc: ${location.latitude}")
+        /* try {
+             locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+             if (ActivityCompat.checkSelfPermission(
+                     context,
+                     Manifest.permission.ACCESS_FINE_LOCATION
+                 ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                     context,
+                     Manifest.permission.ACCESS_COARSE_LOCATION
+                 ) != PackageManager.PERMISSION_GRANTED
+             ) {
+                 // TODO: Consider calling
+                 //    ActivityCompat#requestPermissions
+                 // here to request the missing permissions, and then overriding
+                 //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                 //                                          int[] grantResults)
+                 // to handle the case where the user grants the permission. See the documentation
+                 // for ActivityCompat#requestPermissions for more details.
+             }
+             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F, object :
+                 LocationListener {
+                 override fun onLocationChanged(location: Location) {
+                     lat = location.latitude.toString()
+                     lng = location.longitude.toString()
+                     println("loc: ${location.latitude}")
 
-                }
-            })
-        } catch (ex: Exception) {
-            Log.e("Error_", ex.message.toString())
-        }*/
+                 }
+             })
+         } catch (ex: Exception) {
+             Log.e("Error_", ex.message.toString())
+         }*/
 
         return ViewHolder(view, parent.context)
     }
@@ -224,7 +225,7 @@ class MyCoverageAdapter(
 
                 holder.btnAccept.setOnClickListener {
                     try {
-                        val uLocation =  activity.userLocation
+                        val uLocation = activity.userLocation
                         println("Location: ${uLocation.latitude.toDouble()}-${uLocation.longitude.toDouble()}")
                         val myLocation = Location("")
 
@@ -254,7 +255,6 @@ class MyCoverageAdapter(
                         //activity.getLocation()
 
 
-
                         /*val builder = AlertDialog.Builder(context)
                         builder.setMessage("ULocation:${uLocation.latitude.toDouble()} - ${uLocation.longitude.toDouble()} \n Your Location: $lat - $lng \n Store Location: ${itemData.Longitude.toDouble()} - ${itemData.Latitude.toDouble()} \n Distance: $distanceInMeters")
 
@@ -277,10 +277,17 @@ class MyCoverageAdapter(
                                 println("distanceInMeters: Distance is greater")
                                 (context as Activity).runOnUiThread {
                                     context?.let { it1 ->
-                                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                            .setTitle("Out of Range!!")
-                                            .setMessage("Your Current Location is greater than $minDistance meters!")
-                                            .sneakWarning()
+                                        try {
+                                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                                .setTitle(settingData.filter { it -> it.fixedLabelName == "General_OutOfRangeTitle" }[0].labelName)
+                                                .setMessage(settingData.filter { it -> it.fixedLabelName == "General_OutOfRangeMessage" }[0].labelName)
+                                                .sneakWarning()
+                                        } catch (ex: Exception) {
+                                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                                .setTitle("Out of Range!!")
+                                                .setMessage("Your Current Location is greater than $minDistance meters!")
+                                                .sneakWarning()
+                                        }
                                     }
                                 }
                             } else {
@@ -302,7 +309,7 @@ class MyCoverageAdapter(
                                         )
                                         Navigation.findNavController(it)
                                             .navigate(R.id.action_myCoverageFragment_to_cameraActivity)
-                                    }else {
+                                    } else {
                                         CSP.saveData(
                                             "sess_visit_status_id",
                                             itemData.VisitStatusID.toString()
@@ -313,7 +320,8 @@ class MyCoverageAdapter(
                                         )
 
                                         val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
-                                        val currentDateAndTime: String = simpleDateFormat.format(Date())
+                                        val currentDateAndTime: String =
+                                            simpleDateFormat.format(Date())
 
                                         println(
                                             "${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemData.VisitStatusID}&Longitude=$lng&Latitude=$lat&Remarks=-"
@@ -342,7 +350,7 @@ class MyCoverageAdapter(
                                         )
                                         Navigation.findNavController(it)
                                             .navigate(R.id.action_myCoverageFragment_to_cameraActivity)
-                                    }else {
+                                    } else {
                                         CSP.saveData(
                                             "sess_visit_status_id",
                                             itemData.VisitStatusID.toString()
@@ -353,7 +361,8 @@ class MyCoverageAdapter(
                                         )
 
                                         val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
-                                        val currentDateAndTime: String = simpleDateFormat.format(Date())
+                                        val currentDateAndTime: String =
+                                            simpleDateFormat.format(Date())
 
                                         println(
                                             "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
@@ -636,10 +645,13 @@ class MyCoverageAdapter(
                 if (charSearch.isEmpty()) {
                     filterList = itemList as ArrayList<MyCoverageData>
                 } else {
-                    if(filterList.size > 0){
+                    if (filterList.size > 0) {
                         val resultList = ArrayList<MyCoverageData>()
                         for (row in itemList) {
-                            if (row.StoreName.toLowerCase().contains(constraint.toString().toLowerCase()) || row.StoreCode.toLowerCase().contains(constraint.toString().toLowerCase())
+                            if (row.StoreName.toLowerCase().contains(
+                                    constraint.toString().toLowerCase()
+                                ) || row.StoreCode.toLowerCase()
+                                    .contains(constraint.toString().toLowerCase())
                             ) {
                                 resultList.add(row)
                             }

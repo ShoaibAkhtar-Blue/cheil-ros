@@ -69,6 +69,14 @@ class JourneyPlanFragment : BaseFragment() {
 
         view.mainLoadingLayout.setState(LoadingLayout.LOADING)
 
+        //Set Label
+        try{
+            view.txtNoRecord.text = settingData.filter { it.fixedLabelName == "General_NoRecordFound" }[0].labelName
+        }catch (ex: Exception){
+
+        }
+        //End Label
+
         view.btnDate.setOnClickListener {
             //getting current day,month and year.
             val year = calendar.get(Calendar.YEAR)

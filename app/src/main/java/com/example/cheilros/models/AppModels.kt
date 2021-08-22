@@ -53,11 +53,37 @@ class AssetBrandsData(
     val BrandName: String,
     val Assets: List<AssetBrandsListData>
 )
+
 class AssetBrandsListData(
     val AssetTypeID: Int,
     val AssetTypeName: String
 )
 //endregion
+
+//region MyActivities
+class MyActivitiesModel(val status: Int, val data: List<MyActivitiesData>)
+class MyActivitiesData(
+    val ActivityID: Int,
+    val TeamMemberID: Int,
+    val mySingleID: String,
+    val TeamMemberName: String,
+    val ActivityDateTime: String,
+    val ActivityTypeID: Int,
+    val ActivityTypeName: String,
+    val ActivityCategoryID: Int,
+    val ActivityCategoryName: String,
+    val BrandID: Int,
+    val BrandName: String,
+    val ActivityDescription: String,
+    val StatusID: Int,
+    val Quantity: Int,
+    val StoreID: Int,
+    val StoreCode: String,
+    val StoreName: String,
+    val ImageActivity: String,
+    val ImageActivity2: String
+)
+//region
 
 //region Team Status
 class AssignedTeamMemberModel(val status: Int, val data: List<AssignedTeamMemberData>)
@@ -82,7 +108,12 @@ class TeamStatusData(
 
 //region Training
 class TrainingModel(val status: Int, val data: List<TrainingModelData>)
-class TrainingModelData(val TrainingModelID: Int, val TrainingModelTitle: String, val Features:  List<TrainingFeaturesData>)
+class TrainingModelData(
+    val TrainingModelID: Int,
+    val TrainingModelTitle: String,
+    val Features: List<TrainingFeaturesData>
+)
+
 class TrainingFeaturesData(val TrainingModelFeatureID: Int, val TrainingModelFeatureTitle: String)
 
 class RecentTrainingModel(val status: Int, val data: List<RecentTrainingModelData>)
@@ -174,6 +205,7 @@ class PriceData(
     val BrandName: String,
     val Products: List<PriceModelData>
 )
+
 class PriceModelData(
     val ProductCategoryID: Int,
     val ProductCategoryName: String,
@@ -202,12 +234,14 @@ class SalesData(
     val BrandName: String,
     val Products: List<SalesProductData>
 )
+
 class SalesProductData(
     val ProductCategoryID: Int,
     val ProductCategoryName: String,
     val SaleQuantity: Int,
     val SaleValue: Int
 )
+
 class SalesDetailModel(val status: Int, val data: List<SalesDetailData>)
 class SalesDetailData(
     val ProductID: Int,
@@ -234,6 +268,7 @@ class DisplayCountData(
     val BrandName: String,
     val Products: List<DisplayProductData>
 )
+
 class DisplayProductData(
     val ProductCategoryID: Int,
     val ProductCategoryName: String,

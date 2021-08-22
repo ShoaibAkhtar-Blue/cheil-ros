@@ -1,7 +1,6 @@
 package com.example.cheilros.fragments.storeview
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,18 +8,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.adapters.DisplayCountAdapter
-import com.example.cheilros.adapters.InvestmentAdapter
 import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.models.DisplayCountModel
-import com.example.cheilros.models.InvestmentModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
-import kotlinx.android.synthetic.main.fragment_checklist_category.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
 import kotlinx.android.synthetic.main.fragment_display_count.*
-import kotlinx.android.synthetic.main.fragment_investment.*
 import okhttp3.*
 import java.io.IOException
 
@@ -85,7 +80,7 @@ class DisplayCountFragment : BaseFragment() {
                         rvDisplayCount.setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(requireContext())
                         rvDisplayCount.layoutManager = layoutManager
-                        recylcerAdapter = DisplayCountAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"), arguments?.getString("StoreName"))
+                        recylcerAdapter = DisplayCountAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"), arguments?.getString("StoreName"), settingData)
                         rvDisplayCount.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })

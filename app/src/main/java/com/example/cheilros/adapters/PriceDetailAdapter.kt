@@ -55,6 +55,7 @@ class PriceDetailAdapter(
         var txtNetPrice: TextView = view.findViewById(R.id.txtNetPrice)
         var txtPrice: TextView = view.findViewById(R.id.txtPrice)
         var txtInstallment: TextView = view.findViewById(R.id.txtInstallment)
+
         //var txtPromotion: TextView = view.findViewById(R.id.txtPromotion)
         var txtUsername: TextView = view.findViewById(R.id.txtUsername)
         var etNetPrice: EditText = view.findViewById(R.id.etNetPrice)
@@ -72,7 +73,8 @@ class PriceDetailAdapter(
         viewType: Int
     ): ViewHolder {
         CSP = CustomSharedPref(parent.context)
-        val view = LayoutInflater.from(context).inflate(R.layout.list_price_detail_new, parent, false)
+        val view =
+            LayoutInflater.from(context).inflate(R.layout.list_price_detail_new, parent, false)
         return ViewHolder(view)
     }
 
@@ -81,44 +83,60 @@ class PriceDetailAdapter(
 
         //region set Labels
         try {
-            holder.txtNetPrice.text = settingData.filter { it.fixedLabelName == "PricePromotion_RRP" }[0].labelName
-            holder.txtPrice.text = settingData.filter { it.fixedLabelName == "PricePromotion_NetPrice" }[0].labelName
-            holder.txtInstallment.text = settingData.filter { it.fixedLabelName == "PricePromotion_Promotion" }[0].labelName
-            holder.etPromotion.hint = settingData.filter { it.fixedLabelName == "PricePromotion_Installment" }[0].labelName
-            holder.et3Month.hint = settingData.filter { it.fixedLabelName == "PricePromotion_3Month" }[0].labelName
-            holder.et6Month.hint = settingData.filter { it.fixedLabelName == "PricePromotion_6Month" }[0].labelName
-            holder.et12Month.hint = settingData.filter { it.fixedLabelName == "PricePromotion_12Month" }[0].labelName
-        }catch (ex: Exception){
+            holder.txtNetPrice.text =
+                settingData.filter { it.fixedLabelName == "PricePromotion_RRP" }[0].labelName
+            holder.txtPrice.text =
+                settingData.filter { it.fixedLabelName == "PricePromotion_NetPrice" }[0].labelName
+            holder.txtInstallment.text =
+                settingData.filter { it.fixedLabelName == "PricePromotion_Installment" }[0].labelName
+            holder.etPromotion.hint =
+                settingData.filter { it.fixedLabelName == "PricePromotion_Promotion" }[0].labelName
+            holder.et3Month.hint =
+                settingData.filter { it.fixedLabelName == "PricePromotion_3Month" }[0].labelName
+            holder.et6Month.hint =
+                settingData.filter { it.fixedLabelName == "PricePromotion_6Month" }[0].labelName
+            holder.et12Month.hint =
+                settingData.filter { it.fixedLabelName == "PricePromotion_12Month" }[0].labelName
+        } catch (ex: Exception) {
             Log.e("Error_", ex.message.toString())
         }
         //endregion
 
 
-        holder.txtCount.text = (position+1).toString()
+        holder.txtCount.text = (position + 1).toString()
         holder.txtTitleHeader.text = itemList[position].ShortName //Todo: Add Category name too
         holder.txtUsername.text = itemList[position].Username
-        holder.etNetPrice.setText(itemList[position].NetPrice)
-        holder.etPrice.setText(itemList[position].Price)
-        holder.etPromotion.setText(itemList[position].Promotion)
-        holder.et3Month.setText(itemList[position].Installment_3Month)
-        holder.et6Month.setText(itemList[position].Installment_6Month)
-        holder.et12Month.setText(itemList[position].Installment_12Month)
+        if (itemList[position].NetPrice != "0")
+            holder.etNetPrice.setText(itemList[position].NetPrice)
+        if (itemList[position].Price != "0")
+            holder.etPrice.setText(itemList[position].Price)
+        if (itemList[position].Promotion != "0")
+            holder.etPromotion.setText(itemList[position].Promotion)
+        if (itemList[position].Installment_3Month != "0")
+            holder.et3Month.setText(itemList[position].Installment_3Month)
+        if (itemList[position].Installment_6Month != "0")
+            holder.et6Month.setText(itemList[position].Installment_6Month)
+        if (itemList[position].Installment_12Month != "0")
+            holder.et12Month.setText(itemList[position].Installment_12Month)
         println("${CSP.getData("base_url")}/PricesPictures/${itemList[position].PiceTagPictureID}")
 
         println("PiceTagPictureID: ${itemList[position].PiceTagPictureID}")
-        if(itemList[position].PiceTagPictureID != "0" && !itemList[position].PiceTagPictureID.contains("/storage") )
-        Glide.with(context)
-            .load("${CSP.getData("base_url")}/PricesPictures/${itemList[position].PiceTagPictureID}")
-            .into(holder.imgTag!!)
+        if (itemList[position].PiceTagPictureID != "0" && !itemList[position].PiceTagPictureID.contains(
+                "/storage"
+            )
+        )
+            Glide.with(context)
+                .load("${CSP.getData("base_url")}/PricesPictures/${itemList[position].PiceTagPictureID}")
+                .into(holder.imgTag!!)
         else
             Glide.with(context)
                 .load("${itemList[position].PiceTagPictureID}")
                 .into(holder.imgTag!!)
 
 
-        if(CSP.getData("productid") != ""){
-            if(CSP.getData("productid") == itemList[position].ProductID.toString()){
-                if(!CSP.getData("sess_gallery_img").equals(""))
+        if (CSP.getData("productid") != "") {
+            if (CSP.getData("productid") == itemList[position].ProductID.toString()) {
+                if (!CSP.getData("sess_gallery_img").equals(""))
                     Glide.with(context)
                         .load(CSP.getData("sess_gallery_img"))
                         .into(holder.imgTag!!)
@@ -170,7 +188,7 @@ class PriceDetailAdapter(
                     ImgPath = CSP.getData("PriceDetail_SESSION_IMAGE").toString()
 
 
-                if(ImgPath != ""){
+                if (ImgPath != "") {
                     val sourceFile = File(ImgPath)
                     val mimeType =
                         CoreHelperMethods(context as Activity).getMimeType(sourceFile)
@@ -203,11 +221,13 @@ class PriceDetailAdapter(
 
                 val requestBody = builder.build()
 
-                println("${CSP.getData("base_url")}/Prices.asmx/PricePromotionAdd?ProductID=${itemList[position].ProductID}&StoreID=${StoreID}&Price=${holder.etPrice.text}&Promotion=${holder.etPromotion.text}&TeamMemberID=${
-                    CSP.getData(
-                        "user_id"
-                    ).toString()
-                }&NetPrice=${holder.etNetPrice.text}&Installment_3Month=${holder.et3Month.text}&Installment_6Month=${holder.et6Month.text}&Installment_12Month=${holder.et12Month.text}")
+                println(
+                    "${CSP.getData("base_url")}/Prices.asmx/PricePromotionAdd?ProductID=${itemList[position].ProductID}&StoreID=${StoreID}&Price=${holder.etPrice.text}&Promotion=${holder.etPromotion.text}&TeamMemberID=${
+                        CSP.getData(
+                            "user_id"
+                        ).toString()
+                    }&NetPrice=${holder.etNetPrice.text}&Installment_3Month=${holder.et3Month.text}&Installment_6Month=${holder.et6Month.text}&Installment_12Month=${holder.et12Month.text}"
+                )
 
                 val request: Request = Request.Builder()
                     .url(
@@ -240,22 +260,23 @@ class PriceDetailAdapter(
                                     .setMessage("Task updated!")
                                     .sneakSuccess()
                             }
-                            ImgPath = if(ImgPath != "") ImgPath else itemList[position].PiceTagPictureID
-                                updateItem(
+                            ImgPath =
+                                if (ImgPath != "") ImgPath else itemList[position].PiceTagPictureID
+                            updateItem(
+                                itemList[position].ProductID,
+                                PriceDetailData(
                                     itemList[position].ProductID,
-                                    PriceDetailData(
-                                        itemList[position].ProductID,
-                                        itemList[position].ShortName,
-                                        holder.etNetPrice.text.toString(),
-                                        holder.etPrice.text.toString(),
-                                        holder.etPromotion.text.toString(),
-                                        holder.et3Month.text.toString(),
-                                        holder.et6Month.text.toString(),
-                                        holder.et12Month.text.toString(),
-                                        itemList[position].Username,
-                                        ImgPath
-                                    )
+                                    itemList[position].ShortName,
+                                    holder.etNetPrice.text.toString(),
+                                    holder.etPrice.text.toString(),
+                                    holder.etPromotion.text.toString(),
+                                    holder.et3Month.text.toString(),
+                                    holder.et6Month.text.toString(),
+                                    holder.et12Month.text.toString(),
+                                    itemList[position].Username,
+                                    ImgPath
                                 )
+                            )
 
                             //Reset Session
                             CSP.delData("fragName")
@@ -427,7 +448,7 @@ class PriceDetailAdapter(
 
     override fun getItemViewType(position: Int): Int = position
 
-    fun addNewItem(pid:String,imgPath: String) {
+    fun addNewItem(pid: String, imgPath: String) {
 
         println("addNewItem")
         println(imgPath)

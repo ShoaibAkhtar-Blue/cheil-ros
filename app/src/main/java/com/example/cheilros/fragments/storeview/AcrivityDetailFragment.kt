@@ -73,8 +73,8 @@ class AcrivityDetailFragment : BaseFragment() {
                 println("callback")
                 // setup the alert builder
                 val builder: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
-                builder.setTitle("Close Session")
-                builder.setMessage("Are You Sure you want to close current session?")
+                builder.setTitle(settingData.filter { it.fixedLabelName == "General_CloseSession" }.get(0).labelName)
+                builder.setMessage(settingData.filter { it.fixedLabelName == "General_CloseSessionMessage" }.get(0).labelName)
 
                 // add the buttons
 

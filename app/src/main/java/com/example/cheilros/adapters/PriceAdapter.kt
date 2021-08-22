@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,15 +14,16 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.data.AppSetting
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.PriceData
-import java.security.AccessController.getContext
 
 
 class PriceAdapter(
     val context: Context,
     val itemList: List<PriceData>,
-    val StoreID: Int?
+    val StoreID: Int?,
+    val settingData: List<AppSetting>
 ) : RecyclerView.Adapter<PriceAdapter.ViewHolder>() {
 
     lateinit var CSP: CustomSharedPref
@@ -53,6 +53,15 @@ class PriceAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtTitleHeader.text = itemList[position].BrandName
         holder.txtTitleDate.text = ""
+
+        //region Set Labels
+        try{
+            holder.QuantityHeading.text = settingData.filter { it.fixedLabelName == "Sale_Quantity" }[0].labelName
+            holder.ValueHeading.text = settingData.filter { it.fixedLabelName == "Sale_Value" }[0].labelName
+        }catch (ex: Exception){
+
+        }
+        //endregion
 
         holder.QuantityHeading.visibility = View.GONE
         holder.ValueHeading.visibility = View.GONE

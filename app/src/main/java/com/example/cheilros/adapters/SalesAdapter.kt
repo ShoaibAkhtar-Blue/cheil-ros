@@ -13,14 +13,15 @@ import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.data.AppSetting
 import com.example.cheilros.helpers.CustomSharedPref
-import com.example.cheilros.models.DisplayCountData
 import com.example.cheilros.models.SalesData
 
 class SalesAdapter(
     val context: Context,
     val itemList: List<SalesData>,
-    val StoreID: Int?
+    val StoreID: Int?,
+    val settingData: List<AppSetting>
 ) : RecyclerView.Adapter<SalesAdapter.ViewHolder>() {
 
     lateinit var CSP: CustomSharedPref
@@ -32,6 +33,8 @@ class SalesAdapter(
         var txtTitleDate: TextView = view.findViewById(R.id.txtTitleDate)
         var LLtable: LinearLayout = view.findViewById(R.id.LLtable)
         var imgArrowRight: ImageView = view.findViewById(R.id.imgArrowRight)
+        var QuantityHeading: TextView = view.findViewById(R.id.QuantityHeading)
+        var ValueHeading: TextView = view.findViewById(R.id.ValueHeading)
     }
 
     override fun onCreateViewHolder(
@@ -49,6 +52,15 @@ class SalesAdapter(
         holder.txtTitleDate.text = ""
 
         holder.imgArrowRight.visibility = View.GONE
+
+        //region Set Labels
+        try{
+            holder.QuantityHeading.text = settingData.filter { it.fixedLabelName == "Sale_Quantity" }[0].labelName
+            holder.ValueHeading.text = settingData.filter { it.fixedLabelName == "Sale_Value" }[0].labelName
+        }catch (ex: Exception){
+
+        }
+        //endregion
 
 
         /*holder.LLInvestment.setOnClickListener {

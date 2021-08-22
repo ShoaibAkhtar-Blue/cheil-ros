@@ -64,12 +64,14 @@ class StoreViewFragment : BaseFragment() {
         //StoreView_SubTitle
         //region Set Labels
         try {
-            view.StoreMenu_Investment.text =
-                settingData.filter { it.fixedLabelName == "StoreView_InvesmentSubTitle" }[0].labelName
-            view.StoreView_SubTitle.text =
-                settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }.get(0).labelName
-            view.StoreView_SubTitle.text =
-                settingData.filter { it.fixedLabelName == "StoreView_ChecklistSubTitle" }.get(0).labelName
+            view.StoreMenu_Investment.text = settingData.filter { it.fixedLabelName == "StoreView_InvesmentSubTitle" }[0].labelName
+            view.StoreView_SubTitle.text = settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }.get(0).labelName
+            view.StoreView_SubTitle.text = settingData.filter { it.fixedLabelName == "StoreView_ChecklistSubTitle" }.get(0).labelName
+
+            view.txtNoRecord.text = settingData.filter { it.fixedLabelName == "General_NoRecordFound" }[0].labelName
+            view.StoreSummary_Region.text = settingData.filter { it.fixedLabelName == "StoreSummary_Region" }[0].labelName
+            view.StoreSummary_StoreType.text = settingData.filter { it.fixedLabelName == "StoreSummary_StoreType" }[0].labelName
+            view.StoreSummary_CityDistrict.text = settingData.filter { it.fixedLabelName == "StoreSummary_CityDistrict" }[0].labelName
         } catch (ex: Exception) {
 
         }

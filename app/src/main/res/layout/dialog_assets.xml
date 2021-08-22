@@ -162,6 +162,7 @@
                         android:orientation="vertical"
                         android:layout_marginBottom="8dp">
                         <TextView
+                            android:id="@+id/Asset_Width"
                             android:layout_marginBottom="4dp"
                             android:textSize="12dp"
                             android:textColor="@color/black"
@@ -188,6 +189,7 @@
                         android:orientation="vertical"
                         android:layout_marginBottom="8dp">
                         <TextView
+                            android:id="@+id/Asset_Depth"
                             android:layout_marginBottom="4dp"
                             android:textSize="12dp"
                             android:textColor="@color/black"
@@ -213,6 +215,7 @@
                         android:orientation="vertical"
                         android:layout_marginBottom="8dp">
                         <TextView
+                            android:id="@+id/Asset_Height"
                             android:layout_marginBottom="4dp"
                             android:textSize="12dp"
                             android:textColor="@color/black"
