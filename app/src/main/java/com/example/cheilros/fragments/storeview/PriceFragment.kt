@@ -50,6 +50,13 @@ class PriceFragment : BaseFragment() {
         fetchPrices("${CSP.getData("base_url")}/Prices.asmx/PricePromotionSummary")
     }
 
+    override fun onResume() {
+        super.onResume()
+        //Reset Session
+        CSP.delData("PriceDetail_SESSION_IMAGE")
+        CSP.delData("sess_gallery_img")
+    }
+
 
     fun fetchPrices(url: String){
         println(url)

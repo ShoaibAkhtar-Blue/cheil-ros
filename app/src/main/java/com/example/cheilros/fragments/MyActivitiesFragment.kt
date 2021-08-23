@@ -133,6 +133,7 @@ class MyActivitiesFragment : BaseFragment() {
     }
 
     fun fetchMyActivities(url: String){
+        println(url)
         val client = OkHttpClient()
 
         mainLoadingLayout.setState(LoadingLayout.LOADING)

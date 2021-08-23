@@ -8,8 +8,6 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,31 +19,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
+import com.example.cheilros.data.AppSetting
 import com.example.cheilros.fragments.storeview.ChecklistCategoryDetailFragment
 import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.CheckListDetailData
 import com.example.cheilros.models.CheckListJSON
 import com.example.cheilros.models.CheckListJSONData
-import com.example.cheilros.models.InvestmentJSON
 import com.google.gson.Gson
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
-import kotlinx.android.synthetic.main.dialog_add_visit.*
 import kotlinx.android.synthetic.main.dialog_add_visit.btnAccept
 import kotlinx.android.synthetic.main.dialog_add_visit.btnCancel
 import kotlinx.android.synthetic.main.dialog_add_visit.txtQuestion
 import kotlinx.android.synthetic.main.dialog_add_visit.txtTitle
-import kotlinx.android.synthetic.main.dialog_assignedtask.*
 import kotlinx.android.synthetic.main.dialog_checklist.*
 import kotlinx.android.synthetic.main.dialog_checklist.btnDate
 import kotlinx.android.synthetic.main.dialog_checklist.btnTakePictureTask
 import kotlinx.android.synthetic.main.dialog_checklist.rvTaskPictures
-import kotlinx.android.synthetic.main.fragment_checklist_category_detail.*
 import kotlinx.android.synthetic.main.fragment_checklist_category_detail.btnSubmit
 import kotlinx.android.synthetic.main.fragment_checklist_category_detail.mainLoadingLayoutCC
-import kotlinx.android.synthetic.main.fragment_investment_detail.*
-import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -60,7 +53,8 @@ class ChecklistDetailAdapter(
     val itemList: MutableList<CheckListDetailData>,
     val arguments: Bundle?,
     val fragment: ChecklistCategoryDetailFragment,
-    val activity: NewDashboardActivity
+    val activity: NewDashboardActivity,
+    val settingData: List<AppSetting>
 ) : RecyclerView.Adapter<ChecklistDetailAdapter.ViewHolder>() {
 
     var IdStart = 1000
@@ -126,6 +120,14 @@ class ChecklistDetailAdapter(
             dialog.txtTitle.text = "Question"
             dialog.txtQuestion.text = itemList[position].Question
             println("InputTypeID: ${itemList[position].InputTypeID}")
+
+            //region Set Label
+            try{
+                dialog.btnAccept.text = settingData.filter { it.fixedLabelName == "JourneyPlan_CancelSave" }[0].labelName
+            }catch (ex: Exception){
+
+            }
+            //endregion
 
 
             dialog.rvTaskPictures.setHasFixedSize(true)

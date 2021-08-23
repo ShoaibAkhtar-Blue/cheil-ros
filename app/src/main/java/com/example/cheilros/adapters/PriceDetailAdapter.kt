@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.data.AppSetting
+import com.example.cheilros.data.UserData
 import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.PriceDetailData
@@ -37,7 +38,8 @@ class PriceDetailAdapter(
     val itemList: MutableList<PriceDetailData>,
     val StoreID: Int?,
     val activity: NewDashboardActivity,
-    val settingData: List<AppSetting>
+    val settingData: List<AppSetting>,
+    val userData: List<UserData>
 ) : RecyclerView.Adapter<PriceDetailAdapter.ViewHolder>() {
 
     lateinit var CSP: CustomSharedPref
@@ -50,6 +52,7 @@ class PriceDetailAdapter(
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         //var RLHeader: RelativeLayout = view.findViewById(R.id.RLHeader)
         var LLPriceDetail: LinearLayout = view.findViewById(R.id.LLPriceDetail)
+        var LLInstallment: LinearLayout = view.findViewById(R.id.LLInstallment)
         var txtCount: TextView = view.findViewById(R.id.txtCount)
         var txtTitleHeader: TextView = view.findViewById(R.id.txtTitleHeader)
         var txtNetPrice: TextView = view.findViewById(R.id.txtNetPrice)
@@ -97,15 +100,25 @@ class PriceDetailAdapter(
                 settingData.filter { it.fixedLabelName == "PricePromotion_6Month" }[0].labelName
             holder.et12Month.hint =
                 settingData.filter { it.fixedLabelName == "PricePromotion_12Month" }[0].labelName
+            holder.btnAccept.text =
+                settingData.filter { it.fixedLabelName == "JourneyPlan_CancelSave" }[0].labelName
         } catch (ex: Exception) {
             Log.e("Error_", ex.message.toString())
         }
         //endregion
 
 
+        if(userData[0].MarketType != 1)
+            holder.LLInstallment.visibility = View.GONE
+
         holder.txtCount.text = (position + 1).toString()
         holder.txtTitleHeader.text = itemList[position].ShortName //Todo: Add Category name too
-        holder.txtUsername.text = itemList[position].Username
+
+        if (itemList[position].Username != "0")
+            holder.txtUsername.text = itemList[position].Username
+        else
+            holder.txtUsername.visibility = View.INVISIBLE
+
         if (itemList[position].NetPrice != "0")
             holder.etNetPrice.setText(itemList[position].NetPrice)
         if (itemList[position].Price != "0")
@@ -128,10 +141,11 @@ class PriceDetailAdapter(
             Glide.with(context)
                 .load("${CSP.getData("base_url")}/PricesPictures/${itemList[position].PiceTagPictureID}")
                 .into(holder.imgTag!!)
-        else
+        else if (itemList[position].PiceTagPictureID != "0")
             Glide.with(context)
                 .load("${itemList[position].PiceTagPictureID}")
                 .into(holder.imgTag!!)
+
 
 
         if (CSP.getData("productid") != "") {

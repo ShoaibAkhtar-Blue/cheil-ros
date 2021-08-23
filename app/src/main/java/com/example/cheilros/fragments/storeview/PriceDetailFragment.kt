@@ -169,6 +169,7 @@ class PriceDetailFragment : BaseFragment() {
 
 
     fun fetchPrices(url: String) {
+        println(url)
         val request = Request.Builder()
             .url(url)
             .build()
@@ -189,6 +190,7 @@ class PriceDetailFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
+                println(userData.toString())
                 val gson = GsonBuilder().create()
                 val apiData = gson.fromJson(body, PriceDetailModel::class.java)
                 if (apiData.status == 200) {
@@ -201,7 +203,8 @@ class PriceDetailFragment : BaseFragment() {
                             apiData.data as MutableList<PriceDetailData>,
                             arguments?.getInt("StoreID"),
                             requireActivity() as NewDashboardActivity,
-                            settingData
+                            settingData,
+                            userData
                         )
                         rvPriceDetail.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)

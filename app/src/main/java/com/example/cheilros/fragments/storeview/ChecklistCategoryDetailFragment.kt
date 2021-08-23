@@ -1,7 +1,6 @@
 package com.example.cheilros.fragments.storeview
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.ChecklistDetailAdapter
-import com.example.cheilros.helpers.CustomSharedPref
+import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.models.CheckListDetailData
 import com.example.cheilros.models.CheckListDetailModel
 import com.google.gson.GsonBuilder
@@ -24,14 +23,14 @@ import kotlinx.android.synthetic.main.fragment_checklist_category_detail.*
 import okhttp3.*
 import java.io.IOException
 
-class ChecklistCategoryDetailFragment : Fragment() {
+class ChecklistCategoryDetailFragment : BaseFragment() {
 
     private val client = OkHttpClient()
 
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: ChecklistDetailAdapter
 
-    lateinit var CSP: CustomSharedPref
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,8 +40,6 @@ class ChecklistCategoryDetailFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_checklist_category_detail, container, false)
 
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
-
-        CSP = CustomSharedPref(requireContext())
 
         return view
     }
@@ -127,7 +124,8 @@ class ChecklistCategoryDetailFragment : Fragment() {
                         recylcerAdapter =
                             ChecklistDetailAdapter(requireContext(),
                                 apiData.data as MutableList<CheckListDetailData>, arguments, this@ChecklistCategoryDetailFragment,
-                                requireActivity() as NewDashboardActivity
+                                requireActivity() as NewDashboardActivity,
+                                settingData
                             )
                         rvChecklistDetail.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)

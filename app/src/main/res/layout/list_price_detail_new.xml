@@ -59,23 +59,23 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="170dp"
+                    android:layout_height="140dp"
                     android:layout_weight="1"
-                    android:background="@color/white">
+                    android:background="@color/white"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp">
 
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:padding="8dp">
+                        android:orientation="vertical">
 
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingTop="8dp">
+                            android:orientation="vertical">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -165,7 +165,7 @@
                     <TextView
                         android:id="@+id/txtUsername"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
                         android:fontFamily="@font/samsungsharpsans_bold"
                         android:gravity="center"
@@ -173,9 +173,11 @@
                         android:textColor="@color/black"
                         android:textSize="12dp"></TextView>
                 </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/LLInstallment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"

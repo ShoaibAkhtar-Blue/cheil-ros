@@ -44,7 +44,7 @@ class MyActivitiesAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Glide.with(context)
-            .load("${CSP.getData("base_url")}/${CSP.getData("user_id")}")
+            .load("${CSP.getData("base_url")}/${filterList[position].ImageActivity}")
             .into(holder.imgActivity)
         holder.ActivityTypeName.text = filterList[position].ActivityTypeName
         holder.ActivityTypeName.text = filterList[position].ActivityTypeName

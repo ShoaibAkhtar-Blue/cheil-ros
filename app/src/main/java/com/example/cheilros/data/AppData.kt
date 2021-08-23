@@ -28,7 +28,8 @@ data class UserData(
     val divisionName: String,
     val imagePath: String,
     val teamType: String,
-    val regionName: String
+    val regionName: String,
+    val MarketType: Int
 )
 
 @Entity(tableName = "user_permission")

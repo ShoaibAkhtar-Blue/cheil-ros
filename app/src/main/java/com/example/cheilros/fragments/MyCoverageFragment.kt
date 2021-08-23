@@ -105,6 +105,8 @@ class MyCoverageFragment : BaseFragment() {
         fetchChannelType("${CSP.getData("base_url")}/Webservice.asmx/ChannelTypeList")
         fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${defaultChannel}&SearchKeyWord=&ChannelTypeID=${defaultChannelType}")
 
+
+
         btnChannel.setOnClickListener {
             // setup the alert builder
             // setup the alert builder
@@ -272,6 +274,9 @@ class MyCoverageFragment : BaseFragment() {
         /*etSearch.doOnTextChanged { text, start, before, count ->
             recylcerAdapter?.filter?.filter(text)
         }*/
+
+
+
     }
 
     fun reloadCoverage(){
@@ -314,6 +319,11 @@ class MyCoverageFragment : BaseFragment() {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                            try {
+                                btnChannelType.text = channelData[0].ChannelName
+                            }catch (ex: Exception){
+
+                            }
                         }
                     })
                 } else {
@@ -364,6 +374,11 @@ class MyCoverageFragment : BaseFragment() {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                            try {
+                                btnChannel.text = channelTypeData[0].ChannelTypeName
+                            }catch (ex: Exception){
+
+                            }
                         }
                     })
                 } else {
