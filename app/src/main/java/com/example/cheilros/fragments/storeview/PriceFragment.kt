@@ -37,7 +37,7 @@ class PriceFragment : BaseFragment() {
 
         //region Set Labels
         try{
-            view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_PricePromotions" }.get(0).labelName
+            view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_PricePromotions" }[0].labelName
         }catch (ex: Exception){
 
         }
@@ -47,7 +47,7 @@ class PriceFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        fetchPrices("${CSP.getData("base_url")}/Prices.asmx/PricePromotionSummary")
+        fetchPrices("${CSP.getData("base_url")}/Prices.asmx/PricePromotionSummary?StoreID=${arguments?.getInt("StoreID")}")
     }
 
     override fun onResume() {

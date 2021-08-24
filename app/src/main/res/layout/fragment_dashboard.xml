@@ -375,7 +375,10 @@
                         android:horizontalSpacing="10dp"
                         android:numColumns="auto_fit"
                         android:stretchMode="columnWidth"
-                        android:verticalSpacing="10dp" />
+                        android:verticalSpacing="10dp" >
+
+
+                    </GridView>
 
                     <LinearLayout
                         android:id="@+id/LLGraphThree"

@@ -46,7 +46,7 @@ class SalesFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        fetchSales("${CSP.getData("base_url")}/Sales.asmx/SaleCountSummary")
+        fetchSales("${CSP.getData("base_url")}/Sales.asmx/SaleCountSummary?StoreID=${arguments?.getInt("StoreID")}")
     }
 
     fun fetchSales(url: String){

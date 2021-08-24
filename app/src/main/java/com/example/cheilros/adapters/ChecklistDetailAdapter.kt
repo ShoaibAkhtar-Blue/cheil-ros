@@ -17,6 +17,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.ceylonlabs.imageviewpopup.ImagePopup
 import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.data.AppSetting
@@ -130,6 +131,31 @@ class ChecklistDetailAdapter(
             //endregion
 
 
+            try{
+                val imagePopup = ImagePopup(context)
+                imagePopup.windowHeight = 800 // Optional
+                imagePopup.windowWidth = 800 // Optional
+                //imagePopup.backgroundColor = Color.BLACK // Optional
+                imagePopup.isFullScreen = false // Optional
+                imagePopup.isHideCloseIcon = true // Optional
+                imagePopup.isImageOnClickClose = true // Optional
+                imagePopup.initiatePopupWithGlide("${CSP.getData("base_url")}/ChecklistSampleImages/${itemList[position].ChecklistID}.jpg") // Load Image from Drawable
+
+                dialog.imgPrev.setOnClickListener(View.OnClickListener {
+                    dialog.dismiss()
+                    imagePopup.viewPopup()
+                })
+            }catch (ex: Exception){
+                (context as Activity).runOnUiThread {
+                    context?.let { it1 ->
+                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                            .setTitle("Error!!")
+                            .setMessage("Image not exist!")
+                            .sneakError()
+                    }
+                }
+            }
+
             dialog.rvTaskPictures.setHasFixedSize(true)
             layoutManagerPA = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
             dialog.rvTaskPictures.layoutManager = layoutManagerPA
@@ -171,134 +197,10 @@ class ChecklistDetailAdapter(
 
             if (itemList[position].InputTypeID == 2) {
                 dialog.OTnumber_edit_text.visibility = View.VISIBLE
-                /*dialog.number_edit_text.addTextChangedListener(object : TextWatcher {
-                        override fun beforeTextChanged(
-                            s: CharSequence?,
-                            start: Int,
-                            count: Int,
-                            after: Int
-                        ) {
-
-                        }
-
-                        override fun onTextChanged(
-                            s: CharSequence?,
-                            start: Int,
-                            before: Int,
-                            count: Int
-                        ) {
-                            println(s)
-                            try {
-                                if (checklistAnswer.isNullOrEmpty()) {
-                                    checklistAnswer.add(
-                                        CheckListJSONData(
-                                            itemList[position].ChecklistID,
-                                            arguments?.getInt("StoreID"),
-                                            s.toString(),
-                                            CSP.getData("user_id")?.toInt()
-                                        )
-                                    )
-                                } else {
-                                    val checklistSize =
-                                        checklistAnswer.filter { it.CheckListID == itemList[position].ChecklistID }.size
-                                    if (checklistSize == 0) {
-                                        checklistAnswer.add(
-                                            CheckListJSONData(
-                                                itemList[position].ChecklistID,
-                                                arguments?.getInt("StoreID"),
-                                                s.toString(),
-                                                CSP.getData("user_id")?.toInt()
-                                            )
-                                        )
-                                    } else {
-                                        val checklistIndex =
-                                            checklistAnswer.indexOf(checklistAnswer.find { it.CheckListID == itemList[position].ChecklistID })
-
-                                        checklistAnswer.add(
-                                            checklistIndex,
-                                            CheckListJSONData(
-                                                itemList[position].ChecklistID,
-                                                arguments?.getInt("StoreID"),
-                                                s.toString(),
-                                                CSP.getData("user_id")?.toInt()
-                                            )
-                                        )
-                                    }
-                                }
-                            } catch (ex: Exception) {
-                                Log.e("Error_", ex.message.toString())
-                            }
-                        }
-
-                        override fun afterTextChanged(s: Editable?) {
-                        }
-                    })*/
             }
 
             if (itemList[position].InputTypeID == 3) {
                 dialog.OTalpha_edit_text.visibility = View.VISIBLE
-                /* dialog.alpha_edit_text.addTextChangedListener(object : TextWatcher {
-                     override fun beforeTextChanged(
-                         s: CharSequence?,
-                         start: Int,
-                         count: Int,
-                         after: Int
-                     ) {
-
-                     }
-
-                     override fun onTextChanged(
-                         s: CharSequence?,
-                         start: Int,
-                         before: Int,
-                         count: Int
-                     ) {
-                         println(s)
-                         try {
-                             if (checklistAnswer.isNullOrEmpty()) {
-                                 checklistAnswer.add(
-                                     CheckListJSONData(
-                                         itemList[position].ChecklistID,
-                                         arguments?.getInt("StoreID"),
-                                         s.toString(),
-                                         CSP.getData("user_id")?.toInt()
-                                     )
-                                 )
-                             } else {
-                                 val checklistSize =
-                                     checklistAnswer.filter { it.CheckListID == itemList[position].ChecklistID }.size
-                                 if (checklistSize == 0) {
-                                     checklistAnswer.add(
-                                         CheckListJSONData(
-                                             itemList[position].ChecklistID,
-                                             arguments?.getInt("StoreID"),
-                                             s.toString(),
-                                             CSP.getData("user_id")?.toInt()
-                                         )
-                                     )
-                                 } else {
-                                     val checklistIndex =
-                                         checklistAnswer.indexOf(checklistAnswer.find { it.CheckListID == itemList[position].ChecklistID })
-
-                                     checklistAnswer.add(
-                                         checklistIndex,
-                                         CheckListJSONData(
-                                             itemList[position].ChecklistID,
-                                             arguments?.getInt("StoreID"),
-                                             s.toString(),
-                                             CSP.getData("user_id")?.toInt()
-                                         )
-                                     )
-                                 }
-                             }
-                         } catch (ex: Exception) {
-                             Log.e("Error_", ex.message.toString())
-                         }
-                     }
-
-                     override fun afterTextChanged(s: Editable?) {
-                     }
-                 })*/
             }
 
             if (itemList[position].InputTypeID == 4) {
@@ -386,7 +288,7 @@ class ChecklistDetailAdapter(
                             CSP.getData(
                                 "user_id"
                             )
-                        }&CheckListID=${itemList[position].ChecklistID}&StoreID=${
+                        }&Rate=${dialog.etRating.text}&CheckListID=${itemList[position].ChecklistID}&StoreID=${
                             arguments?.getInt(
                                 "StoreID"
                             )
@@ -399,7 +301,7 @@ class ChecklistDetailAdapter(
                                 CSP.getData(
                                     "user_id"
                                 )
-                            }&CheckListID=${itemList[position].ChecklistID}&StoreID=${
+                            }&Rate=${dialog.etRating.text}&CheckListID=${itemList[position].ChecklistID}&StoreID=${
                                 arguments?.getInt(
                                     "StoreID"
                                 )

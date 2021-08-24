@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.ceylonlabs.imageviewpopup.ImagePopup
 import com.example.cheilros.MainActivity
 import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
@@ -228,6 +229,10 @@ class DashboardFragment : BaseFragment() {
         val distanceInMeters: Float = myLocation.distanceTo(storeLocation)
         println("distanceInMeters: ${distanceInMeters}")*/
 
+
+
+
+
         cvCoverage.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
         }
@@ -238,72 +243,9 @@ class DashboardFragment : BaseFragment() {
         }
 
         cvDeployement.setOnClickListener {
-            /*val url = "http://rosturkey.cheildata.com/Audit.asmx/CheckList_AuditAdd"
-
-            val JSON: MediaType? = "application/text; charset=utf-8".toMediaTypeOrNull()
-
-            val JSONObjectString = "{\n" +
-                    "    \"data\":\n" +
-                    "    [\n" +
-                    "        {\"CheckListID\":\"1\",\"StoreID\":\"1\",\"CheckListStatus\":\"0\",\"TeamMemberID\":\"1\"},\n" +
-                    "        {\"CheckListID\":\"2\",\"StoreID\":\"1\",\"CheckListStatus\":\"0\",\"TeamMemberID\":\"1\"},\n" +
-                    "        {\"CheckListID\":\"3\",\"StoreID\":\"1\",\"CheckListStatus\":\"0\",\"TeamMemberID\":\"1\"}\n" +
-                    "    ]\n" +
-                    "}" //The data I want to send
-
-            var body: RequestBody = RequestBody.create(JSON, JSONObjectString)
-            val request = Request.Builder().post(body).url(url).build()
-            val client = OkHttpClient()
-            client.newCall(request).enqueue(object : Callback {
-                override fun onResponse(call: Call, response: Response) {
-                    val tm = response.body?.string()
-                    println(tm)
-                }
-
-                override fun onFailure(call: Call, e: IOException) {
-                    Log.d("Failed", "FAILED")
-                    e.printStackTrace()
-                }
-            })*/
+            findNavController().navigate(R.id.action_dashboardFragment_to_pendingDeploymentFragment)
         }
 
-        /*val client = OkHttpClient()
-        val sourceFile = File("/storage/emulated/0/Pictures/1621837639994.jpg")
-        val mimeType = CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
-        val fileName: String = sourceFile.name
-
-        try {
-            val requestBody: RequestBody =
-                MultipartBody.Builder().setType(MultipartBody.FORM)
-                    .addFormDataPart("CheckInImage", fileName,sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull()))
-                    .build()
-
-            val request: Request = Request.Builder()
-                .url("http://rosturkey.cheildata.com/Checkin.asmx/CheckInImg?VisitID=9&Longitude=1234&Latitude=4567&Remarks=Test")
-                .post(requestBody)
-                .build()
-
-            val response: Response = client.newCall(request).execute()
-
-            println(response.body!!.string())
-
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-            Log.e("File upload", "failed")
-        }*/
-
-
-        /*btnCamera.setOnClickListener {
-            findNavController().navigate(R.id.cameraActivity)
-        }
-
-        btnJourneyPlan.setOnClickListener {
-            findNavController().navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
-        }
-
-        btnTest.setOnClickListener {
-            findNavController().navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
-        }*/
         val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
         val currentDateAndTime: String = simpleDateFormat.format(Date())
 

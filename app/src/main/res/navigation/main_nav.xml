@@ -27,6 +27,9 @@
         <action
             android:id="@+id/action_dashboardFragment_to_myActivitiesFragment"
             app:destination="@id/myActivitiesFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_pendingDeploymentFragment"
+            app:destination="@id/pendingDeploymentFragment" />
     </fragment>
     <fragment
         android:id="@+id/journeyPlanFragment"
@@ -483,4 +486,9 @@
         android:name="com.example.cheilros.fragments.MyActivitiesFragment"
         android:label="my_activities"
         tools:layout="@layout/fragment_my_activities" />
+    <fragment
+        android:id="@+id/pendingDeploymentFragment"
+        android:name="com.example.cheilros.fragments.PendingDeploymentFragment"
+        android:label="fragment_pending_deployment"
+        tools:layout="@layout/fragment_pending_deployment" />
 </navigation>

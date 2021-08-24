@@ -436,6 +436,19 @@ class JPCurrentWeekData(
 )
 //endregion
 
+//region Pending Deployment
+class PendingDeploymentModel(val status: Int, val data: List<PendingDeploymentData>)
+class PendingDeploymentData(
+    val ActivityCategoryID: Int,
+    val StoreID: Int,
+    val PlanDateTime: String,
+    val TaskDeploymentCategoryName: String,
+    val ActivityCategoryName: String,
+    val StoreCode: String,
+    val StoreName: String
+)
+//endregion
+
 //region My Coverage
 class MyCoverageModel(val status: Int, val data: List<MyCoverageData>)
 class MyCoverageData(
