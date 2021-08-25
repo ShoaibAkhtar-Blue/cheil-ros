@@ -63,6 +63,9 @@ open class BaseFragment : Fragment() {
         } else if (fragmentLabel == "journeyplan") {
             configureToolbar(settingData.filter { it.fixedLabelName == "JourneyPlan_Title" }
                 .get(0).labelName, true)
+        }else if (fragmentLabel == "pending_deployment") {
+            configureToolbar(settingData.filter { it.fixedLabelName == "Dashboard_PendingButton" }
+                .get(0).labelName, true)
         } else if (fragmentLabel == "mycoverage") {
             configureToolbar(settingData.filter { it.fixedLabelName == "StoreList_Title" }
                 .get(0).labelName, true, true)
@@ -90,6 +93,9 @@ open class BaseFragment : Fragment() {
                 .get(0).labelName)
         } else if (fragmentLabel == "journeyplan") {
             configureToolbar(settingData.filter { it.fixedLabelName == "JourneyPlan_Title" }
+                .get(0).labelName, true)
+        }else if (fragmentLabel == "pending_deployment") {
+            configureToolbar(settingData.filter { it.fixedLabelName == "Dashboard_PendingButton" }
                 .get(0).labelName, true)
         } else if (fragmentLabel == "mycoverage") {
             configureToolbar(settingData.filter { it.fixedLabelName == "StoreList_Title" }

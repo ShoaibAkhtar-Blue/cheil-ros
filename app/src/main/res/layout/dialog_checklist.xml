@@ -147,14 +147,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
-                android:padding="4dp"
-                android:id="@+id/imgPrev"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/ic_menu_gallery" />
-
             <EditText
                 android:id="@+id/etRating"
                 style="@style/editTextSimple"
@@ -165,6 +157,15 @@
                 android:hint="Rating"
                 android:inputType="numberDecimal"
                 android:maxLength="6" />
+
+            <ImageView
+                android:id="@+id/imgPrev"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_menu_gallery" />
         </LinearLayout>
 
         <LinearLayout

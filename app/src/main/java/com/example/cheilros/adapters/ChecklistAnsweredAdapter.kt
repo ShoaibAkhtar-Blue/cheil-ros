@@ -23,6 +23,7 @@ class ChecklistAnsweredAdapter(val context: Context, val itemList: List<CheckLis
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var txtQuestion : TextView = view.findViewById(R.id.txtQuestion)
         var txtAnswer : TextView = view.findViewById(R.id.txtAnswer)
+        var txtRate : TextView = view.findViewById(R.id.txtRate)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChecklistAnsweredAdapter.ViewHolder {
@@ -34,7 +35,7 @@ class ChecklistAnsweredAdapter(val context: Context, val itemList: List<CheckLis
     override fun onBindViewHolder(holder: ChecklistAnsweredAdapter.ViewHolder, position: Int) {
         holder.txtQuestion.text = itemList[position].Question
         holder.txtAnswer.text = itemList[position].CheckListStatus
-
+        holder.txtRate.text = itemList[position].Rate.toString()
     }
 
     override fun getItemCount(): Int {

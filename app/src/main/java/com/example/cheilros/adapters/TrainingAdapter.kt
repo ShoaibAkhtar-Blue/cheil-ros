@@ -7,12 +7,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.OvershootInterpolator
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.TrainingFeaturesData
 import com.example.cheilros.models.TrainingModelData
+import net.cachapa.expandablelayout.ExpandableLayout
+import net.cachapa.expandablelayout.ExpandableLayout.OnExpansionUpdateListener
 
 
 class TrainingAdapter(
@@ -36,6 +39,8 @@ class TrainingAdapter(
         var LLchecklist: LinearLayout = view.findViewById(R.id.LLchecklist)
         var LLfeatures: LinearLayout = view.findViewById(R.id.LLfeatures)
         var txtTitle: TextView = view.findViewById(R.id.txtTitle)
+        var expandableLayout: ExpandableLayout = view.findViewById(R.id.expandable_layout)
+        var LLExpand: LinearLayout = view.findViewById(R.id.LLExpand)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -46,23 +51,32 @@ class TrainingAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtTitle.text = filterList[position].TrainingModelTitle
+
+        holder.LLExpand.setOnClickListener {
+            if (holder.expandableLayout.isExpanded)
+                holder.expandableLayout.collapse()
+            else
+                holder.expandableLayout.expand()
+        }
+
+
         holder.LLchecklist.setOnClickListener {
-           /* val bundle = bundleOf(
-                "DivisionID" to arguments?.getInt("DivisionID"),
-                "TrainingModelID" to itemList[position].TrainingModelID,
-                "TrainingModelTitle" to itemList[position].TrainingModelTitle,
-                "StoreID" to arguments?.getInt("StoreID"),
-                "StoreName" to arguments?.getString("StoreName")
-            )
-            Navigation.findNavController(it)
-                .navigate(R.id.action_trainingFragment_to_trainingDetailFragment, bundle)*/
+            /* val bundle = bundleOf(
+                 "DivisionID" to arguments?.getInt("DivisionID"),
+                 "TrainingModelID" to itemList[position].TrainingModelID,
+                 "TrainingModelTitle" to itemList[position].TrainingModelTitle,
+                 "StoreID" to arguments?.getInt("StoreID"),
+                 "StoreName" to arguments?.getString("StoreName")
+             )
+             Navigation.findNavController(it)
+                 .navigate(R.id.action_trainingFragment_to_trainingDetailFragment, bundle)*/
         }
 
         val lparams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
         )
 
-        for (features in filterList[position].Features){
+        for (features in filterList[position].Features) {
             //println(features.TrainingModelFeatureTitle)
 
             val checkbox = CheckBox(context)
@@ -73,10 +87,10 @@ class TrainingAdapter(
             checkbox.layoutDirection = View.LAYOUT_DIRECTION_RTL
 
             checkbox.setOnCheckedChangeListener { buttonView, isChecked ->
-                if (isChecked){
+                if (isChecked) {
                     selectedFeatures.add("${filterList[position].TrainingModelID}:${features.TrainingModelFeatureID}")
 
-                }else{
+                } else {
 
                 }
                 CSP.saveData("sess_selected_training_features", selectedFeatures.joinToString(","))

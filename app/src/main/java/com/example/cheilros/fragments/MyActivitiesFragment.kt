@@ -155,6 +155,7 @@ class MyActivitiesFragment : BaseFragment() {
                 })
             }
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
@@ -178,6 +179,8 @@ class MyActivitiesFragment : BaseFragment() {
                         recyclerView.setEmptyView(emptyView)
                         recylcerAdapter = MyActivitiesAdapter(requireContext(), apiData.data, arguments)
                         recyclerView.adapter = recylcerAdapter
+
+                        getCurrentWeek(btnDate.tag as String)
 
                         mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                     })

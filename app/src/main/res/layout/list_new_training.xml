@@ -17,26 +17,60 @@
         android:background="#FFF"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txtTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/top_radius"
-            android:fontFamily="@font/samsungsharpsans_bold"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="TextView"
-            android:textColor="@color/white" />
 
         <LinearLayout
-            android:background="@drawable/bottom_radius"
-            android:id="@+id/LLfeatures"
+            android:id="@+id/LLExpand"
+            android:background="@color/status_none"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="48dp">
+
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/txtTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/samsungsharpsans_bold"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="TextView"
+                android:textColor="@color/white" />
+
+            <ImageView
+                android:id="@+id/team_member_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                app:srcCompat="@drawable/ic_arrow_drop_down" />
 
         </LinearLayout>
+
+
+
+
+        <net.cachapa.expandablelayout.ExpandableLayout
+            android:id="@+id/expandable_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:el_duration="1000"
+            app:el_expanded="false"
+            app:el_parallax="0.5">
+
+            <LinearLayout
+                android:background="@drawable/bottom_radius"
+                android:id="@+id/LLfeatures"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+            </LinearLayout>
+
+        </net.cachapa.expandablelayout.ExpandableLayout>
+
+
 
     </LinearLayout>
 </LinearLayout>

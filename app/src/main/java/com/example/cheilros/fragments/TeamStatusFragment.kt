@@ -255,6 +255,7 @@ class TeamStatusFragment : BaseFragment() {
                 })
             }
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
@@ -279,6 +280,7 @@ class TeamStatusFragment : BaseFragment() {
                         recylcerAdapter = TeamStatusAdapter(requireContext(), apiData.data, arguments)
                         recyclerView.adapter = recylcerAdapter
 
+                        getCurrentWeek(btnDate.tag as String)
                         mainLoadingLayoutTS.setState(LoadingLayout.COMPLETE)
                     })
                 } else {

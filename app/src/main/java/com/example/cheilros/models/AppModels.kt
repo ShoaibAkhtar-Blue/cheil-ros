@@ -370,7 +370,8 @@ class CheckListAnswerData(
     val CheckListID: Int,
     val Question: String,
     val StoreID: Int,
-    val CheckListStatus: String
+    val CheckListStatus: String,
+    val Rate: Int
 )
 //endregion
 

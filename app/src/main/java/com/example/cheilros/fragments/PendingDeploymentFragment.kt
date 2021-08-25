@@ -21,6 +21,7 @@ import com.example.cheilros.models.PendingDeploymentModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
+import kotlinx.android.synthetic.main.activity_new_dashboard.*
 import kotlinx.android.synthetic.main.fragment_activity_sub_category.*
 import kotlinx.android.synthetic.main.fragment_my_coverage.*
 import kotlinx.android.synthetic.main.fragment_pending_deployment.*
@@ -47,7 +48,7 @@ class PendingDeploymentFragment : BaseFragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_pending_deployment, container, false)
 
-        requireActivity().title = "Deployment Pending"
+        //requireActivity().toolbar_title.text = "Deployment Pending"
         val callback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
             // Handle the back button event
             println("callback")

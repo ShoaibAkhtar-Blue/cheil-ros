@@ -489,6 +489,6 @@
     <fragment
         android:id="@+id/pendingDeploymentFragment"
         android:name="com.example.cheilros.fragments.PendingDeploymentFragment"
-        android:label="fragment_pending_deployment"
+        android:label="pending_deployment"
         tools:layout="@layout/fragment_pending_deployment" />
 </navigation>
