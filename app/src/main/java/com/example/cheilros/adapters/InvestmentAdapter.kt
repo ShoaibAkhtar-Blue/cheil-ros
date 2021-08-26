@@ -30,6 +30,8 @@ class InvestmentAdapter(
         var RLHeader: RelativeLayout = view.findViewById(R.id.RLHeader)
         var LLInvestment: LinearLayout = view.findViewById(R.id.LLInvestment)
         var txtTitleHeader: TextView = view.findViewById(R.id.txtTitleHeader)
+        var QuantityHeading: TextView = view.findViewById(R.id.QuantityHeading)
+        var ValueHeading: TextView = view.findViewById(R.id.ValueHeading)
         var txtTitleDate: TextView = view.findViewById(R.id.txtTitleDate)
         var LLtable: LinearLayout = view.findViewById(R.id.LLtable)
         var imgArrowRight: ImageView = view.findViewById(R.id.imgArrowRight)
@@ -48,6 +50,9 @@ class InvestmentAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtTitleHeader.text = itemList[position].ElementTitle
         holder.txtTitleDate.text = "  (${itemList[position].ElementUpdateDate})"
+
+        holder.QuantityHeading.visibility = View.GONE
+        holder.ValueHeading.visibility = View.GONE
 
         if (itemList[position].ElementUpdateDate == "")
             holder.txtTitleDate.visibility = View.GONE

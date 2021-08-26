@@ -50,6 +50,9 @@ class DisplayCountDetailAdapter(
     lateinit var layoutManagerBC: RecyclerView.LayoutManager
     lateinit var recylcerAdapterBC: BarcodeAdapter
 
+    private val SHOW_MENU = 1
+    private val HIDE_MENU = 2
+
 
     init {
         filterList = itemList as ArrayList<DisplayCountViewData>
@@ -58,6 +61,7 @@ class DisplayCountDetailAdapter(
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         lateinit var onTextUpdated: (String) -> Unit
 
+        var LLDisplayCount: LinearLayout = view.findViewById(R.id.LLDisplayCount)
         var txtNum: TextView = view.findViewById(R.id.txtNum)
         var txtBrand: TextView = view.findViewById(R.id.txtBrand)
         var txtAttend: EditText = view.findViewById(R.id.txtAttend)
