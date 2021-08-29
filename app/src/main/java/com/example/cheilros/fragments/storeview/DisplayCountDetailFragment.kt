@@ -5,7 +5,6 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,25 +13,18 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
-import com.example.cheilros.adapters.ChecklistDetailAdapter
 import com.example.cheilros.adapters.DisplayCountDetailAdapter
 import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.models.*
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
-import com.project.mhmd.voj.swipelsit.library.MyButtonClickListener
 import com.project.mhmd.voj.swipelsit.library.SwipeListHelper
-import com.project.mhmd.voj.swipelsit.library.SwipeListHelper.ButtonSwipe
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.activity_new_dashboard.*
-import kotlinx.android.synthetic.main.fragment_checklist_category.*
-import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
-import kotlinx.android.synthetic.main.fragment_checklist_category_detail.*
 import kotlinx.android.synthetic.main.fragment_display_count_detail.*
 import kotlinx.android.synthetic.main.fragment_display_count_detail.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_display_count_detail.view.*
-import kotlinx.android.synthetic.main.fragment_my_coverage.*
 import okhttp3.*
 import java.io.IOException
 
@@ -193,29 +185,32 @@ class DisplayCountDetailFragment : BaseFragment() {
                                 )
                         rvDisplayCountDetail.adapter = recylcerAdapter
 
-                        object : SwipeListHelper(requireContext(), rvDisplayCountDetail, 200) {
+                        object : SwipeListHelper(requireContext(), rvDisplayCountDetail, 250) {
                             override fun instantiateMyButton(viewHolder: RecyclerView.ViewHolder, buffer: MutableList<ButtonSwipe>) {
                                 val buttonSwipe = ButtonSwipe(requireContext(),
                                         "View",
                                     R.drawable.ic_baseline_view,
                                         0,
                                         Color.parseColor("#DBA40E")
-                                ) { Toast.makeText(requireContext(), "View", Toast.LENGTH_SHORT).show() }
+                                ) { recylcerAdapter.allBarcodes(viewHolder.adapterPosition) }
                                 val buttonSwipeIcon1 = ButtonSwipe(requireContext(),
                                     "Input",
                                     R.drawable.ic_baseline_edit_24,
                                     0,
                                     Color.parseColor("#2F5233")
-                                ) { Toast.makeText(requireContext(), "Favorite", Toast.LENGTH_SHORT).show() }
+                                ) { recylcerAdapter.inputBarcode(viewHolder.adapterPosition) }
                                 val buttonSwipeIcon = ButtonSwipe(requireContext(),
                                         "Scan",
-                                    R.drawable.ic_baseline_aspect_ratio_24,
+                                    R.drawable.barcode2,
                                         0,
                                         Color.parseColor("#1A5653")
-                                ) { Toast.makeText(requireContext(), "Favorite", Toast.LENGTH_SHORT).show() }
+                                ) {
+                                    recylcerAdapter.barCodeScan(viewHolder.adapterPosition)
+                                }
                                 buffer.add(buttonSwipe)
                                 buffer.add(buttonSwipeIcon1)
-                                buffer.add(buttonSwipeIcon)
+                                if (CSP.getData("Display_BarCode").equals("Y"))
+                                    buffer.add(buttonSwipeIcon)
                             }
                         }
 

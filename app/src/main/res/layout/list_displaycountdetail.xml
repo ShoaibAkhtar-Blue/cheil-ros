@@ -68,6 +68,7 @@
             android:textAlignment="center" />
 
         <ImageButton
+            android:visibility="gone"
             android:id="@+id/btnBarCode"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
@@ -81,6 +82,7 @@
             android:src="@drawable/barcode_code" />
 
         <ImageButton
+            android:visibility="gone"
             android:id="@+id/btnAllBarCode"
             android:layout_width="40dp"
             android:layout_height="wrap_content"

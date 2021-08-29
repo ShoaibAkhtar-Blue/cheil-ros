@@ -16,14 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.fragments.storeview.DisplayCountDetailFragment
-import com.example.cheilros.fragments.storeview.InvestmentDetailFragment
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.*
 import com.google.gson.Gson
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
-import kotlinx.android.synthetic.main.dialog_assets.*
 import kotlinx.android.synthetic.main.dialog_barcode.*
+import kotlinx.android.synthetic.main.dialog_barcode_input.*
 import kotlinx.android.synthetic.main.fragment_investment_detail.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -67,7 +66,8 @@ class DisplayCountDetailAdapter(
         var txtAttend: EditText = view.findViewById(R.id.txtAttend)
         var btnBarCode: ImageButton = view.findViewById(R.id.btnBarCode)
         var btnAllBarCode: ImageButton = view.findViewById(R.id.btnAllBarCode)
-       // var qpAttend: HorizontalQuantitizer = view.findViewById(R.id.qpAttend)
+
+        // var qpAttend: HorizontalQuantitizer = view.findViewById(R.id.qpAttend)
         var watcher: TextWatcher? = null
 
         init { // TextChanged listener added only once.
@@ -90,31 +90,33 @@ class DisplayCountDetailAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         holder.txtNum.text = (position + 1).toString()
         holder.txtBrand.text = itemList[position].ShortName
 
         if (CSP.getData("Display_BarCode").equals("N")) {
             holder.btnBarCode.visibility = View.GONE
             holder.btnAllBarCode.visibility = View.GONE
-           // holder.qpAttend.visibility = View.GONE
-        }
-        else{
+            // holder.qpAttend.visibility = View.GONE
+        } else {
 
-            holder.txtAttend.visibility = View.GONE
+            //holder.txtAttend.visibility = View.GONE
             holder.txtAttend.isEnabled = false
             holder.txtAttend.isFocusable = false
         }
 
+
+
         holder.btnBarCode.setOnClickListener {
 //            Navigation.findNavController(it)
 //                .navigate(R.id.action_displayCountDetailFragment_to_barcodeFragment)
-            CSP.saveData("dispProdID", filterList[position].ProductID.toString())
+            /*CSP.saveData("dispProdID", filterList[position].ProductID.toString())
             Navigation.findNavController(it)
-                .navigate(R.id.action_displayCountDetailFragment_to_barcodeActivity)
+                .navigate(R.id.action_displayCountDetailFragment_to_barcodeActivity)*/
         }
 
         holder.btnAllBarCode.setOnClickListener {
-            if(!CSP.getData("ActivityDetail_BARCODE_SET").equals("")){
+            /*if(!CSP.getData("ActivityDetail_BARCODE_SET").equals("")){
                 println("ActivityDetail_BARCODE_SET: ${CSP.getData("ActivityDetail_BARCODE_SET")}")
                 var savedBarcodes = CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.toTypedArray()
                 var savedBarcodes1 = savedBarcodes?.filter { it.contains("_${filterList[position].ProductID}") }
@@ -144,11 +146,11 @@ class DisplayCountDetailAdapter(
                 }
 
             } else {
-                /*Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                *//*Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                     .setTitle("Info!!")
                     .setMessage("No Barcode Added to the session!")
-                    .sneakWarning()*/
-            }
+                    .sneakWarning()*//*
+            }*/
         }
 
         holder.onTextUpdated = { text ->
@@ -299,5 +301,90 @@ class DisplayCountDetailAdapter(
         println("updateItem $numbersOnSameIndexAsValue")
         //itemList[position] = item
         notifyDataSetChanged()
+    }
+
+    fun barCodeScan(position: Int) {
+        CSP.saveData("dispProdID", filterList[position].ProductID.toString())
+        fragment.view?.let {
+            Navigation.findNavController(it)
+                .navigate(R.id.action_displayCountDetailFragment_to_barcodeActivity)
+        }
+    }
+
+    fun allBarcodes(position: Int) {
+        if (!CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
+            println("ActivityDetail_BARCODE_SET: ${CSP.getData("ActivityDetail_BARCODE_SET")}")
+            var savedBarcodes =
+                CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.toTypedArray()
+            var savedBarcodes1 =
+                savedBarcodes?.filter { it.contains("_${filterList[position].ProductID}") }
+            //var savedBarcodes = "abc, xyz"?.split(",").toTypedArray()
+
+            if (savedBarcodes1 != null) {
+                if (savedBarcodes1.isNotEmpty()) {
+                    val li = LayoutInflater.from(context)
+                    val promptsView: View = li.inflate(R.layout.dialog_barcode, null)
+
+                    val dialog = Dialog(context)
+                    dialog.setContentView(promptsView)
+                    dialog.setCancelable(false)
+                    dialog.setCanceledOnTouchOutside(true)
+
+                    dialog.rvBarcode.setHasFixedSize(true)
+                    layoutManagerBC = LinearLayoutManager(context)
+                    dialog.rvBarcode.layoutManager = layoutManagerBC
+                    recylcerAdapterBC = savedBarcodes1?.toMutableList()?.let { it1 ->
+                        BarcodeAdapter(
+                            context,
+                            it1, dialog
+                        )
+                    }!!
+                    dialog.rvBarcode.adapter = recylcerAdapterBC
+
+                    dialog.show()
+                }
+            }
+
+        } else {
+            /*Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                .setTitle("Info!!")
+                .setMessage("No Barcode Added to the session!")
+                .sneakWarning()*/
+        }
+    }
+
+    fun inputBarcode(position: Int) {
+        val li = LayoutInflater.from(context)
+        val promptsView: View = li.inflate(R.layout.dialog_barcode_input, null)
+
+        val dialog = Dialog(context)
+        dialog.setContentView(promptsView)
+        dialog.setCancelable(false)
+        dialog.setCanceledOnTouchOutside(true)
+
+        dialog.btnAccept.setOnClickListener {
+            val barInput = dialog.etInputBarcode.text.toString()
+
+            if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
+                CSP.saveData(
+                    "ActivityDetail_BARCODE_SET",
+                    "${barInput}_${filterList[position].ProductID}"
+                )
+                CSP.delData("activity_barcodes")
+                updateItem(filterList[position].ProductID)
+
+
+            } else {
+                CSP.saveData(
+                    "ActivityDetail_BARCODE_SET",
+                    "${CSP.getData("ActivityDetail_BARCODE_SET")},${barInput}_${filterList[position].ProductID}"
+                )
+                CSP.delData("activity_barcodes")
+                updateItem(filterList[position].ProductID)
+            }
+
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 }
