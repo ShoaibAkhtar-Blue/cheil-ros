@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.helpers.CustomSharedPref
 
-class BarcodeAdapter(val context: Context, val barcodeList: MutableList<String>, val dialog: Dialog): RecyclerView.Adapter<BarcodeAdapter.ViewHolder>() {
+class BarcodeAdapter(val context: Context, val barcodeList: MutableList<String>, val dialog: Dialog, val isRemoveActive: Boolean): RecyclerView.Adapter<BarcodeAdapter.ViewHolder>() {
 
     lateinit var CSP: CustomSharedPref
 
@@ -33,6 +33,8 @@ class BarcodeAdapter(val context: Context, val barcodeList: MutableList<String>,
             holder.txtTitle.text = barcodeList[position]
         }
 
+        if(!isRemoveActive)
+            holder.btnRemove.visibility = View.GONE
 
         holder.btnRemove.setOnClickListener {
             barcodeList.removeAt(position)

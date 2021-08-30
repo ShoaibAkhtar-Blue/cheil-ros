@@ -3,6 +3,7 @@ package com.example.cheilros.adapters
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.text.TextWatcher
 import android.util.Log
@@ -19,11 +20,16 @@ import com.example.cheilros.fragments.storeview.DisplayCountDetailFragment
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.*
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
+import com.project.mhmd.voj.swipelsit.library.SwipeListHelper
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.dialog_barcode.*
 import kotlinx.android.synthetic.main.dialog_barcode_input.*
+import kotlinx.android.synthetic.main.fragment_display_count_detail.*
 import kotlinx.android.synthetic.main.fragment_investment_detail.*
+import kotlinx.android.synthetic.main.fragment_investment_detail.btnSubmit
+import kotlinx.android.synthetic.main.fragment_investment_detail.mainLoadingLayoutCC
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -94,7 +100,10 @@ class DisplayCountDetailAdapter(
         holder.txtNum.text = (position + 1).toString()
         holder.txtBrand.text = itemList[position].ShortName
 
-        if (CSP.getData("Display_BarCode").equals("N")) {
+        holder.btnBarCode.visibility = View.GONE
+        holder.btnAllBarCode.visibility = View.GONE
+
+        /*if (CSP.getData("Display_BarCode").equals("N")) {
             holder.btnBarCode.visibility = View.GONE
             holder.btnAllBarCode.visibility = View.GONE
             // holder.qpAttend.visibility = View.GONE
@@ -103,9 +112,12 @@ class DisplayCountDetailAdapter(
             //holder.txtAttend.visibility = View.GONE
             holder.txtAttend.isEnabled = false
             holder.txtAttend.isFocusable = false
+        }*/
+
+        if (itemList[position].isBarCodeEnabled == "Y") {
+            holder.txtAttend.isEnabled = false
+            holder.txtAttend.isFocusable = false
         }
-
-
 
         holder.btnBarCode.setOnClickListener {
 //            Navigation.findNavController(it)
@@ -154,58 +166,7 @@ class DisplayCountDetailAdapter(
         }
 
         holder.onTextUpdated = { text ->
-            val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
-            val currentDateAndTime: String = simpleDateFormat.format(Date())
-            try {
-                if (displayCountData.isNullOrEmpty()) {
-                    println("investmentsCountData: null")
-                    displayCountData.add(
-                        DisplayCountJSONData(
-                            itemList[position].ProductID,
-                            arguments?.getInt("StoreID"),
-                            text.toInt(),
-                            CSP.getData("user_id")?.toInt()
-                        )
-                    )
-                } else {
-                    val investmentSize =
-                        displayCountData.filter { it.ProductID == itemList[position].ProductID }.size
-                    println(investmentSize)
-                    if (investmentSize == 0) {
-                        displayCountData.add(
-                            DisplayCountJSONData(
-                                itemList[position].ProductID,
-                                arguments?.getInt("StoreID"),
-                                text.toInt(),
-                                CSP.getData("user_id")?.toInt()
-                            )
-                        )
-                    } else {
-                        val investmentIndex =
-                            displayCountData.indexOf(displayCountData.find { it.ProductID == itemList[position].ProductID })
-                        displayCountData[investmentIndex] =
-                            DisplayCountJSONData(
-                                itemList[position].ProductID,
-                                arguments?.getInt("StoreID"),
-                                text.toInt(),
-                                CSP.getData("user_id")?.toInt()
-                            )
-
-                    }
-                }
-
-                /*updateItem(
-                    position,
-                    DisplayCountProductsData(
-                        itemList[position].ProductID,
-                        itemList[position].ShortName,
-                        text.toInt()
-                    )
-                )*/
-
-            } catch (ex: Exception) {
-                println(ex.message)
-            }
+            addDatainJsonObject(position, text)
         }
 
         holder.txtAttend.setText(filterList[position].DisplayCount.toString())
@@ -218,7 +179,7 @@ class DisplayCountDetailAdapter(
             val jsonString: String = gson.toJson(DisplayCountJSON(displayCountData))
             println(jsonString)
 
-            val url = "${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountAdd"
+            val url = "${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountDetailAdd"
 
             val request_header: MediaType? = "application/text; charset=utf-8".toMediaTypeOrNull()
 
@@ -264,6 +225,7 @@ class DisplayCountDetailAdapter(
     }
 
     override fun getItemViewType(position: Int): Int = position
+
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
@@ -305,6 +267,7 @@ class DisplayCountDetailAdapter(
 
     fun barCodeScan(position: Int) {
         CSP.saveData("dispProdID", filterList[position].ProductID.toString())
+        CSP.saveData("dispPosition", position.toString())
         fragment.view?.let {
             Navigation.findNavController(it)
                 .navigate(R.id.action_displayCountDetailFragment_to_barcodeActivity)
@@ -336,20 +299,21 @@ class DisplayCountDetailAdapter(
                     recylcerAdapterBC = savedBarcodes1?.toMutableList()?.let { it1 ->
                         BarcodeAdapter(
                             context,
-                            it1, dialog
+                            it1, dialog, true
                         )
                     }!!
                     dialog.rvBarcode.adapter = recylcerAdapterBC
 
                     dialog.show()
+                } else {
+                    fetchSerialNum(position)
                 }
+            } else {
+                //fetchSerialNum(position)
             }
 
         } else {
-            /*Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
-                .setTitle("Info!!")
-                .setMessage("No Barcode Added to the session!")
-                .sneakWarning()*/
+            fetchSerialNum(position)
         }
     }
 
@@ -383,8 +347,126 @@ class DisplayCountDetailAdapter(
                 updateItem(filterList[position].ProductID)
             }
 
+            addDatainJsonObject(position, barInput)
+
             dialog.dismiss()
         }
         dialog.show()
+    }
+
+    fun addDatainJsonObject(position: Int, text: String) {
+        val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+        val currentDateAndTime: String = simpleDateFormat.format(Date())
+        try {
+            if (displayCountData.isNullOrEmpty()) {
+                println("investmentsCountData: null")
+                displayCountData.add(
+                    DisplayCountJSONData(
+                        itemList[position].ProductID,
+                        arguments?.getInt("StoreID"),
+                        text.toInt(),
+                        CSP.getData("user_id")?.toInt()
+                    )
+                )
+            } else {
+                val displaySize =
+                    displayCountData.filter { it.ProductID == itemList[position].ProductID }.size
+                println(displaySize)
+                if (displaySize == 0) {
+                    displayCountData.add(
+                        DisplayCountJSONData(
+                            itemList[position].ProductID,
+                            arguments?.getInt("StoreID"),
+                            text.toInt(),
+                            CSP.getData("user_id")?.toInt()
+                        )
+                    )
+                } else {
+                    val displayIndex =
+                        displayCountData.indexOf(displayCountData.find { it.ProductID == itemList[position].ProductID })
+                    displayCountData[displayIndex] =
+                        DisplayCountJSONData(
+                            itemList[position].ProductID,
+                            arguments?.getInt("StoreID"),
+                            text.toInt(),
+                            CSP.getData("user_id")?.toInt()
+                        )
+
+                }
+            }
+
+        } catch (ex: Exception) {
+            println(ex.message)
+        }
+    }
+
+    fun fetchSerialNum(position: Int) {
+        var url =
+            "${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountDetailView?ProductID=${filterList[position].ProductID}&StoreID=${
+                arguments?.getInt(
+                    "StoreID"
+                )
+            }"
+
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body?.string()
+                println(body)
+                val gson = GsonBuilder().create()
+                val apiData =
+                    gson.fromJson(body, DisplayCountDetailViewModel::class.java)
+                if (apiData.status == 200) {
+
+                    if (apiData.data.isNotEmpty()) {
+                        (context as Activity).runOnUiThread {
+                            try {
+                                var barcodeList: MutableList<String> = arrayListOf()
+
+                                for (bl in apiData.data) {
+                                    barcodeList.add(bl.SerialNumber)
+                                }
+
+                                val li = LayoutInflater.from(context)
+                                val promptsView: View =
+                                    li.inflate(R.layout.dialog_barcode, null)
+
+                                val dialog = Dialog(context)
+                                dialog.setContentView(promptsView)
+                                dialog.setCancelable(false)
+                                dialog.setCanceledOnTouchOutside(true)
+
+                                dialog.rvBarcode.setHasFixedSize(true)
+                                layoutManagerBC = LinearLayoutManager(context)
+                                dialog.rvBarcode.layoutManager = layoutManagerBC
+                                recylcerAdapterBC =
+                                    barcodeList?.toMutableList()?.let { it1 ->
+                                        BarcodeAdapter(
+                                            context,
+                                            it1, dialog, false
+                                        )
+                                    }!!
+                                dialog.rvBarcode.adapter = recylcerAdapterBC
+
+                                dialog.show()
+                            } catch (ex: Exception) {
+
+                            }
+                        }
+                    }
+                } else {
+
+                }
+            }
+        })
     }
 }

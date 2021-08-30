@@ -39,8 +39,8 @@ class DisplayCountDetailFragment : BaseFragment() {
     lateinit var productCategoryData: List<DisplayProductCategoryData>
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_display_count_detail, container, false)
@@ -50,13 +50,15 @@ class DisplayCountDetailFragment : BaseFragment() {
         //region Set Labels
         try {
             view.txtStoreName.text =
-                    settingData.filter { it.fixedLabelName == "StoreMenu_ModelCount" }[0].labelName + " / " + arguments?.getString("BrandName")
+                settingData.filter { it.fixedLabelName == "StoreMenu_ModelCount" }[0].labelName + " / " + arguments?.getString(
+                    "BrandName"
+                )
             view.BrandHeading.text =
-                    settingData.filter { it.fixedLabelName == "DisplayCount_Model" }[0].labelName
+                settingData.filter { it.fixedLabelName == "DisplayCount_Model" }[0].labelName
             view.CountHeading.text =
-                    settingData.filter { it.fixedLabelName == "DisplayCount_Display" }[0].labelName
+                settingData.filter { it.fixedLabelName == "DisplayCount_Display" }[0].labelName
             view.btnProductCategory.text =
-                    "${arguments?.getString("ProductCategoryName")}"
+                "${arguments?.getString("ProductCategoryName")}"
         } catch (ex: Exception) {
             Log.e("Error_", ex.message.toString())
         }
@@ -68,15 +70,15 @@ class DisplayCountDetailFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         fetchCategory("${CSP.getData("base_url")}/DisplayCount.asmx/ProductCategoryList")
         fetchDisplayCountDetail(
-                "${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountView?BrandID=${
-                    arguments?.getInt(
-                            "BrandID"
-                    )
-                }&ProductCategoryID=${arguments?.getInt("ProductCategoryID")}&StoreID=${
-                    arguments?.getInt(
-                            "StoreID"
-                    )
-                }"
+            "${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountView?BrandID=${
+                arguments?.getInt(
+                    "BrandID"
+                )
+            }&ProductCategoryID=${arguments?.getInt("ProductCategoryID")}&StoreID=${
+                arguments?.getInt(
+                    "StoreID"
+                )
+            }"
         )
 
         btnProductCategory.setOnClickListener {
@@ -89,25 +91,26 @@ class DisplayCountDetailFragment : BaseFragment() {
             }
 
             builder.setItems(channels,
-                    DialogInterface.OnClickListener { dialog, which ->
-                        println(productCategoryData[which].ProductCategoryName)
-                        defaultChannel = productCategoryData[which].ProductCategoryID.toString()
-                        btnProductCategory.text =
-                                "${productCategoryData[which].ProductCategoryName}"
-                        fetchDisplayCountDetail(
-                                "${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountView?BrandID=${
-                                    arguments?.getInt(
-                                            "BrandID"
-                                    )
-                                }&ProductCategoryID=${defaultChannel}&StoreID=${arguments?.getInt("StoreID")}"
-                        )
-                    })
+                DialogInterface.OnClickListener { dialog, which ->
+                    println(productCategoryData[which].ProductCategoryName)
+                    defaultChannel = productCategoryData[which].ProductCategoryID.toString()
+                    btnProductCategory.text =
+                        "${productCategoryData[which].ProductCategoryName}"
+                    fetchDisplayCountDetail(
+                        "${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountView?BrandID=${
+                            arguments?.getInt(
+                                "BrandID"
+                            )
+                        }&ProductCategoryID=${defaultChannel}&StoreID=${arguments?.getInt("StoreID")}"
+                    )
+                })
             val dialog: AlertDialog = builder.create()
             dialog.show()
         }
 
-        requireActivity().toolbar_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
-                android.widget.SearchView.OnQueryTextListener {
+        requireActivity().toolbar_search.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener,
+            android.widget.SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(qString: String): Boolean {
                 recylcerAdapter?.filter?.filter(qString)
@@ -125,25 +128,42 @@ class DisplayCountDetailFragment : BaseFragment() {
         super.onResume()
         if (!CSP.getData("activity_barcodes").equals("")) {
             Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
-                    .setTitle("Success!!")
-                    .setMessage("Barcode Added to this session!")
-                    .sneakSuccess()
+                .setTitle("Success!!")
+                .setMessage("Barcode Added to this session!")
+                .sneakSuccess()
 
             println("activity_barcodes: ${CSP.getData("activity_barcodes")}")
 
+
+
             if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
-                CSP.saveData("ActivityDetail_BARCODE_SET", "${CSP.getData("activity_barcodes")}_${CSP.getData("dispProdID")}")
+                CSP.saveData(
+                    "ActivityDetail_BARCODE_SET",
+                    "${CSP.getData("activity_barcodes")}_${CSP.getData("dispProdID")}"
+                )
                 CSP.delData("activity_barcodes")
 
                 CSP.getData("dispProdID")?.let { recylcerAdapter.updateItem(it.toInt()) }
             } else {
                 CSP.saveData(
-                        "ActivityDetail_BARCODE_SET",
-                        "${CSP.getData("ActivityDetail_BARCODE_SET")},${CSP.getData("activity_barcodes")}_${CSP.getData("dispProdID")}"
+                    "ActivityDetail_BARCODE_SET",
+                    "${CSP.getData("ActivityDetail_BARCODE_SET")},${CSP.getData("activity_barcodes")}_${
+                        CSP.getData(
+                            "dispProdID"
+                        )
+                    }"
                 )
                 CSP.delData("activity_barcodes")
                 CSP.getData("dispProdID")?.let { recylcerAdapter.updateItem(it.toInt()) }
             }
+            //Add in Json Object
+            CSP.getData("dispPosition")?.let {
+                recylcerAdapter.addDatainJsonObject(
+                    it.toInt(),
+                    CSP.getData("activity_barcodes")!!
+                )
+            }
+            CSP.delData("dispPosition")
         }
     }
 
@@ -152,17 +172,17 @@ class DisplayCountDetailFragment : BaseFragment() {
         val client = OkHttpClient()
 
         val request = Request.Builder()
-                .url(url)
-                .build()
+            .url(url)
+            .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 requireActivity().runOnUiThread(java.lang.Runnable {
                     activity?.let { it1 ->
                         Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                .setTitle("Error!!")
-                                .setMessage(e.message.toString())
-                                .sneakError()
+                            .setTitle("Error!!")
+                            .setMessage(e.message.toString())
+                            .sneakError()
                     }
                     //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                 })
@@ -179,38 +199,50 @@ class DisplayCountDetailFragment : BaseFragment() {
                         layoutManager = LinearLayoutManager(requireContext())
                         rvDisplayCountDetail.layoutManager = layoutManager
                         recylcerAdapter =
-                                DisplayCountDetailAdapter(
-                                        requireContext(),
-                                        apiData.data as MutableList<DisplayCountViewData>, ref, arguments
-                                )
+                            DisplayCountDetailAdapter(
+                                requireContext(),
+                                apiData.data as MutableList<DisplayCountViewData>, ref, arguments
+                            )
                         rvDisplayCountDetail.adapter = recylcerAdapter
 
                         object : SwipeListHelper(requireContext(), rvDisplayCountDetail, 250) {
-                            override fun instantiateMyButton(viewHolder: RecyclerView.ViewHolder, buffer: MutableList<ButtonSwipe>) {
-                                val buttonSwipe = ButtonSwipe(requireContext(),
-                                        "View",
+                            override fun instantiateMyButton(
+                                viewHolder: RecyclerView.ViewHolder,
+                                buffer: MutableList<ButtonSwipe>
+                            ) {
+                                val buttonSwipe = ButtonSwipe(
+                                    requireContext(),
+                                    "View",
                                     R.drawable.ic_baseline_view,
-                                        0,
-                                        Color.parseColor("#DBA40E")
+                                    0,
+                                    Color.parseColor("#DBA40E")
                                 ) { recylcerAdapter.allBarcodes(viewHolder.adapterPosition) }
-                                val buttonSwipeIcon1 = ButtonSwipe(requireContext(),
+                                val buttonSwipeIcon1 = ButtonSwipe(
+                                    requireContext(),
                                     "Input",
                                     R.drawable.ic_baseline_edit_24,
                                     0,
                                     Color.parseColor("#2F5233")
                                 ) { recylcerAdapter.inputBarcode(viewHolder.adapterPosition) }
-                                val buttonSwipeIcon = ButtonSwipe(requireContext(),
-                                        "Scan",
+                                val buttonSwipeIcon = ButtonSwipe(
+                                    requireContext(),
+                                    "Scan",
                                     R.drawable.barcode2,
-                                        0,
-                                        Color.parseColor("#1A5653")
+                                    0,
+                                    Color.parseColor("#1A5653")
                                 ) {
                                     recylcerAdapter.barCodeScan(viewHolder.adapterPosition)
                                 }
                                 buffer.add(buttonSwipe)
-                                buffer.add(buttonSwipeIcon1)
-                                if (CSP.getData("Display_BarCode").equals("Y"))
+
+
+                                if (recylcerAdapter.itemList[viewHolder.adapterPosition].isBarCodeEnabled == "Y") {
+                                    buffer.add(buttonSwipeIcon1)
                                     buffer.add(buttonSwipeIcon)
+                                }
+
+                                /*if (CSP.getData("Display_BarCode").equals("Y"))
+                                    buffer.add(buttonSwipeIcon)*/
                             }
                         }
 
@@ -221,9 +253,9 @@ class DisplayCountDetailFragment : BaseFragment() {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                    .setTitle("Error!!")
-                                    .setMessage("Data not fetched.")
-                                    .sneakWarning()
+                                .setTitle("Error!!")
+                                .setMessage("Data not fetched.")
+                                .sneakWarning()
                         }
                         //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
@@ -237,17 +269,17 @@ class DisplayCountDetailFragment : BaseFragment() {
         val client = OkHttpClient()
 
         val request = Request.Builder()
-                .url(url)
-                .build()
+            .url(url)
+            .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 requireActivity().runOnUiThread(java.lang.Runnable {
                     activity?.let { it1 ->
                         Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                .setTitle("Error!!")
-                                .setMessage(e.message.toString())
-                                .sneakError()
+                            .setTitle("Error!!")
+                            .setMessage(e.message.toString())
+                            .sneakError()
                         //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
                     }
                 })
@@ -271,9 +303,9 @@ class DisplayCountDetailFragment : BaseFragment() {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                    .setTitle("Error!!")
-                                    .setMessage("Data not fetched.")
-                                    .sneakWarning()
+                                .setTitle("Error!!")
+                                .setMessage("Data not fetched.")
+                                .sneakWarning()
                             //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
                         }
                     })
