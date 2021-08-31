@@ -54,6 +54,9 @@ class DisplayCountAdapter(
 
         holder.imgArrowRight.visibility = View.GONE
 
+        holder.QuantityHeading.visibility = View.GONE
+        holder.ValueHeading.visibility = View.GONE
+
         //region Set Labels
         try{
             holder.QuantityHeading.text = settingData.filter { it.fixedLabelName == "Sale_Quantity" }[0].labelName

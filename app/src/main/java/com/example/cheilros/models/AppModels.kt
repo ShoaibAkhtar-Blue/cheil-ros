@@ -456,6 +456,27 @@ class PendingDeploymentData(
 )
 //endregion
 
+//region General Pictures
+class GeneralPicturesModel(val status: Int, val data: List<GeneralPicturesData>)
+class GeneralPicturesData(
+    val PictureID: Int,
+    val StoreID: Int,
+    val TeamMembeID: Int,
+    val BrandID: Int,
+    val PictureElementID: Int,
+    val Remarks: String,
+    val CreationDateTime: String,
+    val StorePictureElementName: String,
+    val BrandName: String
+)
+
+class BrandModel(val status: Int, val data: List<BrandData>)
+class BrandData(
+    val BrandID: Int,
+    val BrandName: String
+)
+//endregion
+
 //region My Coverage
 class MyCoverageModel(val status: Int, val data: List<MyCoverageData>)
 class MyCoverageData(

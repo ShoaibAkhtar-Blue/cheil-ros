@@ -115,6 +115,11 @@ class InvestmentAdapter(
                         } else {
                             tv.text =
                                 if (itemList[position].Brands[brandIndex].ElementStatus == "") "0" else itemList[position].Brands[brandIndex].ElementStatus
+
+                            if (itemList[position].Brands[brandIndex].ElementStatus != "0"){
+                                tv!!.typeface = ResourcesCompat.getFont(context!!, R.font.samsungsharpsans_bold)
+                                tv.setTextColor(Color.BLUE)
+                            }
                             brandIndex++
                         }
 

@@ -123,6 +123,9 @@
         <action
             android:id="@+id/action_storeViewFragment_to_salesFragment"
             app:destination="@id/salesFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_storePicturesFragment"
+            app:destination="@id/storePicturesFragment" />
     </fragment>
     <fragment
         android:id="@+id/checklistCategoryFragment"
@@ -491,4 +494,9 @@
         android:name="com.example.cheilros.fragments.PendingDeploymentFragment"
         android:label="pending_deployment"
         tools:layout="@layout/fragment_pending_deployment" />
+    <fragment
+        android:id="@+id/storePicturesFragment"
+        android:name="com.example.cheilros.fragments.storeview.StorePicturesFragment"
+        android:label="store_pictures"
+        tools:layout="@layout/fragment_store_pictures" />
 </navigation>
