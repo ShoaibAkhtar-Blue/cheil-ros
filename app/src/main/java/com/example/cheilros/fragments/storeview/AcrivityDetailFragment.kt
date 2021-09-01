@@ -157,8 +157,10 @@ class AcrivityDetailFragment : BaseFragment() {
                 layoutManagerBC = LinearLayoutManager(requireContext())
                 dialog.rvBarcode.layoutManager = layoutManagerBC
                 recylcerAdapterBC = savedBarcodes?.toMutableList()?.let { it1 ->
-                    BarcodeAdapter(requireContext(),
-                        it1, dialog, true)
+                    BarcodeAdapter(
+                        requireContext(),
+                        it1, dialog, true, null, null, arguments
+                    )
                 }!!
                 dialog.rvBarcode.adapter = recylcerAdapterBC
 

@@ -3,7 +3,6 @@ package com.example.cheilros.adapters
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.text.TextWatcher
 import android.util.Log
@@ -22,12 +21,9 @@ import com.example.cheilros.models.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
-import com.project.mhmd.voj.swipelsit.library.SwipeListHelper
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.dialog_barcode.*
 import kotlinx.android.synthetic.main.dialog_barcode_input.*
-import kotlinx.android.synthetic.main.fragment_display_count_detail.*
-import kotlinx.android.synthetic.main.fragment_investment_detail.*
 import kotlinx.android.synthetic.main.fragment_investment_detail.btnSubmit
 import kotlinx.android.synthetic.main.fragment_investment_detail.mainLoadingLayoutCC
 import okhttp3.*
@@ -255,15 +251,23 @@ class DisplayCountDetailAdapter(
         }
     }
 
-    fun updateItem(pid: Int) {
+    fun updateItem(pid: Int, isRemove: Boolean = false) {
         val numbersOnSameIndexAsValue = filterList.indexOf(filterList.find { it.ProductID == pid })
-        filterList[numbersOnSameIndexAsValue].DisplayCount =
-            (filterList[numbersOnSameIndexAsValue].DisplayCount + 1).toInt()
+        if(isRemove){
+            if(filterList[numbersOnSameIndexAsValue].DisplayCount > 0)
+            filterList[numbersOnSameIndexAsValue].DisplayCount =
+                (filterList[numbersOnSameIndexAsValue].DisplayCount - 1)
+        }else {
+            filterList[numbersOnSameIndexAsValue].DisplayCount =
+                (filterList[numbersOnSameIndexAsValue].DisplayCount + 1)
+        }
 
         println("updateItem $numbersOnSameIndexAsValue")
         //itemList[position] = item
         notifyDataSetChanged()
     }
+
+
 
     fun barCodeScan(position: Int) {
         CSP.saveData("dispProdID", filterList[position].ProductID.toString())
@@ -299,7 +303,7 @@ class DisplayCountDetailAdapter(
                     recylcerAdapterBC = savedBarcodes1?.toMutableList()?.let { it1 ->
                         BarcodeAdapter(
                             context,
-                            it1, dialog, true
+                            it1, dialog, true, fragment.recylcerAdapter, filterList[position].ProductID, arguments
                         )
                     }!!
                     dialog.rvBarcode.adapter = recylcerAdapterBC
@@ -452,7 +456,7 @@ class DisplayCountDetailAdapter(
                                     barcodeList?.toMutableList()?.let { it1 ->
                                         BarcodeAdapter(
                                             context,
-                                            it1, dialog, false
+                                            it1, dialog, true, fragment.recylcerAdapter, filterList[position].ProductID, arguments
                                         )
                                     }!!
                                 dialog.rvBarcode.adapter = recylcerAdapterBC

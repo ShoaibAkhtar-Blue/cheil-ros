@@ -1,8 +1,12 @@
 package com.example.cheilros.fragments
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.DialogInterface.OnMultiChoiceClickListener
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +26,7 @@ import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.activities.customobj.EmptyRecyclerView
 import com.example.cheilros.adapters.MyCoverageAdapter
 import com.example.cheilros.models.*
+import com.google.android.play.core.internal.e
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
@@ -35,6 +41,8 @@ import java.io.IOException
 
 class MyCoverageFragment : BaseFragment() {
 
+    lateinit var activity: NewDashboardActivity
+    lateinit var uLocation: Location
     private val client = OkHttpClient()
 
     lateinit var recyclerView: EmptyRecyclerView
@@ -52,6 +60,13 @@ class MyCoverageFragment : BaseFragment() {
 
     var latitude: String = "0.0"
     var longitude: String = "0.0"
+
+    var isLoc: Boolean = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activity = requireActivity() as NewDashboardActivity
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,11 +95,18 @@ class MyCoverageFragment : BaseFragment() {
             findNavController().popBackStack()
         }
 
+        try {
+            uLocation = activity.userLocation
+        }catch (ex: Exception){
+
+        }
+
 
 
         return view
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         recyclerView= rvCoverage
@@ -106,6 +128,33 @@ class MyCoverageFragment : BaseFragment() {
         fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${defaultChannel}&SearchKeyWord=&ChannelTypeID=${defaultChannelType}")
 
 
+        btnLocation.setOnClickListener {
+            try{
+                if(!isLoc){
+                    val lat = uLocation.latitude
+                    val lng = uLocation.longitude
+                    fetchData("${CSP.getData("base_url")}/WebService.asmx/NearestStore?TeamMemberID=${userData[0].memberID}&Longitude=${lng}&Latitude=${lat}")
+
+                    isLoc = true
+
+                    btnLocation.backgroundTintList = ColorStateList.valueOf(Color.CYAN)
+                    btnLocation.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_aspect_ratio_24))
+                }else{
+                    fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${defaultChannel}&SearchKeyWord=&ChannelTypeID=${defaultChannelType}")
+                    btnLocation.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.map_icon))
+                    isLoc = false
+                }
+            }catch (ex: Exception){
+                requireActivity().runOnUiThread(java.lang.Runnable {
+                    activity?.let { it1 ->
+                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                            .setTitle("Error!!")
+                            .setMessage("Your Location Service is not working properly!")
+                            .sneakError()
+                    }
+                })
+            }
+        }
 
         btnChannel.setOnClickListener {
             // setup the alert builder
@@ -399,6 +448,7 @@ class MyCoverageFragment : BaseFragment() {
     fun fetchData(url: String) {
         println(url)
         mainLoadingLayoutCoverage.setState(LoadingLayout.LOADING)
+        btnLocation.visibility = View.INVISIBLE
         val request = Request.Builder()
                 .url(url)
                 .build()
@@ -427,6 +477,9 @@ class MyCoverageFragment : BaseFragment() {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         recylcerAdapter = MyCoverageAdapter(requireContext(), apiData.data, settingData, latitude, longitude,this@MyCoverageFragment, requireActivity() as NewDashboardActivity)
                         recyclerView.adapter = recylcerAdapter
+
+                        btnLocation.visibility = View.VISIBLE
+
                         mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
                     })
                 } else {

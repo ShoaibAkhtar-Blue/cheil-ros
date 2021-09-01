@@ -1,16 +1,35 @@
 package com.example.cheilros.adapters
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.helpers.CustomSharedPref
+import com.example.cheilros.models.CheckInOutModel
+import com.example.cheilros.models.DisplayCountDetailViewModel
+import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.dialog_barcode.*
+import okhttp3.*
+import java.io.IOException
 
-class BarcodeAdapter(val context: Context, val barcodeList: MutableList<String>, val dialog: Dialog, val isRemoveActive: Boolean): RecyclerView.Adapter<BarcodeAdapter.ViewHolder>() {
+class BarcodeAdapter(
+    val context: Context,
+    val barcodeList: MutableList<String>,
+    val dialog: Dialog,
+    val isRemoveActive: Boolean,
+    val recylcerAdapter: DisplayCountDetailAdapter?,
+    val productID: Int?,
+    val arguments: Bundle?,
+    val isRemoveOnline: Boolean = false
+) : RecyclerView.Adapter<BarcodeAdapter.ViewHolder>() {
 
     lateinit var CSP: CustomSharedPref
 
@@ -25,25 +44,77 @@ class BarcodeAdapter(val context: Context, val barcodeList: MutableList<String>,
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if(barcodeList[position].contains("_")){
+    override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
+
+        var serialNum = ""
+
+        if (barcodeList[position].contains("_")) {
             var splitText = barcodeList[position].split("_")
-            holder.txtTitle.text = splitText[0]
-        }else{
-            holder.txtTitle.text = barcodeList[position]
+            serialNum = splitText[0]
+            holder.txtTitle.text = serialNum
+        } else {
+            serialNum = barcodeList[position]
+            holder.txtTitle.text = serialNum
         }
 
-        if(!isRemoveActive)
+        if (!isRemoveActive)
             holder.btnRemove.visibility = View.GONE
 
         holder.btnRemove.setOnClickListener {
-            barcodeList.removeAt(position)
-            notifyDataSetChanged()
 
-            CSP.saveData("ActivityDetail_BARCODE_SET", barcodeList.joinToString(","))
+            if (!isRemoveOnline) {
+                barcodeList.removeAt(position)
+                notifyDataSetChanged()
 
-            if(barcodeList.size == 0)
-                dialog.dismiss()
+                println(productID)
+
+                productID?.let { it1 -> recylcerAdapter?.updateItem(it1, true) }
+
+                CSP.saveData("ActivityDetail_BARCODE_SET", barcodeList.joinToString(","))
+
+                if (barcodeList.size == 0)
+                    dialog.dismiss()
+            } else {
+                var url =
+                    "${CSP.getData("base_url")}/DisplayCount.asmx/RemoveDisplayModel?ProductID=${productID}&StoreID=${
+                        arguments?.getInt(
+                            "StoreID"
+                        )
+                    }&SerialNumber=${serialNum}"
+
+                val client = OkHttpClient()
+
+                val request = Request.Builder()
+                    .url(url)
+                    .build()
+
+                client.newCall(request).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        val body = response.body?.string()
+                        println(body)
+                        val gson = GsonBuilder().create()
+                        val apiData =
+                            gson.fromJson(body, CheckInOutModel::class.java)
+                        if (apiData.status == 200) {
+                            barcodeList.removeAt(position)
+                            notifyDataSetChanged()
+
+                            println(productID)
+
+                            productID?.let { it1 -> recylcerAdapter?.updateItem(it1, true) }
+
+                            if (barcodeList.size == 0)
+                                dialog.dismiss()
+                        } else {
+
+                        }
+                    }
+                })
+            }
         }
     }
 

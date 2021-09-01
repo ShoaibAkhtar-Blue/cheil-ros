@@ -30,6 +30,8 @@ import kotlinx.android.synthetic.main.activity_new_dashboard.view.*
 class NewDashboardActivity : AppCompatActivity() {
 
     lateinit var userLocation: Location
+    lateinit var actiLat: String
+    lateinit var actiLng: String
     private lateinit var toolbar: Toolbar
     lateinit var CSP: CustomSharedPref
     private val UPDATE_REQUEST_CODE = 1500
@@ -87,6 +89,8 @@ class NewDashboardActivity : AppCompatActivity() {
         override fun onLocationChanged(location: Location) {
             Log.d(TAG, "onLocationChanged()")
             userLocation = location
+            actiLat = userLocation.latitude.toString()
+            actiLng = userLocation.longitude.toString()
 //            posc_lat.text = ("lat: " + location.latitude)
 //            posc_long.text = ("lon:" + location.longitude)
         }
