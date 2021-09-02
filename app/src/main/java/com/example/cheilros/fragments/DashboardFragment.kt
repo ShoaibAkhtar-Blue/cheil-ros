@@ -15,7 +15,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.ceylonlabs.imageviewpopup.ImagePopup
 import com.example.cheilros.MainActivity
 import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity

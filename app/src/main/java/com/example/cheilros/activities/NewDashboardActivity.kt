@@ -21,6 +21,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import com.example.cheilros.R
 import com.example.cheilros.helpers.CustomSharedPref
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
@@ -30,8 +36,6 @@ import kotlinx.android.synthetic.main.activity_new_dashboard.view.*
 class NewDashboardActivity : AppCompatActivity() {
 
     lateinit var userLocation: Location
-    lateinit var actiLat: String
-    lateinit var actiLng: String
     private lateinit var toolbar: Toolbar
     lateinit var CSP: CustomSharedPref
     private val UPDATE_REQUEST_CODE = 1500
@@ -54,7 +58,15 @@ class NewDashboardActivity : AppCompatActivity() {
     )
 
     // inside a basic activity
-    private var locationManager : LocationManager? = null
+    private var locationManager: LocationManager? = null
+
+    private val fusedLocationClient: FusedLocationProviderClient by lazy {
+        LocationServices.getFusedLocationProviderClient(applicationContext)
+    }
+
+    private var cancellationTokenSource = CancellationTokenSource()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,17 +80,23 @@ class NewDashboardActivity : AppCompatActivity() {
         CSP = CustomSharedPref(this)
         inAppUpdatesCheck()
         //setupToolbar()
+
+        requestCurrentLocation()
     }
 
-    fun getLocation(){
+    fun getLocation() {
         try {
             // Request location updates
-            Log.d(TAG,"setOnClickListener")
-            locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
+            Log.d(TAG, "setOnClickListener")
+            locationManager?.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER,
+                0L,
+                0f,
+                locationListener
+            )
 
 
-
-        } catch(ex: SecurityException) {
+        } catch (ex: SecurityException) {
             ex.printStackTrace()
             Log.d(TAG, "Security Exception, no location available")
         }
@@ -88,20 +106,21 @@ class NewDashboardActivity : AppCompatActivity() {
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             Log.d(TAG, "onLocationChanged()")
-            userLocation = location
-            actiLat = userLocation.latitude.toString()
-            actiLng = userLocation.longitude.toString()
+            //userLocation = location
 //            posc_lat.text = ("lat: " + location.latitude)
 //            posc_long.text = ("lon:" + location.longitude)
         }
+
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
             Log.d(TAG, "onStatusChanged()")
 
         }
+
         override fun onProviderEnabled(provider: String) {
             Log.d(TAG, "onProviderEnabled()")
 
         }
+
         override fun onProviderDisabled(provider: String) {
             Log.d(TAG, "onProviderDisabled()")
 
@@ -111,6 +130,12 @@ class NewDashboardActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         inAppUpdatesCheck()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // Cancels location request (if in flight).
+        cancellationTokenSource.cancel()
     }
 
     fun setupToolbar(title: String = "Title") {
@@ -133,11 +158,16 @@ class NewDashboardActivity : AppCompatActivity() {
                 && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
             ) {
                 // Request the update.
-                    try {
-                        appUpdateManager.startUpdateFlowForResult(appUpdateInfo, AppUpdateType.IMMEDIATE, this@NewDashboardActivity, UPDATE_REQUEST_CODE)
-                    }catch (ex: IntentSender.SendIntentException){
-                        Log.e("Error_", ex.message.toString())
-                    }
+                try {
+                    appUpdateManager.startUpdateFlowForResult(
+                        appUpdateInfo,
+                        AppUpdateType.IMMEDIATE,
+                        this@NewDashboardActivity,
+                        UPDATE_REQUEST_CODE
+                    )
+                } catch (ex: IntentSender.SendIntentException) {
+                    Log.e("Error_", ex.message.toString())
+                }
 
             }
         }
@@ -203,7 +233,8 @@ class NewDashboardActivity : AppCompatActivity() {
 
     private fun verifyLocationPermissions(activity: Activity?) {
         // Check if we have write permission
-        val permission: Int = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val permission: Int =
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (permission != PackageManager.PERMISSION_GRANTED) {
             // We don't have permission so prompt the user
             ActivityCompat.requestPermissions(
@@ -228,9 +259,9 @@ class NewDashboardActivity : AppCompatActivity() {
             println("Image Added")
             //image_view.setImageURI(data?.data)
         }
-        if (requestCode == UPDATE_REQUEST_CODE){
+        if (requestCode == UPDATE_REQUEST_CODE) {
             Toast.makeText(this, "Downloading Start", Toast.LENGTH_SHORT).show()
-            if(resultCode != RESULT_OK)
+            if (resultCode != RESULT_OK)
                 Log.e("Error_", "Update Flow Failed")
         }
     }
@@ -250,5 +281,38 @@ class NewDashboardActivity : AppCompatActivity() {
             result = "Not found"
         }
         return result
+    }
+
+    private fun requestCurrentLocation() {
+        // Check Fine permission
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) ==
+            PackageManager.PERMISSION_GRANTED
+        ) {
+
+            // Main code
+            val currentLocationTask: Task<Location> = fusedLocationClient.getCurrentLocation(
+                PRIORITY_HIGH_ACCURACY,
+                cancellationTokenSource.token
+            )
+
+            currentLocationTask.addOnCompleteListener { task: Task<Location> ->
+                val result = if (task.isSuccessful) {
+                    val result: Location = task.result
+                    userLocation = result
+                    "Location (success): ${result.latitude}, ${result.longitude}"
+                } else {
+                    val exception = task.exception
+                    "Location (failure): $exception"
+                }
+
+                Log.d(TAG, "getCurrentLocation() result: $result")
+            }
+        } else {
+            // Request fine location permission (full code below).
+            Log.d(TAG, "getCurrentLocation() result: permission_error")
+        }
     }
 }
