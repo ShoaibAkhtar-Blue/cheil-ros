@@ -128,7 +128,7 @@ class RecentTrainingModelData(
 )
 
 class TeamMemberModel(val status: Int, val data: List<TeamMemberData>)
-class TeamMemberData(val TeamMemberID: Int, val TeamMemberName: String)
+class TeamMemberData(val TeamMemberID: Int, val TeamMemberName: String, val AttendeseTypeID: Int)
 
 //endregion
 
@@ -298,7 +298,7 @@ class DisplayCountJSON(val data: List<DisplayCountJSONData>)
 class DisplayCountJSONData(
     val ProductID: Int,
     val StoreID: Int?,
-    val SerialNumber: Int?,
+    val SerialNumber: String?,
     val TeamMemberID: Int?
 )
 

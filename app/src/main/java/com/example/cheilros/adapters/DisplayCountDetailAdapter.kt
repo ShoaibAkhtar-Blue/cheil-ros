@@ -162,7 +162,8 @@ class DisplayCountDetailAdapter(
         }
 
         holder.onTextUpdated = { text ->
-            addDatainJsonObject(position, text)
+            if (itemList[position].isBarCodeEnabled == "N")
+                addDatainJsonObject(position, text)
         }
 
         holder.txtAttend.setText(filterList[position].DisplayCount.toString())
@@ -170,6 +171,7 @@ class DisplayCountDetailAdapter(
         fragment.btnSubmit.setOnClickListener {
 
             fragment.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
+
 
             val gson = Gson()
             val jsonString: String = gson.toJson(DisplayCountJSON(displayCountData))
@@ -253,11 +255,11 @@ class DisplayCountDetailAdapter(
 
     fun updateItem(pid: Int, isRemove: Boolean = false) {
         val numbersOnSameIndexAsValue = filterList.indexOf(filterList.find { it.ProductID == pid })
-        if(isRemove){
-            if(filterList[numbersOnSameIndexAsValue].DisplayCount > 0)
-            filterList[numbersOnSameIndexAsValue].DisplayCount =
-                (filterList[numbersOnSameIndexAsValue].DisplayCount - 1)
-        }else {
+        if (isRemove) {
+            if (filterList[numbersOnSameIndexAsValue].DisplayCount > 0)
+                filterList[numbersOnSameIndexAsValue].DisplayCount =
+                    (filterList[numbersOnSameIndexAsValue].DisplayCount - 1)
+        } else {
             filterList[numbersOnSameIndexAsValue].DisplayCount =
                 (filterList[numbersOnSameIndexAsValue].DisplayCount + 1)
         }
@@ -266,7 +268,6 @@ class DisplayCountDetailAdapter(
         //itemList[position] = item
         notifyDataSetChanged()
     }
-
 
 
     fun barCodeScan(position: Int) {
@@ -303,7 +304,12 @@ class DisplayCountDetailAdapter(
                     recylcerAdapterBC = savedBarcodes1?.toMutableList()?.let { it1 ->
                         BarcodeAdapter(
                             context,
-                            it1, dialog, true, fragment.recylcerAdapter, filterList[position].ProductID, arguments
+                            it1,
+                            dialog,
+                            true,
+                            fragment.recylcerAdapter,
+                            filterList[position].ProductID,
+                            arguments
                         )
                     }!!
                     dialog.rvBarcode.adapter = recylcerAdapterBC
@@ -351,14 +357,15 @@ class DisplayCountDetailAdapter(
                 updateItem(filterList[position].ProductID)
             }
 
-            addDatainJsonObject(position, barInput)
+            addDatainJsonObject(position, barInput, true)
 
             dialog.dismiss()
         }
         dialog.show()
     }
 
-    fun addDatainJsonObject(position: Int, text: String) {
+    fun addDatainJsonObject(position: Int, text: String, isMuliProdSerialAllow: Boolean = false) {
+        println("addDatainJsonObject: $text")
         val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
         val currentDateAndTime: String = simpleDateFormat.format(Date())
         try {
@@ -368,7 +375,7 @@ class DisplayCountDetailAdapter(
                     DisplayCountJSONData(
                         itemList[position].ProductID,
                         arguments?.getInt("StoreID"),
-                        text.toInt(),
+                        text,
                         CSP.getData("user_id")?.toInt()
                     )
                 )
@@ -381,18 +388,27 @@ class DisplayCountDetailAdapter(
                         DisplayCountJSONData(
                             itemList[position].ProductID,
                             arguments?.getInt("StoreID"),
-                            text.toInt(),
+                            text,
                             CSP.getData("user_id")?.toInt()
                         )
                     )
-                } else {
+                } else if(isMuliProdSerialAllow){
+                    displayCountData.add(
+                        DisplayCountJSONData(
+                            itemList[position].ProductID,
+                            arguments?.getInt("StoreID"),
+                            text,
+                            CSP.getData("user_id")?.toInt()
+                        )
+                    )
+                }else {
                     val displayIndex =
                         displayCountData.indexOf(displayCountData.find { it.ProductID == itemList[position].ProductID })
                     displayCountData[displayIndex] =
                         DisplayCountJSONData(
                             itemList[position].ProductID,
                             arguments?.getInt("StoreID"),
-                            text.toInt(),
+                            text,
                             CSP.getData("user_id")?.toInt()
                         )
 
@@ -456,7 +472,12 @@ class DisplayCountDetailAdapter(
                                     barcodeList?.toMutableList()?.let { it1 ->
                                         BarcodeAdapter(
                                             context,
-                                            it1, dialog, true, fragment.recylcerAdapter, filterList[position].ProductID, arguments
+                                            it1,
+                                            dialog,
+                                            true,
+                                            fragment.recylcerAdapter,
+                                            filterList[position].ProductID,
+                                            arguments
                                         )
                                     }!!
                                 dialog.rvBarcode.adapter = recylcerAdapterBC

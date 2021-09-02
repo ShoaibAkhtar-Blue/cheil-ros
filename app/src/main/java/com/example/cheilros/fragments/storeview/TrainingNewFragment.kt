@@ -147,7 +147,7 @@ class TrainingNewFragment : BaseFragment() {
 
             dialog.btnAccept.text = settingData.filter { it.fixedLabelName == "StoreList_PopupAdd" }.get(0).labelName
             dialog.btnAccept.setOnClickListener {
-                recylcerAdapter.addNewItem(TeamMemberData(0, dialog.etAttendeeName.text.toString()))
+                recylcerAdapter.addNewItem(TeamMemberData(0, dialog.etAttendeeName.text.toString(), 1))
                 dialog.dismiss()
             }
 
@@ -220,7 +220,7 @@ class TrainingNewFragment : BaseFragment() {
                     CSP.getData(
                         "user_id"
                     )
-                }&TrainingDateTime=${currentDateAndTime}&StartTime=${currentDateAndTime} ${btnCheckinTime.text}&EndTime=${currentDateAndTime} ${btnCheckoutTime.text}")
+                }&TrainingDateTime=${currentDateAndTime}&StartTime=${currentDateAndTime} ${btnCheckinTime.text}&EndTime=${currentDateAndTime} ${btnCheckoutTime.text}&AttendeseTypeID=1")
                 val requestBody = builder.build()
                 val request: Request = Request.Builder()
                     .url(
@@ -232,7 +232,7 @@ class TrainingNewFragment : BaseFragment() {
                             CSP.getData(
                                 "user_id"
                             )
-                        }&TrainingDateTime=${currentDateAndTime}&StartTime=${currentDateAndTime} ${btnCheckinTime.text}&EndTime=${currentDateAndTime} ${btnCheckoutTime.text}"
+                        }&TrainingDateTime=${currentDateAndTime}&StartTime=${currentDateAndTime} ${btnCheckinTime.text}&EndTime=${currentDateAndTime} ${btnCheckoutTime.text}&AttendeseTypeID=1"
                     )
                     .post(requestBody)
                     .build()

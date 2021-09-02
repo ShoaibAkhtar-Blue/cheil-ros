@@ -2,11 +2,13 @@ package com.example.cheilros.adapters
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -40,6 +42,7 @@ class TrainingAttendeesAdapter(
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        var RLAttendee: RelativeLayout = view.findViewById(R.id.RLAttendee)
         var txtNum: TextView = view.findViewById(R.id.txtNum)
         var txtAttendee: TextView = view.findViewById(R.id.txtAttendee)
         var checkboxAttendee: CheckBox = view.findViewById(R.id.checkboxAttendee)
@@ -58,6 +61,9 @@ class TrainingAttendeesAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtNum.text = (position + 1).toString()
         holder.txtAttendee.text = itemList[position].TeamMemberName
+
+        if(itemList[position].AttendeseTypeID != 0)
+            holder.RLAttendee.setBackgroundColor(Color.GRAY)
 
         holder.checkboxAttendee.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {

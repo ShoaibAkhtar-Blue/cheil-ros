@@ -52,8 +52,10 @@ class AcrivityDetailFragment : BaseFragment() {
         val view = inflater.inflate(R.layout.fragment_acrivity_detail, container, false)
 
         //region Set Labels
-        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Activity" }
-            .get(0).labelName + " / ${arguments?.getString("ActivityTypeName")}"
+        view.txtStoreName.text = arguments?.getString("ActivityTypeName")
+
+        /*view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Activity" }
+            .get(0).labelName + " / ${arguments?.getString("ActivityTypeName")}"*/
         view.txtBrandDescription.hint =
             settingData.filter { it.fixedLabelName == "ActivityDescription" }.get(0).labelName
         view.txtBrandQuantity.hint =
@@ -324,6 +326,8 @@ class AcrivityDetailFragment : BaseFragment() {
                                     .sneakSuccess()
                             }
                             CSP.delData("activity_barcodes")
+                            CSP.delData("ActivityDetail_BARCODE_SET")
+                            txtBarcodeCount.text = "0"
                             CSP.delData("ActivityDetail_SESSION_IMAGE")
                             CSP.delData("ActivityDetail_SESSION_IMAGE_SET")
 

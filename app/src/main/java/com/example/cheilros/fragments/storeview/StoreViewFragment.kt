@@ -31,6 +31,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
+import kotlinx.android.synthetic.main.fragment_acrivity_detail.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_store_view.*
 import kotlinx.android.synthetic.main.fragment_store_view.view.*
@@ -58,7 +59,11 @@ class StoreViewFragment : BaseFragment() {
         configureToolbar("${arguments?.getString("StoreName")}", true)
 
         //region Reset Sessions
-        //CSP.delData("sess_last_update_element_id")
+        CSP.delData("sess_last_update_element_id")
+        CSP.delData("activity_barcodes")
+        CSP.delData("ActivityDetail_BARCODE_SET")
+        CSP.delData("ActivityDetail_SESSION_IMAGE")
+        CSP.delData("ActivityDetail_SESSION_IMAGE_SET")
         //endregion
 
         //StoreView_SubTitle

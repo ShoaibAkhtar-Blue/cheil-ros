@@ -110,7 +110,7 @@ class TrainingDetailFragment : BaseFragment() {
 
             dialog.btnAccept.text = settingData.filter { it.fixedLabelName == "StoreList_PopupAdd" }.get(0).labelName
             dialog.btnAccept.setOnClickListener {
-                recylcerAdapter.addNewItem(TeamMemberData(0, dialog.etAttendeeName.text.toString()))
+                recylcerAdapter.addNewItem(TeamMemberData(0, dialog.etAttendeeName.text.toString(), 1))
                 dialog.dismiss()
             }
 
