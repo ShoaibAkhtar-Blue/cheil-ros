@@ -19,6 +19,7 @@ import com.example.cheilros.adapters.CapturedPictureAdapter
 import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.helpers.CoreHelperMethods
 import com.irozon.sneaker.Sneaker
+import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.dialog_barcode.*
 import kotlinx.android.synthetic.main.fragment_acrivity_detail.*
 import kotlinx.android.synthetic.main.fragment_acrivity_detail.txtStoreSubName
@@ -235,6 +236,12 @@ class AcrivityDetailFragment : BaseFragment() {
         }
 
         btnSubmit.setOnClickListener {
+            mainLoadingLayout.setState(LoadingLayout.LOADING)
+            /*btnSubmit.isClickable = false
+            btnSubmit.isEnabled = false
+
+            btnSubmit.text = "Processing..."*/
+
             val client = OkHttpClient()
             try {
                 val builder: MultipartBody.Builder =
@@ -310,6 +317,13 @@ class AcrivityDetailFragment : BaseFragment() {
                                     .setTitle("Error!!")
                                     .setMessage(e.message.toString())
                                     .sneakWarning()
+
+                                /*btnSubmit.isClickable = true
+                                btnSubmit.isEnabled = true
+
+                                btnSubmit.text = "Save"*/
+
+                                mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                             }
                         }
                     }
@@ -332,15 +346,13 @@ class AcrivityDetailFragment : BaseFragment() {
                             CSP.delData("ActivityDetail_SESSION_IMAGE_SET")
 
                             findNavController().navigateUp()
+
+                            mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                         }
-
-
                     }
-
                 })
-
             } catch (ex: Exception) {
-
+                mainLoadingLayout.setState(LoadingLayout.COMPLETE)
             }
 
         }

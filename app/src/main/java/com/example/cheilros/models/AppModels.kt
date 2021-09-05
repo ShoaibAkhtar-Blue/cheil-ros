@@ -299,7 +299,8 @@ class DisplayCountJSONData(
     val ProductID: Int,
     val StoreID: Int?,
     val SerialNumber: String?,
-    val TeamMemberID: Int?
+    val TeamMemberID: Int?,
+    val IsBarCodeEnabled: String
 )
 
 @Parcelize
@@ -377,7 +378,7 @@ class CheckListAnswerData(
     val Question: String,
     val StoreID: Int,
     val CheckListStatus: String,
-    val Rate: Int
+    val Rate: String
 )
 //endregion
 

@@ -7,7 +7,7 @@ android:layout_height="match_parent"
 tools:context=".fragments.storeview.AcrivityDetailFragment">
 
 <com.valartech.loadinglayout.LoadingLayout
-    android:id="@+id/mainLoadingLayoutCC"
+    android:id="@+id/mainLoadingLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 

@@ -244,9 +244,23 @@ class ChecklistDetailAdapter(
                     answer = dialog.btnDate.text.toString()
                 } else if (itemList[position].InputTypeID == 1) {
                     //answer = if (dialog.checkBox.isChecked) "Yes" else "No"
-
                     try {
                         val selectedOption: Int = dialog.rgTypeOne!!.checkedRadioButtonId
+
+                        if(selectedOption == -1){
+                            (context as Activity).runOnUiThread {
+                                context?.let { it1 ->
+                                    Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                        .setTitle("Warning!!")
+                                        .setMessage("Please select your answer!")
+                                        .sneakWarning()
+                                }
+                            }
+                            return@setOnClickListener
+                        }
+
+
+                        println("selectedOption: $selectedOption")
                         var radioButton: RadioButton = dialog.findViewById(selectedOption)
                         answer = radioButton.text.toString()
                     } catch (ex: Exception) {
@@ -284,7 +298,7 @@ class ChecklistDetailAdapter(
                     val requestBody = builder.build()
 
                     println(
-                        "${CSP.getData("base_url")}/Audit.asmx/CheckList_AuditAdd??TeamMemberID=${
+                        "${CSP.getData("base_url")}/Audit.asmx/CheckList_AuditAdd?TeamMemberID=${
                             CSP.getData(
                                 "user_id"
                             )

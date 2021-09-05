@@ -343,6 +343,8 @@ class StoreViewFragment : BaseFragment() {
 
     fun fetchChecklistanswer(url: String) {
 
+        println(url)
+
         val client = OkHttpClient()
 
         val request = Request.Builder()

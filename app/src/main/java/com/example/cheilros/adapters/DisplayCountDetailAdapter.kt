@@ -376,7 +376,8 @@ class DisplayCountDetailAdapter(
                         itemList[position].ProductID,
                         arguments?.getInt("StoreID"),
                         text,
-                        CSP.getData("user_id")?.toInt()
+                        CSP.getData("user_id")?.toInt(),
+                        itemList[position].isBarCodeEnabled
                     )
                 )
             } else {
@@ -389,7 +390,8 @@ class DisplayCountDetailAdapter(
                             itemList[position].ProductID,
                             arguments?.getInt("StoreID"),
                             text,
-                            CSP.getData("user_id")?.toInt()
+                            CSP.getData("user_id")?.toInt(),
+                            itemList[position].isBarCodeEnabled
                         )
                     )
                 } else if(isMuliProdSerialAllow){
@@ -398,7 +400,8 @@ class DisplayCountDetailAdapter(
                             itemList[position].ProductID,
                             arguments?.getInt("StoreID"),
                             text,
-                            CSP.getData("user_id")?.toInt()
+                            CSP.getData("user_id")?.toInt(),
+                            itemList[position].isBarCodeEnabled
                         )
                     )
                 }else {
@@ -409,7 +412,8 @@ class DisplayCountDetailAdapter(
                             itemList[position].ProductID,
                             arguments?.getInt("StoreID"),
                             text,
-                            CSP.getData("user_id")?.toInt()
+                            CSP.getData("user_id")?.toInt(),
+                            itemList[position].isBarCodeEnabled
                         )
 
                 }
