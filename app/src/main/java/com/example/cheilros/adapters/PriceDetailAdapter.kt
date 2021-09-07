@@ -117,7 +117,7 @@ class PriceDetailAdapter(
         if (itemList[position].Username != "0")
             holder.txtUsername.text = itemList[position].Username
         else
-            holder.txtUsername.visibility = View.INVISIBLE
+            holder.txtUsername.visibility = View.GONE
 
         if (itemList[position].NetPrice != "0")
             holder.etNetPrice.setText(itemList[position].NetPrice)

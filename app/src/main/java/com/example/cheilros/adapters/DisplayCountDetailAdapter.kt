@@ -481,7 +481,8 @@ class DisplayCountDetailAdapter(
                                             true,
                                             fragment.recylcerAdapter,
                                             filterList[position].ProductID,
-                                            arguments
+                                            arguments,
+                                            true
                                         )
                                     }!!
                                 dialog.rvBarcode.adapter = recylcerAdapterBC

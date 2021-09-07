@@ -34,7 +34,8 @@ class SalesDetailAdapter(
     val context: Context,
     val itemList: MutableList<SalesDetailData>,
     val fragment: SalesDetailFragment,
-    val arguments: Bundle?
+    val arguments: Bundle?,
+    val selectedDate: CharSequence
 ) :
     RecyclerView.Adapter<SalesDetailAdapter.ViewHolder>(),
     Filterable {
@@ -99,7 +100,8 @@ class SalesDetailAdapter(
                             arguments?.getInt("StoreID"),
                             text,
                             holder.txtSalesValue.text.toString(),
-                            CSP.getData("user_id")?.toInt()
+                            CSP.getData("user_id")?.toInt(),
+                            selectedDate.toString()
                         )
                     )
                 } else {
@@ -113,7 +115,8 @@ class SalesDetailAdapter(
                                 arguments?.getInt("StoreID"),
                                 text,
                                 holder.txtSalesValue.text.toString(),
-                                CSP.getData("user_id")?.toInt()
+                                CSP.getData("user_id")?.toInt(),
+                                selectedDate.toString()
                             )
                         )
                     } else {
@@ -125,7 +128,8 @@ class SalesDetailAdapter(
                                 arguments?.getInt("StoreID"),
                                 text,
                                 holder.txtSalesValue.text.toString(),
-                                CSP.getData("user_id")?.toInt()
+                                CSP.getData("user_id")?.toInt(),
+                                selectedDate.toString()
                             )
                     }
                 }
@@ -146,7 +150,8 @@ class SalesDetailAdapter(
                             arguments?.getInt("StoreID"),
                             holder.txtSaleQuantity.text.toString(),
                             text,
-                            CSP.getData("user_id")?.toInt()
+                            CSP.getData("user_id")?.toInt(),
+                            selectedDate.toString()
                         )
                     )
                 } else {
@@ -160,7 +165,8 @@ class SalesDetailAdapter(
                                 arguments?.getInt("StoreID"),
                                 holder.txtSaleQuantity.text.toString(),
                                 text,
-                                CSP.getData("user_id")?.toInt()
+                                CSP.getData("user_id")?.toInt(),
+                                selectedDate.toString()
                             )
                         )
                     } else {
@@ -172,7 +178,8 @@ class SalesDetailAdapter(
                                 arguments?.getInt("StoreID"),
                                 holder.txtSaleQuantity.text.toString(),
                                 text,
-                                CSP.getData("user_id")?.toInt()
+                                CSP.getData("user_id")?.toInt(),
+                                selectedDate.toString()
                             )
 
                     }

@@ -1,5 +1,6 @@
 package com.example.cheilros.adapters
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
@@ -66,7 +67,7 @@ class TaskAssignedAdapter(
 
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         holder.txtTaskTitle.text = itemList[position].TaskTitle
         holder.txtTaskDesc.text = itemList[position].TaskDescription
         holder.txtTime.text = itemList[position].AssignedDateTime

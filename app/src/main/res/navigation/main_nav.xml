@@ -356,8 +356,8 @@
     <fragment
         android:id="@+id/installationFragment"
         android:name="com.example.cheilros.fragments.storeview.InstallationFragment"
-        android:label="fragment_installation"
-        tools:layout="@layout/fragment_installation" >
+        android:label="installation"
+        tools:layout="@layout/fragment_installation">
         <action
             android:id="@+id/action_installationFragment_to_acrivityDetailFragment"
             app:destination="@id/acrivityDetailFragment" />
@@ -498,5 +498,9 @@
         android:id="@+id/storePicturesFragment"
         android:name="com.example.cheilros.fragments.storeview.StorePicturesFragment"
         android:label="store_pictures"
-        tools:layout="@layout/fragment_store_pictures" />
+        tools:layout="@layout/fragment_store_pictures" >
+        <action
+            android:id="@+id/action_storePicturesFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
+    </fragment>
 </navigation>

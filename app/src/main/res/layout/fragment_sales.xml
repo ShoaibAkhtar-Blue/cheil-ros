@@ -52,6 +52,13 @@ tools:context=".fragments.storeview.SalesFragment">
             android:textColor="@color/black"
             android:textSize="20dp" />
 
+        <Button
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            style="@style/ButtonDate"
+            android:id="@+id/btnDate"
+            android:text="Date" />
+
         <com.example.cheilros.activities.customobj.EmptyRecyclerView
             android:id="@+id/rvSales"
             android:layout_width="match_parent"

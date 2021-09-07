@@ -256,7 +256,8 @@ class SalesJSONData(
     val StoreID: Int?,
     val SaleCount: String,
     val SalePrice: String,
-    val TeamMemberID: Int?
+    val TeamMemberID: Int?,
+    val SaleDate: String?
 )
 //endregion
 

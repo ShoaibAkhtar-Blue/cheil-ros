@@ -1,32 +1,32 @@
 package com.example.cheilros.fragments.storeview
 
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
-import com.example.cheilros.adapters.DisplayCountDetailAdapter
 import com.example.cheilros.adapters.SalesDetailAdapter
 import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.models.*
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
-import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
-import kotlinx.android.synthetic.main.fragment_display_count_detail.*
 import kotlinx.android.synthetic.main.fragment_display_count_detail.btnProductCategory
 import kotlinx.android.synthetic.main.fragment_display_count_detail.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_display_count_detail.view.*
 import kotlinx.android.synthetic.main.fragment_sales_detail.*
+import kotlinx.android.synthetic.main.fragment_sales_detail.btnDate
 import okhttp3.*
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class SalesDetailFragment : BaseFragment() {
@@ -67,6 +67,12 @@ class SalesDetailFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+        val currentDateAndTime: String = simpleDateFormat.format(Date())
+
+        btnDate.text = currentDateAndTime
+
         fetchCategory("${CSP.getData("base_url")}/DisplayCount.asmx/ProductCategoryList")
         fetchSalesDetail(
             "${CSP.getData("base_url")}/Sales.asmx/SaleCountView?BrandID=${
@@ -77,8 +83,37 @@ class SalesDetailFragment : BaseFragment() {
                 arguments?.getInt(
                     "StoreID"
                 )
-            }"
+            }&SaleDate=$currentDateAndTime"
         )
+
+        btnDate.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog =
+                DatePickerDialog(
+                    requireContext(), DatePickerDialog.OnDateSetListener
+                    { view, year, monthOfYear, dayOfMonth ->
+                        val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
+                        btnDate.text = currentDate
+                        fetchSalesDetail(
+                            "${CSP.getData("base_url")}/Sales.asmx/SaleCountView?BrandID=${
+                                arguments?.getInt(
+                                    "BrandID"
+                                )
+                            }&ProductCategoryID=${arguments?.getInt("ProductCategoryID")}&StoreID=${
+                                arguments?.getInt(
+                                    "StoreID"
+                                )
+                            }&SaleDate=$currentDate"
+                        )
+                    }, year, month, day
+                )
+            datePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
+            datePickerDialog.show()
+        }
 
         btnProductCategory.setOnClickListener {
             val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
@@ -145,7 +180,7 @@ class SalesDetailFragment : BaseFragment() {
                         recylcerAdapter =
                             SalesDetailAdapter(
                                 requireContext(),
-                                apiData.data as MutableList<SalesDetailData>, ref, arguments
+                                apiData.data as MutableList<SalesDetailData>, ref, arguments, btnDate.text
                             )
                         rvSalesDetail.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)

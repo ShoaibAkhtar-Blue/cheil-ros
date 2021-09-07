@@ -59,7 +59,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="140dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/white"
                     android:paddingLeft="8dp"
@@ -68,7 +68,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical">
 
 
@@ -101,7 +101,8 @@
                                     android:layout_weight="1"
                                     android:background="@drawable/border_grey"
                                     android:hint=""
-                                    android:inputType="text" />
+                                    android:inputType="numberDecimal"
+                                    android:maxLength="8" />
 
                             </LinearLayout>
 
@@ -128,7 +129,8 @@
                                     android:layout_weight="1"
                                     android:background="@drawable/border_grey"
                                     android:hint=""
-                                    android:inputType="text" />
+                                    android:inputType="numberDecimal"
+                                    android:maxLength="8" />
 
                             </LinearLayout>
 
@@ -140,7 +142,8 @@
                                 android:layout_weight="1"
                                 android:background="@drawable/border_grey"
                                 android:hint="Promotion"
-                                android:inputType="text" />
+                                android:inputType="text"
+                                android:maxLength="50" />
 
 
                         </LinearLayout>
@@ -155,9 +158,10 @@
                     android:orientation="vertical">
 
                     <ImageView
+                        android:layout_marginRight="8dp"
                         android:id="@+id/imgTag"
                         android:layout_width="150dp"
-                        android:layout_height="120dp"
+                        android:layout_height="105dp"
                         android:layout_weight="1"
                         android:scaleType="centerCrop"
                         app:srcCompat="@drawable/camera_btn" />
@@ -181,7 +185,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:paddingRight="8dp"
+                android:paddingLeft="8dp">
 
                 <TextView
                     android:id="@+id/txtInstallment"

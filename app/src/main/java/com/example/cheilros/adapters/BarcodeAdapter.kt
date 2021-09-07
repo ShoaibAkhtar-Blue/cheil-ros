@@ -2,6 +2,7 @@ package com.example.cheilros.adapters
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -62,59 +63,78 @@ class BarcodeAdapter(
 
         holder.btnRemove.setOnClickListener {
 
-            if (!isRemoveOnline) {
-                barcodeList.removeAt(position)
-                notifyDataSetChanged()
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("Remove Barcode...")
+            builder.setMessage("Are you Sure?")
+//builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
 
-                println(productID)
+            builder.setPositiveButton("Yes") { dialog, which ->
 
-                productID?.let { it1 -> recylcerAdapter?.updateItem(it1, true) }
+                if (!isRemoveOnline) {
+                    barcodeList.removeAt(position)
+                    notifyDataSetChanged()
 
-                CSP.saveData("ActivityDetail_BARCODE_SET", barcodeList.joinToString(","))
+                    println(productID)
 
-                if (barcodeList.size == 0)
-                    dialog.dismiss()
-            } else {
-                var url =
-                    "${CSP.getData("base_url")}/DisplayCount.asmx/RemoveDisplayModel?ProductID=${productID}&StoreID=${
-                        arguments?.getInt(
-                            "StoreID"
-                        )
-                    }&SerialNumber=${serialNum}"
+                    productID?.let { it1 -> recylcerAdapter?.updateItem(it1, true) }
 
-                val client = OkHttpClient()
+                    CSP.saveData("ActivityDetail_BARCODE_SET", barcodeList.joinToString(","))
 
-                val request = Request.Builder()
-                    .url(url)
-                    .build()
+                    if (barcodeList.size == 0)
+                        dialog.dismiss()
+                } else {
+                    var url =
+                        "${CSP.getData("base_url")}/DisplayCount.asmx/RemoveDisplayModel?ProductID=${productID}&StoreID=${
+                            arguments?.getInt(
+                                "StoreID"
+                            )
+                        }&SerialNumber=${serialNum}"
+                    println(url)
 
-                client.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
+                    val client = OkHttpClient()
 
-                    }
+                    val request = Request.Builder()
+                        .url(url)
+                        .build()
 
-                    override fun onResponse(call: Call, response: Response) {
-                        val body = response.body?.string()
-                        println(body)
-                        val gson = GsonBuilder().create()
-                        val apiData =
-                            gson.fromJson(body, CheckInOutModel::class.java)
-                        if (apiData.status == 200) {
-                            barcodeList.removeAt(position)
-                            notifyDataSetChanged()
-
-                            println(productID)
-
-                            productID?.let { it1 -> recylcerAdapter?.updateItem(it1, true) }
-
-                            if (barcodeList.size == 0)
-                                dialog.dismiss()
-                        } else {
+                    client.newCall(request).enqueue(object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
 
                         }
-                    }
-                })
+
+                        override fun onResponse(call: Call, response: Response) {
+                            val body = response.body?.string()
+                            println(body)
+                            val gson = GsonBuilder().create()
+                            val apiData =
+                                gson.fromJson(body, CheckInOutModel::class.java)
+                            if (apiData.status == 200) {
+                                (context as Activity).runOnUiThread {
+                                    barcodeList.removeAt(position)
+                                    notifyDataSetChanged()
+
+                                    println(productID)
+
+                                    productID?.let { it1 -> recylcerAdapter?.updateItem(it1, true) }
+
+                                    if (barcodeList.size == 0)
+                                        dialog.dismiss()
+                                }
+
+                            } else {
+
+                            }
+                        }
+                    })
+                }
+                dialog.dismiss()
             }
+
+            builder.setNegativeButton("No") { dialog, which ->
+                dialog.dismiss()
+            }
+
+            builder.show()
         }
     }
 

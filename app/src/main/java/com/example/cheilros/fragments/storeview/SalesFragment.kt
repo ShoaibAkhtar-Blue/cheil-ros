@@ -1,5 +1,7 @@
 package com.example.cheilros.fragments.storeview
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +15,16 @@ import com.example.cheilros.models.SalesModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
+import kotlinx.android.synthetic.main.dialog_assets.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
 import kotlinx.android.synthetic.main.fragment_sales.*
+import kotlinx.android.synthetic.main.fragment_sales.btnDate
+import kotlinx.android.synthetic.main.fragment_training_new.*
 import okhttp3.*
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SalesFragment : BaseFragment() {
 
@@ -46,10 +53,35 @@ class SalesFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        fetchSales("${CSP.getData("base_url")}/Sales.asmx/SaleCountSummary?StoreID=${arguments?.getInt("StoreID")}")
+        val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+        val currentDateAndTime: String = simpleDateFormat.format(Date())
+
+        btnDate.text = currentDateAndTime
+
+        btnDate.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog =
+                DatePickerDialog(
+                    requireContext(), DatePickerDialog.OnDateSetListener
+                    { view, year, monthOfYear, dayOfMonth ->
+                        val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
+                        btnDate.text = currentDate
+                        fetchSales("${CSP.getData("base_url")}/Sales.asmx/SaleCountSummary?StoreID=${arguments?.getInt("StoreID")}&SaleDate=$currentDate")
+                    }, year, month, day
+                )
+            datePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
+            datePickerDialog.show()
+        }
+
+        fetchSales("${CSP.getData("base_url")}/Sales.asmx/SaleCountSummary?StoreID=${arguments?.getInt("StoreID")}&SaleDate=$currentDateAndTime")
     }
 
     fun fetchSales(url: String){
+        println(url)
         val client = OkHttpClient()
 
         val request = Request.Builder()

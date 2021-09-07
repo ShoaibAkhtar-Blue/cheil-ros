@@ -60,6 +60,11 @@ tools:context=".fragments.storeview.SalesDetailFragment">
             android:orientation="vertical">
 
             <Button
+                style="@style/ButtonDate"
+                android:id="@+id/btnDate"
+                android:text="Date" />
+
+            <Button
                 android:id="@+id/btnProductCategory"
                 style="@style/ButtonList"
                 android:text="Select Category"/>
