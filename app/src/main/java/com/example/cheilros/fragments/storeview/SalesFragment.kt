@@ -58,6 +58,8 @@ class SalesFragment : BaseFragment() {
 
         btnDate.text = currentDateAndTime
 
+        CSP.saveData("salesData", currentDateAndTime)
+
         btnDate.setOnClickListener {
             val calendar = Calendar.getInstance()
             val year = calendar.get(Calendar.YEAR)
@@ -70,10 +72,11 @@ class SalesFragment : BaseFragment() {
                     { view, year, monthOfYear, dayOfMonth ->
                         val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
                         btnDate.text = currentDate
+                        CSP.saveData("salesData", currentDate)
                         fetchSales("${CSP.getData("base_url")}/Sales.asmx/SaleCountSummary?StoreID=${arguments?.getInt("StoreID")}&SaleDate=$currentDate")
                     }, year, month, day
                 )
-            datePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
+            //datePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
             datePickerDialog.show()
         }
 

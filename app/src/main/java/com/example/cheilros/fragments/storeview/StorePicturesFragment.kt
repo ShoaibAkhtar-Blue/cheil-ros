@@ -31,6 +31,7 @@ import kotlinx.android.synthetic.main.dialog_add_store_picture.etRemarks
 import kotlinx.android.synthetic.main.dialog_add_store_picture.rvTaskPictures
 import kotlinx.android.synthetic.main.dialog_add_store_picture.txtTitle
 import kotlinx.android.synthetic.main.dialog_add_visit.*
+import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
 import kotlinx.android.synthetic.main.fragment_my_coverage.*
 import kotlinx.android.synthetic.main.fragment_store_pictures.*
 import kotlinx.android.synthetic.main.fragment_store_pictures.btnBrand
@@ -78,6 +79,8 @@ class StorePicturesFragment : BaseFragment() {
         titles.add("Second Item")
         titles.add("Third Item")
         titles.add("Fourth Item")
+
+        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Campaign" }.get(0).labelName
 
         fetchElement("${CSP.getData("base_url")}/Webservice.asmx/StorePicture_GeneralElement")
         fetchBrand("${CSP.getData("base_url")}/Webservice.asmx/BrandList_General")

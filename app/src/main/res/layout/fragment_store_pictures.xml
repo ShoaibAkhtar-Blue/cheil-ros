@@ -42,6 +42,24 @@ tools:context=".fragments.storeview.StorePicturesFragment">
         android:paddingRight="16dp"
         android:tag="@string/ll_complete">
 
+        <TextView
+            android:id="@+id/txtStoreName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ededed"
+            android:fontFamily="@font/samsungsharpsans_bold"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="TRAINING"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#e2e2e2"
+        android:orientation="vertical">
+
         <Button
             android:id="@+id/btnElement"
             style="@style/ButtonList"
@@ -86,6 +104,10 @@ tools:context=".fragments.storeview.StorePicturesFragment">
                 android:textSize="16sp" />
 
         </LinearLayout>
+
+    </LinearLayout>
+
+
 
     </LinearLayout>
 

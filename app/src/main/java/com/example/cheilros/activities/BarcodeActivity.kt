@@ -39,7 +39,7 @@ class BarcodeActivity : AppCompatActivity() {
 
 
         //Test Case
-        /*val rnd = Random()
+       /* val rnd = Random()
         val number: Int = rnd.nextInt(999999)
 
         if (CSP.getData("activity_barcodes").equals("")) {

@@ -71,7 +71,7 @@ class SalesDetailFragment : BaseFragment() {
         val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
         val currentDateAndTime: String = simpleDateFormat.format(Date())
 
-        btnDate.text = currentDateAndTime
+        btnDate.text = CSP.getData("salesData")
 
         fetchCategory("${CSP.getData("base_url")}/DisplayCount.asmx/ProductCategoryList")
         fetchSalesDetail(
@@ -83,7 +83,7 @@ class SalesDetailFragment : BaseFragment() {
                 arguments?.getInt(
                     "StoreID"
                 )
-            }&SaleDate=$currentDateAndTime"
+            }&SaleDate=${CSP.getData("salesData")}"
         )
 
         btnDate.setOnClickListener {
@@ -111,7 +111,7 @@ class SalesDetailFragment : BaseFragment() {
                         )
                     }, year, month, day
                 )
-            datePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
+            //datePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
             datePickerDialog.show()
         }
 

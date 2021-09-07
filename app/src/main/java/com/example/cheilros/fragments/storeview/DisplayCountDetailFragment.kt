@@ -168,6 +168,7 @@ class DisplayCountDetailFragment : BaseFragment() {
     }
 
     fun fetchDisplayCountDetail(url: String) {
+        println(url)
         val ref = this
         val client = OkHttpClient()
 

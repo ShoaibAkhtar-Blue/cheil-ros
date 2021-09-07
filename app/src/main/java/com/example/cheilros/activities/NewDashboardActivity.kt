@@ -284,35 +284,42 @@ class NewDashboardActivity : AppCompatActivity() {
     }
 
     private fun requestCurrentLocation() {
-        // Check Fine permission
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) ==
-            PackageManager.PERMISSION_GRANTED
-        ) {
 
-            // Main code
-            val currentLocationTask: Task<Location> = fusedLocationClient.getCurrentLocation(
-                PRIORITY_HIGH_ACCURACY,
-                cancellationTokenSource.token
-            )
+        try{
+            // Check Fine permission
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
 
-            currentLocationTask.addOnCompleteListener { task: Task<Location> ->
-                val result = if (task.isSuccessful) {
-                    val result: Location = task.result
-                    userLocation = result
-                    "Location (success): ${result.latitude}, ${result.longitude}"
-                } else {
-                    val exception = task.exception
-                    "Location (failure): $exception"
+                // Main code
+                val currentLocationTask: Task<Location> = fusedLocationClient.getCurrentLocation(
+                    PRIORITY_HIGH_ACCURACY,
+                    cancellationTokenSource.token
+                )
+
+                currentLocationTask.addOnCompleteListener { task: Task<Location> ->
+                    val result = if (task.isSuccessful) {
+                        val result: Location = task.result
+                        userLocation = result
+                        "Location (success): ${result.latitude}, ${result.longitude}"
+                    } else {
+                        val exception = task.exception
+                        "Location (failure): $exception"
+                    }
+
+                    Log.d(TAG, "getCurrentLocation() result: $result")
                 }
-
-                Log.d(TAG, "getCurrentLocation() result: $result")
+            } else {
+                // Request fine location permission (full code below).
+                Log.d(TAG, "getCurrentLocation() result: permission_error")
             }
-        } else {
-            // Request fine location permission (full code below).
-            Log.d(TAG, "getCurrentLocation() result: permission_error")
+        }catch (ex: Exception){
+            Log.e("Error_", ex.message.toString())
         }
+
+
     }
 }

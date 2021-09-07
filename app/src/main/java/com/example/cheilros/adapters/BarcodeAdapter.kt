@@ -24,7 +24,7 @@ import java.io.IOException
 class BarcodeAdapter(
     val context: Context,
     val barcodeList: MutableList<String>,
-    val dialog: Dialog,
+    val mainDialog: Dialog,
     val isRemoveActive: Boolean,
     val recylcerAdapter: DisplayCountDetailAdapter?,
     val productID: Int?,
@@ -81,7 +81,7 @@ class BarcodeAdapter(
                     CSP.saveData("ActivityDetail_BARCODE_SET", barcodeList.joinToString(","))
 
                     if (barcodeList.size == 0)
-                        dialog.dismiss()
+                        mainDialog.dismiss()
                 } else {
                     var url =
                         "${CSP.getData("base_url")}/DisplayCount.asmx/RemoveDisplayModel?ProductID=${productID}&StoreID=${
@@ -114,13 +114,15 @@ class BarcodeAdapter(
                                     notifyDataSetChanged()
 
                                     println(productID)
+                                    println("barcodeList:"+barcodeList.size)
+
+                                    if (barcodeList.size == 0)
+                                        mainDialog.dismiss()
 
                                     productID?.let { it1 -> recylcerAdapter?.updateItem(it1, true) }
 
-                                    if (barcodeList.size == 0)
-                                        dialog.dismiss()
-                                }
 
+                                }
                             } else {
 
                             }
