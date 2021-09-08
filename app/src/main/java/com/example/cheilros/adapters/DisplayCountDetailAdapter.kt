@@ -196,6 +196,9 @@ class DisplayCountDetailAdapter(
                                 .sneakSuccess()
                         }
 
+                        CSP.delData("activity_barcodes")
+                        CSP.delData("ActivityDetail_BARCODE_SET")
+
                         Navigation.findNavController(it).navigateUp()
                         fragment.mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     }
@@ -269,7 +272,6 @@ class DisplayCountDetailAdapter(
         notifyDataSetChanged()
     }
 
-
     fun barCodeScan(position: Int) {
         CSP.saveData("dispProdID", filterList[position].ProductID.toString())
         CSP.saveData("dispPosition", position.toString())
@@ -328,40 +330,50 @@ class DisplayCountDetailAdapter(
     }
 
     fun inputBarcode(position: Int) {
-        val li = LayoutInflater.from(context)
-        val promptsView: View = li.inflate(R.layout.dialog_barcode_input, null)
+        if(position != -1){
+            val li = LayoutInflater.from(context)
+            val promptsView: View = li.inflate(R.layout.dialog_barcode_input, null)
 
-        val dialog = Dialog(context)
-        dialog.setContentView(promptsView)
-        dialog.setCancelable(false)
-        dialog.setCanceledOnTouchOutside(true)
+            val dialog = Dialog(context)
+            dialog.setContentView(promptsView)
+            dialog.setCancelable(false)
+            dialog.setCanceledOnTouchOutside(true)
 
-        dialog.btnAccept.setOnClickListener {
-            val barInput = dialog.etInputBarcode.text.toString()
+            dialog.btnAccept.setOnClickListener {
+                val barInput = dialog.etInputBarcode.text.toString()
 
-            if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
-                CSP.saveData(
-                    "ActivityDetail_BARCODE_SET",
-                    "${barInput}_${filterList[position].ProductID}"
-                )
-                CSP.delData("activity_barcodes")
-                updateItem(filterList[position].ProductID)
+                try{
+                    if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
+                        CSP.saveData(
+                            "ActivityDetail_BARCODE_SET",
+                            "${barInput}_${filterList[position].ProductID}"
+                        )
+                        CSP.delData("activity_barcodes")
+                        updateItem(filterList[position].ProductID)
 
 
-            } else {
-                CSP.saveData(
-                    "ActivityDetail_BARCODE_SET",
-                    "${CSP.getData("ActivityDetail_BARCODE_SET")},${barInput}_${filterList[position].ProductID}"
-                )
-                CSP.delData("activity_barcodes")
-                updateItem(filterList[position].ProductID)
+                    } else {
+
+                        println("ActivityDetail_BARCODE_SET: ${CSP.getData("ActivityDetail_BARCODE_SET")}")
+                        println("barInput: $barInput")
+                        println("filterList: ${filterList[position].ProductID}")
+
+                        CSP.saveData(
+                            "ActivityDetail_BARCODE_SET",
+                            "${CSP.getData("ActivityDetail_BARCODE_SET")},${barInput}_${filterList[position].ProductID}"
+                        )
+                        CSP.delData("activity_barcodes")
+                        updateItem(filterList[position].ProductID)
+                    }
+
+                    addDatainJsonObject(position, barInput, true)
+                }catch (ex: Exception){
+                    Log.e("Error_", ex.message.toString())
+                }
+                dialog.dismiss()
             }
-
-            addDatainJsonObject(position, barInput, true)
-
-            dialog.dismiss()
+            dialog.show()
         }
-        dialog.show()
     }
 
     fun addDatainJsonObject(position: Int, text: String, isMuliProdSerialAllow: Boolean = false) {

@@ -9,12 +9,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.adapters.DisplayCountDetailAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.helpers.SwipeHelper
 import com.example.cheilros.models.*
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
@@ -133,14 +135,24 @@ class DisplayCountDetailFragment : BaseFragment() {
                 .sneakSuccess()
 
             println("activity_barcodes: ${CSP.getData("activity_barcodes")}")
-
-
+            println("ActivityDetail_BARCODE_SET: ${CSP.getData("ActivityDetail_BARCODE_SET")}")
+            println("dispProdID: ${CSP.getData("dispProdID")}")
+            println("dispPosition: ${CSP.getData("dispPosition")}")
 
             if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
                 CSP.saveData(
                     "ActivityDetail_BARCODE_SET",
                     "${CSP.getData("activity_barcodes")}_${CSP.getData("dispProdID")}"
                 )
+
+                //Add in Json Object
+                CSP.getData("dispPosition")?.let {
+                    recylcerAdapter.addDatainJsonObject(
+                        it.toInt(),
+                        CSP.getData("activity_barcodes")!!, true
+                    )
+                }
+
                 CSP.delData("activity_barcodes")
 
                 CSP.getData("dispProdID")?.let { recylcerAdapter.updateItem(it.toInt()) }
@@ -153,16 +165,19 @@ class DisplayCountDetailFragment : BaseFragment() {
                         )
                     }"
                 )
+
+                //Add in Json Object
+                CSP.getData("dispPosition")?.let {
+                    recylcerAdapter.addDatainJsonObject(
+                        it.toInt(),
+                        CSP.getData("activity_barcodes")!!,true
+                    )
+                }
+
                 CSP.delData("activity_barcodes")
                 CSP.getData("dispProdID")?.let { recylcerAdapter.updateItem(it.toInt()) }
             }
-            //Add in Json Object
-            CSP.getData("dispPosition")?.let {
-                recylcerAdapter.addDatainJsonObject(
-                    it.toInt(),
-                    CSP.getData("activity_barcodes")!!
-                )
-            }
+
             CSP.delData("dispPosition")
         }
     }
@@ -206,7 +221,53 @@ class DisplayCountDetailFragment : BaseFragment() {
                             )
                         rvDisplayCountDetail.adapter = recylcerAdapter
 
-                        object : SwipeListHelper(requireContext(), rvDisplayCountDetail, 250) {
+                        object : SwipeHelper(requireContext(), rvDisplayCountDetail, false) {
+                            override fun instantiateUnderlayButton(
+                                viewHolder: RecyclerView.ViewHolder?,
+                                underlayButtons: MutableList<UnderlayButton>?
+                            ) {
+                                // Archive Button
+                                underlayButtons?.add(SwipeHelper.UnderlayButton(
+                                    "View",
+                                    AppCompatResources.getDrawable(
+                                        requireContext(),
+                                        R.drawable.ic_baseline_view
+                                    ),
+                                    Color.parseColor("#000000"), Color.parseColor("#ffffff"),
+                                    UnderlayButtonClickListener { pos: Int ->
+                                        recylcerAdapter.allBarcodes(pos)
+                                    }
+                                ))
+
+                                // Flag Button
+                                underlayButtons?.add(SwipeHelper.UnderlayButton(
+                                    "Scan",
+                                    AppCompatResources.getDrawable(
+                                        requireContext(),
+                                        R.drawable.barcode2
+                                    ),
+                                    Color.parseColor("#FF0000"), Color.parseColor("#ffffff"),
+                                    UnderlayButtonClickListener { pos: Int ->
+                                        recylcerAdapter.barCodeScan(pos)
+                                    }
+                                ))
+
+                                // More Button
+                                underlayButtons?.add(SwipeHelper.UnderlayButton(
+                                    "Input",
+                                    AppCompatResources.getDrawable(
+                                        requireContext(),
+                                        R.drawable.ic_baseline_edit_24
+                                    ),
+                                    Color.parseColor("#00FF00"), Color.parseColor("#ffffff"),
+                                    UnderlayButtonClickListener { pos: Int ->
+                                        recylcerAdapter.inputBarcode(pos)
+                                    }
+                                ))
+                            }
+                        }
+
+                        /*object : SwipeListHelper(requireContext(), rvDisplayCountDetail, 250) {
                             override fun instantiateMyButton(
                                 viewHolder: RecyclerView.ViewHolder,
                                 buffer: MutableList<ButtonSwipe>
@@ -242,10 +303,10 @@ class DisplayCountDetailFragment : BaseFragment() {
                                     buffer.add(buttonSwipeIcon)
                                 }
 
-                                /*if (CSP.getData("Display_BarCode").equals("Y"))
-                                    buffer.add(buttonSwipeIcon)*/
+                                *//*if (CSP.getData("Display_BarCode").equals("Y"))
+                                    buffer.add(buttonSwipeIcon)*//*
                             }
-                        }
+                        }*/
 
 
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)

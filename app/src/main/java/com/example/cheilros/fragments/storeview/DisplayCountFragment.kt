@@ -51,7 +51,6 @@ class DisplayCountFragment : BaseFragment() {
         fetchDisplayCount("${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountSummary?StoreID=${arguments?.getInt("StoreID")}")
     }
 
-
     fun fetchDisplayCount(url: String){
         val request = Request.Builder()
             .url(url)
