@@ -13,39 +13,39 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
-import com.example.cheilros.adapters.SalesCurrentWeekAdapter
-import com.example.cheilros.adapters.SalesDetailAdapter
-import com.example.cheilros.adapters.SalesDetailCurrentWeekAdapter
+import com.example.cheilros.adapters.StockDetailAdapter
+import com.example.cheilros.adapters.StockDetailCurrentWeekAdapter
 import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.models.*
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
+import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
+import kotlinx.android.synthetic.main.fragment_display_count_detail.*
 import kotlinx.android.synthetic.main.fragment_display_count_detail.btnProductCategory
 import kotlinx.android.synthetic.main.fragment_display_count_detail.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_display_count_detail.view.*
-import kotlinx.android.synthetic.main.fragment_sales.*
-import kotlinx.android.synthetic.main.fragment_sales_detail.*
-import kotlinx.android.synthetic.main.fragment_sales_detail.btnDate
-import kotlinx.android.synthetic.main.fragment_sales_detail.rvCurrentWeek
+import kotlinx.android.synthetic.main.fragment_display_count_detail.view.BrandHeading
+import kotlinx.android.synthetic.main.fragment_display_count_detail.view.btnProductCategory
+import kotlinx.android.synthetic.main.fragment_stock_detail.*
+import kotlinx.android.synthetic.main.fragment_stock_detail.view.*
 import okhttp3.*
 import java.io.IOException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-
-class SalesDetailFragment : BaseFragment() {
+class StockDetailFragment : BaseFragment() {
 
     lateinit var layoutManager: RecyclerView.LayoutManager
-    lateinit var recylcerAdapter: SalesDetailAdapter
+    lateinit var recylcerAdapter: StockDetailAdapter
 
     var defaultChannel = "0"
 
     lateinit var productCategoryData: List<DisplayProductCategoryData>
 
-    lateinit var tsscurrentweekAdapter: SalesDetailCurrentWeekAdapter
+    lateinit var tsscurrentweekAdapter: StockDetailCurrentWeekAdapter
 
     val calendar = Calendar.getInstance()
     lateinit var currentDate: String
@@ -55,21 +55,29 @@ class SalesDetailFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_sales_detail, container, false)
+        val view = inflater.inflate(R.layout.fragment_stock_detail, container, false)
+
         //region Set Labels
         try {
-
             view.txtStoreName.text =
-                settingData.filter { it.fixedLabelName == "StoreMenu_DailySales" }
+                settingData.filter { it.fixedLabelName == "StoreMenu_DailyStock" }
                     .get(0).labelName + " / " + arguments?.getString("BrandName")
             view.BrandHeading.text =
-                settingData.filter { it.fixedLabelName == "StoreMenu_DailySales" }
+                settingData.filter { it.fixedLabelName == "StoreMenu_DailyStock" }
                     .get(0).labelName
-//            view.CountHeading.text =
-//                settingData.filter { it.fixedLabelName == "StoreMenu_DailySales" }
-//                    .get(0).labelName
             view.btnProductCategory.text =
                 "${arguments?.getString("ProductCategoryName")}"
+
+            view.SalesQty.text =
+                settingData.filter { it.fixedLabelName == "Stock_Column1" }
+                    .get(0).labelName
+
+            view.SalesValue.text =
+                settingData.filter { it.fixedLabelName == "Stock_Column2" }
+                    .get(0).labelName
+
+            if(settingData.filter { it.fixedLabelName == "Stock_Column2" }[0].labelName == "")
+                view.SalesValue.visibility = View.GONE
         } catch (ex: Exception) {
             Log.e("Error_", ex.message.toString())
         }
@@ -89,8 +97,8 @@ class SalesDetailFragment : BaseFragment() {
         getCurrentWeek(btnDate.tag as String)
 
         fetchCategory("${CSP.getData("base_url")}/DisplayCount.asmx/ProductCategoryList")
-        fetchSalesDetail(
-            "${CSP.getData("base_url")}/Sales.asmx/SaleCountView?BrandID=${
+        fetchStockDetail(
+            "${CSP.getData("base_url")}/Stock.asmx/StockStatus?BrandID=${
                 arguments?.getInt(
                     "BrandID"
                 )
@@ -98,7 +106,7 @@ class SalesDetailFragment : BaseFragment() {
                 arguments?.getInt(
                     "StoreID"
                 )
-            }&SaleDate=${CSP.getData("salesData")}"
+            }&StockDate=${CSP.getData("salesData")}"
         )
 
         btnDate.setOnClickListener {
@@ -113,8 +121,8 @@ class SalesDetailFragment : BaseFragment() {
                     { view, year, monthOfYear, dayOfMonth ->
                         val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
                         btnDate.tag = currentDate
-                        fetchSalesDetail(
-                            "${CSP.getData("base_url")}/Sales.asmx/SaleCountView?BrandID=${
+                        fetchStockDetail(
+                            "${CSP.getData("base_url")}/Stock.asmx/StockStatus?BrandID=${
                                 arguments?.getInt(
                                     "BrandID"
                                 )
@@ -122,7 +130,7 @@ class SalesDetailFragment : BaseFragment() {
                                 arguments?.getInt(
                                     "StoreID"
                                 )
-                            }&SaleDate=$currentDate"
+                            }&StockDate=$currentDate"
                         )
                     }, year, month, day
                 )
@@ -148,8 +156,8 @@ class SalesDetailFragment : BaseFragment() {
                     defaultChannel = productCategoryData[which].ProductCategoryID.toString()
                     btnProductCategory.text =
                         "${productCategoryData[which].ProductCategoryName}"
-                    fetchSalesDetail(
-                        "${CSP.getData("base_url")}/Sales.asmx/SaleCountView?BrandID=${
+                    fetchStockDetail(
+                        "${CSP.getData("base_url")}/Stock.asmx/StockStatus?BrandID=${
                             arguments?.getInt(
                                 "BrandID"
                             )
@@ -182,16 +190,16 @@ class SalesDetailFragment : BaseFragment() {
         }
         println(dayList.size)
 
-        tsscurrentweekAdapter = SalesDetailCurrentWeekAdapter(
+        tsscurrentweekAdapter = StockDetailCurrentWeekAdapter(
             requireContext(),
-            this@SalesDetailFragment,
+            this@StockDetailFragment,
             dayList,
             mDate
         )
         rvCurrentWeek!!.adapter = tsscurrentweekAdapter
     }
 
-    fun fetchSalesDetail(url: String) {
+    fun fetchStockDetail(url: String) {
         println(url)
         mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
         val ref = this
@@ -218,18 +226,18 @@ class SalesDetailFragment : BaseFragment() {
                 val body = response.body?.string()
                 println(body)
                 val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, SalesDetailModel::class.java)
+                val apiData = gson.fromJson(body, StockDetailModel::class.java)
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvSalesDetail.setHasFixedSize(true)
+                        rvStockDetail.setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(requireContext())
-                        rvSalesDetail.layoutManager = layoutManager
+                        rvStockDetail.layoutManager = layoutManager
                         recylcerAdapter =
-                            SalesDetailAdapter(
+                            StockDetailAdapter(
                                 requireContext(),
-                                apiData.data as MutableList<SalesDetailData>, ref, arguments, btnDate.tag.toString()
+                                apiData.data as MutableList<StockDetailData>, ref, arguments, btnDate.tag.toString(), settingData
                             )
-                        rvSalesDetail.adapter = recylcerAdapter
+                        rvStockDetail.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
                 } else {
@@ -303,8 +311,8 @@ class SalesDetailFragment : BaseFragment() {
         var fd = if (filterDate.equals("")) btnDate.tag else filterDate
         btnDate.tag = fd
         getCurrentWeek(btnDate.tag as String)
-        fetchSalesDetail(
-            "${CSP.getData("base_url")}/Sales.asmx/SaleCountView?BrandID=${
+        fetchStockDetail(
+            "${CSP.getData("base_url")}/Stock.asmx/StockStatus?BrandID=${
                 arguments?.getInt(
                     "BrandID"
                 )
@@ -312,7 +320,7 @@ class SalesDetailFragment : BaseFragment() {
                 arguments?.getInt(
                     "StoreID"
                 )
-            }&SaleDate=${btnDate.tag}"
+            }&StockDate=${btnDate.tag}"
         )
     }
 }

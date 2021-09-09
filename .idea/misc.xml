@@ -36,10 +36,14 @@
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/dialog_checklist.xml" value="0.190234375" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_barcode.xml" value="0.2984375" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_display_count_detail.xml" value="0.21458333333333332" />
+        <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_installation.xml" value="0.183984375" />
+        <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_installation_main.xml" value="0.1" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_my_activities.xml" value="0.18359375" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_my_coverage.xml" value="0.18984375" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_sales.xml" value="0.171484375" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_sales_detail.xml" value="0.171484375" />
+        <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_stock.xml" value="0.183984375" />
+        <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_stock_detail.xml" value="0.1734375" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_store_pictures.xml" value="0.179296875" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_store_status.xml" value="0.185546875" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_store_view.xml" value="0.18984375" />
@@ -51,6 +55,7 @@
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/list_investment.xml" value="0.18984375" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/list_investmentdetail.xml" value="0.171875" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/list_price_detail_new.xml" value="0.21944444444444444" />
+        <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/list_sales_detail.xml" value="0.183984375" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/list_store_pictures.xml" value="0.18984375" />
       </map>
     </option>

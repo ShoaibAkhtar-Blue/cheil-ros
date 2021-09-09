@@ -45,7 +45,7 @@ class StoreMenuAdapter(
         Glide.with(context).load(ListData[position].imagePath).into(convertView.imgStatus!!)
         convertView.txtLabel.text = ListData[position].labelName
 
-        if (ListData[position].fixedLabelName == "StoreMenu_Checklist" || ListData[position].fixedLabelName == "StoreMenu_Investment" || ListData[position].fixedLabelName == "StoreMenu_Activity" || ListData[position].fixedLabelName == "StoreMenu_Training" || ListData[position].fixedLabelName == "StoreMenu_Ticket" || ListData[position].fixedLabelName == "StoreMenu_Installation" || ListData[position].fixedLabelName == "StoreMenu_ModelCount" || ListData[position].fixedLabelName == "StoreMenu_PricePromotions" || ListData[position].fixedLabelName == "StoreMenu_DailySales"|| ListData[position].fixedLabelName == "StoreMenu_Campaign") {
+        if (ListData[position].fixedLabelName == "StoreMenu_Checklist" || ListData[position].fixedLabelName == "StoreMenu_Investment" || ListData[position].fixedLabelName == "StoreMenu_Activity" || ListData[position].fixedLabelName == "StoreMenu_Training" || ListData[position].fixedLabelName == "StoreMenu_Ticket" || ListData[position].fixedLabelName == "StoreMenu_Installation" || ListData[position].fixedLabelName == "StoreMenu_ModelCount" || ListData[position].fixedLabelName == "StoreMenu_PricePromotions" || ListData[position].fixedLabelName == "StoreMenu_DailySales" || ListData[position].fixedLabelName == "StoreMenu_Campaign" || ListData[position].fixedLabelName == "StoreMenu_DailyStock") {
 
         } else {
             convertView.cvStoreMenu.setCardBackgroundColor(Color.GRAY)
@@ -86,10 +86,14 @@ class StoreMenuAdapter(
                     .navigate(R.id.action_storeViewFragment_to_trainingFragment, bundle)*/
                 Navigation.findNavController(it)
                     .navigate(R.id.action_storeViewFragment_to_installationFragment, bundle)
+                /*Navigation.findNavController(it)
+                    .navigate(R.id.action_storeViewFragment_to_installationMainFragment, bundle)*/
             }
             if (ListData[position].fixedLabelName.equals("StoreMenu_Installation")) {
+                /*Navigation.findNavController(it)
+                    .navigate(R.id.action_storeViewFragment_to_taskDeploymentFragment, bundle)*/
                 Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_taskDeploymentFragment, bundle)
+                    .navigate(R.id.action_storeViewFragment_to_installationMainFragment, bundle)
             }
             if (ListData[position].fixedLabelName.equals("StoreMenu_ModelCount")) {
                 Navigation.findNavController(it)
@@ -106,6 +110,10 @@ class StoreMenuAdapter(
             if (ListData[position].fixedLabelName == "StoreMenu_Campaign") {
                 Navigation.findNavController(it)
                     .navigate(R.id.action_storeViewFragment_to_storePicturesFragment, bundle)
+            }
+            if (ListData[position].fixedLabelName == "StoreMenu_DailyStock") {
+                Navigation.findNavController(it)
+                    .navigate(R.id.action_storeViewFragment_to_stockFragment, bundle)
             }
         }
 

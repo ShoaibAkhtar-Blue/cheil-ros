@@ -110,8 +110,8 @@ class StorePicturesFragment : BaseFragment() {
 
             builder.setItems(channels,
                 DialogInterface.OnClickListener { dialog, which ->
-                    println(elementData[which].PictureElementID)
-                    defaultElement = elementData[which].PictureElementID.toString()
+                    println(elementData[which].StorePictureElementID)
+                    defaultElement = elementData[which].StorePictureElementID.toString()
                     btnElement.text = "${elementData[which].StorePictureElementName}"
                     fetchStorePictures(
                         "${CSP.getData("base_url")}/Webservice.asmx/GeneralPictureVie?StoreID=${
@@ -233,8 +233,8 @@ class StorePicturesFragment : BaseFragment() {
 
                 builder.setItems(channels,
                     DialogInterface.OnClickListener { dialog, which ->
-                        println(elementData[which].PictureElementID)
-                        selEle = elementData[which].PictureElementID.toString()
+                        println("StorePictureElementID: ${elementData[which].StorePictureElementID}")
+                        selEle = elementData[which].StorePictureElementID.toString()
                         btnEle.text = "${elementData[which].StorePictureElementName}"
 
                     })
@@ -284,6 +284,8 @@ class StorePicturesFragment : BaseFragment() {
                             "StoreID"
                         ).toString()
                     }&BrandID=$selBrnd&TeamMemberID=${CSP.getData("user_id")}&PictureElementID=$selEle&Remarks=${dialog.etRemarks.text}"
+
+                println(url)
 
                 try {
                     val builder: MultipartBody.Builder =

@@ -113,9 +113,9 @@ open class BaseFragment : Fragment() {
             //configureToolbar("Display", true, true)
         } else if (fragmentLabel == "price_detail") {
            // arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
-        }else if (fragmentLabel == "task_deployment" || fragmentLabel == "activity" || fragmentLabel == "installation") {
+        }else if (fragmentLabel == "task_deployment" || fragmentLabel == "activity" || fragmentLabel == "installation" || fragmentLabel == "installation_main") {
             arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
-        } else if (fragmentLabel == "training" || fragmentLabel == "activity_category" || fragmentLabel == "store_view" || fragmentLabel == "activity" || fragmentLabel == "task_deployment" || fragmentLabel == "display_count" || fragmentLabel == "installation") {
+        } else if (fragmentLabel == "training" || fragmentLabel == "installation_main" || fragmentLabel == "activity_category" || fragmentLabel == "store_view" || fragmentLabel == "activity" || fragmentLabel == "task_deployment" || fragmentLabel == "display_count" || fragmentLabel == "installation") {
             val callback =
                 requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
                     findNavController().popBackStack()

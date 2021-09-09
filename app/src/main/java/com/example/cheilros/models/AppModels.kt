@@ -171,7 +171,9 @@ class ActivityCategoryData(
     val ActivityCategoryID: Int,
     val ActivityCategoryName: String,
     val DivisionID: Int,
-    val DivisionName: String
+    val DivisionName: String,
+    val TaskDeploymentCategoryID: Int,
+    val TaskDeploymentCategoryName: String
 )
 //endregion
 
@@ -224,6 +226,40 @@ class PriceDetailData(
     val Installment_12Month: String,
     val Username: String,
     var PiceTagPictureID: String
+)
+//endregion
+
+//region Stock
+class StockModel(val status: Int, val data: List<StockData>)
+class StockData(
+    val BrandID: Int,
+    val BrandName: String,
+    val Products: List<StockProductData>
+)
+
+class StockProductData(
+    val ProductCategoryID: Int,
+    val ProductCategoryName: String,
+    val StockStatus: String,
+    val Field2: String
+)
+
+class StockDetailModel(val status: Int, val data: List<StockDetailData>)
+class StockDetailData(
+    val ProductID: Int,
+    val ShortName: String,
+    val StockStatus: Int,
+    val Field: String
+)
+
+class StockJSON(val data: List<StockJSONData>)
+class StockJSONData(
+    val ProductID: Int,
+    val StoreID: Int?,
+    val StockCount: String,
+    val Field2: String,
+    val TeamMemberID: Int?,
+    val StockDate: String?
 )
 //endregion
 
@@ -459,6 +495,12 @@ class PendingDeploymentData(
 //endregion
 
 //region General Pictures
+class GeneralElementModel(val status: Int, val data: List<GeneralElementData>)
+class GeneralElementData(
+    val StorePictureElementID: Int,
+    val StorePictureElementName: String
+)
+
 class GeneralPicturesModel(val status: Int, val data: List<GeneralPicturesData>)
 class GeneralPicturesData(
     val PictureID: Int,
@@ -468,6 +510,7 @@ class GeneralPicturesData(
     val PictureElementID: Int,
     val Remarks: String,
     val CreationDateTime: String,
+    val StorePictureElementID: Int,
     val StorePictureElementName: String,
     val BrandName: String
 )

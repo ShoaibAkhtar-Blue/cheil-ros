@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".fragments.storeview.StockDetailFragment">
+
+<com.valartech.loadinglayout.LoadingLayout
+    android:id="@+id/mainLoadingLayoutCC"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--  Empty      -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80ddc628"
+        android:gravity="center"
+        android:tag="@string/ll_empty"
+        android:text="@string/no_results"
+        android:textColor="#000"
+        android:textSize="20sp" />
+
+    <!--   Loading     -->
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.CubeGrid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:tag="@string/ll_loading"
+        app:SpinKit_Color="@color/black" />
+
+    <!--   Completed     -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:tag="@string/ll_complete">
+
+        <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:id="@+id/txtStoreName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ededed"
+            android:fontFamily="@font/samsungsharpsans_bold"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="DISPLAY"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <GridView
+                            android:id="@+id/rvCurrentWeek"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:layout_below="@+id/photoContainer"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginRight="0dp"
+                            android:layout_weight="1"
+                            android:columnWidth="55dp"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:horizontalSpacing="1dp"
+                            android:numColumns="7"
+                            android:stretchMode="columnWidth"
+                            android:verticalSpacing="0dp" />
+
+                        <ImageButton
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:id="@+id/btnDate"
+                            android:layout_width="90dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:adjustViewBounds="true"
+                            android:backgroundTint="#00FFFFFF"
+                            android:cropToPadding="true"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/calendar_icon" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c2c2c2" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/btnProductCategory"
+                style="@style/ButtonList"
+                android:text="Select Category"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/black"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:id="@+id/txtNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="false"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="false"
+                    android:layout_alignParentBottom="false"
+                    android:layout_centerInParent="true"
+                    android:layout_marginRight="24dp"
+                    android:fontFamily="@font/samsungsharpsans_bold"
+                    android:gravity="center"
+                    android:text="#"
+                    android:textColor="@android:color/white"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/BrandHeading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toStartOf="@+id/SalesQty"
+                    android:layout_toEndOf="@+id/txtNum"
+                    android:fontFamily="@font/samsungsharpsans_bold"
+                    android:gravity="center|left"
+                    android:text="Model"
+                    android:textColor="@android:color/white"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/SalesQty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="40dp"
+                    android:layout_toStartOf="@+id/SalesValue"
+                    android:fontFamily="@font/samsungsharpsans_bold"
+                    android:gravity="center"
+                    android:text="Quantity"
+                    android:textColor="@android:color/white"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/SalesValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="27dp"
+                    android:layout_marginRight="27dp"
+                    android:fontFamily="@font/samsungsharpsans_bold"
+                    android:gravity="center"
+                    android:text="Price"
+                    android:textColor="@android:color/white"
+                    android:textSize="14dp" />
+            </RelativeLayout>
+
+            <com.example.cheilros.activities.customobj.EmptyRecyclerView
+                android:id="@+id/rvStockDetail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnSubmit"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/black"
+                android:text="Submit" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <!--    Error    -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ff0000"
+        android:gravity="center"
+        android:tag="@string/ll_error"
+        android:text="@string/error"
+        android:textColor="#fff"
+        android:textSize="20sp" />
+
+</com.valartech.loadinglayout.LoadingLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

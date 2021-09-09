@@ -126,6 +126,12 @@
         <action
             android:id="@+id/action_storeViewFragment_to_storePicturesFragment"
             app:destination="@id/storePicturesFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_stockFragment"
+            app:destination="@id/stockFragment" />
+        <action
+            android:id="@+id/action_storeViewFragment_to_installationMainFragment"
+            app:destination="@id/installationMainFragment" />
     </fragment>
     <fragment
         android:id="@+id/checklistCategoryFragment"
@@ -189,6 +195,13 @@
         <action
             android:id="@+id/action_investmentFragment_to_investmentDetailFragment"
             app:destination="@id/investmentDetailFragment" />
+        <argument
+            android:name="TaskDeploymentCategoryID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="TaskDeploymentCategoryName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/activityFragment"
@@ -361,6 +374,35 @@
         <action
             android:id="@+id/action_installationFragment_to_acrivityDetailFragment"
             app:destination="@id/acrivityDetailFragment" />
+        <argument
+            android:name="TaskDeploymentCategoryID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="TaskDeploymentCategoryName"
+            app:argType="string"
+            android:defaultValue="0" />
+        <argument
+            android:name="ActivityCategoryID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="ActivityCategoryName"
+            app:argType="string" />
+        <argument
+            android:name="ActivityTypeID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="ActivityTypeName"
+            app:argType="string" />
+        <argument
+            android:name="StoreID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/taskDeploymentFragment"
@@ -370,6 +412,34 @@
         <action
             android:id="@+id/action_taskDeploymentFragment_to_acrivityDetailFragment"
             app:destination="@id/acrivityDetailFragment" />
+        <argument
+            android:name="TaskDeploymentCategoryID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="TaskDeploymentCategoryName"
+            app:argType="string" />
+        <argument
+            android:name="ActivityCategoryID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="ActivityCategoryName"
+            app:argType="string" />
+        <argument
+            android:name="ActivityTypeID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="ActivityTypeName"
+            app:argType="string" />
+        <argument
+            android:name="StoreID"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/displayCountFragment"
@@ -502,5 +572,34 @@
         <action
             android:id="@+id/action_storePicturesFragment_to_cameraActivity"
             app:destination="@id/cameraActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/stockFragment"
+        android:name="com.example.cheilros.fragments.storeview.StockFragment"
+        android:label="stock"
+        tools:layout="@layout/fragment_stock" >
+        <action
+            android:id="@+id/action_stockFragment_to_stockDetailFragment"
+            app:destination="@id/stockDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/stockDetailFragment"
+        android:name="com.example.cheilros.fragments.storeview.StockDetailFragment"
+        android:label="fragment_stock_detail"
+        tools:layout="@layout/fragment_stock_detail" />
+    <fragment
+        android:id="@+id/installationMainFragment"
+        android:name="com.example.cheilros.fragments.storeview.InstallationMainFragment"
+        android:label="installation_main"
+        tools:layout="@layout/fragment_installation_main">
+        <action
+            android:id="@+id/action_installationMainFragment_to_investmentFragment"
+            app:destination="@id/investmentFragment" />
+        <action
+            android:id="@+id/action_installationMainFragment_to_installationFragment"
+            app:destination="@id/installationFragment" />
+        <action
+            android:id="@+id/action_installationMainFragment_to_taskDeploymentFragment"
+            app:destination="@id/taskDeploymentFragment" />
     </fragment>
 </navigation>
