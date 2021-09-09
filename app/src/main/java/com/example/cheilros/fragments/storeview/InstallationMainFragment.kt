@@ -112,7 +112,7 @@ class InstallationMainFragment : BaseFragment() {
                         layoutManager = LinearLayoutManager(requireContext())
                         rvActivityDetail.layoutManager = layoutManager
                         recylcerAdapter =
-                            InstallationMainAdapter(requireContext(), apiData.data, arguments)
+                            InstallationMainAdapter(requireContext(), apiData.data.distinctBy { it.TaskDeploymentCategoryName }, arguments)
                         rvActivityDetail.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })

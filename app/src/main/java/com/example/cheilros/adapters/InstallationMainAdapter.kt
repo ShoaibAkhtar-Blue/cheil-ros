@@ -39,7 +39,7 @@ class InstallationMainAdapter(val context: Context, val itemList: List<ActivityC
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.txtTitle.text = filterList[position].ActivityCategoryName
+        holder.txtTitle.text = filterList[position].TaskDeploymentCategoryName
         holder.LLchecklist.setOnClickListener {
 
             val bundle = bundleOf(
