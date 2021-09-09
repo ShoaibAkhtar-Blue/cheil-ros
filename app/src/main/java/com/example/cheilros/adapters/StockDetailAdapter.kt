@@ -217,7 +217,7 @@ class StockDetailAdapter(
             val jsonString: String = gson.toJson(StockJSON(salesData))
             println(jsonString)
 
-            val url = "${CSP.getData("base_url")}/Sales.asmx/SaleCountAdd"
+            val url = "${CSP.getData("base_url")}/Stock.asmx/StockStatusAdd"
 
             val request_header: MediaType? = "application/text; charset=utf-8".toMediaTypeOrNull()
 
