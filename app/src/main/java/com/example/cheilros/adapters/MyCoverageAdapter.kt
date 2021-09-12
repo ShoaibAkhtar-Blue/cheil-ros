@@ -127,6 +127,7 @@ class MyCoverageAdapter(
         var btnClose: RelativeLayout = view.findViewById(R.id.RLHeader)
         var btnAccept: Button = view.findViewById(R.id.btnAccept)
         var btnCancel: Button = view.findViewById(R.id.btnCancel)
+        var btnLocUpdate: Button = view.findViewById(R.id.btnLocUpdate)
         var RLnum: RelativeLayout = view.findViewById(R.id.RLnum)
         //var imgMap: ImageView = view.findViewById(R.id.imgMap)
 
@@ -186,7 +187,7 @@ class MyCoverageAdapter(
 
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
-
+        val uLocation = activity.userLocation
         context?.let {
             holder.item?.let { itemData ->
 
@@ -202,6 +203,69 @@ class MyCoverageAdapter(
 
                 holder.txtRegion.text = itemData.RegionName
                 holder.txtAddress.text = itemData.Address
+
+                try{
+                    if(settingData.filter { it.fixedLabelName == "StoreList_LocationUpdate" }[0].labelName == ""){
+                        holder.btnLocUpdate.visibility = View.GONE
+                    }else{
+                        holder.btnLocUpdate.text = settingData.filter { it.fixedLabelName == "StoreList_LocationUpdate" }[0].labelName
+                    }
+                }catch (ex: Exception){
+                    holder.btnLocUpdate.visibility = View.GONE
+                }
+
+                holder.btnLocUpdate.setOnClickListener {
+                    var locURL = "${CSP.getData("base_url")}/Activity.asmx/UpdateLocation?StoreID=${itemData.StoreID}&TeamMemberID=${CSP.getData("user_id")}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}"
+                    println(locURL)
+                    try {
+                        val request = Request.Builder()
+                            .url(locURL)
+                            .build()
+
+                        client.newCall(request).enqueue(object : Callback {
+                            override fun onFailure(call: Call, e: IOException) {
+                                (context as Activity).runOnUiThread {
+                                    context?.let { it1 ->
+                                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                            .setTitle("Error!!")
+                                            .setMessage(e.message.toString())
+                                            .sneakWarning()
+                                    }
+                                }
+                            }
+
+                            override fun onResponse(call: Call, response: Response) {
+                                val body = response.body?.string()
+                                println(body)
+
+                                val gson = GsonBuilder().create()
+                                val apiData = gson.fromJson(body, CheckInOutModel::class.java)
+                                println(apiData.status)
+                                if (apiData.status == 200) {
+                                    (context as Activity).runOnUiThread {
+                                        context?.let { it1 ->
+                                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                                .setTitle("Success!!")
+                                                .setMessage("Location Updated")
+                                                .sneakSuccess()
+                                        }
+                                    }
+                                } else {
+                                    (context as Activity).runOnUiThread {
+                                        context?.let { it1 ->
+                                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                                .setTitle("Error!!")
+                                                .setMessage("Data not Updated.")
+                                                .sneakWarning()
+                                        }
+                                    }
+                                }
+                            }
+                        })
+                    }catch (ex: Exception){
+
+                    }
+                }
 
 
                 //Update Labels
@@ -225,7 +289,7 @@ class MyCoverageAdapter(
 
                 holder.btnAccept.setOnClickListener {
                     try {
-                        val uLocation = activity.userLocation
+
                         println("Location: ${uLocation.latitude.toDouble()}-${uLocation.longitude.toDouble()}")
                         val myLocation = Location("")
 

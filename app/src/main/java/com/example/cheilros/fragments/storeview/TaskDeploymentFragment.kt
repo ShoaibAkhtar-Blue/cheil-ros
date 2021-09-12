@@ -1,7 +1,6 @@
 package com.example.cheilros.fragments.storeview
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +8,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.InstallationAdapter
 import com.example.cheilros.adapters.RecentActivityAdapter
 import com.example.cheilros.fragments.BaseFragment
@@ -165,8 +165,12 @@ class TaskDeploymentFragment : BaseFragment() {
                         rvRecentSubActivities.setHasFixedSize(true)
                         layoutManagerRecent = LinearLayoutManager(requireContext())
                         rvRecentSubActivities.layoutManager = layoutManagerRecent
-                        recylcerAdapterRecent = RecentActivityAdapter(requireContext(),
-                            apiData.data as MutableList<RecentActivityData>, arguments)
+                        recylcerAdapterRecent = RecentActivityAdapter(
+                            requireContext(),
+                            apiData.data as MutableList<RecentActivityData>,
+                            arguments,
+                            requireActivity() as NewDashboardActivity
+                        )
                         rvRecentSubActivities.adapter = recylcerAdapterRecent
 
                     })

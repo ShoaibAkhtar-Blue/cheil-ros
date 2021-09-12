@@ -1,7 +1,6 @@
 package com.example.cheilros.fragments.storeview
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,13 +8,11 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.ActivityAdapter
-import com.example.cheilros.adapters.ChecklistAdapter
 import com.example.cheilros.adapters.RecentActivityAdapter
 import com.example.cheilros.fragments.BaseFragment
-import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.ActivityTypeModel
-import com.example.cheilros.models.CheckListModel
 import com.example.cheilros.models.RecentActivityData
 import com.example.cheilros.models.RecentActivityModel
 import com.google.gson.GsonBuilder
@@ -27,7 +24,6 @@ import kotlinx.android.synthetic.main.fragment_activity.rvRecentActivities
 import kotlinx.android.synthetic.main.fragment_activity.view.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.mainLoadingLayoutCC
-import kotlinx.android.synthetic.main.fragment_checklist_category.txtStoreName
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
@@ -162,8 +158,12 @@ class ActivityFragment : BaseFragment() {
                         rvRecentActivities.setHasFixedSize(true)
                         layoutManagerRecent = LinearLayoutManager(requireContext())
                         rvRecentActivities.layoutManager = layoutManagerRecent
-                        recylcerAdapterRecent = RecentActivityAdapter(requireContext(),
-                            apiData.data as MutableList<RecentActivityData>, arguments)
+                        recylcerAdapterRecent = RecentActivityAdapter(
+                            requireContext(),
+                            apiData.data as MutableList<RecentActivityData>,
+                            arguments,
+                            requireActivity() as NewDashboardActivity
+                        )
                         rvRecentActivities.adapter = recylcerAdapterRecent
 
                     })

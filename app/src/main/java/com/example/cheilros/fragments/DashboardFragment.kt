@@ -291,7 +291,36 @@ class DashboardFragment : BaseFragment() {
             }catch (ex: Exception){
 
             }
-        }else if(!CSP.getData("sess_gallery_img").equals("")){
+        }
+
+        if(!CSP.getData("Dashboard_Followup_SESSION_IMAGE").equals("")){
+            Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                .setTitle("Success!!")
+                .setMessage("Image Added to this session!")
+                .sneakSuccess()
+
+            try {
+                recylcerAdapterRecent.addNewItem(CSP.getData("Dashboard_Followup_SESSION_IMAGE").toString())
+                CSP.delData("Dashboard_Followup_SESSION_IMAGE")
+
+                if (CSP.getData("Dashboard_Followup_SESSION_IMAGE").equals("")) {
+                    recylcerAdapterRecent.addNewItem(CSP.getData("Dashboard_Followup_SESSION_IMAGE").toString())
+                    CSP.saveData("Dashboard_Followup_SESSION_IMAGE_SET", CSP.getData("Dashboard_Followup_SESSION_IMAGE"))
+                    CSP.delData("Dashboard_Followup_SESSION_IMAGE")
+                } else {
+                    recylcerAdapterRecent.addNewItem(CSP.getData("Dashboard_Followup_SESSION_IMAGE").toString())
+                    CSP.saveData(
+                        "Dashboard_Followup_SESSION_IMAGE_SET",
+                        "${CSP.getData("Dashboard_Followup_SESSION_IMAGE_SET")},${CSP.getData("Dashboard_Followup_SESSION_IMAGE")}"
+                    )
+                    CSP.delData("Dashboard_Followup_SESSION_IMAGE")
+                }
+            }catch (ex: Exception){
+
+            }
+        }
+
+        if(!CSP.getData("sess_gallery_img").equals("")){
             try {
                 Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                     .setTitle("Success!!")
@@ -498,7 +527,7 @@ class DashboardFragment : BaseFragment() {
                         layoutManagerRecent = LinearLayoutManager(requireContext())
                         rvRecentSubActivities.layoutManager = layoutManagerRecent
                         recylcerAdapterRecent = RecentActivityAdapter(requireContext(),
-                            apiData.data as MutableList<RecentActivityData>, arguments)
+                            apiData.data as MutableList<RecentActivityData>, arguments, requireActivity() as NewDashboardActivity)
                         rvRecentSubActivities.adapter = recylcerAdapterRecent
 
                     })

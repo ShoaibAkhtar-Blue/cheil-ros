@@ -5,8 +5,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,23 +16,32 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
+import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.helpers.CustomSharedPref
-import com.example.cheilros.models.ChannelModel
+import com.example.cheilros.models.CheckListDetailData
 import com.example.cheilros.models.GenericModel
 import com.example.cheilros.models.RecentActivityData
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
-import com.valartech.loadinglayout.LoadingLayout
+import kotlinx.android.synthetic.main.dialog_checklist.*
 import kotlinx.android.synthetic.main.dialog_followup.*
-import kotlinx.android.synthetic.main.fragment_my_coverage.*
-import kotlinx.android.synthetic.main.item_jpstatus.view.*
+import kotlinx.android.synthetic.main.dialog_followup.btnAccept
+import kotlinx.android.synthetic.main.dialog_followup.btnCancel
+import kotlinx.android.synthetic.main.dialog_followup.btnTakePictureTask
+import kotlinx.android.synthetic.main.dialog_followup.rvTaskPictures
+import kotlinx.android.synthetic.main.dialog_followup.txtTitle
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import java.io.IOException
 
 class RecentActivityAdapter(
     val context: Context,
     val itemList: MutableList<RecentActivityData>,
-    val arguments: Bundle?
+    val arguments: Bundle?,
+    val activity: NewDashboardActivity
 ) : RecyclerView.Adapter<RecentActivityAdapter.ViewHolder>() {
 
     lateinit var CSP: CustomSharedPref
@@ -123,25 +132,111 @@ class RecentActivityAdapter(
 
                 dialog.btnTakePictureTask.setOnClickListener {
 
-                    /*val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
+                    if(capturedPicturesList.size <= 2){
+                        val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
 
-                    builder.setTitle("Choose...")
-                    builder.setMessage("Please select one of the options")
+                        builder.setTitle("Choose...")
+                        builder.setMessage("Please select one of the options")
 
-                    builder.setPositiveButton("Camera") { dialog, which ->
-                        CSP.saveData("fragName", "Dashboard")
-                        Navigation.findNavController(view)
-                            .navigate(R.id.action_dashboardFragment_to_cameraActivity)
+                        builder.setPositiveButton("Camera") { dialog, which ->
+                            try{
+                                CSP.saveData("fragName", "Dashboard_Followup")
+                                Navigation.findNavController(view)
+                                    .navigate(R.id.action_dashboardFragment_to_cameraActivity)
+                            }catch (ex: Exception){
+                                Log.e("Error_", ex.message.toString())
+                            }
+
+                        }
+
+                        builder.setNegativeButton("Gallery") { dialog, which ->
+                            activity.pickFromGallery()
+                        }
+
+                        builder.setNeutralButton("Cancel") { dialog, which ->
+                            dialog.dismiss()
+                        }
+                        builder.show()
+                    }
+                }
+
+                dialog.btnAccept.setOnClickListener {
+
+                    var isFixed = if(dialog.cbIssue.isChecked) "1" else "0"
+
+                    var url = "${CSP.getData("base_url")}/MarketActivity.asmx/ActivityFollowup?ActivityID=${itemList[position].ActivityID}&FollowupDescription=${dialog.etRemarks.text.toString()}&TeamMemberID=${CSP.getData("user_id")}&ActiveStatus=$isFixed"
+                    val client = OkHttpClient()
+                    try{
+                        val builder: MultipartBody.Builder =
+                            MultipartBody.Builder().setType(MultipartBody.FORM)
+
+                        var picNum = 1
+                        for (paths in capturedPicturesList) {
+                            println(paths)
+                            val sourceFile = File(paths)
+                            val mimeType =
+                                CoreHelperMethods(context as Activity).getMimeType(sourceFile)
+                            val fileName: String = sourceFile.name
+                            builder.addFormDataPart(
+                                "Picture$picNum",
+                                fileName,
+                                sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
+                            )
+                            picNum++
+                        }
+
+                        builder.addFormDataPart(
+                            "test",
+                            "test"
+                        )
+
+                        val requestBody = builder.build()
+                        val request: Request = Request.Builder()
+                            .url(url)
+                            .post(requestBody)
+                            .build()
+
+                        client.newCall(request).enqueue(object : Callback {
+                            override fun onFailure(call: Call, e: IOException) {
+                                (context as Activity).runOnUiThread {
+                                    context?.let { it1 ->
+                                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                            .setTitle("Error!!")
+                                            .setMessage("not completed!")
+                                            .sneakError()
+                                    }
+                                    dialog.dismiss()
+                                }
+                            }
+
+                            override fun onResponse(call: Call, response: Response) {
+                                (context as Activity).runOnUiThread {
+                                    context?.let { it1 ->
+                                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                            .setTitle("Success!!")
+                                            .setMessage("updated!")
+                                            .sneakSuccess()
+                                    }
+                                    /*itemList.removeAt(position)
+                                    notifyItemRemoved(position)
+                                    notifyItemRangeChanged(position, itemCount - position)*/
+
+                                    CSP.delData("fragName")
+                                    CSP.delData("Dashboard_Followup_SESSION_IMAGE")
+                                    CSP.delData("Dashboard_Followup_SESSION_IMAGE_SET")
+
+                                    dialog.dismiss()
+                                }
+                            }
+
+                        })
+
+
+                    }catch (ex: Exception){
+
                     }
 
-                    builder.setNegativeButton("Gallery") { dialog, which ->
-                        activity.pickFromGallery()
-                    }
 
-                    builder.setNeutralButton("Cancel") { dialog, which ->
-                        dialog.dismiss()
-                    }
-                    builder.show()*/
                 }
 
                 dialog.btnCancel.setOnClickListener {
@@ -188,8 +283,6 @@ class RecentActivityAdapter(
                     }
                     builder.show()*/
                 }
-
-
 
                 dialog.show()
             }
@@ -266,5 +359,9 @@ class RecentActivityAdapter(
         itemList.removeAt(position)
         notifyItemRemoved(position)
         notifyItemRangeChanged(position, itemCount - position)
+    }
+
+    fun addNewItem(imgPath: String) {
+        recylcerAdapterPA.addNewItem(imgPath)
     }
 }

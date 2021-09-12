@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.ChecklistAnsweredAdapter
 import com.example.cheilros.adapters.RecentActivityAdapter
 import com.example.cheilros.adapters.StoreMenuAdapter
@@ -321,8 +322,12 @@ class StoreViewFragment : BaseFragment() {
                         layoutManager = LinearLayoutManager(requireContext())
                         rvRecentActivities.layoutManager = layoutManager
                         recylcerAdapter =
-                            RecentActivityAdapter(requireContext(),
-                                apiData.data as MutableList<RecentActivityData>, arguments)
+                            RecentActivityAdapter(
+                                requireContext(),
+                                apiData.data as MutableList<RecentActivityData>,
+                                arguments,
+                                requireActivity() as NewDashboardActivity
+                            )
                         rvRecentActivities.adapter = recylcerAdapter
 
                     })

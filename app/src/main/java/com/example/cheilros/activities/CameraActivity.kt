@@ -261,6 +261,12 @@ class CameraActivity : AppCompatActivity() {
                             println(savedImagePath)
                             CSP.saveData("Dashboard_SESSION_IMAGE", savedImagePath)
                             finish()
+                        }else if (CSP.getData("fragName").equals("Dashboard_Followup")) {
+                            println("Dashboard_Followup")
+                            val savedImagePath: String = saveMediaToStorage(bitmapImg)
+                            println(savedImagePath)
+                            CSP.saveData("Dashboard_Followup_SESSION_IMAGE", savedImagePath)
+                            finish()
                         }else if (CSP.getData("fragName").equals("Checklist")) {
                             println("Checklist")
                             val savedImagePath: String = saveMediaToStorage(bitmapImg)
