@@ -141,6 +141,7 @@
             android:orientation="vertical">
 
             <EditText
+                android:minWidth="320dp"
                 android:id="@+id/etInputBarcode"
                 style="@style/editTextSimple"
                 android:layout_height="40dp"

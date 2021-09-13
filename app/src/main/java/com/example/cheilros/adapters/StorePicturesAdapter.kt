@@ -44,12 +44,16 @@ class StorePicturesAdapter(val ctx: Context?, var titles: List<GeneralPicturesDa
         imagePopup.isFullScreen = true // Optional
         imagePopup.isHideCloseIcon = false // Optional
         imagePopup.isImageOnClickClose = false // Optional
-        imagePopup.initiatePopupWithGlide("${CSP.getData("base_url")}/StoreGeneralPictures/${titles[position].PictureID}.png") // Load Image from Drawable
+        imagePopup.initiatePopupWithGlide("${CSP.getData("base_url")}/StoreGeneralPictures/${titles[position].PictureID}.jpg") // Load Image from Drawable
 
         holder.imgStore.setOnClickListener {
             imagePopup.viewPopup()
         }
 
+        holder.imgStore.setOnLongClickListener {
+            println("setOnLongClickListener")
+            true
+        }
 
     }
 
