@@ -526,8 +526,8 @@ class DashboardFragment : BaseFragment() {
                         rvRecentSubActivities.setHasFixedSize(true)
                         layoutManagerRecent = LinearLayoutManager(requireContext())
                         rvRecentSubActivities.layoutManager = layoutManagerRecent
-                        recylcerAdapterRecent = RecentActivityAdapter(requireContext(),
-                            apiData.data as MutableList<RecentActivityData>, arguments, requireActivity() as NewDashboardActivity)
+                        recylcerAdapterRecent = RecentActivityAdapter(requireContext(), "dashboard",
+                            apiData.data as MutableList<RecentActivityData>, arguments, requireActivity() as NewDashboardActivity, userData)
                         rvRecentSubActivities.adapter = recylcerAdapterRecent
 
                     })

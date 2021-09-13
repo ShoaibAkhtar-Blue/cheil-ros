@@ -215,56 +215,72 @@ class MyCoverageAdapter(
                 }
 
                 holder.btnLocUpdate.setOnClickListener {
-                    var locURL = "${CSP.getData("base_url")}/Activity.asmx/UpdateLocation?StoreID=${itemData.StoreID}&TeamMemberID=${CSP.getData("user_id")}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}"
-                    println(locURL)
-                    try {
-                        val request = Request.Builder()
-                            .url(locURL)
-                            .build()
 
-                        client.newCall(request).enqueue(object : Callback {
-                            override fun onFailure(call: Call, e: IOException) {
-                                (context as Activity).runOnUiThread {
-                                    context?.let { it1 ->
-                                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                            .setTitle("Error!!")
-                                            .setMessage(e.message.toString())
-                                            .sneakWarning()
-                                    }
-                                }
-                            }
+                    val builder = android.app.AlertDialog.Builder(context)
+                    builder.setTitle("Update Location...")
+                    builder.setMessage("Are you Sure?")
 
-                            override fun onResponse(call: Call, response: Response) {
-                                val body = response.body?.string()
-                                println(body)
+                    builder.setPositiveButton("Yes") { dialog, which ->
+                        var locURL = "${CSP.getData("base_url")}/Activity.asmx/UpdateLocation?StoreID=${itemData.StoreID}&TeamMemberID=${CSP.getData("user_id")}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}"
+                        println(locURL)
+                        try {
+                            val request = Request.Builder()
+                                .url(locURL)
+                                .build()
 
-                                val gson = GsonBuilder().create()
-                                val apiData = gson.fromJson(body, CheckInOutModel::class.java)
-                                println(apiData.status)
-                                if (apiData.status == 200) {
-                                    (context as Activity).runOnUiThread {
-                                        context?.let { it1 ->
-                                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                                .setTitle("Success!!")
-                                                .setMessage("Location Updated")
-                                                .sneakSuccess()
-                                        }
-                                    }
-                                } else {
+                            client.newCall(request).enqueue(object : Callback {
+                                override fun onFailure(call: Call, e: IOException) {
                                     (context as Activity).runOnUiThread {
                                         context?.let { it1 ->
                                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                                 .setTitle("Error!!")
-                                                .setMessage("Data not Updated.")
+                                                .setMessage(e.message.toString())
                                                 .sneakWarning()
                                         }
                                     }
                                 }
-                            }
-                        })
-                    }catch (ex: Exception){
 
+                                override fun onResponse(call: Call, response: Response) {
+                                    val body = response.body?.string()
+                                    println(body)
+
+                                    val gson = GsonBuilder().create()
+                                    val apiData = gson.fromJson(body, CheckInOutModel::class.java)
+                                    println(apiData.status)
+                                    if (apiData.status == 200) {
+                                        (context as Activity).runOnUiThread {
+                                            context?.let { it1 ->
+                                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                                    .setTitle("Success!!")
+                                                    .setMessage("Location Updated")
+                                                    .sneakSuccess()
+                                            }
+                                        }
+                                    } else {
+                                        (context as Activity).runOnUiThread {
+                                            context?.let { it1 ->
+                                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                                    .setTitle("Error!!")
+                                                    .setMessage("Data not Updated.")
+                                                    .sneakWarning()
+                                            }
+                                        }
+                                    }
+                                }
+                            })
+                        }catch (ex: Exception){
+
+                        }
                     }
+
+                    builder.setNegativeButton("No") { dialog, which ->
+                        dialog.dismiss()
+                    }
+
+                    builder.show()
+
+
+
                 }
 
 

@@ -222,6 +222,9 @@
             android:name="DivisionID"
             android:defaultValue="1"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_activityFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
     </fragment>
     <fragment
         android:id="@+id/activityDetailFragment"
@@ -249,6 +252,9 @@
         <argument
             android:name="ActivityTypeName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_activityDetailFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
     </fragment>
     <fragment
         android:id="@+id/acrivityDetailFragment"
@@ -403,6 +409,9 @@
         <argument
             android:name="StoreName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_installationFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
     </fragment>
     <fragment
         android:id="@+id/taskDeploymentFragment"
@@ -440,6 +449,9 @@
         <argument
             android:name="StoreName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_taskDeploymentFragment_to_cameraActivity"
+            app:destination="@id/cameraActivity" />
     </fragment>
     <fragment
         android:id="@+id/displayCountFragment"

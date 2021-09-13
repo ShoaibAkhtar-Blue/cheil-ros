@@ -22,12 +22,9 @@ import kotlinx.android.synthetic.main.activity_new_dashboard.*
 import kotlinx.android.synthetic.main.fragment_activity.*
 import kotlinx.android.synthetic.main.fragment_activity.rvRecentActivities
 import kotlinx.android.synthetic.main.fragment_activity.view.*
-import kotlinx.android.synthetic.main.fragment_checklist_category.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.mainLoadingLayoutCC
-import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
-import kotlinx.android.synthetic.main.fragment_store_view.*
 import okhttp3.*
 import java.io.IOException
 
@@ -76,6 +73,36 @@ class ActivityFragment : BaseFragment() {
                 return true
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(!CSP.getData("Activity_Followup_SESSION_IMAGE").equals("")){
+            Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                .setTitle("Success!!")
+                .setMessage("Image Added to this session!")
+                .sneakSuccess()
+
+            try {
+                recylcerAdapterRecent.addNewItem(CSP.getData("Activity_Followup_SESSION_IMAGE").toString())
+                CSP.delData("Activity_Followup_SESSION_IMAGE")
+
+                if (CSP.getData("Activity_Followup_SESSION_IMAGE").equals("")) {
+                    recylcerAdapterRecent.addNewItem(CSP.getData("Activity_Followup_SESSION_IMAGE").toString())
+                    CSP.saveData("Activity_Followup_SESSION_IMAGE_SET", CSP.getData("Activity_Followup_SESSION_IMAGE"))
+                    CSP.delData("Activity_Followup_SESSION_IMAGE")
+                } else {
+                    recylcerAdapterRecent.addNewItem(CSP.getData("Activity_Followup_SESSION_IMAGE").toString())
+                    CSP.saveData(
+                        "Activity_Followup_SESSION_IMAGE_SET",
+                        "${CSP.getData("Activity_Followup_SESSION_IMAGE_SET")},${CSP.getData("Activity_Followup_SESSION_IMAGE")}"
+                    )
+                    CSP.delData("Activity_Followup_SESSION_IMAGE")
+                }
+            }catch (ex: Exception){
+
+            }
+        }
     }
 
     fun fetchActivity(url: String){
@@ -160,9 +187,11 @@ class ActivityFragment : BaseFragment() {
                         rvRecentActivities.layoutManager = layoutManagerRecent
                         recylcerAdapterRecent = RecentActivityAdapter(
                             requireContext(),
+                            "activity",
                             apiData.data as MutableList<RecentActivityData>,
                             arguments,
-                            requireActivity() as NewDashboardActivity
+                            requireActivity() as NewDashboardActivity,
+                            userData
                         )
                         rvRecentActivities.adapter = recylcerAdapterRecent
 

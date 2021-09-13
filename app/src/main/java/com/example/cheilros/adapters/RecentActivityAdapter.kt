@@ -17,14 +17,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
+import com.example.cheilros.data.UserData
 import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.helpers.CustomSharedPref
-import com.example.cheilros.models.CheckListDetailData
-import com.example.cheilros.models.GenericModel
-import com.example.cheilros.models.RecentActivityData
+import com.example.cheilros.models.*
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
-import kotlinx.android.synthetic.main.dialog_checklist.*
 import kotlinx.android.synthetic.main.dialog_followup.*
 import kotlinx.android.synthetic.main.dialog_followup.btnAccept
 import kotlinx.android.synthetic.main.dialog_followup.btnCancel
@@ -39,9 +37,11 @@ import java.io.IOException
 
 class RecentActivityAdapter(
     val context: Context,
+    val fragName: String,
     val itemList: MutableList<RecentActivityData>,
     val arguments: Bundle?,
-    val activity: NewDashboardActivity
+    val activity: NewDashboardActivity,
+    val userData: List<UserData>
 ) : RecyclerView.Adapter<RecentActivityAdapter.ViewHolder>() {
 
     lateinit var CSP: CustomSharedPref
@@ -99,7 +99,7 @@ class RecentActivityAdapter(
         else
             holder.imgActivity2.visibility = View.GONE
 
-        if(CSP.getData("TicketFollowup").equals("N"))
+        if (CSP.getData("TicketFollowup").equals("N"))
             holder.btnAccept.visibility = View.GONE
 
         if (filterList[position].ActivityTypeID == 20) {
@@ -132,18 +132,44 @@ class RecentActivityAdapter(
 
                 dialog.btnTakePictureTask.setOnClickListener {
 
-                    if(capturedPicturesList.size <= 2){
+                    if (capturedPicturesList.size <= 2) {
                         val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
 
                         builder.setTitle("Choose...")
                         builder.setMessage("Please select one of the options")
 
                         builder.setPositiveButton("Camera") { dialog, which ->
-                            try{
-                                CSP.saveData("fragName", "Dashboard_Followup")
-                                Navigation.findNavController(view)
-                                    .navigate(R.id.action_dashboardFragment_to_cameraActivity)
-                            }catch (ex: Exception){
+                            try {
+                                if (fragName == "dashboard") {
+                                    CSP.saveData("fragName", "Dashboard_Followup")
+                                    Navigation.findNavController(view)
+                                        .navigate(R.id.action_dashboardFragment_to_cameraActivity)
+                                }
+
+                                if (fragName == "task") {
+                                    CSP.saveData("fragName", "Task_Followup")
+                                    Navigation.findNavController(view)
+                                        .navigate(R.id.action_taskDeploymentFragment_to_cameraActivity)
+                                }
+
+                                if (fragName == "installation") {
+                                    CSP.saveData("fragName", "Installation_Followup")
+                                    Navigation.findNavController(view)
+                                        .navigate(R.id.action_installationFragment_to_cameraActivity)
+                                }
+
+                                if (fragName == "activity") {
+                                    CSP.saveData("fragName", "Activity_Followup")
+                                    Navigation.findNavController(view)
+                                        .navigate(R.id.action_activityFragment_to_cameraActivity)
+                                }
+
+                                if (fragName == "activity_sub") {
+                                    CSP.saveData("fragName", "Activity_Sub_Followup")
+                                    Navigation.findNavController(view)
+                                        .navigate(R.id.action_activityDetailFragment_to_cameraActivity)
+                                }
+                            } catch (ex: Exception) {
                                 Log.e("Error_", ex.message.toString())
                             }
 
@@ -162,86 +188,82 @@ class RecentActivityAdapter(
 
                 dialog.btnAccept.setOnClickListener {
 
-                    var isFixed = if(dialog.cbIssue.isChecked) "1" else "0"
+                    var isFixed = if (dialog.cbIssue.isChecked) "1" else "0"
 
-                    var url = "${CSP.getData("base_url")}/MarketActivity.asmx/ActivityFollowup?ActivityID=${itemList[position].ActivityID}&FollowupDescription=${dialog.etRemarks.text.toString()}&TeamMemberID=${CSP.getData("user_id")}&ActiveStatus=$isFixed"
-                    val client = OkHttpClient()
-                    try{
-                        val builder: MultipartBody.Builder =
-                            MultipartBody.Builder().setType(MultipartBody.FORM)
+                    if(dialog.cbIssue.isChecked){
+                        val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
 
-                        var picNum = 1
-                        for (paths in capturedPicturesList) {
-                            println(paths)
-                            val sourceFile = File(paths)
-                            val mimeType =
-                                CoreHelperMethods(context as Activity).getMimeType(sourceFile)
-                            val fileName: String = sourceFile.name
-                            builder.addFormDataPart(
-                                "Picture$picNum",
-                                fileName,
-                                sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
-                            )
-                            picNum++
+                        builder.setTitle("Update Issue Log...")
+                        builder.setMessage("Are you sure?")
+
+                        builder.setPositiveButton("Yes") { dialog1, which ->
+                            saveIssue(dialog, position, isFixed)
                         }
 
-                        builder.addFormDataPart(
-                            "test",
-                            "test"
-                        )
+                        builder.setNegativeButton("No") { dialog, which ->
+                            dialog.dismiss()
+                        }
 
-                        val requestBody = builder.build()
-                        val request: Request = Request.Builder()
-                            .url(url)
-                            .post(requestBody)
-                            .build()
-
-                        client.newCall(request).enqueue(object : Callback {
-                            override fun onFailure(call: Call, e: IOException) {
-                                (context as Activity).runOnUiThread {
-                                    context?.let { it1 ->
-                                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                            .setTitle("Error!!")
-                                            .setMessage("not completed!")
-                                            .sneakError()
-                                    }
-                                    dialog.dismiss()
-                                }
-                            }
-
-                            override fun onResponse(call: Call, response: Response) {
-                                (context as Activity).runOnUiThread {
-                                    context?.let { it1 ->
-                                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                            .setTitle("Success!!")
-                                            .setMessage("updated!")
-                                            .sneakSuccess()
-                                    }
-                                    /*itemList.removeAt(position)
-                                    notifyItemRemoved(position)
-                                    notifyItemRangeChanged(position, itemCount - position)*/
-
-                                    CSP.delData("fragName")
-                                    CSP.delData("Dashboard_Followup_SESSION_IMAGE")
-                                    CSP.delData("Dashboard_Followup_SESSION_IMAGE_SET")
-
-                                    dialog.dismiss()
-                                }
-                            }
-
-                        })
-
-
-                    }catch (ex: Exception){
-
+                        builder.show()
+                    }else{
+                        saveIssue(dialog, position, isFixed)
                     }
-
-
                 }
 
                 dialog.btnCancel.setOnClickListener {
                     dialog.dismiss()
                 }
+
+                //region RV Issue Log
+                var issueLogURL =
+                    "${CSP.getData("base_url")}/MarketActivity.asmx/ActivityFollowup_Log?ActivityID=${itemList[position].ActivityID}"
+                println(issueLogURL)
+                val request = Request.Builder()
+                    .url(issueLogURL)
+                    .build()
+                val client = OkHttpClient()
+                var layoutManager: RecyclerView.LayoutManager
+                var recylcerAdapter: IssueLogAdapter
+
+                client.newCall(request).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        activity.runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage(e.message.toString())
+                                    .sneakError()
+                            }
+                        })
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        val body = response.body?.string()
+                        println(body)
+                        val gson = GsonBuilder().create()
+                        val apiData = gson.fromJson(body, IssueLogModel::class.java)
+                        if (apiData.status == 200) {
+                            activity.runOnUiThread(java.lang.Runnable {
+                                dialog.rvIssueLog.setHasFixedSize(true)
+                                layoutManager = LinearLayoutManager(context)
+                                dialog.rvIssueLog.layoutManager = layoutManager
+                                recylcerAdapter =
+                                    IssueLogAdapter(context, apiData.data, arguments, userData)
+                                dialog.rvIssueLog.adapter = recylcerAdapter
+                            })
+                        } else {
+                            activity.runOnUiThread(java.lang.Runnable {
+                                activity?.let { it1 ->
+                                    Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                        .setTitle("Error!!")
+                                        .setMessage("Data not fetched.")
+                                        .sneakWarning()
+                                }
+                            })
+                        }
+                    }
+                })
+                //endregion
 
                 dialog.show()
             } else {
@@ -348,6 +370,87 @@ class RecentActivityAdapter(
             )
             Navigation.findNavController(it)
                 .navigate(R.id.action_trainingFragment_to_trainingDetailFragment, bundle)*/
+        }
+    }
+
+    fun saveIssue(dialog: Dialog, position: Int, isFixed: String) {
+        var url =
+            "${CSP.getData("base_url")}/MarketActivity.asmx/ActivityFollowup?ActivityID=${itemList[position].ActivityID}&FollowupDescription=${dialog.etRemarks.text.toString()}&TeamMemberID=${
+                CSP.getData("user_id")
+            }&ActiveStatus=$isFixed"
+        val client = OkHttpClient()
+        try {
+            val builder: MultipartBody.Builder =
+                MultipartBody.Builder().setType(MultipartBody.FORM)
+
+            var picNum = 1
+            for (paths in capturedPicturesList) {
+                println(paths)
+                val sourceFile = File(paths)
+                val mimeType =
+                    CoreHelperMethods(context as Activity).getMimeType(sourceFile)
+                val fileName: String = sourceFile.name
+                builder.addFormDataPart(
+                    "Picture$picNum",
+                    fileName,
+                    sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
+                )
+                picNum++
+            }
+
+            builder.addFormDataPart(
+                "test",
+                "test"
+            )
+
+            val requestBody = builder.build()
+            val request: Request = Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    (context as Activity).runOnUiThread {
+                        context?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage("not completed!")
+                                .sneakError()
+                        }
+                        dialog.dismiss()
+                    }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    (context as Activity).runOnUiThread {
+                        context?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Success!!")
+                                .setMessage("updated!")
+                                .sneakSuccess()
+                        }
+                        CSP.delData("fragName")
+                        CSP.delData("Dashboard_Followup_SESSION_IMAGE")
+                        CSP.delData("Dashboard_Followup_SESSION_IMAGE_SET")
+                        CSP.delData("Task_Followup_SESSION_IMAGE")
+                        CSP.delData("Task_Followup_SESSION_IMAGE_SET")
+                        CSP.delData("Installation_Followup_SESSION_IMAGE")
+                        CSP.delData("Installation_Followup_SESSION_IMAGE_SET")
+                        CSP.delData("Activity_Followup_SESSION_IMAGE")
+                        CSP.delData("Activity_Followup_SESSION_IMAGE_SET")
+                        CSP.delData("Activity_Sub_Followup_SESSION_IMAGE")
+                        CSP.delData("Activity_Sub_Followup_SESSION_IMAGE_SET")
+
+                        dialog.dismiss()
+                    }
+                }
+
+            })
+
+
+        } catch (ex: Exception) {
+
         }
     }
 

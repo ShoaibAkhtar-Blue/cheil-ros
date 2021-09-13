@@ -267,6 +267,30 @@ class CameraActivity : AppCompatActivity() {
                             println(savedImagePath)
                             CSP.saveData("Dashboard_Followup_SESSION_IMAGE", savedImagePath)
                             finish()
+                        }else if (CSP.getData("fragName").equals("Task_Followup")) {
+                            println("Task_Followup")
+                            val savedImagePath: String = saveMediaToStorage(bitmapImg)
+                            println(savedImagePath)
+                            CSP.saveData("Task_Followup_SESSION_IMAGE", savedImagePath)
+                            finish()
+                        }else if (CSP.getData("fragName").equals("Installation_Followup")) {
+                            println("Installation_Followup")
+                            val savedImagePath: String = saveMediaToStorage(bitmapImg)
+                            println(savedImagePath)
+                            CSP.saveData("Installation_Followup_SESSION_IMAGE", savedImagePath)
+                            finish()
+                        }else if (CSP.getData("fragName").equals("Activity_Followup")) {
+                            println("Activity_Followup")
+                            val savedImagePath: String = saveMediaToStorage(bitmapImg)
+                            println(savedImagePath)
+                            CSP.saveData("Activity_Followup_SESSION_IMAGE", savedImagePath)
+                            finish()
+                        }else if (CSP.getData("fragName").equals("Activity_Sub_Followup")) {
+                            println("Activity_Sub_Followup")
+                            val savedImagePath: String = saveMediaToStorage(bitmapImg)
+                            println(savedImagePath)
+                            CSP.saveData("Activity_Sub_Followup_SESSION_IMAGE", savedImagePath)
+                            finish()
                         }else if (CSP.getData("fragName").equals("Checklist")) {
                             println("Checklist")
                             val savedImagePath: String = saveMediaToStorage(bitmapImg)

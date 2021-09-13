@@ -27,6 +27,7 @@ class StorePicturesAdapter(val ctx: Context?, var titles: List<GeneralPicturesDa
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.title.text = titles[position].StorePictureElementName
+        holder.desc.text = titles[position].Remarks
 
         //"${CSP.getData("base_url")}/StoreGeneralPictures/${titles[position].PictureID}.png"
         //"https://images.samsung.com/is/image/samsung/assets/pk/galaxy-a52/pcd/a-category/img_bnn_galaxy_device.png"
@@ -58,6 +59,7 @@ class StorePicturesAdapter(val ctx: Context?, var titles: List<GeneralPicturesDa
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var title: TextView = itemView.findViewById(R.id.txtTitle)
+        var desc: TextView = itemView.findViewById(R.id.txtDesc)
         var imgStore: ImageView = itemView.findViewById(R.id.imgStore)
 
         init {

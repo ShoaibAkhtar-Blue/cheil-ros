@@ -32,7 +32,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
-import kotlinx.android.synthetic.main.fragment_acrivity_detail.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_store_view.*
 import kotlinx.android.synthetic.main.fragment_store_view.view.*
@@ -324,9 +323,11 @@ class StoreViewFragment : BaseFragment() {
                         recylcerAdapter =
                             RecentActivityAdapter(
                                 requireContext(),
+                                "storeview",
                                 apiData.data as MutableList<RecentActivityData>,
                                 arguments,
-                                requireActivity() as NewDashboardActivity
+                                requireActivity() as NewDashboardActivity,
+                                userData
                             )
                         rvRecentActivities.adapter = recylcerAdapter
 

@@ -177,6 +177,20 @@ class ActivityCategoryData(
 )
 //endregion
 
+//region Issue Log
+class IssueLogModel(val status: Int, val data: List<IssueLogData>)
+class IssueLogData(
+    val FollowupID: Int,
+    val ActivityID: Int,
+    val FollowupDescription: String,
+    val FollowupDateTime: String,
+    val TeamMemberID: Int,
+    val ActiveStatus: Int,
+    val FollowUpPicture1: String,
+    val FollowUpPicture2: String
+)
+//endregion
+
 //region Dashboard
 class DashboardModel(val status: Int, val data: List<DashboardData>)
 class DashboardData(val Coverage: String, val TodayVisit: String, val PendingData: String)

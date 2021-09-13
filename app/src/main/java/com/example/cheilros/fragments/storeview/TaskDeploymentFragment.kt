@@ -21,7 +21,6 @@ import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.activity_new_dashboard.*
 import kotlinx.android.synthetic.main.fragment_activity.view.*
 import kotlinx.android.synthetic.main.fragment_activity_sub_category.*
-import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
 import okhttp3.*
@@ -82,6 +81,36 @@ class TaskDeploymentFragment : BaseFragment() {
                 return true
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(!CSP.getData("Task_Followup_SESSION_IMAGE").equals("")){
+            Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                .setTitle("Success!!")
+                .setMessage("Image Added to this session!")
+                .sneakSuccess()
+
+            try {
+                recylcerAdapterRecent.addNewItem(CSP.getData("Task_Followup_SESSION_IMAGE").toString())
+                CSP.delData("Task_Followup_SESSION_IMAGE")
+
+                if (CSP.getData("Task_Followup_SESSION_IMAGE").equals("")) {
+                    recylcerAdapterRecent.addNewItem(CSP.getData("Task_Followup_SESSION_IMAGE").toString())
+                    CSP.saveData("Task_Followup_SESSION_IMAGE_SET", CSP.getData("Task_Followup_SESSION_IMAGE"))
+                    CSP.delData("Task_Followup_SESSION_IMAGE")
+                } else {
+                    recylcerAdapterRecent.addNewItem(CSP.getData("Task_Followup_SESSION_IMAGE").toString())
+                    CSP.saveData(
+                        "Task_Followup_SESSION_IMAGE_SET",
+                        "${CSP.getData("Task_Followup_SESSION_IMAGE_SET")},${CSP.getData("Task_Followup_SESSION_IMAGE")}"
+                    )
+                    CSP.delData("Task_Followup_SESSION_IMAGE")
+                }
+            }catch (ex: Exception){
+
+            }
+        }
     }
 
     fun fetchActivityDetail(url: String) {
@@ -167,9 +196,11 @@ class TaskDeploymentFragment : BaseFragment() {
                         rvRecentSubActivities.layoutManager = layoutManagerRecent
                         recylcerAdapterRecent = RecentActivityAdapter(
                             requireContext(),
+                            "task",
                             apiData.data as MutableList<RecentActivityData>,
                             arguments,
-                            requireActivity() as NewDashboardActivity
+                            requireActivity() as NewDashboardActivity,
+                            userData
                         )
                         rvRecentSubActivities.adapter = recylcerAdapterRecent
 
