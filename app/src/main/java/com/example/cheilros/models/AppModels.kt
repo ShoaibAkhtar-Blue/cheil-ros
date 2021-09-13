@@ -526,7 +526,8 @@ class GeneralPicturesData(
     val CreationDateTime: String,
     val StorePictureElementID: Int,
     val StorePictureElementName: String,
-    val BrandName: String
+    val BrandName: String,
+    val PictureName: String
 )
 
 class BrandModel(val status: Int, val data: List<BrandData>)

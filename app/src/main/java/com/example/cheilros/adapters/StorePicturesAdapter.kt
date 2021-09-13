@@ -1,5 +1,8 @@
 package com.example.cheilros.adapters
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -7,44 +10,53 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ceylonlabs.imageviewpopup.ImagePopup
 import com.example.cheilros.R
+import com.example.cheilros.fragments.storeview.StorePicturesFragment
 import com.example.cheilros.helpers.CustomSharedPref
+import com.example.cheilros.models.CheckInOutModel
 import com.example.cheilros.models.GeneralPicturesData
+import com.google.gson.GsonBuilder
+import com.irozon.sneaker.Sneaker
+import okhttp3.*
+import java.io.IOException
 
-class StorePicturesAdapter(val ctx: Context?, var titles: List<GeneralPicturesData>) :
+class StorePicturesAdapter(
+    val context: Context?,
+    var titles: List<GeneralPicturesData>,
+    val fragment: StorePicturesFragment
+) :
     RecyclerView.Adapter<StorePicturesAdapter.ViewHolder>() {
     var inflater: LayoutInflater
     lateinit var CSP: CustomSharedPref
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = inflater.inflate(R.layout.list_store_pictures, parent, false)
-        CSP = ctx?.let { CustomSharedPref(it) }!!
+        CSP = context?.let { CustomSharedPref(it) }!!
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         holder.title.text = titles[position].StorePictureElementName
         holder.desc.text = titles[position].Remarks
 
         //"${CSP.getData("base_url")}/StoreGeneralPictures/${titles[position].PictureID}.png"
         //"https://images.samsung.com/is/image/samsung/assets/pk/galaxy-a52/pcd/a-category/img_bnn_galaxy_device.png"
-        if (ctx != null) {
-            Glide.with(ctx)
-                .load("${CSP.getData("base_url")}/StoreGeneralPictures/${titles[position].PictureID}.png")
+        if (context != null) {
+            Glide.with(context)
+                .load("${CSP.getData("base_url")}/StoreGeneralPictures/${titles[position].PictureName}")
                 .into(holder.imgStore)
         }
 
-        val imagePopup = ImagePopup(ctx)
+        val imagePopup = ImagePopup(context)
         imagePopup.windowHeight = 800 // Optional
         imagePopup.windowWidth = 800 // Optional
         imagePopup.backgroundColor = Color.BLACK // Optional
         imagePopup.isFullScreen = true // Optional
         imagePopup.isHideCloseIcon = false // Optional
         imagePopup.isImageOnClickClose = false // Optional
-        imagePopup.initiatePopupWithGlide("${CSP.getData("base_url")}/StoreGeneralPictures/${titles[position].PictureID}.jpg") // Load Image from Drawable
+        imagePopup.initiatePopupWithGlide("${CSP.getData("base_url")}/StoreGeneralPictures/${titles[position].PictureName}") // Load Image from Drawable
 
         holder.imgStore.setOnClickListener {
             imagePopup.viewPopup()
@@ -52,6 +64,70 @@ class StorePicturesAdapter(val ctx: Context?, var titles: List<GeneralPicturesDa
 
         holder.imgStore.setOnLongClickListener {
             println("setOnLongClickListener")
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("Remove Picture...")
+            builder.setMessage("Are you Sure?")
+
+            builder.setPositiveButton("Yes") { dialog1, which ->
+
+                val request = Request.Builder()
+                    .url("${CSP.getData("base_url")}/Webservice.asmx/RemoveGeneralPicture?StoreID=${titles[position].StoreID}&PictureID=${titles[position].PictureID}")
+                    .build()
+                val client = OkHttpClient()
+                client.newCall(request).enqueue(object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        (context as Activity).runOnUiThread {
+                            context?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage(e.message.toString())
+                                    .sneakWarning()
+                            }
+                        }
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        val body = response.body?.string()
+                        println(body)
+
+                        val gson = GsonBuilder().create()
+                        val apiData = gson.fromJson(body, CheckInOutModel::class.java)
+                        println(apiData.status)
+                        if (apiData.status == 200) {
+                            (context as Activity).runOnUiThread {
+                                context?.let { it1 ->
+                                    Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                        .setTitle("Success!!")
+                                        .setMessage("Data Updated")
+                                        .sneakSuccess()
+
+                                    fragment.fetchStorePictures(
+                                        "${CSP.getData("base_url")}/Webservice.asmx/GeneralPictureVie?StoreID=${
+                                            titles[position].StoreID
+                                        }&BrandID=0&ElementID=0"
+                                    )
+                                }
+                            }
+                        } else {
+                            (context as Activity).runOnUiThread {
+                                context?.let { it1 ->
+                                    Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                        .setTitle("Error!!")
+                                        .setMessage("Data not Updated.")
+                                        .sneakWarning()
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+
+            builder.setNegativeButton("No") { dialog, which ->
+                dialog.dismiss()
+            }
+
+            builder.show()
+
             true
         }
 
@@ -78,6 +154,6 @@ class StorePicturesAdapter(val ctx: Context?, var titles: List<GeneralPicturesDa
     }
 
     init {
-        inflater = LayoutInflater.from(ctx)
+        inflater = LayoutInflater.from(context)
     }
 }

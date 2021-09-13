@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.CapturedPictureAdapter
-import com.example.cheilros.adapters.MyCoverageAdapter
 import com.example.cheilros.adapters.StorePicturesAdapter
 import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.helpers.CoreHelperMethods
@@ -544,7 +543,7 @@ class StorePicturesFragment : BaseFragment() {
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
 
-                        adapter = StorePicturesAdapter(requireContext(), apiData.data)
+                        adapter = StorePicturesAdapter(requireContext(), apiData.data, this@StorePicturesFragment)
 
                         val gridLayoutManager = GridLayoutManager(
                             requireContext(),
