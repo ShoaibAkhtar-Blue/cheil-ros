@@ -2,9 +2,11 @@ package com.example.cheilros.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.hardware.biometrics.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import android.os.Build
 import android.os.Bundle
 import android.telephony.TelephonyManager
@@ -12,7 +14,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -33,12 +40,17 @@ import kotlinx.coroutines.*
 import okhttp3.*
 import java.io.IOException
 import java.net.URL
+import java.util.concurrent.Executor
 
 class LoginFragment : BaseFragment() {
 
     private val client = OkHttpClient()
 
-    var userIMEI : String = ""
+    var userIMEI: String = ""
+
+    private lateinit var executor: Executor
+    private lateinit var biometricPrompt: BiometricPrompt
+    private lateinit var promptInfo: BiometricPrompt.PromptInfo
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("HardwareIds")
@@ -50,11 +62,9 @@ class LoginFragment : BaseFragment() {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
 
-
         //Remove User Data & Permissions
         mUserDataViewModel.nukeTable()
         mUserPermissionViewModel.nukeTable()
-
 
 
         //Set Labels
@@ -77,27 +87,29 @@ class LoginFragment : BaseFragment() {
         }
 
         try {
-            val telephonyManager = requireContext().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            val telephonyManager =
+                requireContext().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             println("IMEI: ${telephonyManager.imei}")
             userIMEI = telephonyManager.imei
-        }catch (ex: Exception){
+        } catch (ex: Exception) {
             Log.e("Error_", ex.message.toString())
         }
 
 
         try {
-            Glide.with(this).load("${CSP.getData("base_url")}/AppImages/Background.jpg").into(object :
-                CustomTarget<Drawable>() {
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
+            Glide.with(this).load("${CSP.getData("base_url")}/AppImages/Background.jpg")
+                .into(object :
+                    CustomTarget<Drawable>() {
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                    }
 
-                override fun onResourceReady(
-                    resource: Drawable,
-                    transition: Transition<in Drawable>?
-                ) {
-                    view.CLlogin.background=resource
-                }
-            })
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        transition: Transition<in Drawable>?
+                    ) {
+                        view.CLlogin.background = resource
+                    }
+                })
 
             Glide.with(this).load("${CSP.getData("base_url")}/AppImages/ROS_Logo.png").into(object :
                 CustomTarget<Drawable>() {
@@ -108,21 +120,99 @@ class LoginFragment : BaseFragment() {
                     resource: Drawable,
                     transition: Transition<in Drawable>?
                 ) {
-                    view.imgLogoLogin.background=resource
+                    view.imgLogoLogin.background = resource
                 }
             })
-        }catch (ex: Exception){
+        } catch (ex: Exception) {
             Log.e("Error_", "CLlogin: ${ex.message.toString()}")
         }
 
         return view
     }
 
+    @SuppressLint("WrongConstant")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        //region Biometric Auth
+        val biometricManager = BiometricManager.from(requireContext())
+        when (biometricManager.canAuthenticate(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)) {
+            BiometricManager.BIOMETRIC_SUCCESS ->
+                Toast.makeText(
+                    requireContext(),
+                    "App can authenticate using biometrics.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
+                Toast.makeText(
+                    requireContext(),
+                    "No biometric features available on this device.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
+                Toast.makeText(
+                    requireContext(),
+                    "Biometric features are currently unavailable.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
+                Toast.makeText(
+                    requireContext(),
+                    "The device does not have any biometric credentials",
+                    Toast.LENGTH_SHORT
+                ).show()
+            BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED ->
+                Toast.makeText(
+                    requireContext(),
+                    "A security vulnerability has been discovered and the sensor is unavailable until a security update has addressed this issue.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED ->
+                Toast.makeText(
+                    requireContext(),
+                    "A given authenticator combination is not supported by the device.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            BiometricManager.BIOMETRIC_STATUS_UNKNOWN ->
+                Toast.makeText(
+                    requireContext(),
+                    "Unable to determine whether the user can authenticate.",
+                    Toast.LENGTH_SHORT
+                ).show()
+        }
 
+        executor = ContextCompat.getMainExecutor(requireContext())
+        biometricPrompt = BiometricPrompt(this, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    Toast.makeText(requireContext(), errString.toString(), Toast.LENGTH_SHORT)
+                        .show()
+                }
 
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    Toast.makeText(requireContext(), "Authentication Success", Toast.LENGTH_SHORT)
+                        .show()
+                    //startActivity(Intent(this@MainActivity,SecondActivity::class.java))
+                }
 
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(requireContext(), "Authentication Failed", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            })
+
+        promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Biometric login for my app")
+            .setSubtitle("Log in using your biometric credential")
+            .setNegativeButtonText("Cancel")
+            .build()
+
+        btnFingerAuth.setOnClickListener {
+            biometricPrompt.authenticate(promptInfo)
+        }
+        //endregion
 
         btnSetting.setOnClickListener {
             findNavController().navigate(R.id.action_global_baseUrlFragment)

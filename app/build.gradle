@@ -16,7 +16,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 3
-        versionName "1.4.20"
+        versionName "1.4.21"
 
         multiDexEnabled true
 
@@ -123,6 +123,8 @@ dependencies {
     implementation 'com.github.cachapa:ExpandableLayout:2.9.2'
 
     implementation 'com.github.mhmdVoj:SwipeList:0.1'
+
+    implementation 'androidx.biometric:biometric:1.2.0-alpha03'
 
 //    implementation "com.github.kojofosu:Quantitizer:1.5.0"
 

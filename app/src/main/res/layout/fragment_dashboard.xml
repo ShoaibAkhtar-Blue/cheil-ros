@@ -375,7 +375,7 @@
                         android:horizontalSpacing="10dp"
                         android:numColumns="auto_fit"
                         android:stretchMode="columnWidth"
-                        android:verticalSpacing="10dp" >
+                        android:verticalSpacing="10dp">
 
 
                     </GridView>
@@ -450,7 +450,7 @@
                             android:orientation="vertical"
                             android:padding="16dp">
 
-                            <com.github.mikephil.charting.charts.BarChart
+                            <com.github.mikephil.charting.charts.CombinedChart
                                 android:id="@+id/chartDailyStatusTwo"
                                 android:layout_width="match_parent"
                                 android:layout_height="200dp" />

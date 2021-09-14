@@ -24,6 +24,7 @@ import com.example.cheilros.adapters.TaskAssignedAdapter
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.models.*
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
@@ -228,10 +229,6 @@ class DashboardFragment : BaseFragment() {
         val distanceInMeters: Float = myLocation.distanceTo(storeLocation)
         println("distanceInMeters: ${distanceInMeters}")*/
 
-
-
-
-
         cvCoverage.setOnClickListener {
             findNavController().navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
         }
@@ -417,14 +414,15 @@ class DashboardFragment : BaseFragment() {
                 val apiData = gson.fromJson(body, DashboardBarChartModel::class.java)
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
-                        setupCombinedCart(apiData.data)
+                        setupCombinedCart(chartDailyStatusThree, apiData.data)
                         val data = createChartData(apiData.data)
                         configureChartAppearance(apiData.data, chartDailyStatus)
                         data?.let { prepareChartData(it, chartDailyStatus) }
 
                         if(team_type == "7"){
-                            configureChartAppearance(apiData.data, chartDailyStatusTwo)
-                            data?.let { prepareChartData(it, chartDailyStatusTwo) }
+                            setupCombinedCart(chartDailyStatusTwo, apiData.data)
+                            /*configureChartAppearance(apiData.data, chartDailyStatusTwo)
+                            data?.let { prepareChartData(it, chartDailyStatusTwo) }*/
                         }
                     })
                 }else{
@@ -435,7 +433,6 @@ class DashboardFragment : BaseFragment() {
                                 .setMessage("Data not fetched.")
                                 .sneakWarning()
                         }
-                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
                 }
             }
@@ -668,16 +665,19 @@ class DashboardFragment : BaseFragment() {
         return BarData(dataSets)
     }
 
-    private fun setupCombinedCart(data: List<DashboardBarChartData>) {
-        chartDailyStatusThree.description.isEnabled = false
-        chartDailyStatusThree.setBackgroundColor(Color.WHITE)
-        chartDailyStatusThree.setDrawGridBackground(false)
-        chartDailyStatusThree.setDrawBarShadow(false)
-        chartDailyStatusThree.isHighlightFullBarEnabled = false
-        chartDailyStatusThree.setTouchEnabled(false)
-        chartDailyStatusThree.isDragEnabled = false
-        chartDailyStatusThree.setScaleEnabled(false)
-        chartDailyStatusThree.setPinchZoom(false)
+    private fun setupCombinedCart(
+        combined_chart: CombinedChart,
+        data: List<DashboardBarChartData>
+    ) {
+        combined_chart.description.isEnabled = false
+        combined_chart.setBackgroundColor(Color.WHITE)
+        combined_chart.setDrawGridBackground(false)
+        combined_chart.setDrawBarShadow(false)
+        combined_chart.isHighlightFullBarEnabled = false
+        combined_chart.setTouchEnabled(false)
+        combined_chart.isDragEnabled = false
+        combined_chart.setScaleEnabled(false)
+        combined_chart.setPinchZoom(false)
 
 
         // draw bars behind lines
@@ -687,26 +687,26 @@ class DashboardFragment : BaseFragment() {
             )
         )*/
 
-        val l: Legend = chartDailyStatusThree.getLegend()
+        val l: Legend = combined_chart.getLegend()
         l.isWordWrapEnabled = true
         l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
         l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
         l.orientation = Legend.LegendOrientation.HORIZONTAL
         l.setDrawInside(false)
 
-        val rightAxis: YAxis = chartDailyStatusThree.axisRight
+        val rightAxis: YAxis = combined_chart.axisRight
         rightAxis.setDrawGridLines(false)
         rightAxis.axisMinimum = 0f // this replaces setStartAtZero(true)
 
 
-        val leftAxis: YAxis = chartDailyStatusThree.axisLeft
+        val leftAxis: YAxis = combined_chart.axisLeft
         leftAxis.setDrawGridLines(false)
         leftAxis.axisMinimum = 0f // this replaces setStartAtZero(true)
 
 
 
 
-        val xAxis: XAxis = chartDailyStatusThree.xAxis
+        val xAxis: XAxis = combined_chart.xAxis
         xAxis.position = XAxisPosition.BOTTOM
         xAxis.axisMinimum = 0f
         xAxis.granularity = 1f
@@ -723,7 +723,7 @@ class DashboardFragment : BaseFragment() {
                 xAxisLabels.add(label.TrendDate)*/
             i++
         }
-        chartDailyStatusThree.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisLabels)
+        combined_chart.xAxis.valueFormatter = IndexAxisValueFormatter(xAxisLabels)
 
         //xAxis.setValueFormatter(IAxisValueFormatter { value, axis -> months.get(value.toInt() % months.length) } as ValueFormatter?)
 
@@ -735,8 +735,8 @@ class DashboardFragment : BaseFragment() {
 
         //xAxis.axisMaximum = chartData.xMax + 0.25f
 
-        chartDailyStatusThree.data = chartData
-        chartDailyStatusThree.invalidate()
+        combined_chart.data = chartData
+        combined_chart.invalidate()
     }
 
     private fun generateLineData(data: List<DashboardBarChartData>): LineData? {

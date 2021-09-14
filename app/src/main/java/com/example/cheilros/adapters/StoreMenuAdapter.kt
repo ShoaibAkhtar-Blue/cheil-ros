@@ -1,5 +1,6 @@
 package com.example.cheilros.adapters
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -12,6 +13,8 @@ import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.example.cheilros.R
 import com.example.cheilros.data.AppSetting
+import com.example.cheilros.helpers.CustomSharedPref
+import com.irozon.sneaker.Sneaker
 import kotlinx.android.synthetic.main.item_jpstatus.view.imgStatus
 import kotlinx.android.synthetic.main.item_jpstatus.view.txtLabel
 import kotlinx.android.synthetic.main.item_storemenu.view.*
@@ -19,13 +22,15 @@ import kotlinx.android.synthetic.main.item_storemenu.view.*
 class StoreMenuAdapter(
     private val context: Context,
     private val ListData: List<AppSetting>,
-    private val arguments: Bundle?
+    private val arguments: Bundle?,
+    val settingData: List<AppSetting>
 ) : BaseAdapter() {
-
+    lateinit var CSP: CustomSharedPref
     private val mInflater: LayoutInflater
 
     init {
         mInflater = LayoutInflater.from(context)
+        CSP = CustomSharedPref(context)
     }
 
     override fun getCount(): Int {
@@ -59,61 +64,180 @@ class StoreMenuAdapter(
                 "StoreName" to arguments?.getString("StoreName")
             )
 
-            if (ListData[position].fixedLabelName.equals("StoreMenu_Checklist")) {
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_checklistCategoryFragment, bundle)
+            if (ListData[position].fixedLabelName == "StoreMenu_Checklist") {
+                if(CSP.getData("StoreMenu_Checklist").equals("Y")){
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_storeViewFragment_to_checklistCategoryFragment, bundle)
+                }else{
+                    (context as Activity).runOnUiThread {
+                        context?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Warning!!")
+                                .setMessage(settingData.filter { it.fixedLabelName == "ScreenAccessPermission_Msg" }[0].labelName)
+                                .sneakWarning()
+                        }
+                    }
+                }
             }
 
-            if (ListData[position].fixedLabelName.equals("StoreMenu_Investment")) {
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_investmentFragment, bundle)
+            if (ListData[position].fixedLabelName == "StoreMenu_Investment") {
+                if(CSP.getData("StoreMenu_Investment").equals("Y")){
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_storeViewFragment_to_investmentFragment, bundle)
+                }else{
+                    (context as Activity).runOnUiThread {
+                        context?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Warning!!")
+                                .setMessage(settingData.filter { it.fixedLabelName == "ScreenAccessPermission_Msg" }[0].labelName)
+                                .sneakWarning()
+                        }
+                    }
+                }
             }
 
-            if (ListData[position].fixedLabelName.equals("StoreMenu_Activity")) {
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_activityFragment, bundle)
+            if (ListData[position].fixedLabelName == "StoreMenu_Activity") {
+                if(CSP.getData("StoreMenu_Activity").equals("Y")){
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_storeViewFragment_to_activityFragment, bundle)
+                }else{
+                    (context as Activity).runOnUiThread {
+                        context?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Warning!!")
+                                .setMessage(settingData.filter { it.fixedLabelName == "ScreenAccessPermission_Msg" }[0].labelName)
+                                .sneakWarning()
+                        }
+                    }
+                }
             }
 
-            if (ListData[position].fixedLabelName.equals("StoreMenu_Training")) {
-                /*Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_trainingFragment, bundle)*/
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_trainingNewFragment, bundle)
+            if (ListData[position].fixedLabelName == "StoreMenu_Training") {
+                if(CSP.getData("StoreMenu_Training").equals("Y")){
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_storeViewFragment_to_trainingNewFragment, bundle)
+                }else{
+                    (context as Activity).runOnUiThread {
+                        context?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Warning!!")
+                                .setMessage(settingData.filter { it.fixedLabelName == "ScreenAccessPermission_Msg" }[0].labelName)
+                                .sneakWarning()
+                        }
+                    }
+                }
             }
 
-            if (ListData[position].fixedLabelName.equals("StoreMenu_Ticket")) {
-                /*Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_trainingFragment, bundle)*/
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_installationFragment, bundle)
-                /*Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_installationMainFragment, bundle)*/
+            if (ListData[position].fixedLabelName == "StoreMenu_Ticket") {
+                if(CSP.getData("StoreMenu_Ticket").equals("Y")){
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_storeViewFragment_to_installationFragment, bundle)
+                }else{
+                    (context as Activity).runOnUiThread {
+                        context?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Warning!!")
+                                .setMessage(settingData.filter { it.fixedLabelName == "ScreenAccessPermission_Msg" }[0].labelName)
+                                .sneakWarning()
+                        }
+                    }
+                }
             }
-            if (ListData[position].fixedLabelName.equals("StoreMenu_Installation")) {
-                /*Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_taskDeploymentFragment, bundle)*/
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_installationMainFragment, bundle)
+
+            if (ListData[position].fixedLabelName == "StoreMenu_Installation") {
+                if(CSP.getData("StoreMenu_Installation").equals("Y")){
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_storeViewFragment_to_installationMainFragment, bundle)
+                }else{
+                    (context as Activity).runOnUiThread {
+                        context?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Warning!!")
+                                .setMessage(settingData.filter { it.fixedLabelName == "ScreenAccessPermission_Msg" }[0].labelName)
+                                .sneakWarning()
+                        }
+                    }
+                }
             }
-            if (ListData[position].fixedLabelName.equals("StoreMenu_ModelCount")) {
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_displayCountFragment, bundle)
+
+            if (ListData[position].fixedLabelName == "StoreMenu_ModelCount") {
+                if(CSP.getData("StoreMenu_ModelCount").equals("Y")){
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_storeViewFragment_to_displayCountFragment, bundle)
+                }else{
+                    (context as Activity).runOnUiThread {
+                        context?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Warning!!")
+                                .setMessage(settingData.filter { it.fixedLabelName == "ScreenAccessPermission_Msg" }[0].labelName)
+                                .sneakWarning()
+                        }
+                    }
+                }
             }
-            if (ListData[position].fixedLabelName.equals("StoreMenu_PricePromotions")) {
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_priceFragment, bundle)
+
+            if (ListData[position].fixedLabelName == "StoreMenu_PricePromotions") {
+                if(CSP.getData("StoreMenu_PricePromotions").equals("Y")){
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_storeViewFragment_to_priceFragment, bundle)
+                }else{
+                    (context as Activity).runOnUiThread {
+                        context?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Warning!!")
+                                .setMessage(settingData.filter { it.fixedLabelName == "ScreenAccessPermission_Msg" }[0].labelName)
+                                .sneakWarning()
+                        }
+                    }
+                }
             }
+
             if (ListData[position].fixedLabelName == "StoreMenu_DailySales") {
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_salesFragment, bundle)
+                if(CSP.getData("StoreMenu_DailySales").equals("Y")){
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_storeViewFragment_to_salesFragment, bundle)
+                }else{
+                    (context as Activity).runOnUiThread {
+                        context?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Warning!!")
+                                .setMessage(settingData.filter { it.fixedLabelName == "ScreenAccessPermission_Msg" }[0].labelName)
+                                .sneakWarning()
+                        }
+                    }
+                }
             }
+
             if (ListData[position].fixedLabelName == "StoreMenu_Campaign") {
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_storePicturesFragment, bundle)
+                if(CSP.getData("StoreMenu_Campaign").equals("Y")){
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_storeViewFragment_to_storePicturesFragment, bundle)
+                }else{
+                    (context as Activity).runOnUiThread {
+                        context?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Warning!!")
+                                .setMessage(settingData.filter { it.fixedLabelName == "ScreenAccessPermission_Msg" }[0].labelName)
+                                .sneakWarning()
+                        }
+                    }
+                }
             }
+
             if (ListData[position].fixedLabelName == "StoreMenu_DailyStock") {
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_storeViewFragment_to_stockFragment, bundle)
+                if(CSP.getData("StoreMenu_DailyStock").equals("Y")){
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_storeViewFragment_to_stockFragment, bundle)
+                }else{
+                    (context as Activity).runOnUiThread {
+                        context?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Warning!!")
+                                .setMessage(settingData.filter { it.fixedLabelName == "ScreenAccessPermission_Msg" }[0].labelName)
+                                .sneakWarning()
+                        }
+                    }
+                }
             }
         }
 

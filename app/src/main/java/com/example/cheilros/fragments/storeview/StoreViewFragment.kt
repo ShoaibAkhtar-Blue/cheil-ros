@@ -93,7 +93,8 @@ class StoreViewFragment : BaseFragment() {
         storemenuAdapter = StoreMenuAdapter(
             requireContext(),
             settingData.filter { it.screenName == "StoreView" }.sortedBy { it.labelID },
-            arguments
+            arguments,
+            settingData
         )
         rvStoreMenu!!.adapter = storemenuAdapter
 

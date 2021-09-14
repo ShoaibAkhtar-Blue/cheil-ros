@@ -148,6 +148,7 @@ class BaseUrlFragment : Fragment() {
 
 
     fun fetchData(url: String) {
+        mAppSettingViewModel.nukeTable()
         println(url)
         val request = Request.Builder()
                 .url(url)
