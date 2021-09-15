@@ -246,10 +246,19 @@ class DashboardFragment : BaseFragment() {
         val currentDateAndTime: String = simpleDateFormat.format(Date())
 
         try{
-            if(team_type != "7")
-                fetchTaskAssignedData("${CSP.getData("base_url")}/Dashboard.asmx/TaskAssigned?TeamMemberID=${CSP.getData("user_id")}&Status=1")
+            if(team_type != "7") {
+                fetchTaskAssignedData(
+                    "${CSP.getData("base_url")}/Dashboard.asmx/TaskAssigned?TeamMemberID=${
+                        CSP.getData(
+                            "user_id"
+                        )
+                    }&Status=1"
+                )
+            }else{
+                fetchChartData(chartDailyStatusTwo, "${CSP.getData("base_url")}/Dashboard.asmx/TeamMemberPerformance?TeamMemberID=${CSP.getData("user_id")}&PerformanceMonth=0&PerformanceYear=0")
+            }
 
-            fetchChartData("${CSP.getData("base_url")}/Dashboard.asmx/DailyTrend?TeamMemberID=${CSP.getData("user_id")}&TrendDate=${currentDateAndTime}")
+            fetchChartData(chartDailyStatusThree, "${CSP.getData("base_url")}/Dashboard.asmx/DailyTrend?TeamMemberID=${CSP.getData("user_id")}&TrendDate=${currentDateAndTime}")
         }catch (ex:Exception){
 
         }
@@ -386,7 +395,7 @@ class DashboardFragment : BaseFragment() {
         })
     }
 
-    fun fetchChartData(url: String){
+    fun fetchChartData(combined_chart: CombinedChart, url: String){
         println(url)
         val client = OkHttpClient()
 
@@ -414,13 +423,13 @@ class DashboardFragment : BaseFragment() {
                 val apiData = gson.fromJson(body, DashboardBarChartModel::class.java)
                 if (apiData.status == 200) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
-                        setupCombinedCart(chartDailyStatusThree, apiData.data)
+                        setupCombinedCart(combined_chart, apiData.data)
                         val data = createChartData(apiData.data)
                         configureChartAppearance(apiData.data, chartDailyStatus)
                         data?.let { prepareChartData(it, chartDailyStatus) }
 
                         if(team_type == "7"){
-                            setupCombinedCart(chartDailyStatusTwo, apiData.data)
+                            setupCombinedCart(combined_chart, apiData.data)
                             /*configureChartAppearance(apiData.data, chartDailyStatusTwo)
                             data?.let { prepareChartData(it, chartDailyStatusTwo) }*/
                         }

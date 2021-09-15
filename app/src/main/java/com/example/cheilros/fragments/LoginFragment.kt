@@ -1,6 +1,7 @@
 package com.example.cheilros.fragments
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -29,6 +30,7 @@ import com.example.cheilros.MainActivity
 import com.example.cheilros.R
 import com.example.cheilros.data.UserData
 import com.example.cheilros.data.UserPermission
+import com.example.cheilros.models.CheckInOutModel
 import com.example.cheilros.models.LoginUserPermission
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
@@ -191,8 +193,70 @@ class LoginFragment : BaseFragment() {
 
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
+
+                    val request = Request.Builder()
+                        .url("${CSP.getData("base_url")}/Webservice.asmx/LoginWithDeviceIMEIID?DeviceIMEIID=$userIMEI")
+                        .build()
+
+                    client.newCall(request).enqueue(object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+                            requireActivity().runOnUiThread(java.lang.Runnable {
+                                activity?.let { it1 ->
+                                    Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                        .setTitle("Error!!")
+                                        .setMessage(e.message.toString())
+                                        .sneakWarning()
+                                }
+                            })
+                        }
+
+                        override fun onResponse(call: Call, response: Response) {
+                            val body = response.body?.string()
+                            println(body)
+
+                            val gson = GsonBuilder().create()
+                            val apiData = gson.fromJson(body, LoginModel::class.java)
+                            println(apiData.status)
+                            if (apiData.status == 200) {
+                                println("TeamMemberID: ${apiData.data[0].TeamMemberID}")
+                                CSP.saveData("user_id", apiData.data[0].TeamMemberID.toString())
+                                CSP.saveData("team_type_id", apiData.data[0].TeamTypeID.toString())
+                                for (data in apiData.data) {
+                                    var userdata = UserData(
+                                        0,
+                                        data.TeamMemberID,
+                                        data.TeamTypeID,
+                                        data.TeamMemberName,
+                                        data.mySingleID,
+                                        data.Email,
+                                        data.DivisionID,
+                                        data.DivisionName,
+                                        "",
+                                        data.TeamTypeName,
+                                        data.RegionName,
+                                        data.MarketType
+                                    )
+                                    mUserDataViewModel.addUser(userdata)
+                                }
+
+                                fetchUserPermission("${CSP.getData("base_url")}/Webservice.asmx/TeamMemberPermissions?TeamMemberID=${apiData.data[0].TeamMemberID}")
+
+                            } else {
+                                requireActivity().runOnUiThread(java.lang.Runnable {
+                                    activity?.let { it1 ->
+                                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                            .setTitle("Invalid!!")
+                                            .setMessage("Your Credentials are wrong.")
+                                            .sneakWarning()
+                                    }
+                                })
+                            }
+                        }
+                    })
+
                     Toast.makeText(requireContext(), "Authentication Success", Toast.LENGTH_SHORT)
                         .show()
+
                     //startActivity(Intent(this@MainActivity,SecondActivity::class.java))
                 }
 
@@ -237,8 +301,6 @@ class LoginFragment : BaseFragment() {
                             .sneakWarning()
                 }
             }*/
-
-
         }
 
         btnForgot.setOnClickListener {
@@ -252,6 +314,7 @@ class LoginFragment : BaseFragment() {
     }
 
     fun fetchData(url: String) {
+        println(url)
         val request = Request.Builder()
             .url(url)
             .build()
