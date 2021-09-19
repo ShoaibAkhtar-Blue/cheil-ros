@@ -230,11 +230,13 @@ class DisplayCountDetailAdapter(
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val charSearch = constraint.toString()
+                val charSearch = constraint.toString().lowercase(Locale.ROOT)
+                println("charSearch: $charSearch")
                 if (charSearch.isEmpty()) {
                     filterList = itemList as ArrayList<DisplayCountViewData>
                 } else {
                     val resultList = ArrayList<DisplayCountViewData>()
+                    /*val resultList = ArrayList<DisplayCountViewData>()
                     for (row in itemList) {
                         if (row.ShortName.toLowerCase()
                                 .contains(constraint.toString().toLowerCase())
@@ -242,11 +244,19 @@ class DisplayCountDetailAdapter(
                             resultList.add(row)
                         }
                     }
+                    filterList = resultList*/
+                    filterList
+                        .filter {
+                            (it.ShortName.lowercase(Locale.ROOT).startsWith(charSearch!!))
+
+                        }
+                        .forEach { resultList.add(it) }
                     filterList = resultList
                 }
-                val filterResults = FilterResults()
+                return FilterResults().apply { values = filterList }
+                /*val filterResults = FilterResults()
                 filterResults.values = filterList
-                return filterResults
+                return filterResults*/
             }
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
