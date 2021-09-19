@@ -230,13 +230,13 @@ class DisplayCountDetailAdapter(
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val charSearch = constraint.toString().lowercase(Locale.ROOT)
+                val charSearch = constraint.toString().uppercase(Locale.ROOT)
                 println("charSearch: $charSearch")
-                if (charSearch.isEmpty()) {
+                /*if (charSearch.isEmpty()) {
                     filterList = itemList as ArrayList<DisplayCountViewData>
                 } else {
                     val resultList = ArrayList<DisplayCountViewData>()
-                    /*val resultList = ArrayList<DisplayCountViewData>()
+                    *//*val resultList = ArrayList<DisplayCountViewData>()
                     for (row in itemList) {
                         if (row.ShortName.toLowerCase()
                                 .contains(constraint.toString().toLowerCase())
@@ -244,22 +244,45 @@ class DisplayCountDetailAdapter(
                             resultList.add(row)
                         }
                     }
-                    filterList = resultList*/
-                    filterList
+                    filterList = resultList*//*
+                    itemList
                         .filter {
-                            (it.ShortName.lowercase(Locale.ROOT).startsWith(charSearch!!))
+                            (it.ShortName.uppercase(Locale.ROOT).contains(charSearch!!, true))
 
                         }
-                        .forEach { resultList.add(it) }
+                        .forEach {
+                            println("resultList: ${it.ShortName}")
+                            resultList.add(it)
+                        }
                     filterList = resultList
                 }
-                return FilterResults().apply { values = filterList }
+                return FilterResults().apply { values = filterList }*/
                 /*val filterResults = FilterResults()
                 filterResults.values = filterList
                 return filterResults*/
+                val filteredList = ArrayList<DisplayCountViewData>()
+                if (charSearch.isEmpty()) filterList =
+                    itemList as ArrayList<DisplayCountViewData> else {
+
+                    itemList
+                        .filter {
+                            (it.ShortName.uppercase(Locale.ROOT).contains(charSearch!!, true))
+                        }
+                        .forEach {
+                            if (it.ShortName.toLowerCase()
+                                    .contains(constraint.toString().toLowerCase())
+                            ) {
+                                filteredList.add(it)
+                            }
+                        }
+                    filterList = filteredList
+
+                }
+                return FilterResults().apply { values = filteredList }
             }
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                println("filterList ${filterList.size}")
                 filterList = results?.values as ArrayList<DisplayCountViewData>
                 notifyDataSetChanged()
             }
