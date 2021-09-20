@@ -86,7 +86,7 @@ class SalesDetailAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtNum.text = (position + 1).toString()
-        holder.txtBrand.text = itemList[position].ShortName
+        holder.txtBrand.text = filterList[position].ShortName
 
         holder.onTextUpdated = { text ->
             val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
@@ -96,7 +96,7 @@ class SalesDetailAdapter(
                     println("salesCountData: null")
                     salesData.add(
                         SalesJSONData(
-                            itemList[position].ProductID,
+                            filterList[position].ProductID,
                             arguments?.getInt("StoreID"),
                             text,
                             holder.txtSalesValue.text.toString(),
@@ -106,12 +106,12 @@ class SalesDetailAdapter(
                     )
                 } else {
                     val salesSize =
-                        salesData.filter { it.ProductID == itemList[position].ProductID }.size
+                        salesData.filter { it.ProductID == filterList[position].ProductID }.size
                     println(salesSize)
                     if (salesSize == 0) {
                         salesData.add(
                             SalesJSONData(
-                                itemList[position].ProductID,
+                                filterList[position].ProductID,
                                 arguments?.getInt("StoreID"),
                                 text,
                                 holder.txtSalesValue.text.toString(),
@@ -121,10 +121,10 @@ class SalesDetailAdapter(
                         )
                     } else {
                         val salesIndex =
-                            salesData.indexOf(salesData.find { it.ProductID == itemList[position].ProductID })
+                            salesData.indexOf(salesData.find { it.ProductID == filterList[position].ProductID })
                         salesData[salesIndex] =
                             SalesJSONData(
-                                itemList[position].ProductID,
+                                filterList[position].ProductID,
                                 arguments?.getInt("StoreID"),
                                 text,
                                 holder.txtSalesValue.text.toString(),
@@ -146,7 +146,7 @@ class SalesDetailAdapter(
                     println("salesCountData: null")
                     salesData.add(
                         SalesJSONData(
-                            itemList[position].ProductID,
+                            filterList[position].ProductID,
                             arguments?.getInt("StoreID"),
                             holder.txtSaleQuantity.text.toString(),
                             text,
@@ -156,12 +156,12 @@ class SalesDetailAdapter(
                     )
                 } else {
                     val salesSize =
-                        salesData.filter { it.ProductID == itemList[position].ProductID }.size
+                        salesData.filter { it.ProductID == filterList[position].ProductID }.size
                     println(salesSize)
                     if (salesSize == 0) {
                         salesData.add(
                             SalesJSONData(
-                                itemList[position].ProductID,
+                                filterList[position].ProductID,
                                 arguments?.getInt("StoreID"),
                                 holder.txtSaleQuantity.text.toString(),
                                 text,
@@ -171,10 +171,10 @@ class SalesDetailAdapter(
                         )
                     } else {
                         val salesIndex =
-                            salesData.indexOf(salesData.find { it.ProductID == itemList[position].ProductID })
+                            salesData.indexOf(salesData.find { it.ProductID == filterList[position].ProductID })
                         salesData[salesIndex] =
                             SalesJSONData(
-                                itemList[position].ProductID,
+                                filterList[position].ProductID,
                                 arguments?.getInt("StoreID"),
                                 holder.txtSaleQuantity.text.toString(),
                                 text,
@@ -188,8 +188,8 @@ class SalesDetailAdapter(
                 /*updateItem(
                     position,
                     DisplayCountProductsData(
-                        itemList[position].ProductID,
-                        itemList[position].ShortName,
+                        filterList[position].ProductID,
+                        filterList[position].ShortName,
                         text.toInt()
                     )
                 )*/
@@ -199,8 +199,8 @@ class SalesDetailAdapter(
             }
         }
 
-        holder.txtSaleQuantity.setText(itemList[position].SaleQuantity.toString())
-        holder.txtSalesValue.setText(itemList[position].SaleValue.toString())
+        holder.txtSaleQuantity.setText(filterList[position].SaleQuantity.toString())
+        holder.txtSalesValue.setText(filterList[position].SaleValue.toString())
 
         fragment.btnSubmit.setOnClickListener {
 
@@ -286,8 +286,8 @@ class SalesDetailAdapter(
     }
 
     /*fun updateItem(position: Int, item: DisplayCountProductsData) {
-        itemList[position] = item
-        //itemList[position] = item
+        filterList[position] = item
+        //filterList[position] = item
         //notifyDataSetChanged()
     }*/
 }

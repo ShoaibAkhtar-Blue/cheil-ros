@@ -3,9 +3,11 @@ package com.example.cheilros.fragments.storeview
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
@@ -16,6 +18,7 @@ import com.example.cheilros.models.*
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
+import kotlinx.android.synthetic.main.activity_new_dashboard.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
 import kotlinx.android.synthetic.main.fragment_price_detail.*
@@ -107,6 +110,24 @@ class PriceDetailFragment : BaseFragment() {
             val dialog: AlertDialog = builder.create()
             dialog.show()
         }
+
+        requireActivity().toolbar_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            android.widget.SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(qString: String): Boolean {
+                try {
+                    recylcerAdapter?.filter?.filter(qString)
+                }catch (ex: Exception){
+                    Log.e("Error_", ex.message.toString())
+                }
+
+                return true
+            }
+            override fun onQueryTextSubmit(qString: String): Boolean {
+
+                return true
+            }
+        })
     }
 
     override fun onResume() {

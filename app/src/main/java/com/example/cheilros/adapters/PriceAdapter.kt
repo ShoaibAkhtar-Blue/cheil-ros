@@ -23,6 +23,7 @@ class PriceAdapter(
     val context: Context,
     val itemList: List<PriceData>,
     val StoreID: Int?,
+    val StoreName: String?,
     val settingData: List<AppSetting>
 ) : RecyclerView.Adapter<PriceAdapter.ViewHolder>() {
 
@@ -116,10 +117,11 @@ class PriceAdapter(
                             println("${itemList[position].BrandID}-${productName}-${productID}-${StoreID}")
                             val bundle = bundleOf(
                                 "StoreID" to StoreID,
+                                "StoreName" to StoreName,
                                 "BrandName" to itemList[position].BrandName,
                                 "BrandID" to itemList[position].BrandID,
                                 "ProductCategoryID" to productID,
-                                "ProductCategory" to productName.toString()
+                                "ProductCategory" to productName
                             )
                             Navigation.findNavController(it)
                                 .navigate(R.id.action_priceFragment_to_priceDetailFragment, bundle)

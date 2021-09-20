@@ -271,48 +271,6 @@ class DisplayCountDetailFragment : BaseFragment() {
                             }
                         }
 
-                        /*object : SwipeListHelper(requireContext(), rvDisplayCountDetail, 250) {
-                            override fun instantiateMyButton(
-                                viewHolder: RecyclerView.ViewHolder,
-                                buffer: MutableList<ButtonSwipe>
-                            ) {
-                                val buttonSwipe = ButtonSwipe(
-                                    requireContext(),
-                                    "View",
-                                    R.drawable.ic_baseline_view,
-                                    0,
-                                    Color.parseColor("#DBA40E")
-                                ) { recylcerAdapter.allBarcodes(viewHolder.adapterPosition) }
-                                val buttonSwipeIcon1 = ButtonSwipe(
-                                    requireContext(),
-                                    "Input",
-                                    R.drawable.ic_baseline_edit_24,
-                                    0,
-                                    Color.parseColor("#2F5233")
-                                ) { recylcerAdapter.inputBarcode(viewHolder.adapterPosition) }
-                                val buttonSwipeIcon = ButtonSwipe(
-                                    requireContext(),
-                                    "Scan",
-                                    R.drawable.barcode2,
-                                    0,
-                                    Color.parseColor("#1A5653")
-                                ) {
-                                    recylcerAdapter.barCodeScan(viewHolder.adapterPosition)
-                                }
-                                buffer.add(buttonSwipe)
-
-
-                                if (recylcerAdapter.itemList[viewHolder.adapterPosition].isBarCodeEnabled == "Y") {
-                                    buffer.add(buttonSwipeIcon1)
-                                    buffer.add(buttonSwipeIcon)
-                                }
-
-                                *//*if (CSP.getData("Display_BarCode").equals("Y"))
-                                    buffer.add(buttonSwipeIcon)*//*
-                            }
-                        }*/
-
-
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
                 } else {

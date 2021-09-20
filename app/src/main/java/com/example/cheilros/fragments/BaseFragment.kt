@@ -87,7 +87,7 @@ open class BaseFragment : Fragment() {
         activity?.toolbar_search?.onActionViewCollapsed();
         //endregion
 
-        println(fragmentLabel)
+        println("fragmentLabel: $fragmentLabel")
         if (fragmentLabel == "dashboard") {
             configureToolbar(settingData.filter { it.fixedLabelName == "Dashbord_Title" }
                 .get(0).labelName)
@@ -111,9 +111,7 @@ open class BaseFragment : Fragment() {
         } else if (fragmentLabel == "display_count_detail") {
             arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
             //configureToolbar("Display", true, true)
-        } else if (fragmentLabel == "price_detail") {
-           // arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
-        }else if (fragmentLabel == "task_deployment" || fragmentLabel == "activity" || fragmentLabel == "installation" || fragmentLabel == "installation_main") {
+        }else if (fragmentLabel == "task_deployment" || fragmentLabel == "activity" || fragmentLabel == "installation" || fragmentLabel == "installation_main" || fragmentLabel == "price_detail" || fragmentLabel == "sales_detail"|| fragmentLabel == "stock_detail") {
             arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
         } else if (fragmentLabel == "training" || fragmentLabel == "installation_main" || fragmentLabel == "activity_category" || fragmentLabel == "store_view" || fragmentLabel == "activity" || fragmentLabel == "task_deployment" || fragmentLabel == "display_count" || fragmentLabel == "installation") {
             val callback =

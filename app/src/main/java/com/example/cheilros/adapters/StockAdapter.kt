@@ -15,13 +15,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.helpers.CustomSharedPref
-import com.example.cheilros.models.SalesData
 import com.example.cheilros.models.StockData
 
 class StockAdapter(
     val context: Context,
     val itemList: List<StockData>,
     val StoreID: Int?,
+    val StoreName: String?,
     val settingData: List<AppSetting>
 ) : RecyclerView.Adapter<StockAdapter.ViewHolder>() {
 
@@ -122,6 +122,7 @@ class StockAdapter(
                             println("${itemList[position].BrandID}-${productName}-${productID}-${StoreID}")
                             val bundle = bundleOf(
                                 "StoreID" to StoreID,
+                                "StoreName" to StoreName,
                                 "BrandID" to itemList[position].BrandID,
                                 "BrandName" to itemList[position].BrandName,
                                 "ProductCategoryName" to productName,

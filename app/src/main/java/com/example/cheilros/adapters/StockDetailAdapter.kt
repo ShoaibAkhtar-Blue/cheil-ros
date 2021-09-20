@@ -90,7 +90,7 @@ class StockDetailAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtNum.text = (position + 1).toString()
-        holder.txtBrand.text = itemList[position].ShortName
+        holder.txtBrand.text = filterList[position].ShortName
 
         holder.onTextUpdated = { text ->
             val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
@@ -100,7 +100,7 @@ class StockDetailAdapter(
                     println("salesCountData: null")
                     salesData.add(
                         StockJSONData(
-                            itemList[position].ProductID,
+                            filterList[position].ProductID,
                             arguments?.getInt("StoreID"),
                             text,
                             holder.txtSalesValue.text.toString(),
@@ -110,12 +110,12 @@ class StockDetailAdapter(
                     )
                 } else {
                     val salesSize =
-                        salesData.filter { it.ProductID == itemList[position].ProductID }.size
+                        salesData.filter { it.ProductID == filterList[position].ProductID }.size
                     println(salesSize)
                     if (salesSize == 0) {
                         salesData.add(
                             StockJSONData(
-                                itemList[position].ProductID,
+                                filterList[position].ProductID,
                                 arguments?.getInt("StoreID"),
                                 text,
                                 holder.txtSalesValue.text.toString(),
@@ -125,10 +125,10 @@ class StockDetailAdapter(
                         )
                     } else {
                         val salesIndex =
-                            salesData.indexOf(salesData.find { it.ProductID == itemList[position].ProductID })
+                            salesData.indexOf(salesData.find { it.ProductID == filterList[position].ProductID })
                         salesData[salesIndex] =
                             StockJSONData(
-                                itemList[position].ProductID,
+                                filterList[position].ProductID,
                                 arguments?.getInt("StoreID"),
                                 text,
                                 holder.txtSalesValue.text.toString(),
@@ -150,7 +150,7 @@ class StockDetailAdapter(
                     println("salesCountData: null")
                     salesData.add(
                         StockJSONData(
-                            itemList[position].ProductID,
+                            filterList[position].ProductID,
                             arguments?.getInt("StoreID"),
                             holder.txtSaleQuantity.text.toString(),
                             text,
@@ -160,12 +160,12 @@ class StockDetailAdapter(
                     )
                 } else {
                     val salesSize =
-                        salesData.filter { it.ProductID == itemList[position].ProductID }.size
+                        salesData.filter { it.ProductID == filterList[position].ProductID }.size
                     println(salesSize)
                     if (salesSize == 0) {
                         salesData.add(
                             StockJSONData(
-                                itemList[position].ProductID,
+                                filterList[position].ProductID,
                                 arguments?.getInt("StoreID"),
                                 holder.txtSaleQuantity.text.toString(),
                                 text,
@@ -175,10 +175,10 @@ class StockDetailAdapter(
                         )
                     } else {
                         val salesIndex =
-                            salesData.indexOf(salesData.find { it.ProductID == itemList[position].ProductID })
+                            salesData.indexOf(salesData.find { it.ProductID == filterList[position].ProductID })
                         salesData[salesIndex] =
                             StockJSONData(
-                                itemList[position].ProductID,
+                                filterList[position].ProductID,
                                 arguments?.getInt("StoreID"),
                                 holder.txtSaleQuantity.text.toString(),
                                 text,
@@ -192,8 +192,8 @@ class StockDetailAdapter(
                 /*updateItem(
                     position,
                     DisplayCountProductsData(
-                        itemList[position].ProductID,
-                        itemList[position].ShortName,
+                        filterList[position].ProductID,
+                        filterList[position].ShortName,
                         text.toInt()
                     )
                 )*/
@@ -203,8 +203,8 @@ class StockDetailAdapter(
             }
         }
 
-        holder.txtSaleQuantity.setText(itemList[position].StockStatus.toString())
-        holder.txtSalesValue.setText(itemList[position].Field.toString())
+        holder.txtSaleQuantity.setText(filterList[position].StockStatus.toString())
+        holder.txtSalesValue.setText(filterList[position].Field.toString())
 
         if(settingData.filter { it.fixedLabelName == "Stock_Column2" }[0].labelName == "")
             holder.txtSalesValue.visibility = View.GONE
@@ -263,6 +263,7 @@ class StockDetailAdapter(
     }
 
     override fun getItemViewType(position: Int): Int = position
+
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {

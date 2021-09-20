@@ -157,7 +157,7 @@ class SalesFragment : BaseFragment() {
                         rvSales.setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(requireContext())
                         rvSales.layoutManager = layoutManager
-                        recylcerAdapter = SalesAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"), settingData)
+                        recylcerAdapter = SalesAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"), arguments?.getString("StoreName"), settingData)
                         rvSales.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })

@@ -323,9 +323,6 @@ class MyCoverageFragment : BaseFragment() {
         /*etSearch.doOnTextChanged { text, start, before, count ->
             recylcerAdapter?.filter?.filter(text)
         }*/
-
-
-
     }
 
     fun reloadCoverage(){

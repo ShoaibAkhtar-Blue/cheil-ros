@@ -214,7 +214,7 @@ class DashboardFragment : BaseFragment() {
         //CSP.saveData("Asset_Parameters", "N")
         //CSP.saveData("CheckIn_Camera", "N")
         //CSP.saveData("CheckOut_Camera", "N")
-        //CSP.saveData("LocationLimit", "N")
+        //CSP.saveData("LocationLimit", "20000000000000000000000000000000000000000000000000000000000")
 
         /*val myLocation = Location("")
 
@@ -265,7 +265,7 @@ class DashboardFragment : BaseFragment() {
 
         //setupCombinedCart()
 
-        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
 
     }
 
@@ -433,6 +433,7 @@ class DashboardFragment : BaseFragment() {
                             /*configureChartAppearance(apiData.data, chartDailyStatusTwo)
                             data?.let { prepareChartData(it, chartDailyStatusTwo) }*/
                         }
+                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
                 }else{
                     requireActivity().runOnUiThread(java.lang.Runnable {

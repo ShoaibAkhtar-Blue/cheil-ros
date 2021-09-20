@@ -94,75 +94,18 @@ class DisplayCountDetailAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.txtNum.text = (position + 1).toString()
-        holder.txtBrand.text = itemList[position].ShortName
+        holder.txtBrand.text = filterList[position].ShortName
 
         holder.btnBarCode.visibility = View.GONE
         holder.btnAllBarCode.visibility = View.GONE
 
-        /*if (CSP.getData("Display_BarCode").equals("N")) {
-            holder.btnBarCode.visibility = View.GONE
-            holder.btnAllBarCode.visibility = View.GONE
-            // holder.qpAttend.visibility = View.GONE
-        } else {
-
-            //holder.txtAttend.visibility = View.GONE
+        if (filterList[position].isBarCodeEnabled == "Y") {
             holder.txtAttend.isEnabled = false
             holder.txtAttend.isFocusable = false
-        }*/
-
-        if (itemList[position].isBarCodeEnabled == "Y") {
-            holder.txtAttend.isEnabled = false
-            holder.txtAttend.isFocusable = false
-        }
-
-        holder.btnBarCode.setOnClickListener {
-//            Navigation.findNavController(it)
-//                .navigate(R.id.action_displayCountDetailFragment_to_barcodeFragment)
-            /*CSP.saveData("dispProdID", filterList[position].ProductID.toString())
-            Navigation.findNavController(it)
-                .navigate(R.id.action_displayCountDetailFragment_to_barcodeActivity)*/
-        }
-
-        holder.btnAllBarCode.setOnClickListener {
-            /*if(!CSP.getData("ActivityDetail_BARCODE_SET").equals("")){
-                println("ActivityDetail_BARCODE_SET: ${CSP.getData("ActivityDetail_BARCODE_SET")}")
-                var savedBarcodes = CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.toTypedArray()
-                var savedBarcodes1 = savedBarcodes?.filter { it.contains("_${filterList[position].ProductID}") }
-                //var savedBarcodes = "abc, xyz"?.split(",").toTypedArray()
-
-                if (savedBarcodes1 != null) {
-                    if(savedBarcodes1.isNotEmpty()){
-                        val li = LayoutInflater.from(context)
-                        val promptsView: View = li.inflate(R.layout.dialog_barcode, null)
-
-                        val dialog = Dialog(context)
-                        dialog.setContentView(promptsView)
-                        dialog.setCancelable(false)
-                        dialog.setCanceledOnTouchOutside(true)
-
-                        dialog.rvBarcode.setHasFixedSize(true)
-                        layoutManagerBC = LinearLayoutManager(context)
-                        dialog.rvBarcode.layoutManager = layoutManagerBC
-                        recylcerAdapterBC = savedBarcodes1?.toMutableList()?.let { it1 ->
-                            BarcodeAdapter(context,
-                                it1, dialog)
-                        }!!
-                        dialog.rvBarcode.adapter = recylcerAdapterBC
-
-                        dialog.show()
-                    }
-                }
-
-            } else {
-                *//*Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
-                    .setTitle("Info!!")
-                    .setMessage("No Barcode Added to the session!")
-                    .sneakWarning()*//*
-            }*/
         }
 
         holder.onTextUpdated = { text ->
-            if (itemList[position].isBarCodeEnabled == "N")
+            if (filterList[position].isBarCodeEnabled == "N")
                 addDatainJsonObject(position, text)
         }
 
@@ -230,37 +173,29 @@ class DisplayCountDetailAdapter(
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val charSearch = constraint.toString().uppercase(Locale.ROOT)
+                val charSearch = constraint.toString()
                 println("charSearch: $charSearch")
-                /*if (charSearch.isEmpty()) {
+                if (charSearch.isEmpty()) {
                     filterList = itemList as ArrayList<DisplayCountViewData>
                 } else {
                     val resultList = ArrayList<DisplayCountViewData>()
-                    *//*val resultList = ArrayList<DisplayCountViewData>()
                     for (row in itemList) {
                         if (row.ShortName.toLowerCase()
                                 .contains(constraint.toString().toLowerCase())
                         ) {
+
                             resultList.add(row)
                         }
                     }
-                    filterList = resultList*//*
-                    itemList
-                        .filter {
-                            (it.ShortName.uppercase(Locale.ROOT).contains(charSearch!!, true))
 
-                        }
-                        .forEach {
-                            println("resultList: ${it.ShortName}")
-                            resultList.add(it)
-                        }
                     filterList = resultList
                 }
-                return FilterResults().apply { values = filterList }*/
-                /*val filterResults = FilterResults()
+                //return FilterResults().apply { values = filterList }
+
+                val filterResults = FilterResults()
                 filterResults.values = filterList
-                return filterResults*/
-                val filteredList = ArrayList<DisplayCountViewData>()
+                return filterResults
+                /*val filteredList = ArrayList<DisplayCountViewData>()
                 if (charSearch.isEmpty()) filterList =
                     itemList as ArrayList<DisplayCountViewData> else {
 
@@ -269,8 +204,8 @@ class DisplayCountDetailAdapter(
                             (it.ShortName.uppercase(Locale.ROOT).contains(charSearch!!, true))
                         }
                         .forEach {
-                            if (it.ShortName.toLowerCase()
-                                    .contains(constraint.toString().toLowerCase())
+                            if (it.ShortName.uppercase(Locale.ROOT)
+                                    .contains(constraint.toString().uppercase(Locale.ROOT))
                             ) {
                                 filteredList.add(it)
                             }
@@ -278,7 +213,7 @@ class DisplayCountDetailAdapter(
                     filterList = filteredList
 
                 }
-                return FilterResults().apply { values = filteredList }
+                return FilterResults().apply { values = filteredList }*/
             }
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
@@ -363,7 +298,7 @@ class DisplayCountDetailAdapter(
     }
 
     fun inputBarcode(position: Int) {
-        if(position != -1){
+        if (position != -1) {
             val li = LayoutInflater.from(context)
             val promptsView: View = li.inflate(R.layout.dialog_barcode_input, null)
 
@@ -375,7 +310,7 @@ class DisplayCountDetailAdapter(
             dialog.btnAccept.setOnClickListener {
                 val barInput = dialog.etInputBarcode.text.toString()
 
-                try{
+                try {
                     if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
                         CSP.saveData(
                             "ActivityDetail_BARCODE_SET",
@@ -400,7 +335,7 @@ class DisplayCountDetailAdapter(
                     }
 
                     addDatainJsonObject(position, barInput, true)
-                }catch (ex: Exception){
+                } catch (ex: Exception) {
                     Log.e("Error_", ex.message.toString())
                 }
                 dialog.dismiss()
@@ -418,47 +353,47 @@ class DisplayCountDetailAdapter(
                 println("investmentsCountData: null")
                 displayCountData.add(
                     DisplayCountJSONData(
-                        itemList[position].ProductID,
+                        filterList[position].ProductID,
                         arguments?.getInt("StoreID"),
                         text,
                         CSP.getData("user_id")?.toInt(),
-                        itemList[position].isBarCodeEnabled
+                        filterList[position].isBarCodeEnabled
                     )
                 )
             } else {
                 val displaySize =
-                    displayCountData.filter { it.ProductID == itemList[position].ProductID }.size
+                    displayCountData.filter { it.ProductID == filterList[position].ProductID }.size
                 println(displaySize)
                 if (displaySize == 0) {
                     displayCountData.add(
                         DisplayCountJSONData(
-                            itemList[position].ProductID,
+                            filterList[position].ProductID,
                             arguments?.getInt("StoreID"),
                             text,
                             CSP.getData("user_id")?.toInt(),
-                            itemList[position].isBarCodeEnabled
+                            filterList[position].isBarCodeEnabled
                         )
                     )
-                } else if(isMuliProdSerialAllow){
+                } else if (isMuliProdSerialAllow) {
                     displayCountData.add(
                         DisplayCountJSONData(
-                            itemList[position].ProductID,
+                            filterList[position].ProductID,
                             arguments?.getInt("StoreID"),
                             text,
                             CSP.getData("user_id")?.toInt(),
-                            itemList[position].isBarCodeEnabled
+                            filterList[position].isBarCodeEnabled
                         )
                     )
-                }else {
+                } else {
                     val displayIndex =
-                        displayCountData.indexOf(displayCountData.find { it.ProductID == itemList[position].ProductID })
+                        displayCountData.indexOf(displayCountData.find { it.ProductID == filterList[position].ProductID })
                     displayCountData[displayIndex] =
                         DisplayCountJSONData(
-                            itemList[position].ProductID,
+                            filterList[position].ProductID,
                             arguments?.getInt("StoreID"),
                             text,
                             CSP.getData("user_id")?.toInt(),
-                            itemList[position].isBarCodeEnabled
+                            filterList[position].isBarCodeEnabled
                         )
 
                 }

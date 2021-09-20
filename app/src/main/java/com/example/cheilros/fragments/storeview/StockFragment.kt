@@ -3,7 +3,6 @@ package com.example.cheilros.fragments.storeview
 import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +10,9 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
-import com.example.cheilros.adapters.SalesAdapter
-import com.example.cheilros.adapters.SalesCurrentWeekAdapter
 import com.example.cheilros.adapters.StockAdapter
 import com.example.cheilros.adapters.StockCurrentWeekAdapter
 import com.example.cheilros.fragments.BaseFragment
-import com.example.cheilros.models.SalesModel
 import com.example.cheilros.models.StockModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
@@ -27,7 +23,6 @@ import kotlinx.android.synthetic.main.fragment_sales.*
 import kotlinx.android.synthetic.main.fragment_sales.btnDate
 import kotlinx.android.synthetic.main.fragment_sales.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_sales.rvCurrentWeek
-import kotlinx.android.synthetic.main.fragment_sales.rvSales
 import kotlinx.android.synthetic.main.fragment_stock.*
 import okhttp3.*
 import java.io.IOException
@@ -160,7 +155,7 @@ class StockFragment : BaseFragment() {
                         rvStock.setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(requireContext())
                         rvStock.layoutManager = layoutManager
-                        recylcerAdapter = StockAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"), settingData)
+                        recylcerAdapter = StockAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"), arguments?.getString("StoreName"), settingData)
                         rvStock.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })

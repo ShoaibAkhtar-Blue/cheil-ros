@@ -431,9 +431,6 @@ class JPAdapter(
                     }
                 }
 
-
-
-
             }
         }
 

@@ -495,8 +495,8 @@
     <fragment
         android:id="@+id/priceFragment"
         android:name="com.example.cheilros.fragments.storeview.PriceFragment"
-        android:label="fragment_price"
-        tools:layout="@layout/fragment_price" >
+        android:label="price"
+        tools:layout="@layout/fragment_price">
         <action
             android:id="@+id/action_priceFragment_to_priceDetailFragment"
             app:destination="@id/priceDetailFragment" />
@@ -527,12 +527,15 @@
         <argument
             android:name="ProductCategory"
             app:argType="string" />
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/salesFragment"
         android:name="com.example.cheilros.fragments.storeview.SalesFragment"
-        android:label="fragment_sales"
-        tools:layout="@layout/fragment_sales" >
+        android:label="sales"
+        tools:layout="@layout/fragment_sales">
         <action
             android:id="@+id/action_salesFragment_to_salesDetailFragment"
             app:destination="@id/salesDetailFragment" />
@@ -540,25 +543,27 @@
     <fragment
         android:id="@+id/salesDetailFragment"
         android:name="com.example.cheilros.fragments.storeview.SalesDetailFragment"
-        android:label="fragment_sales_detail"
-        tools:layout="@layout/fragment_sales_detail" >
+        android:label="sales_detail"
+        tools:layout="@layout/fragment_sales_detail">
         <argument
             android:name="StoreID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="BrandID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="ProductCategoryID"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="BrandName"
             app:argType="string" />
         <argument
             android:name="ProductCategoryName"
+            app:argType="string" />
+        <argument android:name="StoreName"
             app:argType="string" />
     </fragment>
     <activity
@@ -597,8 +602,15 @@
     <fragment
         android:id="@+id/stockDetailFragment"
         android:name="com.example.cheilros.fragments.storeview.StockDetailFragment"
-        android:label="fragment_stock_detail"
-        tools:layout="@layout/fragment_stock_detail" />
+        android:label="stock_detail"
+        tools:layout="@layout/fragment_stock_detail" >
+        <argument
+            android:name="StoreName"
+            app:argType="string" />
+        <argument
+            android:name="StoreID"
+            app:argType="integer" />
+    </fragment>
     <fragment
         android:id="@+id/installationMainFragment"
         android:name="com.example.cheilros.fragments.storeview.InstallationMainFragment"

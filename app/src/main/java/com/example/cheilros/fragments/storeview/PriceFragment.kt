@@ -87,7 +87,7 @@ class PriceFragment : BaseFragment() {
                         rvPrice.setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(requireContext())
                         rvPrice.layoutManager = layoutManager
-                        recylcerAdapter = PriceAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"), settingData)
+                        recylcerAdapter = PriceAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"), arguments?.getString("StoreName"), settingData)
                         rvPrice.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })

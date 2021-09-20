@@ -21,6 +21,7 @@ class SalesAdapter(
     val context: Context,
     val itemList: List<SalesData>,
     val StoreID: Int?,
+    val StoreName: String?,
     val settingData: List<AppSetting>
 ) : RecyclerView.Adapter<SalesAdapter.ViewHolder>() {
 
@@ -141,6 +142,7 @@ class SalesAdapter(
                             println("${itemList[position].BrandID}-${productName}-${productID}-${StoreID}")
                             val bundle = bundleOf(
                                 "StoreID" to StoreID,
+                                "StoreName" to StoreName,
                                 "BrandID" to itemList[position].BrandID,
                                 "BrandName" to itemList[position].BrandName,
                                 "ProductCategoryName" to productName,

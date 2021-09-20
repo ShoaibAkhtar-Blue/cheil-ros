@@ -20,6 +20,7 @@ import com.example.cheilros.data.AppSetting
 import com.example.cheilros.data.UserData
 import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.helpers.CustomSharedPref
+import com.example.cheilros.models.MyCoverageData
 import com.example.cheilros.models.PriceDetailData
 import com.irozon.sneaker.Sneaker
 import kotlinx.android.synthetic.main.dialog_price_detail.*
@@ -40,7 +41,7 @@ class PriceDetailAdapter(
     val activity: NewDashboardActivity,
     val settingData: List<AppSetting>,
     val userData: List<UserData>
-) : RecyclerView.Adapter<PriceDetailAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<PriceDetailAdapter.ViewHolder>(), Filterable {
 
     lateinit var CSP: CustomSharedPref
 
@@ -48,6 +49,11 @@ class PriceDetailAdapter(
     lateinit var recylcerAdapterPA: CapturedPictureAdapter
 
     var capturedPicturesList: MutableList<String> = arrayListOf()
+    var filterList = ArrayList<PriceDetailData>()
+
+    init {
+        filterList = itemList as ArrayList<PriceDetailData>
+    }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         //var RLHeader: RelativeLayout = view.findViewById(R.id.RLHeader)
@@ -112,44 +118,44 @@ class PriceDetailAdapter(
             holder.LLInstallment.visibility = View.GONE
 
         holder.txtCount.text = (position + 1).toString()
-        holder.txtTitleHeader.text = itemList[position].ShortName //Todo: Add Category name too
+        holder.txtTitleHeader.text = filterList[position].ShortName //Todo: Add Category name too
 
-        if (itemList[position].Username != "0")
-            holder.txtUsername.text = itemList[position].Username
+        if (filterList[position].Username != "0")
+            holder.txtUsername.text = filterList[position].Username
         else
             holder.txtUsername.visibility = View.GONE
 
-        if (itemList[position].NetPrice != "0")
-            holder.etNetPrice.setText(itemList[position].NetPrice)
-        if (itemList[position].Price != "0")
-            holder.etPrice.setText(itemList[position].Price)
-        if (itemList[position].Promotion != "0")
-            holder.etPromotion.setText(itemList[position].Promotion)
-        if (itemList[position].Installment_3Month != "0")
-            holder.et3Month.setText(itemList[position].Installment_3Month)
-        if (itemList[position].Installment_6Month != "0")
-            holder.et6Month.setText(itemList[position].Installment_6Month)
-        if (itemList[position].Installment_12Month != "0")
-            holder.et12Month.setText(itemList[position].Installment_12Month)
-        println("${CSP.getData("base_url")}/PricesPictures/${itemList[position].PiceTagPictureID}")
+        if (filterList[position].NetPrice != "0")
+            holder.etNetPrice.setText(filterList[position].NetPrice)
+        if (filterList[position].Price != "0")
+            holder.etPrice.setText(filterList[position].Price)
+        if (filterList[position].Promotion != "0")
+            holder.etPromotion.setText(filterList[position].Promotion)
+        if (filterList[position].Installment_3Month != "0")
+            holder.et3Month.setText(filterList[position].Installment_3Month)
+        if (filterList[position].Installment_6Month != "0")
+            holder.et6Month.setText(filterList[position].Installment_6Month)
+        if (filterList[position].Installment_12Month != "0")
+            holder.et12Month.setText(filterList[position].Installment_12Month)
+        println("${CSP.getData("base_url")}/PricesPictures/${filterList[position].PiceTagPictureID}")
 
-        println("PiceTagPictureID: ${itemList[position].PiceTagPictureID}")
-        if (itemList[position].PiceTagPictureID != "0" && !itemList[position].PiceTagPictureID.contains(
+        println("PiceTagPictureID: ${filterList[position].PiceTagPictureID}")
+        if (filterList[position].PiceTagPictureID != "0" && !filterList[position].PiceTagPictureID.contains(
                 "/storage"
             )
         )
             Glide.with(context)
-                .load("${CSP.getData("base_url")}/PricesPictures/${itemList[position].PiceTagPictureID}")
+                .load("${CSP.getData("base_url")}/PricesPictures/${filterList[position].PiceTagPictureID}")
                 .into(holder.imgTag!!)
-        else if (itemList[position].PiceTagPictureID != "0")
+        else if (filterList[position].PiceTagPictureID != "0")
             Glide.with(context)
-                .load("${itemList[position].PiceTagPictureID}")
+                .load("${filterList[position].PiceTagPictureID}")
                 .into(holder.imgTag!!)
 
 
 
         if (CSP.getData("productid") != "") {
-            if (CSP.getData("productid") == itemList[position].ProductID.toString()) {
+            if (CSP.getData("productid") == filterList[position].ProductID.toString()) {
                 if (!CSP.getData("sess_gallery_img").equals(""))
                     Glide.with(context)
                         .load(CSP.getData("sess_gallery_img"))
@@ -174,7 +180,7 @@ class PriceDetailAdapter(
 
             builder.setPositiveButton("Camera") { dialog, which ->
                 CSP.saveData("fragName", "PriceDetail")
-                CSP.saveData("productid", itemList[position].ProductID.toString())
+                CSP.saveData("productid", filterList[position].ProductID.toString())
                 Navigation.findNavController(it)
                     .navigate(R.id.action_priceDetailFragment_to_cameraActivity)
             }
@@ -236,7 +242,7 @@ class PriceDetailAdapter(
                 val requestBody = builder.build()
 
                 println(
-                    "${CSP.getData("base_url")}/Prices.asmx/PricePromotionAdd?ProductID=${itemList[position].ProductID}&StoreID=${StoreID}&Price=${holder.etPrice.text}&Promotion=${holder.etPromotion.text}&TeamMemberID=${
+                    "${CSP.getData("base_url")}/Prices.asmx/PricePromotionAdd?ProductID=${filterList[position].ProductID}&StoreID=${StoreID}&Price=${holder.etPrice.text}&Promotion=${holder.etPromotion.text}&TeamMemberID=${
                         CSP.getData(
                             "user_id"
                         ).toString()
@@ -245,7 +251,7 @@ class PriceDetailAdapter(
 
                 val request: Request = Request.Builder()
                     .url(
-                        "${CSP.getData("base_url")}/Prices.asmx/PricePromotionAdd?ProductID=${itemList[position].ProductID}&StoreID=${StoreID}&Price=${holder.etPrice.text}&Promotion=${holder.etPromotion.text}&TeamMemberID=${
+                        "${CSP.getData("base_url")}/Prices.asmx/PricePromotionAdd?ProductID=${filterList[position].ProductID}&StoreID=${StoreID}&Price=${holder.etPrice.text}&Promotion=${holder.etPromotion.text}&TeamMemberID=${
                             CSP.getData(
                                 "user_id"
                             ).toString()
@@ -275,19 +281,19 @@ class PriceDetailAdapter(
                                     .sneakSuccess()
                             }
                             ImgPath =
-                                if (ImgPath != "") ImgPath else itemList[position].PiceTagPictureID
+                                if (ImgPath != "") ImgPath else filterList[position].PiceTagPictureID
                             updateItem(
-                                itemList[position].ProductID,
+                                filterList[position].ProductID,
                                 PriceDetailData(
-                                    itemList[position].ProductID,
-                                    itemList[position].ShortName,
+                                    filterList[position].ProductID,
+                                    filterList[position].ShortName,
                                     holder.etNetPrice.text.toString(),
                                     holder.etPrice.text.toString(),
                                     holder.etPromotion.text.toString(),
                                     holder.et3Month.text.toString(),
                                     holder.et6Month.text.toString(),
                                     holder.et12Month.text.toString(),
-                                    itemList[position].Username,
+                                    filterList[position].Username,
                                     ImgPath
                                 )
                             )
@@ -457,7 +463,7 @@ class PriceDetailAdapter(
     }
 
     override fun getItemCount(): Int {
-        return itemList.size
+        return filterList.size
     }
 
     override fun getItemViewType(position: Int): Int = position
@@ -467,11 +473,11 @@ class PriceDetailAdapter(
         println("addNewItem")
         println(imgPath)
         println(pid)
-        val index = itemList.indexOf(itemList.find { it.ProductID == pid.toInt() })
+        val index = filterList.indexOf(filterList.find { it.ProductID == pid.toInt() })
         println(index)
         //itemList[index].PiceTagPictureID = imgPath
-        val updateItem = itemList[index].apply { PiceTagPictureID = imgPath }
-        itemList[index] = updateItem
+        val updateItem = filterList[index].apply { PiceTagPictureID = imgPath }
+        filterList[index] = updateItem
         notifyItemChanged(index)
         notifyDataSetChanged()
         (context as Activity).runOnUiThread {
@@ -484,8 +490,40 @@ class PriceDetailAdapter(
     }
 
     fun updateItem(pid: Int, answer: PriceDetailData) {
-        val index = itemList.indexOf(itemList.find { it.ProductID == pid })
-        itemList[index] = answer
+        val index = filterList.indexOf(filterList.find { it.ProductID == pid })
+        filterList[index] = answer
         notifyDataSetChanged()
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                if (charSearch.isEmpty()) {
+                    filterList = itemList as ArrayList<PriceDetailData>
+                } else {
+                    if (filterList.size > 0) {
+                        val resultList = ArrayList<PriceDetailData>()
+                        for (row in itemList) {
+                            if (row.ShortName.toLowerCase().contains(
+                                    constraint.toString().toLowerCase()
+                                )
+                            ) {
+                                resultList.add(row)
+                            }
+                        }
+                        filterList = resultList
+                    }
+                }
+                val filterResults = FilterResults()
+                filterResults.values = filterList
+                return filterResults
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                filterList = results?.values as ArrayList<PriceDetailData>
+                notifyDataSetChanged()
+            }
+        }
     }
 }
