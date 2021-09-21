@@ -85,6 +85,13 @@ class SalesDetailAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
+        if (CSP.getData("team_type_id")!!.toInt() <= 4) {
+            holder.txtSaleQuantity.isEnabled = false
+            holder.txtSalesValue.isEnabled = false
+            fragment.btnSubmit.visibility = View.GONE
+        }
+
         holder.txtNum.text = (position + 1).toString()
         holder.txtBrand.text = filterList[position].ShortName
 

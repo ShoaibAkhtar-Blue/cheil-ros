@@ -148,6 +148,10 @@ class JPAdapter(
         context?.let {
             holder.item?.let { itemData ->
 
+                if(CSP.getData("team_type_id")!!.toInt() <= 4){
+                    holder.btnAccept.visibility = View.GONE
+                }
+
                 holder.txtCode.text = itemData.StoreCode
                 holder.txtCode.visibility = View.GONE
 

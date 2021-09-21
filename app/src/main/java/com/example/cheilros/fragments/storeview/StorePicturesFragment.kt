@@ -31,6 +31,7 @@ import kotlinx.android.synthetic.main.dialog_add_store_picture.rvTaskPictures
 import kotlinx.android.synthetic.main.dialog_add_store_picture.txtTitle
 import kotlinx.android.synthetic.main.dialog_add_visit.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.*
+import kotlinx.android.synthetic.main.fragment_investment_detail.*
 import kotlinx.android.synthetic.main.fragment_my_coverage.*
 import kotlinx.android.synthetic.main.fragment_store_pictures.*
 import kotlinx.android.synthetic.main.fragment_store_pictures.btnBrand
@@ -554,7 +555,11 @@ class StorePicturesFragment : BaseFragment() {
                         rvStorePictures.layoutManager = gridLayoutManager
                         rvStorePictures.adapter = adapter
 
-                        btnAddStorePicture.visibility = View.VISIBLE
+                        if (CSP.getData("team_type_id")!!.toInt() <= 4) {
+
+                        }
+                        else
+                            btnAddStorePicture.visibility = View.VISIBLE
 
                         mainLoading.setState(LoadingLayout.COMPLETE)
                     })

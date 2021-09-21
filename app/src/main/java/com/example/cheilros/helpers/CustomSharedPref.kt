@@ -27,6 +27,10 @@ class CustomSharedPref(var context: Context) {
         editor.commit()
     }
 
+    fun delAll(){
+        context.getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE).edit().clear().apply()
+    }
+
     companion object {
         const val MY_PREFS_NAME = "ros_pref"
     }

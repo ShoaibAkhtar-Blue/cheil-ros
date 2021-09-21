@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -53,14 +50,17 @@ class InstallationAdapter(val context: Context, val itemList: List<ActivityCateg
                 "StoreName" to arguments?.getString("StoreName")
             )
 
-            try {
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_installationFragment_to_acrivityDetailFragment, bundle)
-            }catch (ex: Exception){
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_taskDeploymentFragment_to_acrivityDetailFragment, bundle)
+            if (CSP.getData("team_type_id")!!.toInt() <= 4){
+                Toast.makeText(context, "You don't have permission", Toast.LENGTH_SHORT).show()
+            }else{
+                try {
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_installationFragment_to_acrivityDetailFragment, bundle)
+                }catch (ex: Exception){
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_taskDeploymentFragment_to_acrivityDetailFragment, bundle)
+                }
             }
-
         }
     }
 

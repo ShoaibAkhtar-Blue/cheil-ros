@@ -75,6 +75,10 @@ class InvestmentDetailAdapter(
         holder.txtNum.text = (position + 1).toString()
         holder.txtBrand.text = itemList[position].BrandName
 
+        if (CSP.getData("team_type_id")!!.toInt() <= 4){
+            holder.txtAttend.isEnabled = false
+            fragment.btnSubmit.visibility = View.GONE
+        }
 
         holder.onTextUpdated = { text ->
             val simpleDateFormat = SimpleDateFormat("yyyy-M-d")

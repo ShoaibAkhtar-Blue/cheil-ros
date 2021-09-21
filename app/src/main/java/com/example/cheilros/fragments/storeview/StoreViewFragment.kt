@@ -114,6 +114,9 @@ class StoreViewFragment : BaseFragment() {
             }"
         )
 
+        if (CSP.getData("team_type_id")!!.toInt() <= 4)
+            btnEditChecklist.visibility = View.INVISIBLE
+
         btnEditChecklist.setOnClickListener {
             val bundle = bundleOf(
                 "StoreID" to arguments?.getInt("StoreID"),

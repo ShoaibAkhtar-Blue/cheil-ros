@@ -79,6 +79,12 @@ class RecentActivityAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
+
+        if(CSP.getData("team_type_id")!!.toInt() <= 4){
+            holder.btnAccept.visibility = View.GONE
+            holder.btnCancel.visibility = View.GONE
+        }
+
         holder.ActivityTypeName.text = filterList[position].ActivityTypeName
         holder.ActivityDescription.text = "Description: ${filterList[position].ActivityDescription}"
         holder.txtDate.text = filterList[position].ActivityDateTime

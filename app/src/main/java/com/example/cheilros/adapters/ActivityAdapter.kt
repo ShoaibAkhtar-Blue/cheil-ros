@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -47,15 +44,20 @@ class ActivityAdapter(
     override fun onBindViewHolder(holder: ActivityAdapter.ViewHolder, position: Int) {
         holder.txtTitle.text = filterList[position].ActivityTypeName
         holder.LLchecklist.setOnClickListener {
-            val bundle = bundleOf(
-                "DivisionID" to arguments?.getInt("DivisionID"),
-                "ActivityTypeID" to itemList[position].ActivityTypeID,
-                "ActivityTypeName" to itemList[position].ActivityTypeName,
-                "StoreID" to arguments?.getInt("StoreID"),
-                "StoreName" to arguments?.getString("StoreName")
-            )
-            Navigation.findNavController(it)
-                .navigate(R.id.action_activityFragment_to_activityDetailFragment, bundle)
+
+//            if(CSP.getData("user_id")!!.toInt() <= 4){
+//                Toast.makeText(context, "You don't have permission", Toast.LENGTH_SHORT).show()
+//            }else{
+                val bundle = bundleOf(
+                    "DivisionID" to arguments?.getInt("DivisionID"),
+                    "ActivityTypeID" to itemList[position].ActivityTypeID,
+                    "ActivityTypeName" to itemList[position].ActivityTypeName,
+                    "StoreID" to arguments?.getInt("StoreID"),
+                    "StoreName" to arguments?.getString("StoreName")
+                )
+                Navigation.findNavController(it)
+                    .navigate(R.id.action_activityFragment_to_activityDetailFragment, bundle)
+            //}
         }
     }
 

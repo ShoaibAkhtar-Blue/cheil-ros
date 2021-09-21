@@ -225,49 +225,53 @@ class DisplayCountDetailFragment : BaseFragment() {
                             )
                         rvDisplayCountDetail.adapter = recylcerAdapter
 
-                        object : SwipeHelper(requireContext(), rvDisplayCountDetail, false) {
-                            override fun instantiateUnderlayButton(
-                                viewHolder: RecyclerView.ViewHolder?,
-                                underlayButtons: MutableList<UnderlayButton>?
-                            ) {
-                                // Archive Button
-                                underlayButtons?.add(SwipeHelper.UnderlayButton(
-                                    "View",
-                                    AppCompatResources.getDrawable(
-                                        requireContext(),
-                                        R.drawable.ic_baseline_view
-                                    ),
-                                    Color.parseColor("#000000"), Color.parseColor("#ffffff"),
-                                    UnderlayButtonClickListener { pos: Int ->
-                                        recylcerAdapter.allBarcodes(pos)
-                                    }
-                                ))
+                        if (CSP.getData("team_type_id")!!.toInt() <= 4){
+                            btnSubmit.visibility = View.INVISIBLE
+                        }else{
+                            object : SwipeHelper(requireContext(), rvDisplayCountDetail, false) {
+                                override fun instantiateUnderlayButton(
+                                    viewHolder: RecyclerView.ViewHolder?,
+                                    underlayButtons: MutableList<UnderlayButton>?
+                                ) {
+                                    // Archive Button
+                                    underlayButtons?.add(SwipeHelper.UnderlayButton(
+                                        "View",
+                                        AppCompatResources.getDrawable(
+                                            requireContext(),
+                                            R.drawable.ic_baseline_view
+                                        ),
+                                        Color.parseColor("#000000"), Color.parseColor("#ffffff"),
+                                        UnderlayButtonClickListener { pos: Int ->
+                                            recylcerAdapter.allBarcodes(pos)
+                                        }
+                                    ))
 
-                                // Flag Button
-                                underlayButtons?.add(SwipeHelper.UnderlayButton(
-                                    "Scan",
-                                    AppCompatResources.getDrawable(
-                                        requireContext(),
-                                        R.drawable.barcode2
-                                    ),
-                                    Color.parseColor("#FF0000"), Color.parseColor("#ffffff"),
-                                    UnderlayButtonClickListener { pos: Int ->
-                                        recylcerAdapter.barCodeScan(pos)
-                                    }
-                                ))
+                                    // Flag Button
+                                    underlayButtons?.add(SwipeHelper.UnderlayButton(
+                                        "Scan",
+                                        AppCompatResources.getDrawable(
+                                            requireContext(),
+                                            R.drawable.barcode2
+                                        ),
+                                        Color.parseColor("#FF0000"), Color.parseColor("#ffffff"),
+                                        UnderlayButtonClickListener { pos: Int ->
+                                            recylcerAdapter.barCodeScan(pos)
+                                        }
+                                    ))
 
-                                // More Button
-                                underlayButtons?.add(SwipeHelper.UnderlayButton(
-                                    "Input",
-                                    AppCompatResources.getDrawable(
-                                        requireContext(),
-                                        R.drawable.ic_baseline_edit_24
-                                    ),
-                                    Color.parseColor("#00FF00"), Color.parseColor("#ffffff"),
-                                    UnderlayButtonClickListener { pos: Int ->
-                                        recylcerAdapter.inputBarcode(pos)
-                                    }
-                                ))
+                                    // More Button
+                                    underlayButtons?.add(SwipeHelper.UnderlayButton(
+                                        "Input",
+                                        AppCompatResources.getDrawable(
+                                            requireContext(),
+                                            R.drawable.ic_baseline_edit_24
+                                        ),
+                                        Color.parseColor("#00FF00"), Color.parseColor("#ffffff"),
+                                        UnderlayButtonClickListener { pos: Int ->
+                                            recylcerAdapter.inputBarcode(pos)
+                                        }
+                                    ))
+                                }
                             }
                         }
 

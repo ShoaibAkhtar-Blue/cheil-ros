@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -43,7 +40,9 @@ class ActivitySubCategoryAdapter(val context: Context, val itemList: List<Activi
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtTitle.text = filterList[position].ActivityCategoryName
         holder.LLchecklist.setOnClickListener {
-
+            if (CSP.getData("team_type_id")!!.toInt() <= 4) {
+                Toast.makeText(context, "You don't have permission", Toast.LENGTH_SHORT).show()
+            } else {
             val bundle = bundleOf(
                 "ActivityCategoryID" to itemList[position].ActivityCategoryID,
                 "ActivityCategoryName" to itemList[position].ActivityCategoryName,
@@ -55,6 +54,7 @@ class ActivitySubCategoryAdapter(val context: Context, val itemList: List<Activi
 
             Navigation.findNavController(it)
                 .navigate(R.id.action_activityDetailFragment_to_acrivityDetailFragment, bundle)
+            }
         }
     }
 

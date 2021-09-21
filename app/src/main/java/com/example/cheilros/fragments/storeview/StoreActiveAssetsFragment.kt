@@ -69,6 +69,9 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
         activity = requireActivity() as NewDashboardActivity
         fetchAssetList("${CSP.getData("base_url")}/Asset.asmx/AssetList?StoreID=$StoreID")
 
+        if (CSP.getData("team_type_id")!!.toInt() <= 4)
+            btnAddAsset.visibility = View.INVISIBLE
+
         btnAddAsset.setOnClickListener {
             addAsset(null)
         }

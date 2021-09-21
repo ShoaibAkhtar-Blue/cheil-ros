@@ -441,7 +441,8 @@ class AppSettingData(
     val ROS_LabelName: String,
     val LanguageID: Int,
     val ImageLocation: String,
-    val FixedLabelName: String
+    val FixedLabelName: String,
+    val ActiveStatus: Int
 )
 //endregion
 

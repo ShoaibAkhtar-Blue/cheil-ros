@@ -11,7 +11,7 @@ import com.example.cheilros.data.AppSetting
 import com.example.cheilros.data.UserData
 import com.example.cheilros.data.UserPermission
 
-@Database(entities = [AppSetting::class], version = 2, exportSchema = false)
+@Database(entities = [AppSetting::class], version = 3, exportSchema = false)
 abstract class AppSettingDatabase: RoomDatabase() {
 
     abstract fun appSettingDao(): AppSettingDao

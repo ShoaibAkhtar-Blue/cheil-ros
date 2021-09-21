@@ -93,6 +93,13 @@ class TrainingNewFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mainLoadingLayoutTD.setState(LoadingLayout.LOADING)
+
+        if (CSP.getData("team_type_id")!!.toInt() <= 4){
+            btnAddAttendee.visibility = View.GONE
+            LLImageRV.visibility = View.GONE
+            btnSubmit.visibility = View.INVISIBLE
+        }
+
         try{
             rvTrainingPictures.setHasFixedSize(true)
             layoutManagerPA = LinearLayoutManager(requireContext(),RecyclerView.HORIZONTAL, false)

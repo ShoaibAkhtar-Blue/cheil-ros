@@ -191,6 +191,12 @@ class MyCoverageAdapter(
         context?.let {
             holder.item?.let { itemData ->
 
+                if(CSP.getData("team_type_id")!!.toInt() <= 4){
+                    holder.btnAccept.visibility = View.GONE
+                    holder.btnLocUpdate.visibility = View.GONE
+                }
+
+
                 holder.txtSerialNo.text = (holder.layoutPosition + 1).toString()
 
                 holder.txtCode.text = itemData.StoreCode

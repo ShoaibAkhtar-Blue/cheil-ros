@@ -3,6 +3,7 @@ package com.example.cheilros.fragments
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,7 +64,7 @@ open class BaseFragment : Fragment() {
         } else if (fragmentLabel == "journeyplan") {
             configureToolbar(settingData.filter { it.fixedLabelName == "JourneyPlan_Title" }
                 .get(0).labelName, true)
-        }else if (fragmentLabel == "pending_deployment") {
+        } else if (fragmentLabel == "pending_deployment") {
             configureToolbar(settingData.filter { it.fixedLabelName == "Dashboard_PendingButton" }
                 .get(0).labelName, true)
         } else if (fragmentLabel == "mycoverage") {
@@ -88,73 +89,84 @@ open class BaseFragment : Fragment() {
         //endregion
 
         println("fragmentLabel: $fragmentLabel")
-        if (fragmentLabel == "dashboard") {
-            configureToolbar(settingData.filter { it.fixedLabelName == "Dashbord_Title" }
-                .get(0).labelName)
-        } else if (fragmentLabel == "journeyplan") {
-            configureToolbar(settingData.filter { it.fixedLabelName == "JourneyPlan_Title" }
-                .get(0).labelName, true)
-        }else if (fragmentLabel == "pending_deployment") {
-            configureToolbar(settingData.filter { it.fixedLabelName == "Dashboard_PendingButton" }
-                .get(0).labelName, true)
-        } else if (fragmentLabel == "mycoverage") {
-            configureToolbar(settingData.filter { it.fixedLabelName == "StoreList_Title" }
-                .get(0).labelName, true, true)
-        } else if (fragmentLabel == "team_status") {
-            configureToolbar(settingData.filter { it.fixedLabelName == "MenuTitle5" }
-                .get(0).labelName, true, true)
-        }else if (fragmentLabel == "my_activities") {
-            configureToolbar(settingData.filter { it.fixedLabelName == "MenuTitle6" }
-                .get(0).labelName, true, false)
-        } else if (fragmentLabel == "activity_detail") {
-            arguments?.getString("StoreName")?.let { configureToolbar(it, true) }
-        } else if (fragmentLabel == "display_count_detail") {
-            arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
-            //configureToolbar("Display", true, true)
-        }else if (fragmentLabel == "task_deployment" || fragmentLabel == "activity" || fragmentLabel == "installation" || fragmentLabel == "installation_main" || fragmentLabel == "price_detail" || fragmentLabel == "sales_detail"|| fragmentLabel == "stock_detail") {
-            arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
-        } else if (fragmentLabel == "training" || fragmentLabel == "installation_main" || fragmentLabel == "activity_category" || fragmentLabel == "store_view" || fragmentLabel == "activity" || fragmentLabel == "task_deployment" || fragmentLabel == "display_count" || fragmentLabel == "installation") {
-            val callback =
-                requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
-                    findNavController().popBackStack()
-                }
-        } else if (fragmentLabel == "training_detail") {
-            arguments?.getString("StoreName")?.let { configureToolbar(it, true) }
-
-            try {
-                val activity: Activity? = requireActivity()
-                if (activity != null) {
-                    val callback =
-                        requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
-                            // Handle the back button event
-                            println("callback")
-                            // setup the alert builder
-                            val builder: AlertDialog.Builder =
-                                AlertDialog.Builder(requireActivity())
-                            builder.setTitle(settingData.filter { it.fixedLabelName == "General_CloseSession" }.get(0).labelName)
-                            builder.setMessage(settingData.filter { it.fixedLabelName == "General_CloseSessionMessage" }.get(0).labelName)
-
-                            // add the buttons
-
-                            // add the buttons
-                            builder.setPositiveButton("Ok") { dialogInterface, which ->
-                                findNavController().popBackStack()
-                            }
-
-                            builder.setNegativeButton("Cancel", null)
-
-                            // create and show the alert dialog
-
-                            // create and show the alert dialog
-                            val dialog: AlertDialog = builder.create()
-                            dialog.show()
+        try {
+            if (fragmentLabel == "dashboard") {
+                configureToolbar(settingData.filter { it.fixedLabelName == "Dashbord_Title" }
+                    .get(0).labelName)
+            } else if (fragmentLabel == "journeyplan") {
+                configureToolbar(settingData.filter { it.fixedLabelName == "JourneyPlan_Title" }
+                    .get(0).labelName, true)
+            } else if (fragmentLabel == "pending_deployment") {
+                configureToolbar(settingData.filter { it.fixedLabelName == "Dashboard_PendingButton" }
+                    .get(0).labelName, true)
+            } else if (fragmentLabel == "mycoverage") {
+                configureToolbar(settingData.filter { it.fixedLabelName == "StoreList_Title" }
+                    .get(0).labelName, true, true)
+            } else if (fragmentLabel == "team_status") {
+                configureToolbar(settingData.filter { it.fixedLabelName == "MenuTitle5" }
+                    .get(0).labelName, true, true)
+            } else if (fragmentLabel == "my_activities") {
+                configureToolbar(settingData.filter { it.fixedLabelName == "MenuTitle6" }
+                    .get(0).labelName, true, false)
+            } else if (fragmentLabel == "activity_detail") {
+                arguments?.getString("StoreName")?.let { configureToolbar(it, true) }
+            } else if (fragmentLabel == "display_count_detail") {
+                arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
+                //configureToolbar("Display", true, true)
+            } else if (fragmentLabel == "task_deployment" || fragmentLabel == "activity" || fragmentLabel == "installation" || fragmentLabel == "installation_main" || fragmentLabel == "price_detail" || fragmentLabel == "sales_detail" || fragmentLabel == "stock_detail") {
+                arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
+            } else if (fragmentLabel == "training" || fragmentLabel == "installation_main" || fragmentLabel == "activity_category" || fragmentLabel == "store_view" || fragmentLabel == "activity" || fragmentLabel == "task_deployment" || fragmentLabel == "display_count" || fragmentLabel == "installation") {
+                val callback =
+                    requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
+                        try {
+                            findNavController().popBackStack()
+                        } catch (ex: Exception) {
+                            Log.e("Error_", ex.message.toString())
                         }
+                    }
+            } else if (fragmentLabel == "training_detail") {
+                arguments?.getString("StoreName")?.let { configureToolbar(it, true) }
+
+                try {
+                    val activity: Activity? = requireActivity()
+                    if (activity != null) {
+                        val callback =
+                            requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
+                                // Handle the back button event
+                                println("callback")
+                                // setup the alert builder
+                                val builder: AlertDialog.Builder =
+                                    AlertDialog.Builder(requireActivity())
+                                builder.setTitle(settingData.filter { it.fixedLabelName == "General_CloseSession" }
+                                    .get(0).labelName)
+                                builder.setMessage(settingData.filter { it.fixedLabelName == "General_CloseSessionMessage" }
+                                    .get(0).labelName)
+
+                                // add the buttons
+
+                                // add the buttons
+                                builder.setPositiveButton("Ok") { dialogInterface, which ->
+                                    findNavController().popBackStack()
+                                }
+
+                                builder.setNegativeButton("Cancel", null)
+
+                                // create and show the alert dialog
+
+                                // create and show the alert dialog
+                                val dialog: AlertDialog = builder.create()
+                                dialog.show()
+                            }
+                    }
+                } catch (ex: Exception) {
+
                 }
-            } catch (ex: Exception) {
 
             }
+        } catch (ex: Exception) {
 
         }
+
     }
 
     @SuppressLint("RestrictedApi")

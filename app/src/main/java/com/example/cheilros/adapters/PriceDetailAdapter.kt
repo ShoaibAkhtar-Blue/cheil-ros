@@ -90,6 +90,11 @@ class PriceDetailAdapter(
     @SuppressLint("ResourceAsColor", "WrongConstant")
     override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
 
+        if (CSP.getData("team_type_id")!!.toInt() <= 4) {
+            holder.btnAccept.visibility = View.GONE
+        }
+
+
         //region set Labels
         try {
             holder.txtNetPrice.text =
@@ -114,7 +119,7 @@ class PriceDetailAdapter(
         //endregion
 
 
-        if(userData[0].MarketType != 1)
+        if (userData[0].MarketType != 1)
             holder.LLInstallment.visibility = View.GONE
 
         holder.txtCount.text = (position + 1).toString()
@@ -173,26 +178,31 @@ class PriceDetailAdapter(
 
 
         holder.imgTag.setOnClickListener {
-            val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
 
-            builder.setTitle("Choose...")
-            builder.setMessage("Please select one of the options")
+            if (CSP.getData("team_type_id")!!.toInt() <= 4) {
 
-            builder.setPositiveButton("Camera") { dialog, which ->
-                CSP.saveData("fragName", "PriceDetail")
-                CSP.saveData("productid", filterList[position].ProductID.toString())
-                Navigation.findNavController(it)
-                    .navigate(R.id.action_priceDetailFragment_to_cameraActivity)
+            } else {
+                val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
+
+                builder.setTitle("Choose...")
+                builder.setMessage("Please select one of the options")
+
+                builder.setPositiveButton("Camera") { dialog, which ->
+                    CSP.saveData("fragName", "PriceDetail")
+                    CSP.saveData("productid", filterList[position].ProductID.toString())
+                    Navigation.findNavController(it)
+                        .navigate(R.id.action_priceDetailFragment_to_cameraActivity)
+                }
+
+                builder.setNegativeButton("Gallery") { dialog, which ->
+                    activity.pickFromGallery()
+                }
+
+                builder.setNeutralButton("Cancel") { dialog, which ->
+                    dialog.dismiss()
+                }
+                builder.show()
             }
-
-            builder.setNegativeButton("Gallery") { dialog, which ->
-                activity.pickFromGallery()
-            }
-
-            builder.setNeutralButton("Cancel") { dialog, which ->
-                dialog.dismiss()
-            }
-            builder.show()
         }
 
         holder.btnAccept.setOnClickListener {

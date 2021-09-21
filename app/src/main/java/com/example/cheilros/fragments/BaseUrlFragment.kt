@@ -121,7 +121,6 @@ class BaseUrlFragment : Fragment() {
                     }
                 })
             }else{
-
                 try{
                     fetchData("${etBaseUrl.text.toString()}/Webservice.asmx/AppSettings?LanguageID=${CSP.getData("lang_id")}")
                 }catch (ex: Exception){
@@ -134,12 +133,8 @@ class BaseUrlFragment : Fragment() {
                         }
                     })
                 }
-
             }
-
         }
-
-
     }
 
     companion object {
@@ -148,6 +143,7 @@ class BaseUrlFragment : Fragment() {
 
 
     fun fetchData(url: String) {
+        CSP.delAll()
         mAppSettingViewModel.nukeTable()
         println(url)
         val request = Request.Builder()
@@ -169,8 +165,6 @@ class BaseUrlFragment : Fragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-
-
 
                 try {
                     val gson = GsonBuilder().create()
@@ -207,10 +201,6 @@ class BaseUrlFragment : Fragment() {
                         }
                     })
                 }
-
-
-
-
             }
         })
     }
