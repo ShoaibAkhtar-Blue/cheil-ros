@@ -44,7 +44,7 @@ class InstallationFragment : BaseFragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_installation, container, false)
-
+        toolbarVisibility(false)
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
@@ -144,6 +144,8 @@ class InstallationFragment : BaseFragment() {
                             InstallationAdapter(requireContext(), apiData.data, arguments)
                         rvActivityDetail.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        toolbarVisibility(true)
+                        (activity as NewDashboardActivity).shouldGoBack = true
                     })
                 } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
@@ -201,7 +203,6 @@ class InstallationFragment : BaseFragment() {
                             userData
                         )
                         rvRecentSubActivities.adapter = recylcerAdapterRecent
-
                     })
                 }else{
                     requireActivity().runOnUiThread(java.lang.Runnable {

@@ -360,7 +360,7 @@ class DashboardFragment : BaseFragment() {
                             .setMessage(e.message.toString())
                             .sneakError()
                     }
-                    mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                    //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                 })
             }
 
@@ -388,7 +388,7 @@ class DashboardFragment : BaseFragment() {
                                 .setMessage("Data not fetched.")
                                 .sneakWarning()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
                 }
             }
@@ -518,7 +518,7 @@ class DashboardFragment : BaseFragment() {
                             .setMessage(e.message.toString())
                             .sneakError()
                     }
-                    mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                    //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                 })
             }
 
@@ -546,7 +546,7 @@ class DashboardFragment : BaseFragment() {
                                 .setMessage("Data not fetched.")
                                 .sneakWarning()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
                 }
             }

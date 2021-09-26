@@ -155,7 +155,7 @@ class SalesDetailFragment : BaseFragment() {
                             arguments?.getInt(
                                 "BrandID"
                             )
-                        }&ProductCategoryID=${defaultChannel}&StoreID=${arguments?.getInt("StoreID")}"
+                        }&ProductCategoryID=${defaultChannel}&StoreID=${arguments?.getInt("StoreID")}&SaleDate=${btnDate.tag}"
                     )
                 })
             val dialog: AlertDialog = builder.create()

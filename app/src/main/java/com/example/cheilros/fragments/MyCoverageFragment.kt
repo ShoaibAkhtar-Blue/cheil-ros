@@ -75,6 +75,8 @@ class MyCoverageFragment : BaseFragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_my_coverage, container, false)
 
+        toolbarVisibility(false)
+
         //region Reset Sessions
         CSP.delData("sess_last_update_element_id")
         //endregion
@@ -325,6 +327,11 @@ class MyCoverageFragment : BaseFragment() {
         }*/
     }
 
+    override fun onResume() {
+        super.onResume()
+        //(activity as NewDashboardActivity).shouldGoBack = true
+    }
+
     fun reloadCoverage(){
         println("reloadCoverage")
         fetchChannel("${CSP.getData("base_url")}/Webservice.asmx/ChannelList")
@@ -362,16 +369,23 @@ class MyCoverageFragment : BaseFragment() {
                 println(apiData.status)
                 if (apiData.status == 200) {
                     channelData = apiData.data
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        activity?.let { it1 ->
-                            //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
-                            try {
-                                btnChannelType.text = channelData[0].ChannelName
-                            }catch (ex: Exception){
+                    try{
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                                try {
+                                    btnChannelType.text = channelData[0].ChannelName
+                                }catch (ex: Exception){
 
+                                }
                             }
-                        }
-                    })
+                        })
+                    }catch (ex: Exception){
+//                        requireActivity().runOnUiThread(java.lang.Runnable {
+//                            Toast.makeText(context, "Error ${ex.message}", Toast.LENGTH_SHORT).show()
+//                        })
+                    }
+
                 } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
@@ -417,16 +431,23 @@ class MyCoverageFragment : BaseFragment() {
                 println(apiData.status)
                 if (apiData.status == 200) {
                     channelTypeData = apiData.data
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        activity?.let { it1 ->
-                            //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
-                            try {
-                                btnChannel.text = channelTypeData[0].ChannelTypeName
-                            }catch (ex: Exception){
+                    try{
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                                try {
+                                    btnChannel.text = channelTypeData[0].ChannelTypeName
+                                }catch (ex: Exception){
 
+                                }
                             }
-                        }
-                    })
+                        })
+                    }catch (ex: Exception){
+//                        requireActivity().runOnUiThread(java.lang.Runnable {
+//                            Toast.makeText(context, "Error ${ex.message}", Toast.LENGTH_SHORT).show()
+//                        })
+                    }
+
                 } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
@@ -471,14 +492,24 @@ class MyCoverageFragment : BaseFragment() {
                 val apiData = gson.fromJson(body, MyCoverageModel::class.java)
                 println(apiData.status)
                 if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        recylcerAdapter = MyCoverageAdapter(requireContext(), apiData.data, settingData, latitude, longitude,this@MyCoverageFragment, requireActivity() as NewDashboardActivity)
-                        recyclerView.adapter = recylcerAdapter
+                    try{
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            recylcerAdapter = MyCoverageAdapter(requireContext(), apiData.data, settingData, latitude, longitude,this@MyCoverageFragment, requireActivity() as NewDashboardActivity)
+                            recyclerView.adapter = recylcerAdapter
 
-                        btnLocation.visibility = View.VISIBLE
+                            btnLocation.visibility = View.VISIBLE
 
-                        mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
-                    })
+                            mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+
+                            toolbarVisibility(true)
+                            (activity as NewDashboardActivity).shouldGoBack = true
+                        })
+                    }catch (ex: Exception){
+//                        requireActivity().runOnUiThread(java.lang.Runnable {
+//                            Toast.makeText(context, "Error ${ex.message}", Toast.LENGTH_SHORT).show()
+//                        })
+                    }
+
                 } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->

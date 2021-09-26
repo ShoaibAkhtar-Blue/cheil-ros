@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -35,6 +36,8 @@ open class BaseFragment : Fragment() {
 
     lateinit var team_type: String
 
+    var isBackEnable = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mAppSettingViewModel = ViewModelProvider(this).get(AppSettingViewModel::class.java)
@@ -46,6 +49,14 @@ open class BaseFragment : Fragment() {
 
         CSP = CustomSharedPref(requireContext())
         team_type = CSP.getData("team_type_id").toString()
+
+        /*activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                println("handleOnBackPressed $isBackEnable")
+                if(isBackEnable)
+                    activity?.onBackPressed()
+            }
+        })*/
 
     }
 
@@ -207,5 +218,14 @@ open class BaseFragment : Fragment() {
             activity.toolbar_search.visibility = View.GONE
         }
 
+    }
+
+    fun toolbarVisibility(isToolbarVisible: Boolean){
+        var activity = requireActivity()
+
+        if(isToolbarVisible)
+            activity.main_toolbar.visibility = View.VISIBLE
+        else
+            activity.main_toolbar.visibility = View.INVISIBLE
     }
 }

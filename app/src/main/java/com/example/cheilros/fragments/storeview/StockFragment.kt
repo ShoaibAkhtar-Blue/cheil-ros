@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.StockAdapter
 import com.example.cheilros.adapters.StockCurrentWeekAdapter
 import com.example.cheilros.fragments.BaseFragment
@@ -48,7 +49,7 @@ class StockFragment : BaseFragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_stock, container, false)
-
+        toolbarVisibility(false)
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
@@ -158,6 +159,8 @@ class StockFragment : BaseFragment() {
                         recylcerAdapter = StockAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"), arguments?.getString("StoreName"), settingData)
                         rvStock.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        toolbarVisibility(true)
+                        (activity as NewDashboardActivity).shouldGoBack = true
                     })
                 }else {
                     requireActivity().runOnUiThread(java.lang.Runnable {

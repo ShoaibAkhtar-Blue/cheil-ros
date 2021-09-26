@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.DisplayCountAdapter
 import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.models.DisplayCountModel
@@ -33,7 +34,7 @@ class DisplayCountFragment : BaseFragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_display_count, container, false)
-
+        toolbarVisibility(false)
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
@@ -75,14 +76,23 @@ class DisplayCountFragment : BaseFragment() {
                 val gson = GsonBuilder().create()
                 val apiData = gson.fromJson(body, DisplayCountModel::class.java)
                 if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvDisplayCount.setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(requireContext())
-                        rvDisplayCount.layoutManager = layoutManager
-                        recylcerAdapter = DisplayCountAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"), arguments?.getString("StoreName"), settingData)
-                        rvDisplayCount.adapter = recylcerAdapter
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                    })
+                    try{
+                        if (requireActivity() == null) {
+                            return;
+                        }
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvDisplayCount.setHasFixedSize(true)
+                            layoutManager = LinearLayoutManager(requireContext())
+                            rvDisplayCount.layoutManager = layoutManager
+                            recylcerAdapter = DisplayCountAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"), arguments?.getString("StoreName"), settingData)
+                            rvDisplayCount.adapter = recylcerAdapter
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                            toolbarVisibility(true)
+                            (activity as NewDashboardActivity).shouldGoBack = true
+                        })
+                    }catch (ex: java.lang.Exception){
+
+                    }
                 }else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->

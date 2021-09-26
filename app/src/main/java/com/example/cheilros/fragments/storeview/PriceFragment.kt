@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.PriceAdapter
 import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.models.PriceModel
@@ -32,7 +33,7 @@ class PriceFragment : BaseFragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_price, container, false)
-
+        toolbarVisibility(false)
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
@@ -90,6 +91,8 @@ class PriceFragment : BaseFragment() {
                         recylcerAdapter = PriceAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"), arguments?.getString("StoreName"), settingData)
                         rvPrice.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        toolbarVisibility(true)
+                        (activity as NewDashboardActivity).shouldGoBack = true
                     })
                 }else {
                     requireActivity().runOnUiThread(java.lang.Runnable {

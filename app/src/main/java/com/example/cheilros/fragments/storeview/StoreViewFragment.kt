@@ -32,7 +32,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
-import kotlinx.android.synthetic.main.fragment_checklist_category.mainLoadingLayoutCC
+import kotlinx.android.synthetic.main.fragment_my_coverage.*
 import kotlinx.android.synthetic.main.fragment_store_view.*
 import kotlinx.android.synthetic.main.fragment_store_view.view.*
 import okhttp3.*
@@ -49,6 +49,8 @@ class StoreViewFragment : BaseFragment() {
     lateinit var layoutManagerCL: RecyclerView.LayoutManager
     lateinit var recylcerAdapterCL: ChecklistAnsweredAdapter
 
+    var shouldAllowBack = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,6 +58,7 @@ class StoreViewFragment : BaseFragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_store_view, container, false)
 
+        toolbarVisibility(false)
         configureToolbar("${arguments?.getString("StoreName")}", true)
 
         //region Reset Sessions
@@ -129,11 +132,13 @@ class StoreViewFragment : BaseFragment() {
         }
 
         genTabs()
+
+
     }
 
     override fun onResume() {
         super.onResume()
-
+        //(activity as NewDashboardActivity).shouldGoBack = true
     }
 
     private fun genTabs() {
@@ -258,7 +263,7 @@ class StoreViewFragment : BaseFragment() {
                             .setMessage(e.message.toString())
                             .sneakError()
                     }
-                    mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                    mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                 })
             }
 
@@ -269,13 +274,26 @@ class StoreViewFragment : BaseFragment() {
                 val apiData = gson.fromJson(body, StoreInfoModel::class.java)
 
                 if (apiData.status == 200) {
+                    try {
+                        if (requireActivity() == null) {
+                            return
+                        }
+                    }catch (ex: Exception){
+                        return
+                    }
+
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         txtStoreRegion.text = apiData.data[0].RegionName
                         txtStoreType.text = apiData.data[0].StoreTypeName
                         txtStoreGrade.text = apiData.data[0].GradeName
                         txtStoreCity.text = apiData.data[0].DistrcitName
                         txtStoreDistributor.text = apiData.data[0].DistributorName
+
+                        toolbarVisibility(true)
+                        (activity as NewDashboardActivity).shouldGoBack = true
+                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                     })
+
                 } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
@@ -284,7 +302,7 @@ class StoreViewFragment : BaseFragment() {
                                 .setMessage("Data not fetched.")
                                 .sneakWarning()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                     })
                 }
             }
@@ -309,7 +327,7 @@ class StoreViewFragment : BaseFragment() {
                             .setMessage(e.message.toString())
                             .sneakError()
                     }
-                    mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                    mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                 })
             }
 
@@ -344,7 +362,7 @@ class StoreViewFragment : BaseFragment() {
                                 .setMessage("Data not fetched.")
                                 .sneakWarning()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                     })
                 }
             }
@@ -353,7 +371,7 @@ class StoreViewFragment : BaseFragment() {
     }
 
     fun fetchChecklistanswer(url: String) {
-
+        mainLoadingLayout.setState(LoadingLayout.LOADING)
         println(url)
 
         val client = OkHttpClient()
@@ -371,7 +389,7 @@ class StoreViewFragment : BaseFragment() {
                             .setMessage(e.message.toString())
                             .sneakError()
                     }
-
+                    mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                 })
             }
 
@@ -381,15 +399,28 @@ class StoreViewFragment : BaseFragment() {
                 val gson = GsonBuilder().create()
                 val apiData = gson.fromJson(body, CheckListAnswerModel::class.java)
                 if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvChecklistAnswer.setHasFixedSize(true)
-                        layoutManagerCL = LinearLayoutManager(requireContext())
-                        rvChecklistAnswer.layoutManager = layoutManagerCL
-                        recylcerAdapterCL = ChecklistAnsweredAdapter(requireContext(), apiData.data)
-                        rvChecklistAnswer.adapter = recylcerAdapterCL
-                        val emptyView: View = todo_list_empty_view1
-                        rvChecklistAnswer.setEmptyView(emptyView)
-                    })
+                    try{
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvChecklistAnswer.setHasFixedSize(true)
+                            layoutManagerCL = LinearLayoutManager(requireContext())
+                            rvChecklistAnswer.layoutManager = layoutManagerCL
+                            recylcerAdapterCL = ChecklistAnsweredAdapter(requireContext(), apiData.data)
+                            rvChecklistAnswer.adapter = recylcerAdapterCL
+                            val emptyView: View = todo_list_empty_view1
+                            rvChecklistAnswer.setEmptyView(emptyView)
+                        })
+                    }catch (ex: Exception){
+                        /*requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Issue in loading data.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                        })*/
+                    }
+
                 } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
@@ -398,7 +429,7 @@ class StoreViewFragment : BaseFragment() {
                                 .setMessage("Data not fetched.")
                                 .sneakWarning()
                         }
-
+                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                     })
                 }
             }

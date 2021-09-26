@@ -35,6 +35,12 @@ import kotlinx.android.synthetic.main.activity_new_dashboard.view.*
 
 class NewDashboardActivity : AppCompatActivity() {
 
+    var shouldGoBack: Boolean = false
+    private var doubleBackPressedInterval: Long = 650
+    private var doubleTap = false
+    private var pressCount = 0
+    private var timeLimit: Long = 0
+
     lateinit var userLocation: Location
     private lateinit var toolbar: Toolbar
     lateinit var CSP: CustomSharedPref
@@ -83,6 +89,21 @@ class NewDashboardActivity : AppCompatActivity() {
 
         requestCurrentLocation()
     }
+
+    override fun onBackPressed() {
+        println("onBackPressed $shouldGoBack")
+        if(shouldGoBack)
+            super.onBackPressed()
+    }
+
+    /*override fun onBackPressed() {
+        val currentFragment = supportFragmentManager.fragments[supportFragmentManager.fragments.size - 1]
+
+        if(!currentFragment.onBackPress()){
+            // Perform the usual back action
+            super.onBackPressed()
+        }
+    }*/
 
     fun getLocation() {
         try {

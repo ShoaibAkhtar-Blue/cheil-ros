@@ -45,7 +45,7 @@ class ActivityFragment : BaseFragment() {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_activity, container, false)
         arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
-
+        toolbarVisibility(false)
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
@@ -137,6 +137,8 @@ class ActivityFragment : BaseFragment() {
                         recylcerAdapter = ActivityAdapter(requireContext(), apiData.data, arguments)
                         rvActivity.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        toolbarVisibility(true)
+                        (activity as NewDashboardActivity).shouldGoBack = true
                     })
                 }else {
                     requireActivity().runOnUiThread(java.lang.Runnable {

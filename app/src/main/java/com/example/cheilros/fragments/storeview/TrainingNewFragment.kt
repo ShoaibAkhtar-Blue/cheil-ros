@@ -79,7 +79,7 @@ class TrainingNewFragment : BaseFragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_training_new, container, false)
-
+        toolbarVisibility(false)
         //region Set Labels
         try {
             //view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Training" }.get(0).labelName
@@ -408,6 +408,8 @@ class TrainingNewFragment : BaseFragment() {
                             apiData.data as MutableList<TeamMemberData>, this@TrainingNewFragment, arguments)
                         rvAttendees.adapter = recylcerAdapter
                         mainLoadingLayoutTD.setState(LoadingLayout.COMPLETE)
+                        toolbarVisibility(true)
+                        (activity as NewDashboardActivity).shouldGoBack = true
                     })
                 }else{
                     requireActivity().runOnUiThread(java.lang.Runnable {

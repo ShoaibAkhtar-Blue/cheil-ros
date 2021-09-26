@@ -43,7 +43,7 @@ class TaskDeploymentFragment : BaseFragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_task_deployment, container, false)
-
+        toolbarVisibility(false)
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
@@ -146,6 +146,8 @@ class TaskDeploymentFragment : BaseFragment() {
                             InstallationAdapter(requireContext(), apiData.data.filter { it.TaskDeploymentCategoryID == arguments?.getInt("TaskDeploymentCategoryID") }, arguments)
                         rvActivityDetail.adapter = recylcerAdapter
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        toolbarVisibility(true)
+                        (activity as NewDashboardActivity).shouldGoBack = true
                     })
                 } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {

@@ -16,6 +16,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.DisplayCountDetailAdapter
 import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.helpers.SwipeHelper
@@ -48,8 +49,8 @@ class DisplayCountDetailFragment : BaseFragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_display_count_detail, container, false)
-
-        //view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
+        toolbarVisibility(false)
+        view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
         try {
@@ -276,6 +277,8 @@ class DisplayCountDetailFragment : BaseFragment() {
                         }
 
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        toolbarVisibility(true)
+                        (activity as NewDashboardActivity).shouldGoBack = true
                     })
                 } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {
