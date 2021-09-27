@@ -51,7 +51,6 @@ class StoreStatusFragment(val StoreID: Int?, val StoreName: String?) : BaseFragm
         fetchInvestment("${CSP.getData("base_url")}/Audit.asmx/InvestmentElement_AuditView?StoreID=$StoreID")
 
 
-
         /*btnEditChecklist.setOnClickListener {
             val bundle = bundleOf(
                 "StoreID" to StoreID,
@@ -68,10 +67,9 @@ class StoreStatusFragment(val StoreID: Int?, val StoreName: String?) : BaseFragm
         }*/
     }
 
-    public fun refresh(){
+    public fun refresh() {
 
     }
-
 
 
     override fun onResume() {
@@ -133,7 +131,7 @@ class StoreStatusFragment(val StoreID: Int?, val StoreName: String?) : BaseFragm
         })
     }*/
 
-    fun fetchInvestmentanswer(url: String){
+    fun fetchInvestmentanswer(url: String) {
 
         val client = OkHttpClient()
 
@@ -157,34 +155,47 @@ class StoreStatusFragment(val StoreID: Int?, val StoreName: String?) : BaseFragm
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, InvestmentAnswerModel::class.java)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvInvestmentAnswer.setHasFixedSize(true)
-                        layoutManagerInvest = LinearLayoutManager(requireContext())
-                        rvInvestmentAnswer.layoutManager = layoutManagerInvest
-                        recylcerAdapterInvest = InvestmentAnswerAdapter(requireContext(), apiData.data)
-                        rvInvestmentAnswer.adapter = recylcerAdapterInvest
-                        val emptyView: View = todo_list_empty_view2
-                        rvInvestmentAnswer.setEmptyView(emptyView)
-                    })
-                }else {
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, InvestmentAnswerModel::class.java)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvInvestmentAnswer.setHasFixedSize(true)
+                            layoutManagerInvest = LinearLayoutManager(requireContext())
+                            rvInvestmentAnswer.layoutManager = layoutManagerInvest
+                            recylcerAdapterInvest =
+                                InvestmentAnswerAdapter(requireContext(), apiData.data)
+                            rvInvestmentAnswer.adapter = recylcerAdapterInvest
+                            val emptyView: View = todo_list_empty_view2
+                            rvInvestmentAnswer.setEmptyView(emptyView)
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-
+                        findNavController().popBackStack()
                     })
                 }
             }
         })
     }
 
-    fun fetchInvestment(url: String){
+    fun fetchInvestment(url: String) {
         println(url)
         val client = OkHttpClient()
 
@@ -207,26 +218,39 @@ class StoreStatusFragment(val StoreID: Int?, val StoreName: String?) : BaseFragm
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, InvestmentModel::class.java)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvInvestmentAnswer.setHasFixedSize(true)
-                        layoutManagerInvest1 = LinearLayoutManager(requireContext())
-                        rvInvestmentAnswer.layoutManager = layoutManagerInvest1
-                        recylcerAdapterInvest1= InvestmentAdapter(requireContext(), apiData.data, StoreID)
-                        rvInvestmentAnswer.adapter = recylcerAdapterInvest1
-                        val emptyView: View = todo_list_empty_view2
-                        rvInvestmentAnswer.setEmptyView(emptyView)
-                    })
-                }else {
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, InvestmentModel::class.java)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvInvestmentAnswer.setHasFixedSize(true)
+                            layoutManagerInvest1 = LinearLayoutManager(requireContext())
+                            rvInvestmentAnswer.layoutManager = layoutManagerInvest1
+                            recylcerAdapterInvest1 =
+                                InvestmentAdapter(requireContext(), apiData.data, StoreID)
+                            rvInvestmentAnswer.adapter = recylcerAdapterInvest1
+                            val emptyView: View = todo_list_empty_view2
+                            rvInvestmentAnswer.setEmptyView(emptyView)
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
+                        findNavController().popBackStack()
                     })
                 }
             }

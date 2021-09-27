@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
@@ -48,8 +49,10 @@ class InstallationFragment : BaseFragment() {
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
-        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Ticket" }.get(0).labelName
-        view.StoreView_SubTitle.text = settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }.get(0).labelName
+        view.txtStoreName.text =
+            settingData.filter { it.fixedLabelName == "StoreMenu_Ticket" }.get(0).labelName
+        view.StoreView_SubTitle.text =
+            settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }.get(0).labelName
         //endregion
 
         CSP.delData("activity_barcodes")
@@ -62,18 +65,26 @@ class InstallationFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         txtStoreSubName.text = arguments?.getString("ActivityTypeName")
 
-        fetchRecentActivities("${CSP.getData("base_url")}/OperMarketActivities.asmx/ViewMarketActivityList?StoreID=${arguments?.getInt("StoreID").toString()}&ActivityCategoryID=0&ActivityTypeID=20&BrandID=0&TeamMemberID=${CSP.getData("user_id")}")
+        fetchRecentActivities(
+            "${CSP.getData("base_url")}/OperMarketActivities.asmx/ViewMarketActivityList?StoreID=${
+                arguments?.getInt(
+                    "StoreID"
+                ).toString()
+            }&ActivityCategoryID=0&ActivityTypeID=20&BrandID=0&TeamMemberID=${CSP.getData("user_id")}"
+        )
         fetchActivityDetail(
             "${CSP.getData("base_url")}/Activity.asmx/ActivityCategoryList?DivisionID=1&ActivityTypeID=20"
         )
 
-        requireActivity().toolbar_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+        requireActivity().toolbar_search.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener,
             android.widget.SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(qString: String): Boolean {
                 recylcerAdapter?.filter?.filter(qString)
                 return true
             }
+
             override fun onQueryTextSubmit(qString: String): Boolean {
 
                 return true
@@ -83,29 +94,38 @@ class InstallationFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        if(!CSP.getData("Installation_Followup_SESSION_IMAGE").equals("")){
+        if (!CSP.getData("Installation_Followup_SESSION_IMAGE").equals("")) {
             Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                 .setTitle("Success!!")
                 .setMessage("Image Added to this session!")
                 .sneakSuccess()
 
             try {
-                recylcerAdapterRecent.addNewItem(CSP.getData("Installation_Followup_SESSION_IMAGE").toString())
+                recylcerAdapterRecent.addNewItem(
+                    CSP.getData("Installation_Followup_SESSION_IMAGE").toString()
+                )
                 CSP.delData("Installation_Followup_SESSION_IMAGE")
 
                 if (CSP.getData("Installation_Followup_SESSION_IMAGE").equals("")) {
-                    recylcerAdapterRecent.addNewItem(CSP.getData("Installation_Followup_SESSION_IMAGE").toString())
-                    CSP.saveData("Installation_Followup_SESSION_IMAGE_SET", CSP.getData("Installation_Followup_SESSION_IMAGE"))
+                    recylcerAdapterRecent.addNewItem(
+                        CSP.getData("Installation_Followup_SESSION_IMAGE").toString()
+                    )
+                    CSP.saveData(
+                        "Installation_Followup_SESSION_IMAGE_SET",
+                        CSP.getData("Installation_Followup_SESSION_IMAGE")
+                    )
                     CSP.delData("Installation_Followup_SESSION_IMAGE")
                 } else {
-                    recylcerAdapterRecent.addNewItem(CSP.getData("Installation_Followup_SESSION_IMAGE").toString())
+                    recylcerAdapterRecent.addNewItem(
+                        CSP.getData("Installation_Followup_SESSION_IMAGE").toString()
+                    )
                     CSP.saveData(
                         "Installation_Followup_SESSION_IMAGE_SET",
                         "${CSP.getData("Installation_Followup_SESSION_IMAGE_SET")},${CSP.getData("Installation_Followup_SESSION_IMAGE")}"
                     )
                     CSP.delData("Installation_Followup_SESSION_IMAGE")
                 }
-            }catch (ex: Exception){
+            } catch (ex: Exception) {
 
             }
         }
@@ -133,36 +153,48 @@ class InstallationFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, ActivityCategoryModel::class.java)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvActivityDetail.setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(requireContext())
-                        rvActivityDetail.layoutManager = layoutManager
-                        recylcerAdapter =
-                            InstallationAdapter(requireContext(), apiData.data, arguments)
-                        rvActivityDetail.adapter = recylcerAdapter
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                        toolbarVisibility(true)
-                        (activity as NewDashboardActivity).shouldGoBack = true
-                    })
-                } else {
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, ActivityCategoryModel::class.java)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvActivityDetail.setHasFixedSize(true)
+                            layoutManager = LinearLayoutManager(requireContext())
+                            rvActivityDetail.layoutManager = layoutManager
+                            recylcerAdapter =
+                                InstallationAdapter(requireContext(), apiData.data, arguments)
+                            rvActivityDetail.adapter = recylcerAdapter
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                            toolbarVisibility(true)
+                            (activity as NewDashboardActivity).shouldGoBack = true
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }
         })
     }
 
-    fun fetchRecentActivities(url: String){
+    fun fetchRecentActivities(url: String) {
         println(url)
         val request = Request.Builder()
             .url(url)
@@ -186,33 +218,45 @@ class InstallationFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, RecentActivityModel::class.java)
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, RecentActivityModel::class.java)
 
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvRecentSubActivities.setHasFixedSize(true)
-                        layoutManagerRecent = LinearLayoutManager(requireContext())
-                        rvRecentSubActivities.layoutManager = layoutManagerRecent
-                        recylcerAdapterRecent = RecentActivityAdapter(
-                            requireContext(),
-                            "installation",
-                            apiData.data as MutableList<RecentActivityData>,
-                            arguments,
-                            requireActivity() as NewDashboardActivity,
-                            userData
-                        )
-                        rvRecentSubActivities.adapter = recylcerAdapterRecent
-                    })
-                }else{
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvRecentSubActivities.setHasFixedSize(true)
+                            layoutManagerRecent = LinearLayoutManager(requireContext())
+                            rvRecentSubActivities.layoutManager = layoutManagerRecent
+                            recylcerAdapterRecent = RecentActivityAdapter(
+                                requireContext(),
+                                "installation",
+                                apiData.data as MutableList<RecentActivityData>,
+                                arguments,
+                                requireActivity() as NewDashboardActivity,
+                                userData
+                            )
+                            rvRecentSubActivities.adapter = recylcerAdapterRecent
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }

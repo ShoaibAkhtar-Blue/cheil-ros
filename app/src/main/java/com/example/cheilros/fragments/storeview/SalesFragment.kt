@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
@@ -51,14 +52,15 @@ class SalesFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view =   inflater.inflate(R.layout.fragment_sales, container, false)
+        val view = inflater.inflate(R.layout.fragment_sales, container, false)
         toolbarVisibility(false)
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
-        try{
-            view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_DailySales" }.get(0).labelName
-        }catch (ex: Exception){
+        try {
+            view.txtStoreName.text =
+                settingData.filter { it.fixedLabelName == "StoreMenu_DailySales" }.get(0).labelName
+        } catch (ex: Exception) {
 
         }
         //endregion
@@ -88,14 +90,26 @@ class SalesFragment : BaseFragment() {
                         val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
                         btnDate.tag = currentDate
                         CSP.saveData("salesData", currentDate)
-                        fetchSales("${CSP.getData("base_url")}/Sales.asmx/SaleCountSummary?StoreID=${arguments?.getInt("StoreID")}&SaleDate=$currentDate")
+                        fetchSales(
+                            "${CSP.getData("base_url")}/Sales.asmx/SaleCountSummary?StoreID=${
+                                arguments?.getInt(
+                                    "StoreID"
+                                )
+                            }&SaleDate=$currentDate"
+                        )
                     }, year, month, day
                 )
             //datePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
             datePickerDialog.show()
         }
         getCurrentWeek(btnDate.tag as String)
-        fetchSales("${CSP.getData("base_url")}/Sales.asmx/SaleCountSummary?StoreID=${arguments?.getInt("StoreID")}&SaleDate=$currentDateAndTime")
+        fetchSales(
+            "${CSP.getData("base_url")}/Sales.asmx/SaleCountSummary?StoreID=${
+                arguments?.getInt(
+                    "StoreID"
+                )
+            }&SaleDate=$currentDateAndTime"
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -128,7 +142,7 @@ class SalesFragment : BaseFragment() {
         rvCurrentWeek!!.adapter = tsscurrentweekAdapter
     }
 
-    fun fetchSales(url: String){
+    fun fetchSales(url: String) {
         mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
         println(url)
         val client = OkHttpClient()
@@ -149,31 +163,50 @@ class SalesFragment : BaseFragment() {
                     mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                 })
             }
+
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, SalesModel::class.java)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvSales.setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(requireContext())
-                        rvSales.layoutManager = layoutManager
-                        recylcerAdapter = SalesAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"), arguments?.getString("StoreName"), settingData)
-                        rvSales.adapter = recylcerAdapter
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                        toolbarVisibility(true)
-                        (activity as NewDashboardActivity).shouldGoBack = true
-                    })
-                }else {
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, SalesModel::class.java)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvSales.setHasFixedSize(true)
+                            layoutManager = LinearLayoutManager(requireContext())
+                            rvSales.layoutManager = layoutManager
+                            recylcerAdapter = SalesAdapter(
+                                requireContext(),
+                                apiData.data,
+                                arguments?.getInt("StoreID"),
+                                arguments?.getString("StoreName"),
+                                settingData
+                            )
+                            rvSales.adapter = recylcerAdapter
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                            toolbarVisibility(true)
+                            (activity as NewDashboardActivity).shouldGoBack = true
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }
@@ -181,10 +214,16 @@ class SalesFragment : BaseFragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun filterTS(status: Int = 0, filterDate: String = ""){
+    fun filterTS(status: Int = 0, filterDate: String = "") {
         var fd = if (filterDate.equals("")) btnDate.tag else filterDate
         btnDate.tag = fd
         getCurrentWeek(btnDate.tag as String)
-        fetchSales("${CSP.getData("base_url")}/Sales.asmx/SaleCountSummary?StoreID=${arguments?.getInt("StoreID")}&SaleDate=${btnDate.tag}")
+        fetchSales(
+            "${CSP.getData("base_url")}/Sales.asmx/SaleCountSummary?StoreID=${
+                arguments?.getInt(
+                    "StoreID"
+                )
+            }&SaleDate=${btnDate.tag}"
+        )
     }
 }

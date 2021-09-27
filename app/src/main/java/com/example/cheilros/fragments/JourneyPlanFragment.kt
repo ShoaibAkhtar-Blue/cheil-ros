@@ -63,16 +63,17 @@ class JourneyPlanFragment : BaseFragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_journey_plan, container, false)
-
+        toolbarVisibility(false)
         //configureToolbar("Journey Plan", true)
 
 
         view.mainLoadingLayout.setState(LoadingLayout.LOADING)
 
         //Set Label
-        try{
-            view.txtNoRecord.text = settingData.filter { it.fixedLabelName == "General_NoRecordFound" }[0].labelName
-        }catch (ex: Exception){
+        try {
+            view.txtNoRecord.text =
+                settingData.filter { it.fixedLabelName == "General_NoRecordFound" }[0].labelName
+        } catch (ex: Exception) {
 
         }
         //End Label
@@ -175,7 +176,8 @@ class JourneyPlanFragment : BaseFragment() {
         str1.setSpan(ForegroundColorSpan(Color.BLACK), 0, str1.length, 0)
         builder.append(str1)
 
-        val str2 = SpannableString(settingData.filter { it.fixedLabelName == "JourneyPlanAll" }.get(0).labelName)
+        val str2 = SpannableString(settingData.filter { it.fixedLabelName == "JourneyPlanAll" }
+            .get(0).labelName)
         str2.setSpan(ForegroundColorSpan(Color.GRAY), 0, str2.length, 0)
         builder.append(str2)
 
@@ -309,28 +311,39 @@ class JourneyPlanFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, JPStatusModel::class.java)
-                println(apiData.status)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        setupChart(apiData.data)
-                        jpstatusAdapter = JPStatusAdapter(
-                            requireContext(),
-                            apiData.data,
-                            this@JourneyPlanFragment, settingData
-                        )
-                        rvJPStatus!!.adapter = jpstatusAdapter
-                    })
-                } else {
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, JPStatusModel::class.java)
+                    println(apiData.status)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            setupChart(apiData.data)
+                            jpstatusAdapter = JPStatusAdapter(
+                                requireContext(),
+                                apiData.data,
+                                this@JourneyPlanFragment, settingData
+                            )
+                            rvJPStatus!!.adapter = jpstatusAdapter
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
+                        findNavController().popBackStack()
                     })
                 }
             }
@@ -359,54 +372,67 @@ class JourneyPlanFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, JourneyPlanModel::class.java)
+                    println(apiData.status)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvJourneyPlan.setHasFixedSize(true)
 
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, JourneyPlanModel::class.java)
-                println(apiData.status)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvJourneyPlan.setHasFixedSize(true)
-
-                        if (isDecoratorEnabled) {
-                            /*var itemDecoration = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
-                            itemDecoration.setDrawable(getDrawable(R.drawable.border_grey)!!)*/
-                            rvJourneyPlan.addItemDecoration(
-                                DividerItemDecoration(
-                                    context,
-                                    DividerItemDecoration.VERTICAL
+                            if (isDecoratorEnabled) {
+                                /*var itemDecoration = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+                                itemDecoration.setDrawable(getDrawable(R.drawable.border_grey)!!)*/
+                                rvJourneyPlan.addItemDecoration(
+                                    DividerItemDecoration(
+                                        context,
+                                        DividerItemDecoration.VERTICAL
+                                    )
                                 )
+                            }
+
+
+                            val isCurrentDate: Boolean = currentDate.equals(btnDate.tag.toString())
+
+                            layoutManager = LinearLayoutManager(requireContext())
+                            rvJourneyPlan.layoutManager = layoutManager
+                            recylcerAdapter = JPAdapter(
+                                requireContext(),
+                                apiData.data,
+                                this@JourneyPlanFragment,
+                                isCurrentDate,
+                                settingData,
+                                requireActivity() as NewDashboardActivity
                             )
-                        }
+                            rvJourneyPlan.adapter = recylcerAdapter
+                            val emptyView: View = todo_list_empty_view
+                            rvJourneyPlan.setEmptyView(emptyView)
 
+                            getCurrentWeek(btnDate.tag as String)
 
-                        val isCurrentDate: Boolean = currentDate.equals(btnDate.tag.toString())
-
-                        layoutManager = LinearLayoutManager(requireContext())
-                        rvJourneyPlan.layoutManager = layoutManager
-                        recylcerAdapter = JPAdapter(
-                            requireContext(),
-                            apiData.data,
-                            this@JourneyPlanFragment,
-                            isCurrentDate,
-                            settingData,
-                            requireActivity() as NewDashboardActivity
-                        )
-                        rvJourneyPlan.adapter = recylcerAdapter
-                        val emptyView: View = todo_list_empty_view
-                        rvJourneyPlan.setEmptyView(emptyView)
-
-                        getCurrentWeek(btnDate.tag as String)
-
-                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
-                    })
-                } else {
+                            mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                            toolbarVisibility(true)
+                            (activity as NewDashboardActivity).shouldGoBack = true
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
+                        findNavController().popBackStack()
                     })
                 }
             }

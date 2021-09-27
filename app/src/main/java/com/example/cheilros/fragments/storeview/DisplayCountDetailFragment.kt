@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
@@ -175,7 +176,7 @@ class DisplayCountDetailFragment : BaseFragment() {
                 CSP.getData("dispPosition")?.let {
                     recylcerAdapter.addDatainJsonObject(
                         it.toInt(),
-                        CSP.getData("activity_barcodes")!!,true
+                        CSP.getData("activity_barcodes")!!, true
                     )
                 }
 
@@ -212,83 +213,101 @@ class DisplayCountDetailFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, DisplayCountViewModel::class.java)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvDisplayCountDetail.setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(requireContext())
-                        rvDisplayCountDetail.layoutManager = layoutManager
-                        recylcerAdapter =
-                            DisplayCountDetailAdapter(
-                                requireContext(),
-                                apiData.data as MutableList<DisplayCountViewData>, ref, arguments
-                            )
-                        rvDisplayCountDetail.adapter = recylcerAdapter
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, DisplayCountViewModel::class.java)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvDisplayCountDetail.setHasFixedSize(true)
+                            layoutManager = LinearLayoutManager(requireContext())
+                            rvDisplayCountDetail.layoutManager = layoutManager
+                            recylcerAdapter =
+                                DisplayCountDetailAdapter(
+                                    requireContext(),
+                                    apiData.data as MutableList<DisplayCountViewData>,
+                                    ref,
+                                    arguments
+                                )
+                            rvDisplayCountDetail.adapter = recylcerAdapter
 
-                        if (CSP.getData("team_type_id")!!.toInt() <= 4){
-                            btnSubmit.visibility = View.INVISIBLE
-                        }else{
-                            object : SwipeHelper(requireContext(), rvDisplayCountDetail, false) {
-                                override fun instantiateUnderlayButton(
-                                    viewHolder: RecyclerView.ViewHolder?,
-                                    underlayButtons: MutableList<UnderlayButton>?
-                                ) {
-                                    // Archive Button
-                                    underlayButtons?.add(SwipeHelper.UnderlayButton(
-                                        "View",
-                                        AppCompatResources.getDrawable(
-                                            requireContext(),
-                                            R.drawable.ic_baseline_view
-                                        ),
-                                        Color.parseColor("#000000"), Color.parseColor("#ffffff"),
-                                        UnderlayButtonClickListener { pos: Int ->
-                                            recylcerAdapter.allBarcodes(pos)
-                                        }
-                                    ))
+                            if (CSP.getData("team_type_id")!!.toInt() <= 4) {
+                                btnSubmit.visibility = View.INVISIBLE
+                            } else {
+                                object :
+                                    SwipeHelper(requireContext(), rvDisplayCountDetail, false) {
+                                    override fun instantiateUnderlayButton(
+                                        viewHolder: RecyclerView.ViewHolder?,
+                                        underlayButtons: MutableList<UnderlayButton>?
+                                    ) {
+                                        // Archive Button
+                                        underlayButtons?.add(SwipeHelper.UnderlayButton(
+                                            "View",
+                                            AppCompatResources.getDrawable(
+                                                requireContext(),
+                                                R.drawable.ic_baseline_view
+                                            ),
+                                            Color.parseColor("#000000"),
+                                            Color.parseColor("#ffffff"),
+                                            UnderlayButtonClickListener { pos: Int ->
+                                                recylcerAdapter.allBarcodes(pos)
+                                            }
+                                        ))
 
-                                    // Flag Button
-                                    underlayButtons?.add(SwipeHelper.UnderlayButton(
-                                        "Scan",
-                                        AppCompatResources.getDrawable(
-                                            requireContext(),
-                                            R.drawable.barcode2
-                                        ),
-                                        Color.parseColor("#FF0000"), Color.parseColor("#ffffff"),
-                                        UnderlayButtonClickListener { pos: Int ->
-                                            recylcerAdapter.barCodeScan(pos)
-                                        }
-                                    ))
+                                        // Flag Button
+                                        underlayButtons?.add(SwipeHelper.UnderlayButton(
+                                            "Scan",
+                                            AppCompatResources.getDrawable(
+                                                requireContext(),
+                                                R.drawable.barcode2
+                                            ),
+                                            Color.parseColor("#FF0000"),
+                                            Color.parseColor("#ffffff"),
+                                            UnderlayButtonClickListener { pos: Int ->
+                                                recylcerAdapter.barCodeScan(pos)
+                                            }
+                                        ))
 
-                                    // More Button
-                                    underlayButtons?.add(SwipeHelper.UnderlayButton(
-                                        "Input",
-                                        AppCompatResources.getDrawable(
-                                            requireContext(),
-                                            R.drawable.ic_baseline_edit_24
-                                        ),
-                                        Color.parseColor("#00FF00"), Color.parseColor("#ffffff"),
-                                        UnderlayButtonClickListener { pos: Int ->
-                                            recylcerAdapter.inputBarcode(pos)
-                                        }
-                                    ))
+                                        // More Button
+                                        underlayButtons?.add(SwipeHelper.UnderlayButton(
+                                            "Input",
+                                            AppCompatResources.getDrawable(
+                                                requireContext(),
+                                                R.drawable.ic_baseline_edit_24
+                                            ),
+                                            Color.parseColor("#00FF00"),
+                                            Color.parseColor("#ffffff"),
+                                            UnderlayButtonClickListener { pos: Int ->
+                                                recylcerAdapter.inputBarcode(pos)
+                                            }
+                                        ))
+                                    }
                                 }
                             }
-                        }
 
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                        toolbarVisibility(true)
-                        (activity as NewDashboardActivity).shouldGoBack = true
-                    })
-                } else {
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                            toolbarVisibility(true)
+                            (activity as NewDashboardActivity).shouldGoBack = true
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }
@@ -319,26 +338,36 @@ class DisplayCountDetailFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, DisplayProductCategoryModel::class.java)
-
-                if (apiData.status == 200) {
-                    productCategoryData = apiData.data
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        activity?.let { it1 ->
-                            //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
-                        }
-                    })
-                } else {
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, DisplayProductCategoryModel::class.java)
+                    if (apiData.status == 200) {
+                        productCategoryData = apiData.data
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                            }
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                                //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                            }
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
-                            //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
+                        findNavController().popBackStack()
                     })
                 }
             }

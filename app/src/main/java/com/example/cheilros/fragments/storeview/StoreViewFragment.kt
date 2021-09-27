@@ -73,14 +73,22 @@ class StoreViewFragment : BaseFragment() {
         //StoreView_SubTitle
         //region Set Labels
         try {
-            view.StoreMenu_Investment.text = settingData.filter { it.fixedLabelName == "StoreView_InvesmentSubTitle" }[0].labelName
-            view.StoreView_SubTitle.text = settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }.get(0).labelName
-            view.StoreView_SubTitle.text = settingData.filter { it.fixedLabelName == "StoreView_ChecklistSubTitle" }.get(0).labelName
+            view.StoreMenu_Investment.text =
+                settingData.filter { it.fixedLabelName == "StoreView_InvesmentSubTitle" }[0].labelName
+            view.StoreView_SubTitle.text =
+                settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }.get(0).labelName
+            view.StoreView_SubTitle.text =
+                settingData.filter { it.fixedLabelName == "StoreView_ChecklistSubTitle" }
+                    .get(0).labelName
 
-            view.txtNoRecord.text = settingData.filter { it.fixedLabelName == "General_NoRecordFound" }[0].labelName
-            view.StoreSummary_Region.text = settingData.filter { it.fixedLabelName == "StoreSummary_Region" }[0].labelName
-            view.StoreSummary_StoreType.text = settingData.filter { it.fixedLabelName == "StoreSummary_StoreType" }[0].labelName
-            view.StoreSummary_CityDistrict.text = settingData.filter { it.fixedLabelName == "StoreSummary_CityDistrict" }[0].labelName
+            view.txtNoRecord.text =
+                settingData.filter { it.fixedLabelName == "General_NoRecordFound" }[0].labelName
+            view.StoreSummary_Region.text =
+                settingData.filter { it.fixedLabelName == "StoreSummary_Region" }[0].labelName
+            view.StoreSummary_StoreType.text =
+                settingData.filter { it.fixedLabelName == "StoreSummary_StoreType" }[0].labelName
+            view.StoreSummary_CityDistrict.text =
+                settingData.filter { it.fixedLabelName == "StoreSummary_CityDistrict" }[0].labelName
         } catch (ex: Exception) {
 
         }
@@ -270,39 +278,51 @@ class StoreViewFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, StoreInfoModel::class.java)
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, StoreInfoModel::class.java)
 
-                if (apiData.status == 200) {
-                    try {
-                        if (requireActivity() == null) {
+                    if (apiData.status == 200) {
+                        try {
+                            if (requireActivity() == null) {
+                                return
+                            }
+                        } catch (ex: Exception) {
                             return
                         }
-                    }catch (ex: Exception){
-                        return
+
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            txtStoreRegion.text = apiData.data[0].RegionName
+                            txtStoreType.text = apiData.data[0].StoreTypeName
+                            txtStoreGrade.text = apiData.data[0].GradeName
+                            txtStoreCity.text = apiData.data[0].DistrcitName
+                            txtStoreDistributor.text = apiData.data[0].DistributorName
+
+                            toolbarVisibility(true)
+                            (activity as NewDashboardActivity).shouldGoBack = true
+                            mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                        })
+
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                        })
                     }
-
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        txtStoreRegion.text = apiData.data[0].RegionName
-                        txtStoreType.text = apiData.data[0].StoreTypeName
-                        txtStoreGrade.text = apiData.data[0].GradeName
-                        txtStoreCity.text = apiData.data[0].DistrcitName
-                        txtStoreDistributor.text = apiData.data[0].DistributorName
-
-                        toolbarVisibility(true)
-                        (activity as NewDashboardActivity).shouldGoBack = true
-                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
-                    })
-
-                } else {
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }
@@ -334,35 +354,47 @@ class StoreViewFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, RecentActivityModel::class.java)
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, RecentActivityModel::class.java)
 
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvRecentActivities.setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(requireContext())
-                        rvRecentActivities.layoutManager = layoutManager
-                        recylcerAdapter =
-                            RecentActivityAdapter(
-                                requireContext(),
-                                "storeview",
-                                apiData.data as MutableList<RecentActivityData>,
-                                arguments,
-                                requireActivity() as NewDashboardActivity,
-                                userData
-                            )
-                        rvRecentActivities.adapter = recylcerAdapter
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvRecentActivities.setHasFixedSize(true)
+                            layoutManager = LinearLayoutManager(requireContext())
+                            rvRecentActivities.layoutManager = layoutManager
+                            recylcerAdapter =
+                                RecentActivityAdapter(
+                                    requireContext(),
+                                    "storeview",
+                                    apiData.data as MutableList<RecentActivityData>,
+                                    arguments,
+                                    requireActivity() as NewDashboardActivity,
+                                    userData
+                                )
+                            rvRecentActivities.adapter = recylcerAdapter
 
-                    })
-                } else {
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }
@@ -396,40 +428,53 @@ class StoreViewFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, CheckListAnswerModel::class.java)
-                if (apiData.status == 200) {
-                    try{
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, CheckListAnswerModel::class.java)
+                    if (apiData.status == 200) {
+                        try {
+                            requireActivity().runOnUiThread(java.lang.Runnable {
+                                rvChecklistAnswer.setHasFixedSize(true)
+                                layoutManagerCL = LinearLayoutManager(requireContext())
+                                rvChecklistAnswer.layoutManager = layoutManagerCL
+                                recylcerAdapterCL =
+                                    ChecklistAnsweredAdapter(requireContext(), apiData.data)
+                                rvChecklistAnswer.adapter = recylcerAdapterCL
+                                val emptyView: View = todo_list_empty_view1
+                                rvChecklistAnswer.setEmptyView(emptyView)
+                            })
+                        } catch (ex: Exception) {
+                            /*requireActivity().runOnUiThread(java.lang.Runnable {
+                                activity?.let { it1 ->
+                                    Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                        .setTitle("Error!!")
+                                        .setMessage("Issue in loading data.")
+                                        .sneakWarning()
+                                }
+                                mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                            })*/
+                        }
+
+                    } else {
                         requireActivity().runOnUiThread(java.lang.Runnable {
-                            rvChecklistAnswer.setHasFixedSize(true)
-                            layoutManagerCL = LinearLayoutManager(requireContext())
-                            rvChecklistAnswer.layoutManager = layoutManagerCL
-                            recylcerAdapterCL = ChecklistAnsweredAdapter(requireContext(), apiData.data)
-                            rvChecklistAnswer.adapter = recylcerAdapterCL
-                            val emptyView: View = todo_list_empty_view1
-                            rvChecklistAnswer.setEmptyView(emptyView)
-                        })
-                    }catch (ex: Exception){
-                        /*requireActivity().runOnUiThread(java.lang.Runnable {
                             activity?.let { it1 ->
                                 Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                     .setTitle("Error!!")
-                                    .setMessage("Issue in loading data.")
+                                    .setMessage("Data not fetched.")
                                     .sneakWarning()
                             }
                             mainLoadingLayout.setState(LoadingLayout.COMPLETE)
-                        })*/
+                        })
                     }
-
-                } else {
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }

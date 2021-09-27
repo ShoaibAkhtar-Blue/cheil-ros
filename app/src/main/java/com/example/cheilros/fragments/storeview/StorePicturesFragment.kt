@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -80,7 +81,8 @@ class StorePicturesFragment : BaseFragment() {
         titles.add("Third Item")
         titles.add("Fourth Item")
 
-        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Campaign" }.get(0).labelName
+        view.txtStoreName.text =
+            settingData.filter { it.fixedLabelName == "StoreMenu_Campaign" }.get(0).labelName
 
         fetchElement("${CSP.getData("base_url")}/Webservice.asmx/StorePicture_GeneralElement")
         fetchBrand("${CSP.getData("base_url")}/Webservice.asmx/BrandList_General")
@@ -426,31 +428,42 @@ class StorePicturesFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, GeneralPicturesModel::class.java)
+                    println(apiData.status)
+                    if (apiData.status == 200) {
+                        elementData = apiData.data
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                //mainLoading.setState(LoadingLayout.COMPLETE)
+                                try {
+                                    btnElement.text = elementData[0].StorePictureElementName
+                                } catch (ex: Exception) {
 
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, GeneralPicturesModel::class.java)
-                println(apiData.status)
-                if (apiData.status == 200) {
-                    elementData = apiData.data
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        activity?.let { it1 ->
-                            //mainLoading.setState(LoadingLayout.COMPLETE)
-                            try {
-                                btnElement.text = elementData[0].StorePictureElementName
-                            } catch (ex: Exception) {
-
+                                }
                             }
-                        }
-                    })
-                } else {
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                                mainLoading.setState(LoadingLayout.COMPLETE)
+                            }
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
-                            mainLoading.setState(LoadingLayout.COMPLETE)
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
+                        findNavController().popBackStack()
                     })
                 }
             }
@@ -481,31 +494,42 @@ class StorePicturesFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, BrandModel::class.java)
+                    println(apiData.status)
+                    if (apiData.status == 200) {
+                        brandData = apiData.data
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                //mainLoading.setState(LoadingLayout.COMPLETE)
+                                try {
+                                    btnBrand.text = brandData[0].BrandName
+                                } catch (ex: Exception) {
 
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, BrandModel::class.java)
-                println(apiData.status)
-                if (apiData.status == 200) {
-                    brandData = apiData.data
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        activity?.let { it1 ->
-                            //mainLoading.setState(LoadingLayout.COMPLETE)
-                            try {
-                                btnBrand.text = brandData[0].BrandName
-                            } catch (ex: Exception) {
-
+                                }
                             }
-                        }
-                    })
-                } else {
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                                mainLoading.setState(LoadingLayout.COMPLETE)
+                            }
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
-                            mainLoading.setState(LoadingLayout.COMPLETE)
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
+                        findNavController().popBackStack()
                     })
                 }
             }
@@ -537,41 +561,55 @@ class StorePicturesFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, GeneralPicturesModel::class.java)
+                    println(apiData.status)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
 
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, GeneralPicturesModel::class.java)
-                println(apiData.status)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
+                            adapter = StorePicturesAdapter(
+                                requireContext(),
+                                apiData.data,
+                                this@StorePicturesFragment
+                            )
 
-                        adapter = StorePicturesAdapter(requireContext(), apiData.data, this@StorePicturesFragment)
+                            val gridLayoutManager = GridLayoutManager(
+                                requireContext(),
+                                2,
+                                GridLayoutManager.VERTICAL,
+                                false
+                            )
+                            rvStorePictures.layoutManager = gridLayoutManager
+                            rvStorePictures.adapter = adapter
 
-                        val gridLayoutManager = GridLayoutManager(
-                            requireContext(),
-                            2,
-                            GridLayoutManager.VERTICAL,
-                            false
-                        )
-                        rvStorePictures.layoutManager = gridLayoutManager
-                        rvStorePictures.adapter = adapter
+                            if (CSP.getData("team_type_id")!!.toInt() <= 4) {
 
-                        if (CSP.getData("team_type_id")!!.toInt() <= 4) {
+                            } else
+                                btnAddStorePicture.visibility = View.VISIBLE
 
-                        }
-                        else
-                            btnAddStorePicture.visibility = View.VISIBLE
-
-                        mainLoading.setState(LoadingLayout.COMPLETE)
-                    })
-                } else {
+                            mainLoading.setState(LoadingLayout.COMPLETE)
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoading.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoading.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }

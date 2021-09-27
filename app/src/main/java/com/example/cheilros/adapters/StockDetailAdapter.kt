@@ -210,8 +210,16 @@ class StockDetailAdapter(
             }
         }
 
-        holder.txtSaleQuantity.setText(filterList[position].StockStatus.toString())
-        holder.txtSalesValue.setText(filterList[position].Field.toString())
+        val isAlreadyEdit = salesData.filter { it.ProductID == filterList[position].ProductID}
+        if(isAlreadyEdit.isNotEmpty()){
+            holder.txtSaleQuantity.setText(isAlreadyEdit[0].StockCount)
+            holder.txtSalesValue.setText(isAlreadyEdit[0].Field2)
+        }else{
+            holder.txtSaleQuantity.setText(filterList[position].StockStatus.toString())
+            holder.txtSalesValue.setText(filterList[position].Field.toString())
+        }
+
+
 
         if(settingData.filter { it.fixedLabelName == "Stock_Column2" }[0].labelName == "")
             holder.txtSalesValue.visibility = View.GONE

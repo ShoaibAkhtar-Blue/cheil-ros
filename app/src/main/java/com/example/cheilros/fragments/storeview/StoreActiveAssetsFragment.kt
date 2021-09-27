@@ -155,32 +155,44 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, AssetListModel::class.java)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvAssetsList.setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(requireContext())
-                        rvAssetsList.layoutManager = layoutManager
-                        recylcerAdapter =
-                            AssetListAdapter(
-                                requireContext(),
-                                apiData.data,
-                                this@StoreActiveAssetsFragment
-                            )
-                        rvAssetsList.adapter = recylcerAdapter
-                        val emptyView: View = todo_list_empty_view3
-                        rvAssetsList.setEmptyView(emptyView)
-                    })
-                } else {
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, AssetListModel::class.java)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvAssetsList.setHasFixedSize(true)
+                            layoutManager = LinearLayoutManager(requireContext())
+                            rvAssetsList.layoutManager = layoutManager
+                            recylcerAdapter =
+                                AssetListAdapter(
+                                    requireContext(),
+                                    apiData.data,
+                                    this@StoreActiveAssetsFragment
+                                )
+                            rvAssetsList.adapter = recylcerAdapter
+                            val emptyView: View = todo_list_empty_view3
+                            rvAssetsList.setEmptyView(emptyView)
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-
+                        findNavController().popBackStack()
                     })
                 }
             }
@@ -208,26 +220,37 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, AssetBrandsModel::class.java)
-                println(apiData.status)
-                if (apiData.status == 200) {
-                    brandData = apiData.data
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        activity?.let { it1 ->
-                            //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
-                        }
-                    })
-                } else {
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, AssetBrandsModel::class.java)
+                    println(apiData.status)
+                    if (apiData.status == 200) {
+                        brandData = apiData.data
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                            }
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                                //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                            }
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
-                            //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
+                        findNavController().popBackStack()
                     })
                 }
             }
@@ -251,12 +274,16 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
             dialog.LLExtraOpt.visibility = View.GONE
 
         //region Set Label
-        try{
-            dialog.Asset_Height.text = settingData.filter { it.fixedLabelName == "Asset_Height" }[0].labelName
-            dialog.Asset_Depth.text = settingData.filter { it.fixedLabelName == "Asset_Depth" }[0].labelName
-            dialog.Asset_Width.text = settingData.filter { it.fixedLabelName == "Asset_Width" }[0].labelName
-            dialog.btnAcceptAsset.text = settingData.filter { it.fixedLabelName == "Asset_Save" }[0].labelName
-        }catch (ex: Exception){
+        try {
+            dialog.Asset_Height.text =
+                settingData.filter { it.fixedLabelName == "Asset_Height" }[0].labelName
+            dialog.Asset_Depth.text =
+                settingData.filter { it.fixedLabelName == "Asset_Depth" }[0].labelName
+            dialog.Asset_Width.text =
+                settingData.filter { it.fixedLabelName == "Asset_Width" }[0].labelName
+            dialog.btnAcceptAsset.text =
+                settingData.filter { it.fixedLabelName == "Asset_Save" }[0].labelName
+        } catch (ex: Exception) {
 
         }
         //endregion

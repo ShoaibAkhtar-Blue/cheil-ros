@@ -7,6 +7,14 @@ import kotlinx.android.parcel.Parcelize
 
 class AddVisitPlanModel(val status: Int)
 
+//region Dashboard Cumlative
+class DashboardCumlativeModel(val status: Int, val data: List<DashboardCumlativeData>)
+class DashboardCumlativeData(
+    val market_activity: String,
+    val teammember_performance: List<DashboardBarChartData2>,
+    val daily_trend: List<DashboardBarChartData>,
+)
+//endregion
 
 //region Store View
 class StoreInfoModel(val status: Int, val data: List<StoreInfoData>)
@@ -201,6 +209,13 @@ class DashboardBarChartData(
     val TrendDate: String,
     val Value1: String,
     val Value2: String
+)
+class DashboardBarChartData2(
+    val TeamMemberID: Int,
+    val PerformanceMonth: String,
+    val PerformanceYear: String,
+    val Score1: String,
+    val Score2: String
 )
 
 class DashboardTaskAssignedModel(val status: Int, val data: List<DashboardTaskAssignedData>)

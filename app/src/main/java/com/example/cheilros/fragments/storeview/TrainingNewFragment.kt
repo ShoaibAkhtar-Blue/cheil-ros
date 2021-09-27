@@ -78,12 +78,12 @@ class TrainingNewFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view =  inflater.inflate(R.layout.fragment_training_new, container, false)
+        val view = inflater.inflate(R.layout.fragment_training_new, container, false)
         toolbarVisibility(false)
         //region Set Labels
         try {
             //view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Training" }.get(0).labelName
-        }catch (ex: Exception){
+        } catch (ex: Exception) {
 
         }
         //endregion
@@ -94,25 +94,31 @@ class TrainingNewFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mainLoadingLayoutTD.setState(LoadingLayout.LOADING)
 
-        if (CSP.getData("team_type_id")!!.toInt() <= 4){
+        if (CSP.getData("team_type_id")!!.toInt() <= 4) {
             btnAddAttendee.visibility = View.GONE
             LLImageRV.visibility = View.GONE
             btnSubmit.visibility = View.INVISIBLE
         }
 
-        try{
+        try {
             rvTrainingPictures.setHasFixedSize(true)
-            layoutManagerPA = LinearLayoutManager(requireContext(),RecyclerView.HORIZONTAL, false)
+            layoutManagerPA = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
             rvTrainingPictures.layoutManager = layoutManagerPA
             recylcerAdapterPA = CapturedPictureAdapter(requireContext(), capturedPicturesList)
             rvTrainingPictures.adapter = recylcerAdapterPA
-        }catch (ex: Exception){
+        } catch (ex: Exception) {
 
         }
 
         fetchTraining("${CSP.getData("base_url")}/Training.asmx/TrainingModelsList")
 
-        fetchAttendees("${CSP.getData("base_url")}/Training.asmx/StoreTeamMemberForTraining?StoreID=${arguments?.getInt("StoreID")}")
+        fetchAttendees(
+            "${CSP.getData("base_url")}/Training.asmx/StoreTeamMemberForTraining?StoreID=${
+                arguments?.getInt(
+                    "StoreID"
+                )
+            }"
+        )
 
         btnCheckinTime.setOnClickListener {
             val cal = Calendar.getInstance()
@@ -121,7 +127,13 @@ class TrainingNewFragment : BaseFragment() {
                 cal.set(Calendar.MINUTE, minute)
                 btnCheckinTime.text = SimpleDateFormat("HH:mm:ss").format(cal.time)
             }
-            TimePickerDialog(requireContext(), timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+            TimePickerDialog(
+                requireContext(),
+                timeSetListener,
+                cal.get(Calendar.HOUR_OF_DAY),
+                cal.get(Calendar.MINUTE),
+                true
+            ).show()
         }
 
         btnCheckoutTime.setOnClickListener {
@@ -131,7 +143,13 @@ class TrainingNewFragment : BaseFragment() {
                 cal.set(Calendar.MINUTE, minute)
                 btnCheckoutTime.text = SimpleDateFormat("HH:mm:ss").format(cal.time)
             }
-            TimePickerDialog(requireContext(), timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
+            TimePickerDialog(
+                requireContext(),
+                timeSetListener,
+                cal.get(Calendar.HOUR_OF_DAY),
+                cal.get(Calendar.MINUTE),
+                true
+            ).show()
         }
 
         btnAddAttendee.setOnClickListener {
@@ -144,17 +162,28 @@ class TrainingNewFragment : BaseFragment() {
             dialog.setCancelable(false)
             dialog.setCanceledOnTouchOutside(true)
 
-            dialog.txtTitle.text = settingData.filter { it.fixedLabelName == "Training_AddAttendees" }.get(0).labelName
-            dialog.txtQuestion.text = settingData.filter { it.fixedLabelName == "Training_AddTittle" }.get(0).labelName
-            dialog.OTAttendeeName.hint = settingData.filter { it.fixedLabelName == "Training_EnterName" }.get(0).labelName
-            dialog.btnCancel.text = settingData.filter { it.fixedLabelName == "Logout_Cancel" }.get(0).labelName
+            dialog.txtTitle.text =
+                settingData.filter { it.fixedLabelName == "Training_AddAttendees" }.get(0).labelName
+            dialog.txtQuestion.text =
+                settingData.filter { it.fixedLabelName == "Training_AddTittle" }.get(0).labelName
+            dialog.OTAttendeeName.hint =
+                settingData.filter { it.fixedLabelName == "Training_EnterName" }.get(0).labelName
+            dialog.btnCancel.text =
+                settingData.filter { it.fixedLabelName == "Logout_Cancel" }.get(0).labelName
             dialog.btnCancel.setOnClickListener {
                 dialog.dismiss()
             }
 
-            dialog.btnAccept.text = settingData.filter { it.fixedLabelName == "StoreList_PopupAdd" }.get(0).labelName
+            dialog.btnAccept.text =
+                settingData.filter { it.fixedLabelName == "StoreList_PopupAdd" }.get(0).labelName
             dialog.btnAccept.setOnClickListener {
-                recylcerAdapter.addNewItem(TeamMemberData(0, dialog.etAttendeeName.text.toString(), 1))
+                recylcerAdapter.addNewItem(
+                    TeamMemberData(
+                        0,
+                        dialog.etAttendeeName.text.toString(),
+                        1
+                    )
+                )
                 dialog.dismiss()
             }
 
@@ -170,7 +199,10 @@ class TrainingNewFragment : BaseFragment() {
             builder.setPositiveButton("Camera") { dialog, which ->
                 CSP.saveData("fragName", "TrainingDetail")
                 val bundle = bundleOf("fragName" to "TrainingDetailFragment")
-                findNavController().navigate(R.id.action_trainingNewFragment_to_cameraActivity, bundle)
+                findNavController().navigate(
+                    R.id.action_trainingNewFragment_to_cameraActivity,
+                    bundle
+                )
             }
 
             builder.setNegativeButton("Gallery") { dialog, which ->
@@ -216,18 +248,24 @@ class TrainingNewFragment : BaseFragment() {
                     val sourceFile = File(paths)
                     val mimeType = CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
                     val fileName: String = sourceFile.name
-                    builder.addFormDataPart("TrainingPictures", fileName,sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull()))
+                    builder.addFormDataPart(
+                        "TrainingPictures",
+                        fileName,
+                        sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
+                    )
                 }
 
-                println("${CSP.getData("base_url")}/Training.asmx/OperTrainingDetail?TrainingModelID=${
-                    arguments?.getInt(
-                        "TrainingModelID"
-                    )
-                }&StoreID=${arguments?.getInt("StoreID")}&Description=-&TeamMemberID=${
-                    CSP.getData(
-                        "user_id"
-                    )
-                }&TrainingDateTime=${currentDateAndTime}&StartTime=${currentDateAndTime} ${btnCheckinTime.text}&EndTime=${currentDateAndTime} ${btnCheckoutTime.text}&AttendeseTypeID=1")
+                println(
+                    "${CSP.getData("base_url")}/Training.asmx/OperTrainingDetail?TrainingModelID=${
+                        arguments?.getInt(
+                            "TrainingModelID"
+                        )
+                    }&StoreID=${arguments?.getInt("StoreID")}&Description=-&TeamMemberID=${
+                        CSP.getData(
+                            "user_id"
+                        )
+                    }&TrainingDateTime=${currentDateAndTime}&StartTime=${currentDateAndTime} ${btnCheckinTime.text}&EndTime=${currentDateAndTime} ${btnCheckoutTime.text}&AttendeseTypeID=1"
+                )
                 val requestBody = builder.build()
                 val request: Request = Request.Builder()
                     .url(
@@ -289,7 +327,7 @@ class TrainingNewFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         println(CSP.getData("TrainingDetail_SESSION_IMAGE_SET"))
-        if(!CSP.getData("TrainingDetail_SESSION_IMAGE").equals("")){
+        if (!CSP.getData("TrainingDetail_SESSION_IMAGE").equals("")) {
             Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                 .setTitle("Success!!")
                 .setMessage("Image Added to this session!")
@@ -297,7 +335,10 @@ class TrainingNewFragment : BaseFragment() {
 
             if (CSP.getData("TrainingDetail_SESSION_IMAGE_SET").equals("")) {
                 recylcerAdapterPA.addNewItem(CSP.getData("TrainingDetail_SESSION_IMAGE"))
-                CSP.saveData("TrainingDetail_SESSION_IMAGE_SET", CSP.getData("TrainingDetail_SESSION_IMAGE"))
+                CSP.saveData(
+                    "TrainingDetail_SESSION_IMAGE_SET",
+                    CSP.getData("TrainingDetail_SESSION_IMAGE")
+                )
                 CSP.delData("TrainingDetail_SESSION_IMAGE")
             } else {
                 recylcerAdapterPA.addNewItem(CSP.getData("TrainingDetail_SESSION_IMAGE"))
@@ -307,7 +348,7 @@ class TrainingNewFragment : BaseFragment() {
                 )
                 CSP.delData("TrainingDetail_SESSION_IMAGE")
             }
-        }else if(!CSP.getData("sess_gallery_img").equals("")){
+        } else if (!CSP.getData("sess_gallery_img").equals("")) {
             try {
                 Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                     .setTitle("Success!!")
@@ -316,13 +357,13 @@ class TrainingNewFragment : BaseFragment() {
 
                 recylcerAdapterPA.addNewItem(CSP.getData("sess_gallery_img").toString())
                 CSP.delData("sess_gallery_img")
-            }catch (ex: Exception){
+            } catch (ex: Exception) {
 
             }
         }
     }
 
-    fun fetchTraining(url: String){
+    fun fetchTraining(url: String) {
         val client = OkHttpClient()
         println(url)
         val request = Request.Builder()
@@ -345,27 +386,40 @@ class TrainingNewFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, TrainingModel::class.java)
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, TrainingModel::class.java)
 
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvTraining.setHasFixedSize(true)
-                        layoutManagerTL = LinearLayoutManager(requireContext())
-                        rvTraining.layoutManager = layoutManagerTL
-                        recylcerAdapterTL = TrainingAdapter(requireContext(), apiData.data, arguments)
-                        rvTraining.adapter = recylcerAdapterTL
-                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                    })
-                }else{
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvTraining.setHasFixedSize(true)
+                            layoutManagerTL = LinearLayoutManager(requireContext())
+                            rvTraining.layoutManager = layoutManagerTL
+                            recylcerAdapterTL =
+                                TrainingAdapter(requireContext(), apiData.data, arguments)
+                            rvTraining.adapter = recylcerAdapterTL
+                            //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }
@@ -373,7 +427,7 @@ class TrainingNewFragment : BaseFragment() {
         })
     }
 
-    fun fetchAttendees(url: String){
+    fun fetchAttendees(url: String) {
         val client = OkHttpClient()
         println(url)
         val request = Request.Builder()
@@ -396,30 +450,46 @@ class TrainingNewFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, TeamMemberModel::class.java)
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, TeamMemberModel::class.java)
 
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvAttendees.setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(requireContext())
-                        rvAttendees.layoutManager = layoutManager
-                        recylcerAdapter = TrainingAttendeesAdapter(requireContext(),
-                            apiData.data as MutableList<TeamMemberData>, this@TrainingNewFragment, arguments)
-                        rvAttendees.adapter = recylcerAdapter
-                        mainLoadingLayoutTD.setState(LoadingLayout.COMPLETE)
-                        toolbarVisibility(true)
-                        (activity as NewDashboardActivity).shouldGoBack = true
-                    })
-                }else{
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvAttendees.setHasFixedSize(true)
+                            layoutManager = LinearLayoutManager(requireContext())
+                            rvAttendees.layoutManager = layoutManager
+                            recylcerAdapter = TrainingAttendeesAdapter(
+                                requireContext(),
+                                apiData.data as MutableList<TeamMemberData>,
+                                this@TrainingNewFragment,
+                                arguments
+                            )
+                            rvAttendees.adapter = recylcerAdapter
+                            mainLoadingLayoutTD.setState(LoadingLayout.COMPLETE)
+                            toolbarVisibility(true)
+                            (activity as NewDashboardActivity).shouldGoBack = true
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayoutTD.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayoutTD.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
 

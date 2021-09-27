@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
@@ -45,14 +46,20 @@ class ChecklistCategoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //txtStoreName.text = arguments?.getString("StoreName")
-        fetchChecklist("${CSP.getData("base_url")}/Audit.asmx/CheckList?StoreID=${arguments?.getInt("StoreID").toString()}")
+        fetchChecklist(
+            "${CSP.getData("base_url")}/Audit.asmx/CheckList?StoreID=${
+                arguments?.getInt(
+                    "StoreID"
+                ).toString()
+            }"
+        )
     }
 
     companion object {
 
     }
 
-    fun fetchChecklist(url: String){
+    fun fetchChecklist(url: String) {
 
         val request = Request.Builder()
             .url(url)
@@ -74,26 +81,39 @@ class ChecklistCategoryFragment : Fragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, CheckListModel::class.java)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvChecklist.setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(requireContext())
-                        rvChecklist.layoutManager = layoutManager
-                        recylcerAdapter = ChecklistAdapter(requireContext(), apiData.data, arguments)
-                        rvChecklist.adapter = recylcerAdapter
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                    })
-                }else {
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, CheckListModel::class.java)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvChecklist.setHasFixedSize(true)
+                            layoutManager = LinearLayoutManager(requireContext())
+                            rvChecklist.layoutManager = layoutManager
+                            recylcerAdapter =
+                                ChecklistAdapter(requireContext(), apiData.data, arguments)
+                            rvChecklist.adapter = recylcerAdapter
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }

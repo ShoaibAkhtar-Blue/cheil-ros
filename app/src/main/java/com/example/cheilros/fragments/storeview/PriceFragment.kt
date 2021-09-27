@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
@@ -37,9 +38,10 @@ class PriceFragment : BaseFragment() {
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
-        try{
-            view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_PricePromotions" }[0].labelName
-        }catch (ex: Exception){
+        try {
+            view.txtStoreName.text =
+                settingData.filter { it.fixedLabelName == "StoreMenu_PricePromotions" }[0].labelName
+        } catch (ex: Exception) {
 
         }
         //endregion
@@ -48,7 +50,13 @@ class PriceFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        fetchPrices("${CSP.getData("base_url")}/Prices.asmx/PricePromotionSummary?StoreID=${arguments?.getInt("StoreID")}")
+        fetchPrices(
+            "${CSP.getData("base_url")}/Prices.asmx/PricePromotionSummary?StoreID=${
+                arguments?.getInt(
+                    "StoreID"
+                )
+            }"
+        )
     }
 
     override fun onResume() {
@@ -59,7 +67,7 @@ class PriceFragment : BaseFragment() {
     }
 
 
-    fun fetchPrices(url: String){
+    fun fetchPrices(url: String) {
         println(url)
         val request = Request.Builder()
             .url(url)
@@ -81,28 +89,46 @@ class PriceFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, PriceModel::class.java)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvPrice.setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(requireContext())
-                        rvPrice.layoutManager = layoutManager
-                        recylcerAdapter = PriceAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"), arguments?.getString("StoreName"), settingData)
-                        rvPrice.adapter = recylcerAdapter
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                        toolbarVisibility(true)
-                        (activity as NewDashboardActivity).shouldGoBack = true
-                    })
-                }else {
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, PriceModel::class.java)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvPrice.setHasFixedSize(true)
+                            layoutManager = LinearLayoutManager(requireContext())
+                            rvPrice.layoutManager = layoutManager
+                            recylcerAdapter = PriceAdapter(
+                                requireContext(),
+                                apiData.data,
+                                arguments?.getInt("StoreID"),
+                                arguments?.getString("StoreName"),
+                                settingData
+                            )
+                            rvPrice.adapter = recylcerAdapter
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                            toolbarVisibility(true)
+                            (activity as NewDashboardActivity).shouldGoBack = true
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }

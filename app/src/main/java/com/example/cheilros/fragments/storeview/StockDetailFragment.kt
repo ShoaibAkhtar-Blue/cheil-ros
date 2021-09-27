@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
@@ -78,7 +79,7 @@ class StockDetailFragment : BaseFragment() {
                 settingData.filter { it.fixedLabelName == "Stock_Column2" }
                     .get(0).labelName
 
-            if(settingData.filter { it.fixedLabelName == "Stock_Column2" }[0].labelName == "")
+            if (settingData.filter { it.fixedLabelName == "Stock_Column2" }[0].labelName == "")
                 view.SalesValue.visibility = View.GONE
         } catch (ex: Exception) {
             Log.e("Error_", ex.message.toString())
@@ -170,18 +171,20 @@ class StockDetailFragment : BaseFragment() {
             dialog.show()
         }
 
-        requireActivity().toolbar_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+        requireActivity().toolbar_search.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener,
             android.widget.SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(qString: String): Boolean {
                 try {
                     recylcerAdapter?.filter?.filter(qString)
-                }catch (ex: Exception){
+                } catch (ex: Exception) {
                     Log.e("Error_", ex.message.toString())
                 }
 
                 return true
             }
+
             override fun onQueryTextSubmit(qString: String): Boolean {
 
                 return true
@@ -245,30 +248,46 @@ class StockDetailFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, StockDetailModel::class.java)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvStockDetail.setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(requireContext())
-                        rvStockDetail.layoutManager = layoutManager
-                        recylcerAdapter =
-                            StockDetailAdapter(
-                                requireContext(),
-                                apiData.data as MutableList<StockDetailData>, ref, arguments, btnDate.tag.toString(), settingData
-                            )
-                        rvStockDetail.adapter = recylcerAdapter
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                    })
-                } else {
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, StockDetailModel::class.java)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvStockDetail.setHasFixedSize(true)
+                            layoutManager = LinearLayoutManager(requireContext())
+                            rvStockDetail.layoutManager = layoutManager
+                            recylcerAdapter =
+                                StockDetailAdapter(
+                                    requireContext(),
+                                    apiData.data as MutableList<StockDetailData>,
+                                    ref,
+                                    arguments,
+                                    btnDate.tag.toString(),
+                                    settingData
+                                )
+                            rvStockDetail.adapter = recylcerAdapter
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }
@@ -299,35 +318,44 @@ class StockDetailFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, DisplayProductCategoryModel::class.java)
-
-                if (apiData.status == 200) {
-                    productCategoryData = apiData.data
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        activity?.let { it1 ->
-                            //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
-                        }
-                    })
-                } else {
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, DisplayProductCategoryModel::class.java)
+                    if (apiData.status == 200) {
+                        productCategoryData = apiData.data
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                            }
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                                //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                            }
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
-                            //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
+                        findNavController().popBackStack()
                     })
                 }
             }
-
         })
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun filterTS(status: Int = 0, filterDate: String = ""){
+    fun filterTS(status: Int = 0, filterDate: String = "") {
         var fd = if (filterDate.equals("")) btnDate.tag else filterDate
         btnDate.tag = fd
         getCurrentWeek(btnDate.tag as String)

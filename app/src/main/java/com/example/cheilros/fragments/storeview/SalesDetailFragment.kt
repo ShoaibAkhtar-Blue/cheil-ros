@@ -1,5 +1,6 @@
 package com.example.cheilros.fragments.storeview
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.DialogInterface
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
@@ -162,18 +164,20 @@ class SalesDetailFragment : BaseFragment() {
             dialog.show()
         }
 
-        requireActivity().toolbar_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+        requireActivity().toolbar_search.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener,
             android.widget.SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(qString: String): Boolean {
                 try {
                     recylcerAdapter?.filter?.filter(qString)
-                }catch (ex: Exception){
+                } catch (ex: Exception) {
                     Log.e("Error_", ex.message.toString())
                 }
 
                 return true
             }
+
             override fun onQueryTextSubmit(qString: String): Boolean {
 
                 return true
@@ -234,35 +238,52 @@ class SalesDetailFragment : BaseFragment() {
                 })
             }
 
+
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, SalesDetailModel::class.java)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvSalesDetail.setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(requireContext())
-                        rvSalesDetail.layoutManager = layoutManager
-                        recylcerAdapter =
-                            SalesDetailAdapter(
-                                requireContext(),
-                                apiData.data as MutableList<SalesDetailData>, ref, arguments, btnDate.tag.toString()
-                            )
-                        rvSalesDetail.adapter = recylcerAdapter
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                    })
-                } else {
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, SalesDetailModel::class.java)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvSalesDetail.setHasFixedSize(true)
+                            layoutManager = LinearLayoutManager(requireContext())
+                            rvSalesDetail.layoutManager = layoutManager
+                            recylcerAdapter =
+                                SalesDetailAdapter(
+                                    requireContext(),
+                                    apiData.data as MutableList<SalesDetailData>,
+                                    ref,
+                                    arguments,
+                                    btnDate.tag.toString()
+                                )
+                            rvSalesDetail.adapter = recylcerAdapter
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
+
             }
         })
     }
@@ -291,26 +312,37 @@ class SalesDetailFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, DisplayProductCategoryModel::class.java)
 
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, DisplayProductCategoryModel::class.java)
-
-                if (apiData.status == 200) {
-                    productCategoryData = apiData.data
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        activity?.let { it1 ->
-                            //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
-                        }
-                    })
-                } else {
+                    if (apiData.status == 200) {
+                        productCategoryData = apiData.data
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                            }
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                                //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                            }
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
-                            //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
+                        findNavController().popBackStack()
                     })
                 }
             }
@@ -319,7 +351,7 @@ class SalesDetailFragment : BaseFragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun filterTS(status: Int = 0, filterDate: String = ""){
+    fun filterTS(status: Int = 0, filterDate: String = "") {
         var fd = if (filterDate.equals("")) btnDate.tag else filterDate
         btnDate.tag = fd
         getCurrentWeek(btnDate.tag as String)

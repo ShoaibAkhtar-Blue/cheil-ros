@@ -206,8 +206,14 @@ class SalesDetailAdapter(
             }
         }
 
-        holder.txtSaleQuantity.setText(filterList[position].SaleQuantity.toString())
-        holder.txtSalesValue.setText(filterList[position].SaleValue.toString())
+        val isAlreadyEdit = salesData.filter { it.ProductID == filterList[position].ProductID}
+        if(isAlreadyEdit.isNotEmpty()){
+            holder.txtSaleQuantity.setText(isAlreadyEdit[0].SalePrice)
+            holder.txtSalesValue.setText(isAlreadyEdit[0].SaleCount)
+        }else{
+            holder.txtSaleQuantity.setText(filterList[position].SaleQuantity.toString())
+            holder.txtSalesValue.setText(filterList[position].SaleValue.toString())
+        }
 
         fragment.btnSubmit.setOnClickListener {
 

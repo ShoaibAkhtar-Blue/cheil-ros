@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
@@ -53,9 +54,10 @@ class StockFragment : BaseFragment() {
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
-        try{
-            view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_DailyStock" }.get(0).labelName
-        }catch (ex: Exception){
+        try {
+            view.txtStoreName.text =
+                settingData.filter { it.fixedLabelName == "StoreMenu_DailyStock" }.get(0).labelName
+        } catch (ex: Exception) {
 
         }
         //endregion
@@ -85,7 +87,13 @@ class StockFragment : BaseFragment() {
                         val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
                         btnDate.tag = currentDate
                         CSP.saveData("salesData", currentDate)
-                        fetchStock("${CSP.getData("base_url")}/Stock.asmx/StockSummary?StoreID=${arguments?.getInt("StoreID")}&StockDate=$currentDate")
+                        fetchStock(
+                            "${CSP.getData("base_url")}/Stock.asmx/StockSummary?StoreID=${
+                                arguments?.getInt(
+                                    "StoreID"
+                                )
+                            }&StockDate=$currentDate"
+                        )
                     }, year, month, day
                 )
             //datePickerDialog.datePicker.minDate = System.currentTimeMillis() - 1000
@@ -125,7 +133,7 @@ class StockFragment : BaseFragment() {
         rvCurrentWeek!!.adapter = tsscurrentweekAdapter
     }
 
-    fun fetchStock(url: String){
+    fun fetchStock(url: String) {
         mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
         println(url)
         val client = OkHttpClient()
@@ -146,31 +154,50 @@ class StockFragment : BaseFragment() {
                     mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                 })
             }
+
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, StockModel::class.java)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvStock.setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(requireContext())
-                        rvStock.layoutManager = layoutManager
-                        recylcerAdapter = StockAdapter(requireContext(), apiData.data, arguments?.getInt("StoreID"), arguments?.getString("StoreName"), settingData)
-                        rvStock.adapter = recylcerAdapter
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                        toolbarVisibility(true)
-                        (activity as NewDashboardActivity).shouldGoBack = true
-                    })
-                }else {
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, StockModel::class.java)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvStock.setHasFixedSize(true)
+                            layoutManager = LinearLayoutManager(requireContext())
+                            rvStock.layoutManager = layoutManager
+                            recylcerAdapter = StockAdapter(
+                                requireContext(),
+                                apiData.data,
+                                arguments?.getInt("StoreID"),
+                                arguments?.getString("StoreName"),
+                                settingData
+                            )
+                            rvStock.adapter = recylcerAdapter
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                            toolbarVisibility(true)
+                            (activity as NewDashboardActivity).shouldGoBack = true
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }
@@ -178,7 +205,7 @@ class StockFragment : BaseFragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun filterTS(status: Int = 0, filterDate: String = ""){
+    fun filterTS(status: Int = 0, filterDate: String = "") {
         var fd = if (filterDate.equals("")) btnDate.tag else filterDate
         btnDate.tag = fd
         getCurrentWeek(btnDate.tag as String)

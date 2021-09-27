@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
@@ -42,14 +43,14 @@ class InstallationMainFragment : BaseFragment() {
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
-       try{
-           view.txtStoreName.text =
-               settingData.filter { it.fixedLabelName == "StoreMenu_Ticket" }[0].labelName
-           view.StoreView_SubTitle.text =
-               settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }[0].labelName
-       }catch (ex: Exception){
+        try {
+            view.txtStoreName.text =
+                settingData.filter { it.fixedLabelName == "StoreMenu_Ticket" }[0].labelName
+            view.StoreView_SubTitle.text =
+                settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }[0].labelName
+        } catch (ex: Exception) {
 
-       }
+        }
         //endregion
 
         CSP.delData("activity_barcodes")
@@ -104,27 +105,43 @@ class InstallationMainFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, ActivityCategoryModel::class.java)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvActivityDetail.setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(requireContext())
-                        rvActivityDetail.layoutManager = layoutManager
-                        recylcerAdapter =
-                            InstallationMainAdapter(requireContext(), apiData.data.distinctBy { it.TaskDeploymentCategoryName }, arguments)
-                        rvActivityDetail.adapter = recylcerAdapter
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                    })
-                } else {
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, ActivityCategoryModel::class.java)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvActivityDetail.setHasFixedSize(true)
+                            layoutManager = LinearLayoutManager(requireContext())
+                            rvActivityDetail.layoutManager = layoutManager
+                            recylcerAdapter =
+                                InstallationMainAdapter(
+                                    requireContext(),
+                                    apiData.data.distinctBy { it.TaskDeploymentCategoryName },
+                                    arguments
+                                )
+                            rvActivityDetail.adapter = recylcerAdapter
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }

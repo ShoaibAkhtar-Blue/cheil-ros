@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
@@ -31,7 +32,6 @@ class ChecklistCategoryDetailFragment : BaseFragment() {
     lateinit var recylcerAdapter: ChecklistDetailAdapter
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,13 +46,19 @@ class ChecklistCategoryDetailFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         txtStoreName.text = arguments?.getString("ChecklistName")
-        fetchChecklistDetail("${CSP.getData("base_url")}/Audit.asmx/CheckList_Audit?CheckListCategoryID=${arguments?.getInt("ChecklistID").toString()}&StoreID=${arguments?.getInt("StoreID").toString()}")
+        fetchChecklistDetail(
+            "${CSP.getData("base_url")}/Audit.asmx/CheckList_Audit?CheckListCategoryID=${
+                arguments?.getInt(
+                    "ChecklistID"
+                ).toString()
+            }&StoreID=${arguments?.getInt("StoreID").toString()}"
+        )
     }
 
     override fun onResume() {
         super.onResume()
         println("onResume Checklist Frag")
-        if(!CSP.getData("Checklist_SESSION_IMAGE").equals("")){
+        if (!CSP.getData("Checklist_SESSION_IMAGE").equals("")) {
             Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                 .setTitle("Success!!")
                 .setMessage("Image Added to this session!")
@@ -64,7 +70,10 @@ class ChecklistCategoryDetailFragment : BaseFragment() {
 
                 if (CSP.getData("Checklist_SESSION_IMAGE").equals("")) {
                     recylcerAdapter.addNewItem(CSP.getData("Checklist_SESSION_IMAGE").toString())
-                    CSP.saveData("Checklist_SESSION_IMAGE_SET", CSP.getData("Checklist_SESSION_IMAGE"))
+                    CSP.saveData(
+                        "Checklist_SESSION_IMAGE_SET",
+                        CSP.getData("Checklist_SESSION_IMAGE")
+                    )
                     CSP.delData("Checklist_SESSION_IMAGE")
                 } else {
                     recylcerAdapter.addNewItem(CSP.getData("Checklist_SESSION_IMAGE").toString())
@@ -74,10 +83,10 @@ class ChecklistCategoryDetailFragment : BaseFragment() {
                     )
                     CSP.delData("Checklist_SESSION_IMAGE")
                 }
-            }catch (ex: Exception){
+            } catch (ex: Exception) {
 
             }
-        }else if(!CSP.getData("sess_gallery_img").equals("")){
+        } else if (!CSP.getData("sess_gallery_img").equals("")) {
             try {
                 Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                     .setTitle("Success!!")
@@ -86,7 +95,7 @@ class ChecklistCategoryDetailFragment : BaseFragment() {
 
                 recylcerAdapter.addNewItem(CSP.getData("sess_gallery_img").toString())
                 CSP.delData("sess_gallery_img")
-            }catch (ex: Exception){
+            } catch (ex: Exception) {
 
             }
         }
@@ -114,31 +123,46 @@ class ChecklistCategoryDetailFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, CheckListDetailModel::class.java)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvChecklistDetail.setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(requireContext())
-                        rvChecklistDetail.layoutManager = layoutManager
-                        recylcerAdapter =
-                            ChecklistDetailAdapter(requireContext(),
-                                apiData.data as MutableList<CheckListDetailData>, arguments, this@ChecklistCategoryDetailFragment,
-                                requireActivity() as NewDashboardActivity,
-                                settingData
-                            )
-                        rvChecklistDetail.adapter = recylcerAdapter
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                    })
-                } else {
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, CheckListDetailModel::class.java)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvChecklistDetail.setHasFixedSize(true)
+                            layoutManager = LinearLayoutManager(requireContext())
+                            rvChecklistDetail.layoutManager = layoutManager
+                            recylcerAdapter =
+                                ChecklistDetailAdapter(
+                                    requireContext(),
+                                    apiData.data as MutableList<CheckListDetailData>,
+                                    arguments,
+                                    this@ChecklistCategoryDetailFragment,
+                                    requireActivity() as NewDashboardActivity,
+                                    settingData
+                                )
+                            rvChecklistDetail.adapter = recylcerAdapter
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }

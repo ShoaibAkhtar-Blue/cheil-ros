@@ -92,7 +92,7 @@ class JPAdapter(
             }
         }
 
-        fun bind(journeyData: JourneyPlanData, mContext: Context, callback: OnMapReadyCallback){
+        fun bind(journeyData: JourneyPlanData, mContext: Context, callback: OnMapReadyCallback) {
             try {
                 mContext.let {
                     mapView.onCreate(null)
@@ -105,9 +105,9 @@ class JPAdapter(
         }
 
 
-
         var imgStatus: ImageView = view.findViewById(R.id.imgStatus)
         var txtCode: TextView = view.findViewById(R.id.txtCode)
+
         //var mapView: MapView = view.findViewById(R.id.mapView)
         var txtTitle: TextView = view.findViewById(R.id.txtTitle)
         var txtTitleHeader: TextView = view.findViewById(R.id.txtTitleHeader)
@@ -148,7 +148,7 @@ class JPAdapter(
         context?.let {
             holder.item?.let { itemData ->
 
-                if(CSP.getData("team_type_id")!!.toInt() <= 4){
+                if (CSP.getData("team_type_id")!!.toInt() <= 4) {
                     holder.btnAccept.visibility = View.GONE
                 }
 
@@ -172,13 +172,25 @@ class JPAdapter(
                     holder.txtRemarks.text = "No Remarks"
 
                 holder.btnCancel.text =
-                    settingData.filter { it.fixedLabelName == "JuorneyPlan_CancelButton" }.get(0).labelName
+                    settingData.filter { it.fixedLabelName == "JuorneyPlan_CancelButton" }
+                        .get(0).labelName
                 holder.btnAccept.text =
-                    settingData.filter { it.fixedLabelName == "JourneyPlan_CheckinButton" }.get(0).labelName
+                    settingData.filter { it.fixedLabelName == "JourneyPlan_CheckinButton" }
+                        .get(0).labelName
 
                 if (itemData.VisitStatusID === 1) {
-                    holder.RLStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.status_none))
-                    holder.RLHeader.setBackgroundColor(ContextCompat.getColor(context, R.color.status_none))
+                    holder.RLStatus.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.status_none
+                        )
+                    )
+                    holder.RLHeader.setBackgroundColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.status_none
+                        )
+                    )
                     holder.txtTime.visibility = View.GONE
 
                 } else if (itemData.VisitStatusID === 2) {
@@ -266,7 +278,7 @@ class JPAdapter(
 
                 holder.btnAccept.setOnClickListener {
                     try {
-                        val uLocation =  activity.userLocation
+                        val uLocation = activity.userLocation
                         println("Location: ${uLocation.latitude.toDouble()}-${uLocation.longitude.toDouble()}")
 
                         var lat: String = uLocation.latitude.toString()
@@ -310,31 +322,39 @@ class JPAdapter(
                                         }
                                     }
                                 }
-                            }else{
-                                if(itemData.VisitStatusID === 1){
-                                    if(CSP.getData("CheckIn_Camera").equals("Y")){
+                            } else {
+                                if (itemData.VisitStatusID === 1) {
+                                    if (CSP.getData("CheckIn_Camera").equals("Y")) {
                                         CSP.saveData("sess_visit_id", itemData.VisitID.toString())
-                                        CSP.saveData("sess_visit_status_id", itemData.VisitStatusID.toString())
+                                        CSP.saveData(
+                                            "sess_visit_status_id",
+                                            itemData.VisitStatusID.toString()
+                                        )
                                         CSP.saveData("fragName", "JP")
 
-                                        Navigation.findNavController(it).navigate(R.id.action_journeyPlanFragment_to_cameraActivity)
-                                    }else{
+                                        Navigation.findNavController(it)
+                                            .navigate(R.id.action_journeyPlanFragment_to_cameraActivity)
+                                    } else {
                                         sendCheckInOutRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/CheckIn?VisitID=${itemData.VisitID}&Longitude=$lng&Latitude=$lat&Remarks=-")
                                     }
                                 }
 
-                                if(itemData.VisitStatusID === 2){
-                                    if(CSP.getData("CheckOut_Camera").equals("Y")){
+                                if (itemData.VisitStatusID === 2) {
+                                    if (CSP.getData("CheckOut_Camera").equals("Y")) {
                                         CSP.saveData("sess_visit_id", itemData.VisitID.toString())
-                                        CSP.saveData("sess_visit_status_id", itemData.VisitStatusID.toString())
+                                        CSP.saveData(
+                                            "sess_visit_status_id",
+                                            itemData.VisitStatusID.toString()
+                                        )
                                         CSP.saveData("fragName", "JP")
-                                        Navigation.findNavController(it).navigate(R.id.action_journeyPlanFragment_to_cameraActivity)
-                                    }else{
+                                        Navigation.findNavController(it)
+                                            .navigate(R.id.action_journeyPlanFragment_to_cameraActivity)
+                                    } else {
                                         sendCheckInOutRequest("${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemData.VisitID}&Longitude=$lng&Latitude=$lat&Remarks=-")
                                     }
                                 }
                             }
-                        }else{
+                        } else {
                             if (itemData.VisitStatusID === 1) {
                                 if (CSP.getData("CheckIn_Camera").equals("Y")) {
                                     CSP.saveData("sess_visit_id", itemData.VisitID.toString())
@@ -368,73 +388,95 @@ class JPAdapter(
                         }
 
                     } catch (ex: Exception) {
+                        (context as Activity).runOnUiThread {
+                            context?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Warning")
+                                    .setMessage("Please Allow Location Permission!")
+                                    .sneakWarning()
 
+                            }
+                        }
                     }
                 }
 
                 holder.btnCancel.setOnClickListener {
-                    if (itemData.VisitStatusID === 1) {
+                    try {
+                        if (itemData.VisitStatusID === 1) {
 
-                        val uLocation =  activity.userLocation
-                        println("Location: ${uLocation.latitude.toDouble()}-${uLocation.longitude.toDouble()}")
+                            val uLocation = activity.userLocation
+                            println("Location: ${uLocation.latitude.toDouble()}-${uLocation.longitude.toDouble()}")
 
-                        if (CSP.getData("CancelVisit").equals("Y")) {
-                            var lat: String = uLocation.latitude.toString()
-                            var lng: String = uLocation.longitude.toString()
+                            if (CSP.getData("CancelVisit").equals("Y")) {
+                                var lat: String = uLocation.latitude.toString()
+                                var lng: String = uLocation.longitude.toString()
 
-                            val li = LayoutInflater.from(context)
-                            val promptsView: View = li.inflate(R.layout.dialog_add_visit, null)
+                                val li = LayoutInflater.from(context)
+                                val promptsView: View = li.inflate(R.layout.dialog_add_visit, null)
 
-                            val dialog = Dialog(context)
-                            dialog.setContentView(promptsView)
-                            dialog.setCancelable(false)
-                            dialog.setCanceledOnTouchOutside(true)
+                                val dialog = Dialog(context)
+                                dialog.setContentView(promptsView)
+                                dialog.setCancelable(false)
+                                dialog.setCanceledOnTouchOutside(true)
 
 
-                            dialog.txtTitle.text =
-                                settingData.filter { it.fixedLabelName == "JourneyPlan_Title" }
-                                    .get(0).labelName
-                            dialog.txtQuestion.text =
-                                settingData.filter { it.fixedLabelName == "JourneyPlan_CancelTitle" }
-                                    .get(0).labelName
+                                dialog.txtTitle.text =
+                                    settingData.filter { it.fixedLabelName == "JourneyPlan_Title" }
+                                        .get(0).labelName
+                                dialog.txtQuestion.text =
+                                    settingData.filter { it.fixedLabelName == "JourneyPlan_CancelTitle" }
+                                        .get(0).labelName
 
-                            dialog.btnCancel.text =
-                                settingData.filter { it.fixedLabelName == "StoreList_PopupCancel" }
-                                    .get(0).labelName
-                            dialog.btnCancel.setOnClickListener {
-                                dialog.dismiss()
-                            }
+                                dialog.btnCancel.text =
+                                    settingData.filter { it.fixedLabelName == "StoreList_PopupCancel" }
+                                        .get(0).labelName
+                                dialog.btnCancel.setOnClickListener {
+                                    dialog.dismiss()
+                                }
 
-                            dialog.btnAccept.text =
-                                settingData.filter { it.fixedLabelName == "JourneyPlan_CancelSave" }
-                                    .get(0).labelName
-                            dialog.btnAccept.setOnClickListener {
-                                cancelJP("${CSP.getData("base_url")}/JourneyPlan.asmx/CancelVisit?VisitID=${itemData.VisitID}&Longitude=$lng&Latitude=$lat&Remarks=${dialog.etRemarks.text}")
-                                dialog.dismiss()
-                            }
-                            dialog.show()
+                                dialog.btnAccept.text =
+                                    settingData.filter { it.fixedLabelName == "JourneyPlan_CancelSave" }
+                                        .get(0).labelName
+                                dialog.btnAccept.setOnClickListener {
+                                    cancelJP("${CSP.getData("base_url")}/JourneyPlan.asmx/CancelVisit?VisitID=${itemData.VisitID}&Longitude=$lng&Latitude=$lat&Remarks=${dialog.etRemarks.text}")
+                                    dialog.dismiss()
+                                }
+                                dialog.show()
 
-                        } else {
-                            (context as Activity).runOnUiThread {
-                                context?.let { it1 ->
-                                    Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                        .setTitle("Permission!!")
-                                        .setMessage("You Don't have permission rights for this action!")
-                                        .sneakWarning()
+                            } else {
+                                (context as Activity).runOnUiThread {
+                                    context?.let { it1 ->
+                                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                            .setTitle("Permission!!")
+                                            .setMessage("You Don't have permission rights for this action!")
+                                            .sneakWarning()
+                                    }
                                 }
                             }
+                        } else {
+                            // If type is view
+                            val bundle = bundleOf(
+                                "StoreID" to itemData.StoreID,
+                                "StoreName" to itemData.StoreName
+                            )
+                            Navigation.findNavController(it)
+                                .navigate(
+                                    R.id.action_journeyPlanFragment_to_storeViewFragment,
+                                    bundle
+                                )
                         }
-                    } else {
-                        // If type is view
-                        val bundle = bundleOf(
-                            "StoreID" to itemData.StoreID,
-                            "StoreName" to itemData.StoreName
-                        )
-                        Navigation.findNavController(it)
-                            .navigate(R.id.action_journeyPlanFragment_to_storeViewFragment, bundle)
+                    } catch (ex: Exception) {
+                        (context as Activity).runOnUiThread {
+                            context?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Warning")
+                                    .setMessage("Please Allow Location Permission!")
+                                    .sneakWarning()
+
+                            }
+                        }
                     }
                 }
-
             }
         }
 

@@ -48,8 +48,8 @@ class MyCoverageFragment : BaseFragment() {
     lateinit var recyclerView: EmptyRecyclerView
     lateinit var layoutManager: RecyclerView.LayoutManager
 
-    lateinit var channelData:List<ChannelData>
-    lateinit var channelTypeData:List<ChannelTypeData>
+    lateinit var channelData: List<ChannelData>
+    lateinit var channelTypeData: List<ChannelTypeData>
 
     var defaultChannel = "0"
     var defaultChannelType = "0"
@@ -83,9 +83,11 @@ class MyCoverageFragment : BaseFragment() {
 
         //region Set Labels
         try {
-            view.btnChannel.text = settingData.filter { it.fixedLabelName == "StoreList_SearchBox" }[0].labelName
-            view.txtNoRecord.text = settingData.filter { it.fixedLabelName == "General_NoRecordFound" }[0].labelName
-        }catch (ex: Exception){
+            view.btnChannel.text =
+                settingData.filter { it.fixedLabelName == "StoreList_SearchBox" }[0].labelName
+            view.txtNoRecord.text =
+                settingData.filter { it.fixedLabelName == "General_NoRecordFound" }[0].labelName
+        } catch (ex: Exception) {
 
         }
         //endregion
@@ -99,7 +101,7 @@ class MyCoverageFragment : BaseFragment() {
 
         try {
             uLocation = activity.userLocation
-        }catch (ex: Exception){
+        } catch (ex: Exception) {
 
         }
 
@@ -111,7 +113,7 @@ class MyCoverageFragment : BaseFragment() {
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        recyclerView= rvCoverage
+        recyclerView = rvCoverage
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(
             DividerItemDecoration(
@@ -119,8 +121,8 @@ class MyCoverageFragment : BaseFragment() {
                 DividerItemDecoration.VERTICAL
             )
         )
-        layoutManager= LinearLayoutManager(requireContext())
-        recyclerView.layoutManager=layoutManager
+        layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = layoutManager
 
         val emptyView: View = todo_list_empty_view
         recyclerView.setEmptyView(emptyView)
@@ -131,8 +133,8 @@ class MyCoverageFragment : BaseFragment() {
 
 
         btnLocation.setOnClickListener {
-            try{
-                if(!isLoc){
+            try {
+                if (!isLoc) {
                     val lat = uLocation.latitude
                     val lng = uLocation.longitude
                     fetchData("${CSP.getData("base_url")}/WebService.asmx/NearestStore?TeamMemberID=${userData[0].memberID}&Longitude=${lng}&Latitude=${lat}")
@@ -140,13 +142,23 @@ class MyCoverageFragment : BaseFragment() {
                     isLoc = true
 
                     btnLocation.backgroundTintList = ColorStateList.valueOf(Color.CYAN)
-                    btnLocation.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_aspect_ratio_24))
-                }else{
+                    btnLocation.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.ic_baseline_aspect_ratio_24
+                        )
+                    )
+                } else {
                     fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${defaultChannel}&SearchKeyWord=&ChannelTypeID=${defaultChannelType}")
-                    btnLocation.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.map_icon))
+                    btnLocation.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.map_icon
+                        )
+                    )
                     isLoc = false
                 }
-            }catch (ex: Exception){
+            } catch (ex: Exception) {
                 requireActivity().runOnUiThread(java.lang.Runnable {
                     activity?.let { it1 ->
                         Sneaker.with(it1) // Activity, Fragment or ViewGroup
@@ -167,8 +179,8 @@ class MyCoverageFragment : BaseFragment() {
             // add a list
 
             // add a list
-            var channels : Array<String> = arrayOf()
-            for (c in channelData){
+            var channels: Array<String> = arrayOf()
+            for (c in channelData) {
                 channels += c.ChannelName
             }
 
@@ -284,8 +296,8 @@ class MyCoverageFragment : BaseFragment() {
             // add a list
 
             // add a list
-            var channels : Array<String> = arrayOf()
-            for (c in channelTypeData){
+            var channels: Array<String> = arrayOf()
+            for (c in channelTypeData) {
                 channels += c.ChannelTypeName
             }
 
@@ -304,18 +316,20 @@ class MyCoverageFragment : BaseFragment() {
             dialog.show()
         }
 
-       requireActivity().toolbar_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+        requireActivity().toolbar_search.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener,
             android.widget.SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(qString: String): Boolean {
                 try {
                     recylcerAdapter?.filter?.filter(qString)
-                }catch (ex: Exception){
+                } catch (ex: Exception) {
                     Log.e("Error_", ex.message.toString())
                 }
 
                 return true
             }
+
             override fun onQueryTextSubmit(qString: String): Boolean {
 
                 return true
@@ -332,7 +346,7 @@ class MyCoverageFragment : BaseFragment() {
         //(activity as NewDashboardActivity).shouldGoBack = true
     }
 
-    fun reloadCoverage(){
+    fun reloadCoverage() {
         println("reloadCoverage")
         fetchChannel("${CSP.getData("base_url")}/Webservice.asmx/ChannelList")
         fetchChannelType("${CSP.getData("base_url")}/Webservice.asmx/ChannelTypeList")
@@ -363,38 +377,49 @@ class MyCoverageFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, ChannelModel::class.java)
+                    println(apiData.status)
+                    if (apiData.status == 200) {
+                        channelData = apiData.data
+                        try {
+                            requireActivity().runOnUiThread(java.lang.Runnable {
+                                activity?.let { it1 ->
+                                    //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                                    try {
+                                        btnChannelType.text = channelData[0].ChannelName
+                                    } catch (ex: Exception) {
 
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, ChannelModel::class.java)
-                println(apiData.status)
-                if (apiData.status == 200) {
-                    channelData = apiData.data
-                    try{
-                        requireActivity().runOnUiThread(java.lang.Runnable {
-                            activity?.let { it1 ->
-                                //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
-                                try {
-                                    btnChannelType.text = channelData[0].ChannelName
-                                }catch (ex: Exception){
-
+                                    }
                                 }
-                            }
-                        })
-                    }catch (ex: Exception){
+                            })
+                        } catch (ex: Exception) {
 //                        requireActivity().runOnUiThread(java.lang.Runnable {
 //                            Toast.makeText(context, "Error ${ex.message}", Toast.LENGTH_SHORT).show()
 //                        })
-                    }
+                        }
 
-                } else {
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                                mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                            }
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
-                            mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
+                        findNavController().popBackStack()
                     })
                 }
             }
@@ -425,38 +450,49 @@ class MyCoverageFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, ChannelTypeModel::class.java)
+                    println(apiData.status)
+                    if (apiData.status == 200) {
+                        channelTypeData = apiData.data
+                        try {
+                            requireActivity().runOnUiThread(java.lang.Runnable {
+                                activity?.let { it1 ->
+                                    //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                                    try {
+                                        btnChannel.text = channelTypeData[0].ChannelTypeName
+                                    } catch (ex: Exception) {
 
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, ChannelTypeModel::class.java)
-                println(apiData.status)
-                if (apiData.status == 200) {
-                    channelTypeData = apiData.data
-                    try{
-                        requireActivity().runOnUiThread(java.lang.Runnable {
-                            activity?.let { it1 ->
-                                //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
-                                try {
-                                    btnChannel.text = channelTypeData[0].ChannelTypeName
-                                }catch (ex: Exception){
-
+                                    }
                                 }
-                            }
-                        })
-                    }catch (ex: Exception){
+                            })
+                        } catch (ex: Exception) {
 //                        requireActivity().runOnUiThread(java.lang.Runnable {
 //                            Toast.makeText(context, "Error ${ex.message}", Toast.LENGTH_SHORT).show()
 //                        })
-                    }
+                        }
 
-                } else {
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                                mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                            }
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
-                            mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
+                        findNavController().popBackStack()
                     })
                 }
             }
@@ -468,8 +504,8 @@ class MyCoverageFragment : BaseFragment() {
         mainLoadingLayoutCoverage.setState(LoadingLayout.LOADING)
         btnLocation.visibility = View.INVISIBLE
         val request = Request.Builder()
-                .url(url)
-                .build()
+            .url(url)
+            .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -487,44 +523,61 @@ class MyCoverageFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, MyCoverageModel::class.java)
+                    println(apiData.status)
+                    if (apiData.status == 200) {
+                        try {
+                            requireActivity().runOnUiThread(java.lang.Runnable {
+                                recylcerAdapter = MyCoverageAdapter(
+                                    requireContext(),
+                                    apiData.data,
+                                    settingData,
+                                    latitude,
+                                    longitude,
+                                    this@MyCoverageFragment,
+                                    requireActivity() as NewDashboardActivity
+                                )
+                                recyclerView.adapter = recylcerAdapter
 
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, MyCoverageModel::class.java)
-                println(apiData.status)
-                if (apiData.status == 200) {
-                    try{
-                        requireActivity().runOnUiThread(java.lang.Runnable {
-                            recylcerAdapter = MyCoverageAdapter(requireContext(), apiData.data, settingData, latitude, longitude,this@MyCoverageFragment, requireActivity() as NewDashboardActivity)
-                            recyclerView.adapter = recylcerAdapter
+                                btnLocation.visibility = View.VISIBLE
 
-                            btnLocation.visibility = View.VISIBLE
+                                mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
 
-                            mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
-
-                            toolbarVisibility(true)
-                            (activity as NewDashboardActivity).shouldGoBack = true
-                        })
-                    }catch (ex: Exception){
+                                toolbarVisibility(true)
+                                (activity as NewDashboardActivity).shouldGoBack = true
+                            })
+                        } catch (ex: Exception) {
 //                        requireActivity().runOnUiThread(java.lang.Runnable {
 //                            Toast.makeText(context, "Error ${ex.message}", Toast.LENGTH_SHORT).show()
 //                        })
-                    }
+                        }
 
-                } else {
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }
         })
     }
-
-
 }
 

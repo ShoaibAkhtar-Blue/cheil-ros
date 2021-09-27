@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
@@ -41,15 +42,17 @@ class TrainingFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view =   inflater.inflate(R.layout.fragment_training, container, false)
+        val view = inflater.inflate(R.layout.fragment_training, container, false)
 
         arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
 
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
         //region Set Labels
-        view.txtStoreName.text = settingData.filter { it.fixedLabelName == "StoreMenu_Training" }.get(0).labelName
-        view.Training_SubTitle.text = settingData.filter { it.fixedLabelName == "Training_SubTitle" }.get(0).labelName
+        view.txtStoreName.text =
+            settingData.filter { it.fixedLabelName == "StoreMenu_Training" }.get(0).labelName
+        view.Training_SubTitle.text =
+            settingData.filter { it.fixedLabelName == "Training_SubTitle" }.get(0).labelName
         //endregion
 
         return view
@@ -60,15 +63,23 @@ class TrainingFragment : BaseFragment() {
             findNavController().navigate(R.id.action_trainingFragment_to_trainingDetailFragment)
         }*/
         //fetchTraining("${CSP.getData("base_url")}/Training.asmx/TrainingModelsList")
-        fetchRecentTraining("${CSP.getData("base_url")}/Training.asmx/TrainingLog?StoreID=${arguments?.getInt("StoreID").toString()}&TeamMemberID=${CSP.getData("user_id")}")
+        fetchRecentTraining(
+            "${CSP.getData("base_url")}/Training.asmx/TrainingLog?StoreID=${
+                arguments?.getInt(
+                    "StoreID"
+                ).toString()
+            }&TeamMemberID=${CSP.getData("user_id")}"
+        )
 
-        requireActivity().toolbar_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+        requireActivity().toolbar_search.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener,
             android.widget.SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(qString: String): Boolean {
                 recylcerAdapter?.filter?.filter(qString)
                 return true
             }
+
             override fun onQueryTextSubmit(qString: String): Boolean {
 
                 return true
@@ -126,7 +137,7 @@ class TrainingFragment : BaseFragment() {
         })
     }*/
 
-    fun fetchRecentTraining(url: String){
+    fun fetchRecentTraining(url: String) {
         println(url)
         val request = Request.Builder()
             .url(url)
@@ -148,34 +159,46 @@ class TrainingFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, RecentTrainingModel::class.java)
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, RecentTrainingModel::class.java)
 
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvRecentTraining.setHasFixedSize(true)
-                        layoutManagerRecent = LinearLayoutManager(requireContext())
-                        rvRecentTraining.layoutManager = layoutManagerRecent
-                        recylcerAdapterRecent = RecentTrainingAdapter(requireContext(), apiData.data, arguments)
-                        rvRecentTraining.adapter = recylcerAdapterRecent
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            rvRecentTraining.setHasFixedSize(true)
+                            layoutManagerRecent = LinearLayoutManager(requireContext())
+                            rvRecentTraining.layoutManager = layoutManagerRecent
+                            recylcerAdapterRecent =
+                                RecentTrainingAdapter(requireContext(), apiData.data, arguments)
+                            rvRecentTraining.adapter = recylcerAdapterRecent
 
-                    })
-                }else{
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }
 
         })
     }
-
 
 
 }

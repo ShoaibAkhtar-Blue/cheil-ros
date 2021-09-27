@@ -54,12 +54,13 @@ class MyActivitiesFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view =   inflater.inflate(R.layout.fragment_my_activities, container, false)
+        val view = inflater.inflate(R.layout.fragment_my_activities, container, false)
 
         //region Set Label
         try {
-            view.txtNoRecord.text = settingData.filter { it.fixedLabelName == "General_NoRecordFound" }[0].labelName
-        }catch (ex: Exception){
+            view.txtNoRecord.text =
+                settingData.filter { it.fixedLabelName == "General_NoRecordFound" }[0].labelName
+        } catch (ex: Exception) {
 
         }
         //endregion
@@ -92,14 +93,26 @@ class MyActivitiesFragment : BaseFragment() {
                     { view, year, monthOfYear, dayOfMonth ->
                         val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
                         btnDate.tag = currentDate
-                        fetchMyActivities("${CSP.getData("base_url")}/WebService.asmx/MyDailyActivity?TeamMemberID=${CSP.getData("user_id")}&ActivityDate=${btnDate.tag}")
+                        fetchMyActivities(
+                            "${CSP.getData("base_url")}/WebService.asmx/MyDailyActivity?TeamMemberID=${
+                                CSP.getData(
+                                    "user_id"
+                                )
+                            }&ActivityDate=${btnDate.tag}"
+                        )
                     }, year, month, day
                 )
             datePickerDialog.show()
         }
 
         getCurrentWeek(btnDate.tag as String)
-        fetchMyActivities("${CSP.getData("base_url")}/WebService.asmx/MyDailyActivity?TeamMemberID=${CSP.getData("user_id")}&ActivityDate=${currentDateAndTime}")
+        fetchMyActivities(
+            "${CSP.getData("base_url")}/WebService.asmx/MyDailyActivity?TeamMemberID=${
+                CSP.getData(
+                    "user_id"
+                )
+            }&ActivityDate=${currentDateAndTime}"
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -132,7 +145,7 @@ class MyActivitiesFragment : BaseFragment() {
         rvCurrentWeek!!.adapter = tsscurrentweekAdapter
     }
 
-    fun fetchMyActivities(url: String){
+    fun fetchMyActivities(url: String) {
         println(url)
         val client = OkHttpClient()
 
@@ -159,40 +172,53 @@ class MyActivitiesFragment : BaseFragment() {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, MyActivitiesModel::class.java)
-                println(apiData.status)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        recyclerView = rvActivity
-                        recyclerView.setHasFixedSize(true);
-                        recyclerView.addItemDecoration(
-                            DividerItemDecoration(
-                                context,
-                                DividerItemDecoration.VERTICAL
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, MyActivitiesModel::class.java)
+                    println(apiData.status)
+                    if (apiData.status == 200) {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            recyclerView = rvActivity
+                            recyclerView.setHasFixedSize(true);
+                            recyclerView.addItemDecoration(
+                                DividerItemDecoration(
+                                    context,
+                                    DividerItemDecoration.VERTICAL
+                                )
                             )
-                        )
-                        layoutManager= LinearLayoutManager(requireContext())
-                        recyclerView.layoutManager=layoutManager
+                            layoutManager = LinearLayoutManager(requireContext())
+                            recyclerView.layoutManager = layoutManager
 
-                        val emptyView: View = todo_list_empty_view1
-                        recyclerView.setEmptyView(emptyView)
-                        recylcerAdapter = MyActivitiesAdapter(requireContext(), apiData.data, arguments)
-                        recyclerView.adapter = recylcerAdapter
+                            val emptyView: View = todo_list_empty_view1
+                            recyclerView.setEmptyView(emptyView)
+                            recylcerAdapter =
+                                MyActivitiesAdapter(requireContext(), apiData.data, arguments)
+                            recyclerView.adapter = recylcerAdapter
 
-                        getCurrentWeek(btnDate.tag as String)
+                            getCurrentWeek(btnDate.tag as String)
 
-                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
-                    })
-                } else {
+                            mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                        })
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                            }
+                            mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                        })
+                    }
+                } catch (ex: Exception) {
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
                             Sneaker.with(it1) // Activity, Fragment or ViewGroup
                                 .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                                .setMessage(ex.message.toString())
+                                .sneakError()
                         }
-                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                        findNavController().popBackStack()
                     })
                 }
             }
@@ -200,11 +226,17 @@ class MyActivitiesFragment : BaseFragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun filterTS(status: Int = 0, filterDate: String = ""){
+    fun filterTS(status: Int = 0, filterDate: String = "") {
         var fd = if (filterDate.equals("")) btnDate.tag else filterDate
         btnDate.tag = fd
         getCurrentWeek(btnDate.tag as String)
-        fetchMyActivities("${CSP.getData("base_url")}/WebService.asmx/MyDailyActivity?TeamMemberID=${CSP.getData("user_id")}&ActivityDate=${btnDate.tag}")
+        fetchMyActivities(
+            "${CSP.getData("base_url")}/WebService.asmx/MyDailyActivity?TeamMemberID=${
+                CSP.getData(
+                    "user_id"
+                )
+            }&ActivityDate=${btnDate.tag}"
+        )
     }
 
 
