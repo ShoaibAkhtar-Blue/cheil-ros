@@ -10,9 +10,15 @@ class AddVisitPlanModel(val status: Int)
 //region Dashboard Cumlative
 class DashboardCumlativeModel(val status: Int, val data: List<DashboardCumlativeData>)
 class DashboardCumlativeData(
-    val market_activity: String,
+    val market_activity: List<RecentActivityData>,
     val teammember_performance: List<DashboardBarChartData2>,
     val daily_trend: List<DashboardBarChartData>,
+    val dashboard_labels: List<DashboardData>,
+    val task_assigned: List<DashboardTaskAssignedData>,
+    val managment_dashboard_labels: String,
+    val managment_daily_sale: String,
+    val managment_display_share: String,
+    val managment_daily_activity: String,
 )
 //endregion
 
