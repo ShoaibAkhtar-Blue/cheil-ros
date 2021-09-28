@@ -127,22 +127,9 @@ class DashboardFragment : BaseFragment() {
         CSP.delData("fragName")
         //endregion
 
-        //view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
+        view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
-        try {
-            //TODO: Fetch Commented
-            /*fetchDashboardData("${CSP.getData("base_url")}/Dashboard.asmx/DashboardLabels?TeamMemberID=${userData[0].memberID}")
-            if (team_type != "7")
-                fetchRecentActivities(
-                    "${CSP.getData("base_url")}/OperMarketActivities.asmx/ViewMarketActivityList?StoreID=0&ActivityCategoryID=0&ActivityTypeID=20&BrandID=0&TeamMemberID=${
-                        CSP.getData(
-                            "user_id"
-                        )
-                    }"
-                )*/
-        } catch (ex: Exception) {
 
-        }
 
 
         Glide.with(this)
@@ -230,6 +217,21 @@ class DashboardFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        try {
+            //TODO: Fetch Commented
+            val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+            val currentDateAndTimeFormated: String = simpleDateFormat.format(Date())
+            fetchAllDashboardData(
+                "${CSP.getData("base_url")}/Dashboard.asmx/Dashboard_Cumulative?StoreID=0&ActivityCategoryID=0&ActivityTypeID=20&BrandID=0&TeamMemberID=${userData[0].memberID}&PerformanceMonth=0&PerformanceYear=0&TrendDate=${currentDateAndTimeFormated}&Status=1&ActivityDate=2021-01-01&TeamTypeID=${
+                    CSP.getData(
+                        "team_type_id"
+                    )
+                }"
+            )
+
+        } catch (ex: Exception) {
+
+        }
         //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
 
         //CSP.saveData("TicketFollowup", "N")
@@ -289,40 +291,6 @@ class DashboardFragment : BaseFragment() {
                     .sneakWarning()
             }
         }
-
-        val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
-        val currentDateAndTime: String = simpleDateFormat.format(Date())
-
-        try {
-            //TODO: Fetch Commented
-            /*if (team_type != "7") {
-                fetchTaskAssignedData(
-                    "${CSP.getData("base_url")}/Dashboard.asmx/TaskAssigned?TeamMemberID=${
-                        CSP.getData(
-                            "user_id"
-                        )
-                    }&Status=1"
-                )
-            } else {
-                fetchChartData(
-                    chartDailyStatusTwo,
-                    "${CSP.getData("base_url")}/Dashboard.asmx/TeamMemberPerformance?TeamMemberID=${
-                        CSP.getData("user_id")
-                    }&PerformanceMonth=0&PerformanceYear=0"
-                )
-            }
-
-            fetchChartData(
-                chartDailyStatusThree,
-                "${CSP.getData("base_url")}/Dashboard.asmx/DailyTrend?TeamMemberID=${CSP.getData("user_id")}&TrendDate=${currentDateAndTime}"
-            )*/
-        } catch (ex: Exception) {
-
-        }
-
-        //setupCombinedCart()
-
-        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
 
     }
 
@@ -676,11 +644,8 @@ class DashboardFragment : BaseFragment() {
         return d
     }
 
-
-
-    /*fun fetchDashboardData(url: String) {
-
-
+    fun fetchAllDashboardData(url: String) {
+        println(url)
         val client = OkHttpClient()
 
         val request = Request.Builder()
@@ -705,71 +670,77 @@ class DashboardFragment : BaseFragment() {
                 println(body)
 
                 val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, DashboardModel::class.java)
+                val apiData = gson.fromJson(body, DashboardCumlativeModel::class.java)
 
                 if (apiData.status == 200) {
+                    println("DashboardCumlativeModel")
                     requireActivity().runOnUiThread(java.lang.Runnable {
-                        val formatter: NumberFormat = DecimalFormat("00")
-                        val formatter1: NumberFormat = DecimalFormat("00000")
-                        txtTodayVisitCount.text =
-                            formatter.format(apiData.data[0].TodayVisit.toInt())
-                        txtCoverageCount.text = formatter1.format(apiData.data[0].Coverage.toInt())
-                        txtPendingCount.text =
-                            formatter1.format(apiData.data[0].PendingData.toInt())
-                    })
 
-                } else {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        activity?.let { it1 ->
-                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
+                        if (apiData.data.dashboard_labels != null) {
+                            val formatter: NumberFormat = DecimalFormat("00")
+                            val formatter1: NumberFormat = DecimalFormat("00000")
+                            txtTodayVisitCount.text =
+                                formatter.format(apiData.data.dashboard_labels[0].TodayVisit.toInt())
+                            txtCoverageCount.text =
+                                formatter1.format(apiData.data.dashboard_labels[0].Coverage.toInt())
+                            txtPendingCount.text =
+                                formatter1.format(apiData.data.dashboard_labels[0].PendingData.toInt())
                         }
-                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                    })
-                }
-            }
-        })
-    }
 
-    fun fetchChartData(combined_chart: CombinedChart, url: String) {
-        println(url)
-        val client = OkHttpClient()
+                        if (team_type != "7") {
+                            if (apiData.data.market_activity != null) {
+                                rvRecentSubActivities.setHasFixedSize(true)
+                                layoutManagerRecent = LinearLayoutManager(requireContext())
+                                rvRecentSubActivities.layoutManager = layoutManagerRecent
+                                recylcerAdapterRecent = RecentActivityAdapter(
+                                    requireContext(),
+                                    "dashboard",
+                                    apiData.data.market_activity as MutableList<RecentActivityData>,
+                                    arguments,
+                                    requireActivity() as NewDashboardActivity,
+                                    userData
+                                )
+                                rvRecentSubActivities.adapter = recylcerAdapterRecent
+                            }
 
-        val request = Request.Builder()
-            .url(url)
-            .build()
+                            if (apiData.data.task_assigned != null) {
+                                println("task_assigned")
+                                rvAssignedTask.setHasFixedSize(true)
+                                layoutManager = LinearLayoutManager(requireContext())
+                                rvAssignedTask.layoutManager = layoutManager
+                                recylcerAdapter = TaskAssignedAdapter(
+                                    requireContext(),
+                                    apiData.data.task_assigned as MutableList<DashboardTaskAssignedData>,
+                                    this@DashboardFragment,
+                                    requireActivity() as NewDashboardActivity
+                                )
+                                rvAssignedTask.adapter = recylcerAdapter
+                            }
 
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                requireActivity().runOnUiThread(java.lang.Runnable {
-                    activity?.let { it1 ->
-                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                            .setTitle("Error!!")
-                            .setMessage(e.message.toString())
-                            .sneakError()
-                    }
-                })
-            }
+                            if (apiData.data.daily_trend != null) {
+                                setupCombinedCart(chartDailyStatusThree, apiData.data.daily_trend)
+                            }
 
-            override fun onResponse(call: Call, response: Response) {
-                val body = response.body?.string()
-                println(body)
-
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, DashboardBarChartModel::class.java)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        setupCombinedCart(combined_chart, apiData.data)
-                        val data = createChartData(apiData.data)
-                        configureChartAppearance(apiData.data, chartDailyStatus)
-                        data?.let { prepareChartData(it, chartDailyStatus) }
-
-                        if (team_type == "7") {
-                            setupCombinedCart(combined_chart, apiData.data)
-                            *//*configureChartAppearance(apiData.data, chartDailyStatusTwo)
-                            data?.let { prepareChartData(it, chartDailyStatusTwo) }*//*
+                            if (apiData.data.market_activity != null) {
+                                rvRecentSubActivities.setHasFixedSize(true)
+                                layoutManagerRecent = LinearLayoutManager(requireContext())
+                                rvRecentSubActivities.layoutManager = layoutManagerRecent
+                                recylcerAdapterRecent = RecentActivityAdapter(
+                                    requireContext(),
+                                    "dashboard",
+                                    apiData.data.market_activity as MutableList<RecentActivityData>,
+                                    arguments,
+                                    requireActivity() as NewDashboardActivity,
+                                    userData
+                                )
+                                rvRecentSubActivities.adapter = recylcerAdapterRecent
+                            }
+                        } else {
+                            if (team_type == "7") {
+                                if (apiData.data.daily_trend != null) {
+                                    setupCombinedCart(chartDailyStatusTwo, apiData.data.daily_trend)
+                                }
+                            }
                         }
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
@@ -781,123 +752,10 @@ class DashboardFragment : BaseFragment() {
                                 .setMessage("Data not fetched.")
                                 .sneakWarning()
                         }
-                    })
-                }
-            }
-        })
-    }
-
-    fun fetchTaskAssignedData(url: String) {
-        val client = OkHttpClient()
-        println(url)
-
-        val request = Request.Builder()
-            .url(url)
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                requireActivity().runOnUiThread(java.lang.Runnable {
-                    activity?.let { it1 ->
-                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                            .setTitle("Error!!")
-                            .setMessage(e.message.toString())
-                            .sneakError()
-                    }
-                })
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                val body = response.body?.string()
-                println(body)
-
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, DashboardTaskAssignedModel::class.java)
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvAssignedTask.setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(requireContext())
-                        rvAssignedTask.layoutManager = layoutManager
-                        recylcerAdapter = TaskAssignedAdapter(
-                            requireContext(),
-                            apiData.data as MutableList<DashboardTaskAssignedData>,
-                            this@DashboardFragment,
-                            requireActivity() as NewDashboardActivity
-                        )
-                        rvAssignedTask.adapter = recylcerAdapter
-                    })
-                } else {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        activity?.let { it1 ->
-                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
-                        }
                         //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
                 }
             }
         })
     }
-
-    fun fetchRecentActivities(url: String) {
-        println(url)
-        val request = Request.Builder()
-            .url(url)
-            .build()
-
-        val client = OkHttpClient()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                requireActivity().runOnUiThread(java.lang.Runnable {
-                    activity?.let { it1 ->
-                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                            .setTitle("Error!!")
-                            .setMessage(e.message.toString())
-                            .sneakError()
-                    }
-                    //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                })
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                val body = response.body?.string()
-                println(body)
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, RecentActivityModel::class.java)
-
-                if (apiData.status == 200) {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        rvRecentSubActivities.setHasFixedSize(true)
-                        layoutManagerRecent = LinearLayoutManager(requireContext())
-                        rvRecentSubActivities.layoutManager = layoutManagerRecent
-                        recylcerAdapterRecent = RecentActivityAdapter(
-                            requireContext(),
-                            "dashboard",
-                            apiData.data as MutableList<RecentActivityData>,
-                            arguments,
-                            requireActivity() as NewDashboardActivity,
-                            userData
-                        )
-                        rvRecentSubActivities.adapter = recylcerAdapterRecent
-
-                    })
-                } else {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        activity?.let { it1 ->
-                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
-                        }
-                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                    })
-                }
-            }
-
-        })
-    }*/
-
 }

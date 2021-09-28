@@ -63,13 +63,23 @@ class SalesDetailAdapter(
             txtSaleQuantity.doAfterTextChanged { editable ->
                 val text = editable.toString()
                 println(text)
-                onTextUpdated(text)
+                if(text != "")
+                    onTextUpdated(text)
+                else {
+                    txtSaleQuantity.setText("0")
+                    onTextUpdated("0")
+                }
             }
 
             txtSalesValue.doAfterTextChanged { editable ->
                 val text = editable.toString()
                 println(text)
-                onTextUpdated1(text)
+                if(text != "")
+                    onTextUpdated1(text)
+                else {
+                    txtSalesValue.setText("0")
+                    onTextUpdated1("0")
+                }
             }
         }
     }
@@ -208,8 +218,8 @@ class SalesDetailAdapter(
 
         val isAlreadyEdit = salesData.filter { it.ProductID == filterList[position].ProductID}
         if(isAlreadyEdit.isNotEmpty()){
-            holder.txtSaleQuantity.setText(isAlreadyEdit[0].SalePrice)
-            holder.txtSalesValue.setText(isAlreadyEdit[0].SaleCount)
+            holder.txtSaleQuantity.setText(isAlreadyEdit[0].SaleCount)
+            holder.txtSalesValue.setText(isAlreadyEdit[0].SalePrice)
         }else{
             holder.txtSaleQuantity.setText(filterList[position].SaleQuantity.toString())
             holder.txtSalesValue.setText(filterList[position].SaleValue.toString())

@@ -67,13 +67,23 @@ class StockDetailAdapter(
             txtSaleQuantity.doAfterTextChanged { editable ->
                 val text = editable.toString()
                 println(text)
-                onTextUpdated(text)
+                if(text != "")
+                    onTextUpdated(text)
+                else {
+                    txtSaleQuantity.setText("0")
+                    onTextUpdated("0")
+                }
             }
 
             txtSalesValue.doAfterTextChanged { editable ->
                 val text = editable.toString()
                 println(text)
-                onTextUpdated1(text)
+                if(text != "")
+                    onTextUpdated1(text)
+                else {
+                    txtSalesValue.setText("0")
+                    onTextUpdated1("0")
+                }
             }
         }
     }

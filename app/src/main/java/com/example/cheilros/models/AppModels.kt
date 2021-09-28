@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
 class AddVisitPlanModel(val status: Int)
 
 //region Dashboard Cumlative
-class DashboardCumlativeModel(val status: Int, val data: List<DashboardCumlativeData>)
+class DashboardCumlativeModel(val status: Int, val data: DashboardCumlativeData)
 class DashboardCumlativeData(
     val market_activity: List<RecentActivityData>,
     val teammember_performance: List<DashboardBarChartData2>,

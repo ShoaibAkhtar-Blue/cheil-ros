@@ -45,7 +45,7 @@ class InstallationMainFragment : BaseFragment() {
         //region Set Labels
         try {
             view.txtStoreName.text =
-                settingData.filter { it.fixedLabelName == "StoreMenu_Ticket" }[0].labelName
+                settingData.filter { it.fixedLabelName == "StoreMenu_Installation" }[0].labelName
             view.StoreView_SubTitle.text =
                 settingData.filter { it.fixedLabelName == "StoreView_SubTitle" }[0].labelName
         } catch (ex: Exception) {

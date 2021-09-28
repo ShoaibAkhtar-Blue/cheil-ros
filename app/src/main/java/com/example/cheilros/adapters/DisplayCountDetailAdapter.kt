@@ -76,7 +76,12 @@ class DisplayCountDetailAdapter(
             txtAttend.doAfterTextChanged { editable ->
                 val text = editable.toString()
                 println(text)
-                onTextUpdated(text)
+                if(text != "")
+                    onTextUpdated(text)
+                else {
+                    txtAttend.setText("0")
+                    onTextUpdated("0")
+                }
             }
         }
     }
@@ -112,7 +117,12 @@ class DisplayCountDetailAdapter(
                 addDatainJsonObject(position, text)
         }
 
-        holder.txtAttend.setText(filterList[position].DisplayCount.toString())
+        val isAlreadyEdit = displayCountData.filter { it.ProductID == filterList[position].ProductID}
+        if(isAlreadyEdit.isNotEmpty()){
+            holder.txtAttend.setText(isAlreadyEdit[0].SerialNumber)
+        }else{
+            holder.txtAttend.setText(filterList[position].DisplayCount.toString())
+        }
 
         fragment.btnSubmit.setOnClickListener {
 
@@ -123,7 +133,7 @@ class DisplayCountDetailAdapter(
             val jsonString: String = gson.toJson(DisplayCountJSON(displayCountData))
             println(jsonString)
 
-            val url = "${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountDetailAdd"
+            val url = "${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountDetailAdd?TeamMemberID=${CSP.getData("user_id")}"
 
             val request_header: MediaType? = "application/text; charset=utf-8".toMediaTypeOrNull()
 

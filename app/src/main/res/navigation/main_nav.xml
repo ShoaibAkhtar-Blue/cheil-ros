@@ -625,5 +625,8 @@
         <action
             android:id="@+id/action_installationMainFragment_to_taskDeploymentFragment"
             app:destination="@id/taskDeploymentFragment" />
+        <argument
+            android:name="txtStoreName"
+            app:argType="string" />
     </fragment>
 </navigation>
