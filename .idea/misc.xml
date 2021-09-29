@@ -69,8 +69,10 @@
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/list_investmentdetail.xml" value="0.171875" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/list_issue_log.xml" value="0.24513888888888888" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/list_price_detail_new.xml" value="0.21944444444444444" />
+        <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/list_recent_training.xml" value="0.2246376811594203" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/list_sales_detail.xml" value="0.183984375" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/list_store_pictures.xml" value="0.23402777777777778" />
+        <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/list_training_simple.xml" value="0.2734375" />
       </map>
     </option>
   </component>

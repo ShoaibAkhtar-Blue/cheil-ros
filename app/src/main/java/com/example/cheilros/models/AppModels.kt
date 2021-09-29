@@ -22,6 +22,18 @@ class DashboardCumlativeData(
 )
 //endregion
 
+//region TrainingSimple
+class TrainingSimpleModel(val status: Int, val data: List<TrainingSimpleData>)
+class TrainingSimpleData(
+    val TrainingID: Int,
+    val StoreID: Int,
+    val StoreName: String,
+    val TrainingDateTime: String,
+    val Attendese: String,
+    val AdditionalAttendese: String
+)
+//endregion
+
 //region Store View
 class StoreInfoModel(val status: Int, val data: List<StoreInfoData>)
 class StoreInfoData(
@@ -216,6 +228,7 @@ class DashboardBarChartData(
     val Value1: String,
     val Value2: String
 )
+
 class DashboardBarChartData2(
     val TeamMemberID: Int,
     val PerformanceMonth: String,

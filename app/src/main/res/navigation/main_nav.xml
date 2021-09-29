@@ -305,6 +305,9 @@
         <action
             android:id="@+id/action_trainingFragment_to_trainingDetailFragment"
             app:destination="@id/trainingDetailFragment" />
+        <action
+            android:id="@+id/action_trainingFragment_to_trainingNewFragment"
+            app:destination="@id/trainingNewFragment" />
     </fragment>
     <fragment
         android:id="@+id/trainingDetailFragment"

@@ -115,7 +115,7 @@ class StoreMenuAdapter(
             if (ListData[position].fixedLabelName == "StoreMenu_Training") {
                 if(CSP.getData("StoreMenu_Training").equals("Y")){
                     Navigation.findNavController(it)
-                        .navigate(R.id.action_storeViewFragment_to_trainingNewFragment, bundle)
+                        .navigate(R.id.action_storeViewFragment_to_trainingFragment, bundle)
                 }else{
                     (context as Activity).runOnUiThread {
                         context?.let { it1 ->

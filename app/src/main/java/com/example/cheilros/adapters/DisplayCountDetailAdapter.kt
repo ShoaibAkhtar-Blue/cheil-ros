@@ -76,12 +76,12 @@ class DisplayCountDetailAdapter(
             txtAttend.doAfterTextChanged { editable ->
                 val text = editable.toString()
                 println(text)
-                if(text != "")
+                //if(text != "")
                     onTextUpdated(text)
-                else {
-                    txtAttend.setText("0")
-                    onTextUpdated("0")
-                }
+//                else {
+//                    txtAttend.setText("0")
+//                    onTextUpdated("0")
+//                }
             }
         }
     }
@@ -119,7 +119,11 @@ class DisplayCountDetailAdapter(
 
         val isAlreadyEdit = displayCountData.filter { it.ProductID == filterList[position].ProductID}
         if(isAlreadyEdit.isNotEmpty()){
-            holder.txtAttend.setText(isAlreadyEdit[0].SerialNumber)
+            println("isAlreadyEdit")
+            if (filterList[position].isBarCodeEnabled == "N")
+                holder.txtAttend.setText(isAlreadyEdit[0].SerialNumber)
+            else
+                holder.txtAttend.setText(filterList[position].DisplayCount.toString())
         }else{
             holder.txtAttend.setText(filterList[position].DisplayCount.toString())
         }
@@ -248,9 +252,10 @@ class DisplayCountDetailAdapter(
                 (filterList[numbersOnSameIndexAsValue].DisplayCount + 1)
         }
 
-        println("updateItem $numbersOnSameIndexAsValue")
+        println("updateItem $numbersOnSameIndexAsValue ${filterList[numbersOnSameIndexAsValue].DisplayCount}")
         //itemList[position] = item
         notifyDataSetChanged()
+
     }
 
     fun barCodeScan(position: Int) {
@@ -325,6 +330,7 @@ class DisplayCountDetailAdapter(
 
                 try {
                     if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
+                        println("ActivityDetail_BARCODE_SET ${barInput}_${filterList[position].ProductID}")
                         CSP.saveData(
                             "ActivityDetail_BARCODE_SET",
                             "${barInput}_${filterList[position].ProductID}"
@@ -337,7 +343,8 @@ class DisplayCountDetailAdapter(
 
                         println("ActivityDetail_BARCODE_SET: ${CSP.getData("ActivityDetail_BARCODE_SET")}")
                         println("barInput: $barInput")
-                        println("filterList: ${filterList[position].ProductID}")
+                        println("" +
+                                ": ${filterList[position].ProductID}")
 
                         CSP.saveData(
                             "ActivityDetail_BARCODE_SET",
