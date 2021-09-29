@@ -73,13 +73,13 @@ class TrainingFragment : BaseFragment() {
                 ).toString()
             }&TeamMemberID=${CSP.getData("user_id")}"
         )
-        fetchRecentTraining(
+        /*fetchRecentTraining(
             "${CSP.getData("base_url")}/Training.asmx/TrainingLog?StoreID=${
                 arguments?.getInt(
                     "StoreID"
                 ).toString()
             }&TeamMemberID=${CSP.getData("user_id")}"
-        )
+        )*/
 
         btnAddTraining.setOnClickListener {
             val bundle = bundleOf(
