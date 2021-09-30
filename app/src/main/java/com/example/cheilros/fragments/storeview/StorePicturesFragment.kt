@@ -148,7 +148,8 @@ class StorePicturesFragment : BaseFragment() {
             builder.setItems(channels,
                 DialogInterface.OnClickListener { dialog, which ->
                     println(brandData[which].BrandID)
-                    defaultElement = brandData[which].BrandID.toString()
+                    defaultBrand = brandData[which].BrandID.toString()
+                    println("defaultElement $defaultBrand")
                     btnBrand.text = "${brandData[which].BrandName}"
                     fetchStorePictures(
                         "${CSP.getData("base_url")}/Webservice.asmx/GeneralPictureVie?StoreID=${

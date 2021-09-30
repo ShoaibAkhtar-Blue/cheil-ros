@@ -15,11 +15,36 @@ class DashboardCumlativeData(
     val daily_trend: List<DashboardBarChartData>,
     val dashboard_labels: List<DashboardData>,
     val task_assigned: List<DashboardTaskAssignedData>,
-    val managment_dashboard_labels: String,
-    val managment_daily_sale: String,
-    val managment_display_share: String,
-    val managment_daily_activity: String,
+    val managment_dashboard_labels: List<ManagerDashboardLabelData>,
+    val managment_daily_sale: List<ManagerDailySaleData>,
+    val managment_display_share: List<ManagerDisplayShareData>,
+    val managment_daily_activity: List<RecentActivityData>,
 )
+//endregion
+
+//region Manager
+
+class ManagerDashboardLabelData(
+    val ManagementLabelID: String,
+    val ManagementLabelName: String,
+    val ManagementLabelValue: String
+)
+class ManagerDailySaleData(
+    val BrandName: String,
+    val SaleDate: String,
+    val TTLSale: String
+)
+class ManagerDisplayShareData(
+    val BrandName: String,
+    val SaleDate: String,
+    val TTLDisplay: String
+)
+class ManagerDailyActivityData(
+    val BrandName: String,
+    val SaleDate: String,
+    val TTLDisplay: String
+)
+
 //endregion
 
 //region TrainingSimple

@@ -74,6 +74,8 @@ class DashboardFragment : BaseFragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_dashboard, container, false)
 
+        (activity as NewDashboardActivity).shouldGoBack = true
+
         val simpleDateFormat = SimpleDateFormat("E dd, MMMM")
         val currentDateAndTime: String = simpleDateFormat.format(Date())
 
@@ -100,6 +102,23 @@ class DashboardFragment : BaseFragment() {
             view.LLGraphOne.visibility = View.GONE
 
             view.LLTask.visibility = View.GONE
+
+            //If user is Manager
+            if(team_type.toInt() <= 4){
+                view.cvJourneyPlan.visibility = View.GONE
+                view.LLNormalCard.visibility = View.GONE
+                view.gridview.visibility = View.GONE
+                view.LLGraphThree.visibility = View.GONE
+                view.LLGraphOne.visibility = View.GONE
+                view.LLGraphTwo.visibility = View.GONE
+                view.LLTask.visibility = View.GONE
+                view.LLRecentActivity.visibility = View.GONE
+            }else{
+                view.LLNormalCardOne.visibility = View.GONE
+                view.LLNormalCardTwo.visibility = View.GONE
+                view.LLManagerGraphSales.visibility = View.GONE
+                view.LLManagerActivities.visibility = View.GONE
+            }
 
             if (team_type == "7") {
                 view.Dashboard_GraphTitle.text =
@@ -228,7 +247,6 @@ class DashboardFragment : BaseFragment() {
                     )
                 }"
             )
-
         } catch (ex: Exception) {
 
         }
@@ -254,6 +272,33 @@ class DashboardFragment : BaseFragment() {
 
         val distanceInMeters: Float = myLocation.distanceTo(storeLocation)
         println("distanceInMeters: ${distanceInMeters}")*/
+
+
+        cvManagerCoverage.setOnClickListener {
+            try {
+                (activity as NewDashboardActivity).userLocation
+                findNavController().navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
+            } catch (ex: java.lang.Exception) {
+                Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                    .setTitle("Warning!!")
+                    .setMessage("Please Allow Location Permission!")
+                    .sneakWarning()
+            }
+        }
+
+        cvManagerDeployment.setOnClickListener {
+                try {
+                    (activity as NewDashboardActivity).userLocation
+                    findNavController().navigate(R.id.action_dashboardFragment_to_pendingDeploymentFragment)
+                } catch (ex: java.lang.Exception) {
+                    Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                        .setTitle("Warning!!")
+                        .setMessage("Please Allow Location Permission!")
+                        .sneakWarning()
+                }
+            }
+
+
 
         cvCoverage.setOnClickListener {
             try {
@@ -742,6 +787,53 @@ class DashboardFragment : BaseFragment() {
                                 }
                             }
                         }
+
+
+                        //If Manager
+                        if(team_type.toInt() <= 4){
+
+                            if(apiData.data.managment_dashboard_labels != null){
+                                val management_label = apiData.data.managment_dashboard_labels
+
+                                try{
+                                    txtManagerCoverageCount.text = management_label.filter { it.ManagementLabelName == "Store_Coverage_L1" }[0].ManagementLabelValue
+                                    Manager_Dashboard_Online.text = management_label.filter { it.ManagementLabelName == "Store_Coverage_L2" }[0].ManagementLabelValue
+                                    Manager_Dashboard_CoverageButton.text = management_label.filter { it.ManagementLabelName == "Store_Coverage_L3" }[0].ManagementLabelValue
+
+                                    txtManagerDeploymentCount.text = management_label.filter { it.ManagementLabelName == "Pending_Deployment_L1" }[0].ManagementLabelValue
+                                    Manager_Deployment_Online.text = management_label.filter { it.ManagementLabelName == "Pending_Deployment_L2" }[0].ManagementLabelValue
+                                    Manager_Dashboard_DeploymentButton.text = management_label.filter { it.ManagementLabelName == "Pending_Deployment_L3" }[0].ManagementLabelValue
+
+                                    txtManagerTicketCount.text = management_label.filter { it.ManagementLabelName == "Open_Tickets_L1" }[0].ManagementLabelValue
+                                    Manager_Ticket_Online.text = management_label.filter { it.ManagementLabelName == "Open_Tickets_L2" }[0].ManagementLabelValue
+                                    Manager_Dashboard_TicketButton.text = management_label.filter { it.ManagementLabelName == "Open_Tickets_L3" }[0].ManagementLabelValue
+
+                                    txtManagerTaskCount.text = management_label.filter { it.ManagementLabelName == "Pending_Tasks_L1" }[0].ManagementLabelValue
+                                    Manager_Task_Online.text = management_label.filter { it.ManagementLabelName == "Pending_Tasks_L2" }[0].ManagementLabelValue
+                                    Manager_Dashboard_TaskButton.text = management_label.filter { it.ManagementLabelName == "Pending_Tasks_L3" }[0].ManagementLabelValue
+                                }catch (ex: java.lang.Exception){
+
+                                }
+
+                            }
+
+                            if(apiData.data.managment_daily_activity != null){
+                                rvManagerActiviites.setHasFixedSize(true)
+                                layoutManagerRecent = LinearLayoutManager(requireContext())
+                                rvManagerActiviites.layoutManager = layoutManagerRecent
+                                recylcerAdapterRecent = RecentActivityAdapter(
+                                    requireContext(),
+                                    "dashboard",
+                                    apiData.data.managment_daily_activity as MutableList<RecentActivityData>,
+                                    arguments,
+                                    requireActivity() as NewDashboardActivity,
+                                    userData
+                                )
+                                rvManagerActiviites.adapter = recylcerAdapterRecent
+                            }
+                        }
+
+
                         mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                     })
                 } else {
