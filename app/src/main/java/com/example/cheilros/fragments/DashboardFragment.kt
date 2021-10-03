@@ -23,8 +23,11 @@ import com.example.cheilros.adapters.RecentActivityAdapter
 import com.example.cheilros.adapters.TaskAssignedAdapter
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.models.*
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.CombinedChart
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
@@ -51,6 +54,17 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.data.PieData
+
+import com.github.mikephil.charting.data.PieDataSet
+
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.utils.ColorTemplate
+
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.utils.EntryXComparator
 
 
 class DashboardFragment : BaseFragment() {
@@ -117,6 +131,7 @@ class DashboardFragment : BaseFragment() {
                 view.LLNormalCardOne.visibility = View.GONE
                 view.LLNormalCardTwo.visibility = View.GONE
                 view.LLManagerGraphSales.visibility = View.GONE
+                view.LLManagerGraphShares.visibility = View.GONE
                 view.LLManagerActivities.visibility = View.GONE
             }
 
@@ -616,6 +631,108 @@ class DashboardFragment : BaseFragment() {
         combined_chart.invalidate()
     }
 
+    private fun showPieChart(
+        pieChart: PieChart,
+        data: List<ManagerDailySaleData>
+    ) {
+        pieChart.setUsePercentValues(true)
+        pieChart.description.text = ""
+        //hollow pie chart
+        pieChart.isDrawHoleEnabled = false
+        pieChart.setTouchEnabled(false)
+        pieChart.setDrawEntryLabels(false)
+        //adding padding
+        pieChart.setExtraOffsets(20f, 0f, 20f, 20f)
+        pieChart.setUsePercentValues(true)
+        pieChart.isRotationEnabled = false
+        pieChart.setDrawEntryLabels(false)
+        pieChart.legend.orientation = Legend.LegendOrientation.VERTICAL
+        pieChart.legend.isWordWrapEnabled = true
+
+        pieChart.setUsePercentValues(true)
+        val dataEntries = ArrayList<PieEntry>()
+        for (chartVal in data) {
+            dataEntries.add(PieEntry(chartVal.TTLSale.toFloat(), chartVal.BrandName))
+        }
+
+
+        val colors: ArrayList<Int> = ArrayList()
+        colors.add(Color.parseColor("#4DD0E1"))
+        colors.add(Color.parseColor("#FFF176"))
+        colors.add(Color.parseColor("#FF8A65"))
+
+        val dataSet = PieDataSet(dataEntries, "")
+        val data = PieData(dataSet)
+
+        // In Percentage
+        data.setValueFormatter(PercentFormatter())
+        dataSet.sliceSpace = 3f
+        dataSet.colors = colors
+        pieChart.data = data
+        data.setValueTextSize(15f)
+        pieChart.setExtraOffsets(5f, 10f, 5f, 5f)
+        pieChart.animateY(1400, Easing.EaseInOutQuad)
+
+        //create hole in center
+        pieChart.holeRadius = 58f
+        pieChart.transparentCircleRadius = 61f
+        pieChart.isDrawHoleEnabled = true
+        pieChart.setHoleColor(Color.WHITE)
+
+
+        //add text in center
+        pieChart.setDrawCenterText(true);
+        pieChart.centerText = "Display Share"
+
+        pieChart.invalidate()
+    }
+
+    private fun showLineChart(lineChart: LineChart){
+
+        lineChart.axisLeft.setDrawGridLines(false)
+        val xAxis: XAxis = lineChart.xAxis
+        xAxis.setDrawGridLines(false)
+        xAxis.setDrawAxisLine(false)
+
+        //remove right y-axis
+        lineChart.axisRight.isEnabled = false
+
+        //remove legend
+        lineChart.legend.isEnabled = false
+
+
+        //remove description label
+        lineChart.description.isEnabled = false
+
+
+        //add animation
+        lineChart.animateX(1000, Easing.EaseInSine)
+
+        // to draw label on xAxis
+        xAxis.position = XAxis.XAxisPosition.BOTTOM_INSIDE
+        //.valueFormatter = MyAxisFormatter()
+        xAxis.setDrawLabels(true)
+        xAxis.granularity = 1f
+        xAxis.labelRotationAngle = +90f
+
+
+        var lineData: LineData
+        var entries: MutableList<Entry> = arrayListOf()
+
+        entries.add(Entry(10.toFloat(), 20.toFloat()))
+        entries.add(Entry(7.toFloat(), 58.toFloat()))
+        entries.add(Entry(5.toFloat(), 45.toFloat()))
+        entries.add(Entry(9.toFloat(), 96.toFloat()))
+        Collections.sort(entries, EntryXComparator())
+
+        val lineDataSet = LineDataSet(entries, "-")
+
+        val data = LineData(lineDataSet)
+        lineChart.data = data
+
+        lineChart.invalidate()
+    }
+
     private fun generateLineData(data: List<DashboardBarChartData>): LineData? {
         val d = LineData()
         val r = Random()
@@ -785,12 +902,21 @@ class DashboardFragment : BaseFragment() {
                                 if (apiData.data.daily_trend != null) {
                                     setupCombinedCart(chartDailyStatusTwo, apiData.data.daily_trend)
                                 }
+
+
                             }
                         }
 
 
                         //If Manager
                         if(team_type.toInt() <= 4){
+
+                            if(apiData.data.managment_display_share != null){
+                                showPieChart(ManagerDisplayChart, apiData.data.managment_daily_sale)
+                                showLineChart(ManagerShareChart)
+                            }
+
+
 
                             if(apiData.data.managment_dashboard_labels != null){
                                 val management_label = apiData.data.managment_dashboard_labels

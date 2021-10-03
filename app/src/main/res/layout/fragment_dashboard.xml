@@ -791,7 +791,7 @@
 
                         <TextView
                             style="@style/headingStyle"
-                            android:text="Daily Sales Status" />
+                            android:text="Display Share" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -800,7 +800,33 @@
                             android:orientation="vertical"
                             android:padding="16dp">
 
-                            <com.github.mikephil.charting.charts.CombinedChart
+                            <com.github.mikephil.charting.charts.PieChart
+                                android:id="@+id/ManagerDisplayChart"
+                                android:layout_width="match_parent"
+                                android:layout_height="200dp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/LLManagerGraphShares"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/headingStyle"
+                            android:text="Display Share" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border_grey"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <com.github.mikephil.charting.charts.LineChart
+                                android:id="@+id/ManagerShareChart"
                                 android:layout_width="match_parent"
                                 android:layout_height="200dp" />
 
