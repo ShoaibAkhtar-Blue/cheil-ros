@@ -37,6 +37,8 @@ import kotlinx.android.synthetic.main.fragment_team_status.rvCurrentWeek
 import okhttp3.*
 import java.io.IOException
 import java.text.DateFormat
+import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -80,6 +82,8 @@ class TeamStatusFragment : BaseFragment() {
 
         if(team_type.toInt() <= 4){
             LLWeeklyCalendar.visibility = View.GONE
+        }else{
+            cvFieldUser.visibility = View.GONE
         }
 
         val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
@@ -228,7 +232,7 @@ class TeamStatusFragment : BaseFragment() {
                     userList = apiData.data
                     requireActivity().runOnUiThread(java.lang.Runnable {
                         activity?.let { it1 ->
-                            mainLoadingLayoutTS.setState(LoadingLayout.COMPLETE)
+                            //mainLoadingLayoutTS.setState(LoadingLayout.COMPLETE)
                         }
                     })
                 } else {
@@ -295,6 +299,10 @@ class TeamStatusFragment : BaseFragment() {
                         recyclerView.adapter = recylcerAdapter
 
                         getCurrentWeek(btnDate.tag as String)
+
+                        val formatter1: NumberFormat = DecimalFormat("00000")
+                        txtManagerDeploymentCount.text = formatter1.format(apiData.data.size.toInt())
+
                         mainLoadingLayoutTS.setState(LoadingLayout.COMPLETE)
                         toolbarVisibility(true)
                         (activity as NewDashboardActivity).shouldGoBack = true

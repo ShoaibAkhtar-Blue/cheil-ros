@@ -114,8 +114,11 @@ open class BaseFragment : Fragment() {
                 configureToolbar(settingData.filter { it.fixedLabelName == "StoreList_Title" }
                     .get(0).labelName, true, true)
             } else if (fragmentLabel == "team_status") {
+                if(team_type.toInt() > 4)
                 configureToolbar(settingData.filter { it.fixedLabelName == "MenuTitle5" }
                     .get(0).labelName, true, true)
+                else
+                    configureToolbar("Field Users", true, true)
             } else if (fragmentLabel == "my_activities") {
                 configureToolbar(settingData.filter { it.fixedLabelName == "MenuTitle6" }
                     .get(0).labelName, true, false)

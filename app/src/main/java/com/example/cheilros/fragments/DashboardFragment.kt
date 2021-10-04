@@ -659,6 +659,7 @@ class DashboardFragment : BaseFragment() {
         colors.add(Color.parseColor("#4DD0E1"))
         colors.add(Color.parseColor("#FFF176"))
         colors.add(Color.parseColor("#FF8A65"))
+        colors.add(Color.parseColor("#FF8E78"))
 
         val dataSet = PieDataSet(dataEntries, "")
         val data = PieData(dataSet)
