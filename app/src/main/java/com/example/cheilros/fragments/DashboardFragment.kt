@@ -61,7 +61,6 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.utils.ColorTemplate
 
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.utils.EntryXComparator
@@ -304,7 +303,7 @@ class DashboardFragment : BaseFragment() {
         cvManagerDeployment.setOnClickListener {
                 try {
                     (activity as NewDashboardActivity).userLocation
-                    findNavController().navigate(R.id.action_dashboardFragment_to_pendingDeploymentFragment)
+                    findNavController().navigate(R.id.action_dashboardFragment_to_teamStatusFragment)
                 } catch (ex: java.lang.Exception) {
                     Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                         .setTitle("Warning!!")
@@ -633,7 +632,7 @@ class DashboardFragment : BaseFragment() {
 
     private fun showPieChart(
         pieChart: PieChart,
-        data: List<ManagerDailySaleData>
+        data: List<ManagerDisplayShareData>
     ) {
         pieChart.setUsePercentValues(true)
         pieChart.description.text = ""
@@ -652,7 +651,7 @@ class DashboardFragment : BaseFragment() {
         pieChart.setUsePercentValues(true)
         val dataEntries = ArrayList<PieEntry>()
         for (chartVal in data) {
-            dataEntries.add(PieEntry(chartVal.TTLSale.toFloat(), chartVal.BrandName))
+            dataEntries.add(PieEntry(chartVal.TTLDisplay.toFloat(), chartVal.BrandName))
         }
 
 
@@ -912,7 +911,7 @@ class DashboardFragment : BaseFragment() {
                         if(team_type.toInt() <= 4){
 
                             if(apiData.data.managment_display_share != null){
-                                showPieChart(ManagerDisplayChart, apiData.data.managment_daily_sale)
+                                showPieChart(ManagerDisplayChart, apiData.data.managment_display_share)
                                 showLineChart(ManagerShareChart)
                             }
 

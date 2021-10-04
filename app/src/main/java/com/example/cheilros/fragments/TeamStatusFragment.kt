@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.activities.customobj.EmptyRecyclerView
 import com.example.cheilros.adapters.JPCurrentWeekApdater
 import com.example.cheilros.adapters.MyCoverageAdapter
@@ -60,7 +61,7 @@ class TeamStatusFragment : BaseFragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_team_status, container, false)
-
+        toolbarVisibility(false)
 
 
         val callback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
@@ -74,6 +75,12 @@ class TeamStatusFragment : BaseFragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        mainLoadingLayoutTS.setState(LoadingLayout.LOADING)
+
+        if(team_type.toInt() <= 4){
+            LLWeeklyCalendar.visibility = View.GONE
+        }
 
         val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
         val currentDateAndTime: String = simpleDateFormat.format(Date())
@@ -103,7 +110,13 @@ class TeamStatusFragment : BaseFragment() {
         getCurrentWeek(btnDate.tag as String)
 
         fetchUser("${CSP.getData("base_url")}/Team.asmx/AssignedTeamMember?TeamMemberID=${CSP.getData("user_id")}")
-        fetchTeamStatus("${CSP.getData("base_url")}/Team.asmx/TeamStatus?TeamMemberID=${CSP.getData("user_id")}&AssignedTeamMemberID=0&PlanDate=${currentDateAndTime}")
+
+        var team_status_url = "${CSP.getData("base_url")}/Team.asmx/TeamStatus?TeamMemberID=${CSP.getData("user_id")}&AssignedTeamMemberID=0&PlanDate=${currentDateAndTime}"
+
+        if(team_type.toInt() <= 4)
+            team_status_url = "${CSP.getData("base_url")}/Dashboard.asmx/ManagmentTeamStatus?TeamMemberID=${CSP.getData("user_id")}&TeamTypeID=$team_type&ChannelTypeID=1&ChannelID=1"
+
+        fetchTeamStatus(team_status_url)
 
         btnUser.setOnClickListener {
             val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
@@ -118,6 +131,7 @@ class TeamStatusFragment : BaseFragment() {
 
                     btnUser.text = "Selected User: ${userList[which].TeamMemberName}"
                     assignedUserID = userList[which].AssignedTeamMemberID
+                    if(team_type.toInt() > 4)
                     fetchTeamStatus("${CSP.getData("base_url")}/Team.asmx/TeamStatus?TeamMemberID=${CSP.getData("user_id")}&AssignedTeamMemberID=${userList[which].AssignedTeamMemberID}&PlanDate=${btnDate.tag}")
                 })
 
@@ -282,6 +296,8 @@ class TeamStatusFragment : BaseFragment() {
 
                         getCurrentWeek(btnDate.tag as String)
                         mainLoadingLayoutTS.setState(LoadingLayout.COMPLETE)
+                        toolbarVisibility(true)
+                        (activity as NewDashboardActivity).shouldGoBack = true
                     })
                 } else {
                     requireActivity().runOnUiThread(java.lang.Runnable {

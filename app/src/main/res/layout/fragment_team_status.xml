@@ -64,6 +64,7 @@ tools:context=".fragments.TeamStatusFragment">
                 android:padding="4dp">
 
                 <LinearLayout
+                    android:id="@+id/LLWeeklyCalendar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
