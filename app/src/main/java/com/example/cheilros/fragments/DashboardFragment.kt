@@ -287,6 +287,28 @@ class DashboardFragment : BaseFragment() {
         val distanceInMeters: Float = myLocation.distanceTo(storeLocation)
         println("distanceInMeters: ${distanceInMeters}")*/
 
+        cvManagerTicket.setOnClickListener {
+            try {
+                (activity as NewDashboardActivity).userLocation
+                findNavController().navigate(R.id.action_dashboardFragment_to_openTicketsFragment)
+            } catch (ex: java.lang.Exception) {
+                Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                    .setTitle("Warning!!")
+                    .setMessage("Please Allow Location Permission!")
+                    .sneakWarning()
+            }
+        }
+        cvManagerTask.setOnClickListener {
+            try {
+                (activity as NewDashboardActivity).userLocation
+                findNavController().navigate(R.id.action_dashboardFragment_to_pendingTaskFragment)
+            } catch (ex: java.lang.Exception) {
+                Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                    .setTitle("Warning!!")
+                    .setMessage("Please Allow Location Permission!")
+                    .sneakWarning()
+            }
+        }
 
         cvManagerCoverage.setOnClickListener {
             try {

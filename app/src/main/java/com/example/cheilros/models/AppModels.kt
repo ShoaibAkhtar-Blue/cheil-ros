@@ -183,6 +183,13 @@ class TeamMemberData(val TeamMemberID: Int, val TeamMemberName: String, val Atte
 
 //endregion
 
+//region TeamType
+
+class ManagementTeamTypeModel(val status: Int, val data: List<ManagementTeamTypeData>)
+class ManagementTeamTypeData(val TeamTypeID: Int, val TeamTypeName: String, val ActiveStatus: Int)
+
+//endregion
+
 //region Activity
 class RecentActivityModel(val status: Int, val data: List<RecentActivityData>)
 class RecentActivityData(

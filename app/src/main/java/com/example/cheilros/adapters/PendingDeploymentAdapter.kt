@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -20,9 +22,8 @@ class PendingDeploymentAdapter(
     val context: Context,
     val itemList: List<PendingDeploymentData>,
     val settingData: List<AppSetting>,
-    val fragment: PendingDeploymentFragment,
     val activity: NewDashboardActivity
-) : RecyclerView.Adapter<PendingDeploymentAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<PendingDeploymentAdapter.ViewHolder>(), Filterable {
     lateinit var CSP: CustomSharedPref
 
     var filterList = ArrayList<PendingDeploymentData>()
@@ -54,5 +55,38 @@ class PendingDeploymentAdapter(
     }
     override fun getItemCount(): Int {
         return filterList.size
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                if (charSearch.isEmpty()) {
+                    filterList = itemList as ArrayList<PendingDeploymentData>
+                } else {
+                    if (filterList.size > 0) {
+                        val resultList = ArrayList<PendingDeploymentData>()
+                        for (row in itemList) {
+                            if (row.StoreName.toLowerCase().contains(
+                                    constraint.toString().toLowerCase()
+                                ) || row.StoreCode.toLowerCase()
+                                    .contains(constraint.toString().toLowerCase())
+                            ) {
+                                resultList.add(row)
+                            }
+                        }
+                        filterList = resultList
+                    }
+                }
+                val filterResults = FilterResults()
+                filterResults.values = filterList
+                return filterResults
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                filterList = results?.values as ArrayList<PendingDeploymentData>
+                notifyDataSetChanged()
+            }
+        }
     }
 }

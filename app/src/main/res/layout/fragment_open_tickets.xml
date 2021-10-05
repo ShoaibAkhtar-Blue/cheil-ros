@@ -1,14 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.managment.OpenTicketsFragment">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".fragments.managment.OpenTicketsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+<com.valartech.loadinglayout.LoadingLayout
+    android:id="@+id/mainLoadingLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--  Empty      -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:background="#80ddc628"
+        android:gravity="center"
+        android:tag="@string/ll_empty"
+        android:text="@string/no_results"
+        android:textColor="#000"
+        android:textSize="20sp" />
 
-</FrameLayout>
+    <!--   Loading     -->
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.CubeGrid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:tag="@string/ll_loading"
+        app:SpinKit_Color="@color/black" />
+
+    <!--   Completed     -->
+    <LinearLayout
+        android:id="@+id/layout_ejercicios"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#e2e2e2"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:tag="@string/ll_complete">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvFieldUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardBackgroundColor="#534f47"
+                app:cardCornerRadius="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:src="@drawable/watch_icon" />
+
+                        <TextView
+                            android:id="@+id/txtManagerDeploymentCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:text="0000"
+                            android:textColor="#fff"
+                            android:textSize="24dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/Manager_Dashboard_DeploymentButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:maxLength="20"
+                        android:maxLines="1"
+                        android:text="Open Tickets"
+                        android:textColor="#fff"
+                        android:textSize="12dp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnChannelType"
+            style="@style/ButtonList"
+            android:text="Select Channel Type" />
+
+        <Button
+            android:id="@+id/btnChannel"
+            style="@style/ButtonList"
+            android:text="Select Channel" />
+
+
+        <com.example.cheilros.activities.customobj.EmptyRecyclerView
+            android:id="@+id/rvOpenTickets"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- Added an empty view which will be shown when the EmptyRecyclerView
+     is empty -->
+        <LinearLayout
+            android:id="@+id/todo_list_empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:textAlignment="center">
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/no_record" />
+
+            <TextView
+                android:id="@+id/txtNoRecord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/samsungsharpsans_bold"
+                android:padding="16dp"
+                android:text="NO RECORD FOUND"
+                android:textColor="#534f47"
+                android:textSize="16sp" />
+
+
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+    <!--    Error    -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ff0000"
+        android:gravity="center"
+        android:tag="@string/ll_error"
+        android:text="@string/error"
+        android:textColor="#fff"
+        android:textSize="20sp" />
+
+</com.valartech.loadinglayout.LoadingLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

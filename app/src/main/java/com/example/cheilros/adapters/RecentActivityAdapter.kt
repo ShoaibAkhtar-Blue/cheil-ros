@@ -42,7 +42,7 @@ class RecentActivityAdapter(
     val arguments: Bundle?,
     val activity: NewDashboardActivity,
     val userData: List<UserData>
-) : RecyclerView.Adapter<RecentActivityAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<RecentActivityAdapter.ViewHolder>(), Filterable {
 
     lateinit var CSP: CustomSharedPref
 
@@ -80,7 +80,7 @@ class RecentActivityAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
 
-        if(CSP.getData("team_type_id")!!.toInt() <= 4){
+        if (CSP.getData("team_type_id")!!.toInt() <= 4) {
             holder.btnAccept.visibility = View.GONE
             holder.btnCancel.visibility = View.GONE
         }
@@ -196,7 +196,7 @@ class RecentActivityAdapter(
 
                     var isFixed = if (dialog.cbIssue.isChecked) "1" else "0"
 
-                    if(dialog.cbIssue.isChecked){
+                    if (dialog.cbIssue.isChecked) {
                         val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
 
                         builder.setTitle("Update Issue Log...")
@@ -211,7 +211,7 @@ class RecentActivityAdapter(
                         }
 
                         builder.show()
-                    }else{
+                    } else {
                         saveIssue(dialog, position, isFixed)
                     }
                 }
@@ -472,5 +472,37 @@ class RecentActivityAdapter(
 
     fun addNewItem(imgPath: String) {
         recylcerAdapterPA.addNewItem(imgPath)
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                if (charSearch.isEmpty()) {
+                    filterList = itemList as ArrayList<RecentActivityData>
+                } else {
+                    if (filterList.size > 0) {
+                        val resultList = ArrayList<RecentActivityData>()
+                        for (row in itemList) {
+                            if (row.StoreName.toLowerCase().contains(
+                                    constraint.toString().toLowerCase()
+                                )
+                            ) {
+                                resultList.add(row)
+                            }
+                        }
+                        filterList = resultList
+                    }
+                }
+                val filterResults = FilterResults()
+                filterResults.values = filterList
+                return filterResults
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                filterList = results?.values as ArrayList<RecentActivityData>
+                notifyDataSetChanged()
+            }
+        }
     }
 }

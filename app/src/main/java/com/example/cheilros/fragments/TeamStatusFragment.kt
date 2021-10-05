@@ -48,7 +48,8 @@ class TeamStatusFragment : BaseFragment() {
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: TeamStatusAdapter
 
-    lateinit var userList:List<AssignedTeamMemberData>
+    lateinit var userList: List<AssignedTeamMemberData>
+    lateinit var teamTypeList: List<ManagementTeamTypeData>
 
     lateinit var tsscurrentweekAdapter: TeamStatusCurrentWeekApdater
 
@@ -62,7 +63,7 @@ class TeamStatusFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view =  inflater.inflate(R.layout.fragment_team_status, container, false)
+        val view = inflater.inflate(R.layout.fragment_team_status, container, false)
         toolbarVisibility(false)
 
 
@@ -80,10 +81,11 @@ class TeamStatusFragment : BaseFragment() {
 
         mainLoadingLayoutTS.setState(LoadingLayout.LOADING)
 
-        if(team_type.toInt() <= 4){
+        if (team_type.toInt() <= 4) {
             LLWeeklyCalendar.visibility = View.GONE
-        }else{
+        } else {
             cvFieldUser.visibility = View.GONE
+            LLCheckBtns.visibility = View.GONE
         }
 
         val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
@@ -104,7 +106,13 @@ class TeamStatusFragment : BaseFragment() {
                         val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
                         btnDate.tag = currentDate
 
-                        fetchTeamStatus("${CSP.getData("base_url")}/Team.asmx/TeamStatus?TeamMemberID=${CSP.getData("user_id")}&AssignedTeamMemberID=${assignedUserID}&PlanDate=${btnDate.tag}")
+                        fetchTeamStatus(
+                            "${CSP.getData("base_url")}/Team.asmx/TeamStatus?TeamMemberID=${
+                                CSP.getData(
+                                    "user_id"
+                                )
+                            }&AssignedTeamMemberID=${assignedUserID}&PlanDate=${btnDate.tag}"
+                        )
 
                     }, year, month, day
                 )
@@ -112,60 +120,118 @@ class TeamStatusFragment : BaseFragment() {
         }
 
         getCurrentWeek(btnDate.tag as String)
+        if (team_type.toInt() > 4)
+            fetchUser(
+                "${CSP.getData("base_url")}/Team.asmx/AssignedTeamMember?TeamMemberID=${
+                    CSP.getData(
+                        "user_id"
+                    )
+                }"
+            )
+        else
+            fetchTeamType("${CSP.getData("base_url")}/Team.asmx/ManagementTeamType")
 
-        fetchUser("${CSP.getData("base_url")}/Team.asmx/AssignedTeamMember?TeamMemberID=${CSP.getData("user_id")}")
 
-        var team_status_url = "${CSP.getData("base_url")}/Team.asmx/TeamStatus?TeamMemberID=${CSP.getData("user_id")}&AssignedTeamMemberID=0&PlanDate=${currentDateAndTime}"
+        var team_status_url =
+            "${CSP.getData("base_url")}/Team.asmx/TeamStatus?TeamMemberID=${CSP.getData("user_id")}&AssignedTeamMemberID=0&PlanDate=${currentDateAndTime}"
 
-        if(team_type.toInt() <= 4)
-            team_status_url = "${CSP.getData("base_url")}/Dashboard.asmx/ManagmentTeamStatus?TeamMemberID=${CSP.getData("user_id")}&TeamTypeID=$team_type&ChannelTypeID=1&ChannelID=1"
+        if (team_type.toInt() <= 4)
+            team_status_url =
+                "${CSP.getData("base_url")}/Dashboard.asmx/ManagmentTeamStatus?TeamMemberID=${
+                    CSP.getData("user_id")
+                }&TeamTypeID=$team_type&ChannelTypeID=1&ChannelID=1"
 
         fetchTeamStatus(team_status_url)
 
         btnUser.setOnClickListener {
-            val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Choose user")
-            var channels : Array<String> = arrayOf()
-            for (c in userList){
-                channels += c.TeamMemberName
+
+            if (team_type.toInt() > 4) {
+                val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Choose user")
+                var channels: Array<String> = arrayOf()
+                for (c in userList) {
+                    channels += c.TeamMemberName
+                }
+
+                builder.setItems(channels,
+                    DialogInterface.OnClickListener { dialog, which ->
+
+                        btnUser.text = "Selected User: ${userList[which].TeamMemberName}"
+                        assignedUserID = userList[which].AssignedTeamMemberID
+
+                        fetchTeamStatus(
+                            "${CSP.getData("base_url")}/Team.asmx/TeamStatus?TeamMemberID=${
+                                CSP.getData(
+                                    "user_id"
+                                )
+                            }&AssignedTeamMemberID=${userList[which].AssignedTeamMemberID}&PlanDate=${btnDate.tag}"
+                        )
+                    })
+
+                // create and show the alert dialog
+
+                // create and show the alert dialog
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            } else {
+                val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Choose team type")
+                var channels: Array<String> = arrayOf()
+                for (c in teamTypeList) {
+                    channels += c.TeamTypeName
+                }
+
+                builder.setItems(channels,
+                    DialogInterface.OnClickListener { dialog, which ->
+
+                        btnUser.text = "Selected Team Type: ${teamTypeList[which].TeamTypeName}"
+                        assignedUserID = teamTypeList[which].TeamTypeID
+
+                        fetchTeamStatus(
+                            "${CSP.getData("base_url")}/Dashboard.asmx/ManagmentTeamStatus?TeamMemberID=${
+                                CSP.getData(
+                                    "user_id"
+                                )
+                            }&TeamTypeID=$assignedUserID&ChannelTypeID=1&ChannelID=1"
+                        )
+                    })
+
+                // create and show the alert dialog
+
+                // create and show the alert dialog
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
             }
-
-            builder.setItems(channels,
-                DialogInterface.OnClickListener { dialog, which ->
-
-                    btnUser.text = "Selected User: ${userList[which].TeamMemberName}"
-                    assignedUserID = userList[which].AssignedTeamMemberID
-                    if(team_type.toInt() > 4)
-                    fetchTeamStatus("${CSP.getData("base_url")}/Team.asmx/TeamStatus?TeamMemberID=${CSP.getData("user_id")}&AssignedTeamMemberID=${userList[which].AssignedTeamMemberID}&PlanDate=${btnDate.tag}")
-                })
-
-            // create and show the alert dialog
-
-            // create and show the alert dialog
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
-
         }
 
-        requireActivity().toolbar_search.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+        requireActivity().toolbar_search.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener,
             android.widget.SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(qString: String): Boolean {
                 recylcerAdapter?.filter?.filter(qString)
                 return true
             }
+
             override fun onQueryTextSubmit(qString: String): Boolean {
 
                 return true
             }
         })
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    fun filterTS(status: Int = 0, filterDate: String = ""){
+    fun filterTS(status: Int = 0, filterDate: String = "") {
         var fd = if (filterDate.equals("")) btnDate.tag else filterDate
         btnDate.tag = fd
         getCurrentWeek(btnDate.tag as String)
-        fetchTeamStatus("${CSP.getData("base_url")}/Team.asmx/TeamStatus?TeamMemberID=${CSP.getData("user_id")}&AssignedTeamMemberID=${assignedUserID}&PlanDate=${btnDate.tag}")
+        fetchTeamStatus(
+            "${CSP.getData("base_url")}/Team.asmx/TeamStatus?TeamMemberID=${
+                CSP.getData(
+                    "user_id"
+                )
+            }&AssignedTeamMemberID=${assignedUserID}&PlanDate=${btnDate.tag}"
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -250,6 +316,58 @@ class TeamStatusFragment : BaseFragment() {
         })
     }
 
+    fun fetchTeamType(url: String) {
+
+        mainLoadingLayoutTS.setState(LoadingLayout.LOADING)
+
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                requireActivity().runOnUiThread(java.lang.Runnable {
+                    activity?.let { it1 ->
+                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                            .setTitle("Error!!")
+                            .setMessage(e.message.toString())
+                            .sneakError()
+                        mainLoadingLayoutTS.setState(LoadingLayout.COMPLETE)
+                    }
+                })
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body?.string()
+                println(body)
+
+                val gson = GsonBuilder().create()
+                val apiData = gson.fromJson(body, ManagementTeamTypeModel::class.java)
+                println(apiData.status)
+                if (apiData.status == 200) {
+                    teamTypeList = apiData.data
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            //mainLoadingLayoutTS.setState(LoadingLayout.COMPLETE)
+                        }
+                    })
+                } else {
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage("Data not fetched.")
+                                .sneakWarning()
+                            mainLoadingLayoutTS.setState(LoadingLayout.COMPLETE)
+                        }
+                    })
+                }
+            }
+        })
+    }
+
     fun fetchTeamStatus(url: String) {
 
         val client = OkHttpClient()
@@ -290,18 +408,20 @@ class TeamStatusFragment : BaseFragment() {
                                 DividerItemDecoration.VERTICAL
                             )
                         )
-                        layoutManager= LinearLayoutManager(requireContext())
-                        recyclerView.layoutManager=layoutManager
+                        layoutManager = LinearLayoutManager(requireContext())
+                        recyclerView.layoutManager = layoutManager
 
 //                        val emptyView: View = todo_list_empty_view
 //                        recyclerView.setEmptyView(emptyView)
-                        recylcerAdapter = TeamStatusAdapter(requireContext(), apiData.data, arguments)
+                        recylcerAdapter =
+                            TeamStatusAdapter(requireContext(), apiData.data, arguments)
                         recyclerView.adapter = recylcerAdapter
 
                         getCurrentWeek(btnDate.tag as String)
 
                         val formatter1: NumberFormat = DecimalFormat("00000")
-                        txtManagerDeploymentCount.text = formatter1.format(apiData.data.size.toInt())
+                        txtManagerDeploymentCount.text =
+                            formatter1.format(apiData.data.size.toInt())
 
                         mainLoadingLayoutTS.setState(LoadingLayout.COMPLETE)
                         toolbarVisibility(true)

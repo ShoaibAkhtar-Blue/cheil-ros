@@ -175,6 +175,41 @@ tools:context=".fragments.TeamStatusFragment">
                     app:strokeColor="#c2c2c2"
                     app:strokeWidth="2dp" />
 
+                <LinearLayout
+                    android:id="@+id/LLCheckBtns"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <Button
+                        android:layout_marginRight="4dp"
+                        android:layout_weight="1"
+                        android:id="@+id/btnCheckIn"
+                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="@color/white"
+                        android:backgroundTint="@color/white"
+                        android:text="Checked In (0)"
+                        android:textColor="#b2b2b2"
+                        app:cornerRadius="0dp"
+                        app:strokeColor="#c2c2c2"
+                        app:strokeWidth="2dp" />
+
+                    <Button
+                        android:layout_marginRight="4dp"
+                        android:layout_weight="1"
+                        android:id="@+id/btnCheckOut"
+                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="@color/white"
+                        android:backgroundTint="@color/white"
+                        android:text="Checked Out (0)"
+                        android:textColor="#b2b2b2"
+                        app:cornerRadius="0dp"
+                        app:strokeColor="#c2c2c2"
+                        app:strokeWidth="2dp" />
+                </LinearLayout>
+
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>

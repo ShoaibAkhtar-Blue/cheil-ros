@@ -193,7 +193,6 @@ class PendingDeploymentFragment : BaseFragment() {
                                 requireContext(),
                                 apiData.data,
                                 settingData,
-                                this@PendingDeploymentFragment,
                                 requireActivity() as NewDashboardActivity
                             )
                             recyclerView.adapter = recylcerAdapter

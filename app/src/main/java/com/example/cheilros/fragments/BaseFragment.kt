@@ -110,6 +110,10 @@ open class BaseFragment : Fragment() {
             } else if (fragmentLabel == "pending_deployment") {
                 configureToolbar(settingData.filter { it.fixedLabelName == "Dashboard_PendingButton" }
                     .get(0).labelName, true)
+            }else if (fragmentLabel == "pending_task") {
+                configureToolbar("Pending Task", true, true)
+            }else if (fragmentLabel == "open_tickets") {
+                configureToolbar("Open Tickets", true, true)
             } else if (fragmentLabel == "mycoverage") {
                 configureToolbar(settingData.filter { it.fixedLabelName == "StoreList_Title" }
                     .get(0).labelName, true, true)

@@ -30,6 +30,12 @@
         <action
             android:id="@+id/action_dashboardFragment_to_pendingDeploymentFragment"
             app:destination="@id/pendingDeploymentFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_pendingTaskFragment"
+            app:destination="@id/pendingTaskFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_openTicketsFragment"
+            app:destination="@id/openTicketsFragment" />
     </fragment>
     <fragment
         android:id="@+id/journeyPlanFragment"
@@ -632,4 +638,14 @@
             android:name="txtStoreName"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/pendingTaskFragment"
+        android:name="com.example.cheilros.fragments.managment.PendingTaskFragment"
+        android:label="pending_task"
+        tools:layout="@layout/fragment_pending_task" />
+    <fragment
+        android:id="@+id/openTicketsFragment"
+        android:name="com.example.cheilros.fragments.managment.OpenTicketsFragment"
+        android:label="open_tickets"
+        tools:layout="@layout/fragment_open_tickets" />
 </navigation>
