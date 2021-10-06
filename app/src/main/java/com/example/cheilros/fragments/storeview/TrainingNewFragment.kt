@@ -219,56 +219,44 @@ class TrainingNewFragment : BaseFragment() {
         btnSubmit.setOnClickListener {
             val client = OkHttpClient()
 
-            try {
+            if( CSP.getData("sess_selected_training_features") != ""){
+                try {
 
-                val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
-                val currentDateAndTime: String = simpleDateFormat.format(Date())
+                    val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+                    val currentDateAndTime: String = simpleDateFormat.format(Date())
 
-                val builder: MultipartBody.Builder =
-                    MultipartBody.Builder().setType(MultipartBody.FORM)
+                    val builder: MultipartBody.Builder =
+                        MultipartBody.Builder().setType(MultipartBody.FORM)
 
-                println(CSP.getData("training_attendees"))
+                    println(CSP.getData("training_attendees"))
 
-                CSP.getData("training_attendees")?.let { it1 ->
-                    builder.addFormDataPart(
-                        "Attendees",
-                        it1
-                    )
-                }
-
-                CSP.getData("sess_selected_training_features")?.let { it1 ->
-                    builder.addFormDataPart(
-                        "TrainingModel",
-                        it1
-                    )
-                }
-
-                for (paths in capturedPicturesList) {
-                    println(paths)
-                    val sourceFile = File(paths)
-                    val mimeType = CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
-                    val fileName: String = sourceFile.name
-                    builder.addFormDataPart(
-                        "TrainingPictures",
-                        fileName,
-                        sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
-                    )
-                }
-
-                println(
-                    "${CSP.getData("base_url")}/Training.asmx/OperTrainingDetail?TrainingModelID=${
-                        arguments?.getInt(
-                            "TrainingModelID"
+                    CSP.getData("training_attendees")?.let { it1 ->
+                        builder.addFormDataPart(
+                            "Attendees",
+                            it1
                         )
-                    }&StoreID=${arguments?.getInt("StoreID")}&Description=-&TeamMemberID=${
-                        CSP.getData(
-                            "user_id"
+                    }
+
+                    CSP.getData("sess_selected_training_features")?.let { it1 ->
+                        builder.addFormDataPart(
+                            "TrainingModel",
+                            it1
                         )
-                    }&TrainingDateTime=${currentDateAndTime}&StartTime=${currentDateAndTime} ${btnCheckinTime.text}&EndTime=${currentDateAndTime} ${btnCheckoutTime.text}&AttendeseTypeID=1"
-                )
-                val requestBody = builder.build()
-                val request: Request = Request.Builder()
-                    .url(
+                    }
+
+                    for (paths in capturedPicturesList) {
+                        println(paths)
+                        val sourceFile = File(paths)
+                        val mimeType = CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
+                        val fileName: String = sourceFile.name
+                        builder.addFormDataPart(
+                            "TrainingPictures",
+                            fileName,
+                            sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
+                        )
+                    }
+
+                    println(
                         "${CSP.getData("base_url")}/Training.asmx/OperTrainingDetail?TrainingModelID=${
                             arguments?.getInt(
                                 "TrainingModelID"
@@ -279,46 +267,67 @@ class TrainingNewFragment : BaseFragment() {
                             )
                         }&TrainingDateTime=${currentDateAndTime}&StartTime=${currentDateAndTime} ${btnCheckinTime.text}&EndTime=${currentDateAndTime} ${btnCheckoutTime.text}&AttendeseTypeID=1"
                     )
-                    .post(requestBody)
-                    .build()
+                    val requestBody = builder.build()
+                    val request: Request = Request.Builder()
+                        .url(
+                            "${CSP.getData("base_url")}/Training.asmx/OperTrainingDetail?TrainingModelID=${
+                                arguments?.getInt(
+                                    "TrainingModelID"
+                                )
+                            }&StoreID=${arguments?.getInt("StoreID")}&Description=-&TeamMemberID=${
+                                CSP.getData(
+                                    "user_id"
+                                )
+                            }&TrainingDateTime=${currentDateAndTime}&StartTime=${currentDateAndTime} ${btnCheckinTime.text}&EndTime=${currentDateAndTime} ${btnCheckoutTime.text}&AttendeseTypeID=1"
+                        )
+                        .post(requestBody)
+                        .build()
 
-                client.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        requireActivity().runOnUiThread {
-                            activity?.let { it1 ->
-                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                    .setTitle("Error!!")
-                                    .setMessage(e.message.toString())
-                                    .sneakWarning()
+                    client.newCall(request).enqueue(object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+                            requireActivity().runOnUiThread {
+                                activity?.let { it1 ->
+                                    Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                        .setTitle("Error!!")
+                                        .setMessage(e.message.toString())
+                                        .sneakWarning()
+                                }
                             }
                         }
-                    }
 
-                    override fun onResponse(call: Call, response: Response) {
-                        val body = response.body?.string()
-                        println(body)
+                        override fun onResponse(call: Call, response: Response) {
+                            val body = response.body?.string()
+                            println(body)
 
-                        requireActivity().runOnUiThread {
-                            activity?.let { it1 ->
-                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                    .setTitle("Success!!")
-                                    .setMessage("Activity Updated!")
-                                    .sneakSuccess()
+                            requireActivity().runOnUiThread {
+                                activity?.let { it1 ->
+                                    Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                        .setTitle("Success!!")
+                                        .setMessage("Activity Updated!")
+                                        .sneakSuccess()
+                                }
+                                CSP.delData("training_attendees")
+                                CSP.delData("sess_selected_training_features")
+                                CSP.delData("TrainingDetail_SESSION_IMAGE")
+                                CSP.delData("TrainingDetail_SESSION_IMAGE_SET")
+
+                                findNavController().navigateUp()
                             }
-                            CSP.delData("training_attendees")
-                            CSP.delData("sess_selected_training_features")
-                            CSP.delData("TrainingDetail_SESSION_IMAGE")
-                            CSP.delData("TrainingDetail_SESSION_IMAGE_SET")
-
-                            findNavController().navigateUp()
                         }
-                    }
 
-                })
+                    })
 
-            } catch (ex: Exception) {
-                Log.e("Error_", ex.message.toString())
+                } catch (ex: Exception) {
+                    Log.e("Error_", ex.message.toString())
+                }
+            }else{
+                Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                    .setTitle("Warning!!")
+                    .setMessage("Please select atleast one Feature!")
+                    .sneakWarning()
             }
+
+
         }
 
 

@@ -67,6 +67,9 @@
         <action
             android:id="@+id/action_myCoverageFragment_to_cameraActivity"
             app:destination="@id/cameraActivity" />
+        <action
+            android:id="@+id/action_myCoverageFragment_to_trainingFragment"
+            app:destination="@id/trainingFragment" />
     </fragment>
     <activity
         android:id="@+id/cameraActivity"

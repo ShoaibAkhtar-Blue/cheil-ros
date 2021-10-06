@@ -192,7 +192,7 @@ class MyCoverageAdapter(
             context?.let {
                 holder.item?.let { itemData ->
 
-                    if(CSP.getData("team_type_id")!!.toInt() <= 4){
+                    if(CSP.getData("team_type_id")!!.toInt() <= 4 || CSP.getData("team_type_id")!!.toInt() >= 9){
                         holder.btnAccept.visibility = View.GONE
                         holder.btnLocUpdate.visibility = View.GONE
                     }
@@ -306,6 +306,10 @@ class MyCoverageAdapter(
                         holder.btnCancel.text =
                             settingData.filter { it.fixedLabelName == "StoreList_ViewButton" }
                                 .get(0).labelName
+
+                        if(CSP.getData("team_type_id")!!.toInt() >= 9){
+                            holder.btnCancel.text = "Training"
+                        }
                     } catch (ex: Exception) {
 
                     }
@@ -556,12 +560,64 @@ class MyCoverageAdapter(
                     }
 
                     holder.btnCancel.setOnClickListener {
+
                         val bundle = bundleOf(
                             "StoreID" to itemData.StoreID,
                             "StoreName" to itemData.StoreName
                         )
-                        Navigation.findNavController(it)
-                            .navigate(R.id.action_myCoverageFragment_to_storeViewFragment, bundle)
+
+                        if(CSP.getData("team_type_id")!!.toInt() >= 9){
+                            println("Location: ${uLocation.latitude.toDouble()}-${uLocation.longitude.toDouble()}")
+                            val myLocation = Location("")
+
+                            myLocation.latitude = uLocation.latitude.toDouble()
+                            myLocation.longitude = uLocation.longitude.toDouble()
+
+                            lat = uLocation.latitude.toString()
+                            lng = uLocation.longitude.toString()
+
+                            val storeLocation = Location("")
+
+                            try {
+                                storeLocation.latitude = itemData.Longitude.toDouble()
+                                storeLocation.longitude = itemData.Latitude.toDouble()
+                            } catch (ex: Exception) {
+                                storeLocation.latitude = 0.0
+                                storeLocation.longitude = 0.0
+                            }
+
+                            val distanceInMeters: Float = myLocation.distanceTo(storeLocation)
+                            println("distanceInMeters: ${distanceInMeters} Location: $lat - $lng")
+
+                            var minDistance = CSP.getData("LocationLimit")?.toDouble()
+                            println("minDistance: ${minDistance}")
+                            if (minDistance!! >= 0) {
+                                if (distanceInMeters >= minDistance) {
+                                    println("distanceInMeters: Distance is greater")
+                                    (context as Activity).runOnUiThread {
+                                        context?.let { it1 ->
+                                            try {
+                                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                                    .setTitle(settingData.filter { it -> it.fixedLabelName == "General_OutOfRangeTitle" }[0].labelName)
+                                                    .setMessage(settingData.filter { it -> it.fixedLabelName == "General_OutOfRangeMessage" }[0].labelName)
+                                                    .sneakWarning()
+                                            } catch (ex: Exception) {
+                                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                                    .setTitle("Out of Range!!")
+                                                    .setMessage("Your Current Location is greater than $minDistance meters!")
+                                                    .sneakWarning()
+                                            }
+                                        }
+                                    }
+                                }else{
+                                    Navigation.findNavController(it)
+                                        .navigate(R.id.action_myCoverageFragment_to_trainingFragment, bundle)
+                                }
+                            }
+                        }else{
+                            Navigation.findNavController(it)
+                                .navigate(R.id.action_myCoverageFragment_to_storeViewFragment, bundle)
+                        }
                     }
                 }
             }

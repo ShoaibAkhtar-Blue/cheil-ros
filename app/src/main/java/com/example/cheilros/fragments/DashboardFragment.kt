@@ -117,7 +117,9 @@ class DashboardFragment : BaseFragment() {
             view.LLTask.visibility = View.GONE
 
             //If user is Manager
-            if(team_type.toInt() <= 4){
+            if (team_type.toInt() <= 4) {
+                view.LLTrainingSection.visibility = View.GONE
+                view.LLTrainingCards.visibility = View.GONE
                 view.cvJourneyPlan.visibility = View.GONE
                 view.LLNormalCard.visibility = View.GONE
                 view.gridview.visibility = View.GONE
@@ -126,7 +128,23 @@ class DashboardFragment : BaseFragment() {
                 view.LLGraphTwo.visibility = View.GONE
                 view.LLTask.visibility = View.GONE
                 view.LLRecentActivity.visibility = View.GONE
-            }else{
+            } else if (team_type.toInt() >= 9) {
+                view.gridview.visibility = View.GONE
+                view.cvJourneyPlan.visibility = View.GONE
+                view.LLNormalCard.visibility = View.GONE
+                view.LLNormalCardOne.visibility = View.GONE
+                view.LLNormalCardTwo.visibility = View.GONE
+                view.LLManagerGraphSales.visibility = View.GONE
+                view.LLManagerGraphShares.visibility = View.GONE
+                view.LLManagerActivities.visibility = View.GONE
+                view.LLGraphThree.visibility = View.GONE
+                view.LLGraphOne.visibility = View.GONE
+                view.LLGraphTwo.visibility = View.GONE
+                view.LLTask.visibility = View.GONE
+                view.LLRecentActivity.visibility = View.GONE
+            } else {
+                view.LLTrainingSection.visibility = View.GONE
+                view.LLTrainingCards.visibility = View.GONE
                 view.LLNormalCardOne.visibility = View.GONE
                 view.LLNormalCardTwo.visibility = View.GONE
                 view.LLManagerGraphSales.visibility = View.GONE
@@ -272,7 +290,7 @@ class DashboardFragment : BaseFragment() {
         //CSP.saveData("Asset_Parameters", "N")
         //CSP.saveData("CheckIn_Camera", "N")
         //CSP.saveData("CheckOut_Camera", "N")
-        //CSP.saveData("LocationLimit", "20000000000000000000000000000000000000000000000000000000000")
+        CSP.saveData("LocationLimit", "-1")
 
         /*val myLocation = Location("")
 
@@ -286,6 +304,18 @@ class DashboardFragment : BaseFragment() {
 
         val distanceInMeters: Float = myLocation.distanceTo(storeLocation)
         println("distanceInMeters: ${distanceInMeters}")*/
+
+        cvOnSiteTraining.setOnClickListener {
+            try {
+                (activity as NewDashboardActivity).userLocation
+                findNavController().navigate(R.id.action_dashboardFragment_to_myCoverageFragment)
+            } catch (ex: java.lang.Exception) {
+                Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                    .setTitle("Warning!!")
+                    .setMessage("Please Allow Location Permission!")
+                    .sneakWarning()
+            }
+        }
 
         cvManagerTicket.setOnClickListener {
             try {
@@ -323,16 +353,16 @@ class DashboardFragment : BaseFragment() {
         }
 
         cvManagerDeployment.setOnClickListener {
-                try {
-                    (activity as NewDashboardActivity).userLocation
-                    findNavController().navigate(R.id.action_dashboardFragment_to_teamStatusFragment)
-                } catch (ex: java.lang.Exception) {
-                    Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
-                        .setTitle("Warning!!")
-                        .setMessage("Please Allow Location Permission!")
-                        .sneakWarning()
-                }
+            try {
+                (activity as NewDashboardActivity).userLocation
+                findNavController().navigate(R.id.action_dashboardFragment_to_teamStatusFragment)
+            } catch (ex: java.lang.Exception) {
+                Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                    .setTitle("Warning!!")
+                    .setMessage("Please Allow Location Permission!")
+                    .sneakWarning()
             }
+        }
 
 
 
@@ -459,6 +489,192 @@ class DashboardFragment : BaseFragment() {
         }
     }
 
+    private fun fetchAllDashboardData(url: String) {
+        println(url)
+        val client = OkHttpClient()
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                requireActivity().runOnUiThread(java.lang.Runnable {
+                    activity?.let { it1 ->
+                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                            .setTitle("Error!!")
+                            .setMessage(e.message.toString())
+                            .sneakError()
+                    }
+                    //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                })
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body?.string()
+                println(body)
+
+                val gson = GsonBuilder().create()
+                val apiData = gson.fromJson(body, DashboardCumlativeModel::class.java)
+
+                if (apiData.status == 200) {
+                    println("DashboardCumlativeModel")
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+
+                        if (apiData.data.dashboard_labels != null) {
+                            val formatter: NumberFormat = DecimalFormat("00")
+                            val formatter1: NumberFormat = DecimalFormat("00000")
+                            txtTodayVisitCount.text =
+                                formatter.format(apiData.data.dashboard_labels[0].TodayVisit.toInt())
+                            txtCoverageCount.text =
+                                formatter1.format(apiData.data.dashboard_labels[0].Coverage.toInt())
+                            txtPendingCount.text =
+                                formatter1.format(apiData.data.dashboard_labels[0].PendingData.toInt())
+                        }
+
+                        if (team_type != "7") {
+                            if (apiData.data.market_activity != null) {
+                                rvRecentSubActivities.setHasFixedSize(true)
+                                layoutManagerRecent = LinearLayoutManager(requireContext())
+                                rvRecentSubActivities.layoutManager = layoutManagerRecent
+                                recylcerAdapterRecent = RecentActivityAdapter(
+                                    requireContext(),
+                                    "dashboard",
+                                    apiData.data.market_activity as MutableList<RecentActivityData>,
+                                    arguments,
+                                    requireActivity() as NewDashboardActivity,
+                                    userData
+                                )
+                                rvRecentSubActivities.adapter = recylcerAdapterRecent
+                            }
+
+                            if (apiData.data.task_assigned != null) {
+                                println("task_assigned")
+                                rvAssignedTask.setHasFixedSize(true)
+                                layoutManager = LinearLayoutManager(requireContext())
+                                rvAssignedTask.layoutManager = layoutManager
+                                recylcerAdapter = TaskAssignedAdapter(
+                                    requireContext(),
+                                    apiData.data.task_assigned as MutableList<DashboardTaskAssignedData>,
+                                    this@DashboardFragment,
+                                    requireActivity() as NewDashboardActivity
+                                )
+                                rvAssignedTask.adapter = recylcerAdapter
+                            }
+
+                            if (apiData.data.daily_trend != null) {
+                                setupCombinedCart(chartDailyStatusThree, apiData.data.daily_trend)
+                            }
+
+                            if (apiData.data.market_activity != null) {
+                                rvRecentSubActivities.setHasFixedSize(true)
+                                layoutManagerRecent = LinearLayoutManager(requireContext())
+                                rvRecentSubActivities.layoutManager = layoutManagerRecent
+                                recylcerAdapterRecent = RecentActivityAdapter(
+                                    requireContext(),
+                                    "dashboard",
+                                    apiData.data.market_activity as MutableList<RecentActivityData>,
+                                    arguments,
+                                    requireActivity() as NewDashboardActivity,
+                                    userData
+                                )
+                                rvRecentSubActivities.adapter = recylcerAdapterRecent
+                            }
+                        } else {
+                            if (team_type == "7") {
+                                if (apiData.data.daily_trend != null) {
+                                    setupCombinedCart(chartDailyStatusTwo, apiData.data.daily_trend)
+                                }
+
+
+                            }
+                        }
+
+
+                        //If Manager
+                        if (team_type.toInt() <= 4) {
+
+                            if (apiData.data.managment_display_share != null) {
+                                showPieChart(
+                                    ManagerDisplayChart,
+                                    apiData.data.managment_display_share
+                                )
+                                showLineChart(ManagerShareChart)
+                            }
+
+
+
+                            if (apiData.data.managment_dashboard_labels != null) {
+                                val management_label = apiData.data.managment_dashboard_labels
+
+                                try {
+                                    txtManagerCoverageCount.text =
+                                        management_label.filter { it.ManagementLabelName == "Store_Coverage_L1" }[0].ManagementLabelValue
+                                    Manager_Dashboard_Online.text =
+                                        management_label.filter { it.ManagementLabelName == "Store_Coverage_L2" }[0].ManagementLabelValue
+                                    Manager_Dashboard_CoverageButton.text =
+                                        management_label.filter { it.ManagementLabelName == "Store_Coverage_L3" }[0].ManagementLabelValue
+
+                                    txtManagerDeploymentCount.text =
+                                        management_label.filter { it.ManagementLabelName == "Pending_Deployment_L1" }[0].ManagementLabelValue
+                                    Manager_Deployment_Online.text =
+                                        management_label.filter { it.ManagementLabelName == "Pending_Deployment_L2" }[0].ManagementLabelValue
+                                    Manager_Dashboard_DeploymentButton.text =
+                                        management_label.filter { it.ManagementLabelName == "Pending_Deployment_L3" }[0].ManagementLabelValue
+
+                                    txtManagerTicketCount.text =
+                                        management_label.filter { it.ManagementLabelName == "Open_Tickets_L1" }[0].ManagementLabelValue
+                                    Manager_Ticket_Online.text =
+                                        management_label.filter { it.ManagementLabelName == "Open_Tickets_L2" }[0].ManagementLabelValue
+                                    Manager_Dashboard_TicketButton.text =
+                                        management_label.filter { it.ManagementLabelName == "Open_Tickets_L3" }[0].ManagementLabelValue
+
+                                    txtManagerTaskCount.text =
+                                        management_label.filter { it.ManagementLabelName == "Pending_Tasks_L1" }[0].ManagementLabelValue
+                                    Manager_Task_Online.text =
+                                        management_label.filter { it.ManagementLabelName == "Pending_Tasks_L2" }[0].ManagementLabelValue
+                                    Manager_Dashboard_TaskButton.text =
+                                        management_label.filter { it.ManagementLabelName == "Pending_Tasks_L3" }[0].ManagementLabelValue
+                                } catch (ex: java.lang.Exception) {
+
+                                }
+                            }
+
+                            if (apiData.data.managment_daily_activity != null) {
+                                rvManagerActiviites.setHasFixedSize(true)
+                                layoutManagerRecent = LinearLayoutManager(requireContext())
+                                rvManagerActiviites.layoutManager = layoutManagerRecent
+                                recylcerAdapterRecent = RecentActivityAdapter(
+                                    requireContext(),
+                                    "dashboard",
+                                    apiData.data.managment_daily_activity as MutableList<RecentActivityData>,
+                                    arguments,
+                                    requireActivity() as NewDashboardActivity,
+                                    userData
+                                )
+                                rvManagerActiviites.adapter = recylcerAdapterRecent
+                            }
+                        }
+
+
+                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                    })
+                } else {
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage("Data not fetched.")
+                                .sneakWarning()
+                        }
+                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                    })
+                }
+            }
+        })
+    }
+
+    //region Chart Method
     private fun setBarChart() {
         chartDailyStatus.getDescription().setEnabled(false)
 
@@ -709,7 +925,7 @@ class DashboardFragment : BaseFragment() {
         pieChart.invalidate()
     }
 
-    private fun showLineChart(lineChart: LineChart){
+    private fun showLineChart(lineChart: LineChart) {
 
         lineChart.axisLeft.setDrawGridLines(false)
         val xAxis: XAxis = lineChart.xAxis
@@ -827,175 +1043,5 @@ class DashboardFragment : BaseFragment() {
         //d.groupBars(0f, groupSpace, barSpace) // start at x = 0
         return d
     }
-
-    fun fetchAllDashboardData(url: String) {
-        println(url)
-        val client = OkHttpClient()
-
-        val request = Request.Builder()
-            .url(url)
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                requireActivity().runOnUiThread(java.lang.Runnable {
-                    activity?.let { it1 ->
-                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                            .setTitle("Error!!")
-                            .setMessage(e.message.toString())
-                            .sneakError()
-                    }
-                    //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                })
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                val body = response.body?.string()
-                println(body)
-
-                val gson = GsonBuilder().create()
-                val apiData = gson.fromJson(body, DashboardCumlativeModel::class.java)
-
-                if (apiData.status == 200) {
-                    println("DashboardCumlativeModel")
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-
-                        if (apiData.data.dashboard_labels != null) {
-                            val formatter: NumberFormat = DecimalFormat("00")
-                            val formatter1: NumberFormat = DecimalFormat("00000")
-                            txtTodayVisitCount.text =
-                                formatter.format(apiData.data.dashboard_labels[0].TodayVisit.toInt())
-                            txtCoverageCount.text =
-                                formatter1.format(apiData.data.dashboard_labels[0].Coverage.toInt())
-                            txtPendingCount.text =
-                                formatter1.format(apiData.data.dashboard_labels[0].PendingData.toInt())
-                        }
-
-                        if (team_type != "7") {
-                            if (apiData.data.market_activity != null) {
-                                rvRecentSubActivities.setHasFixedSize(true)
-                                layoutManagerRecent = LinearLayoutManager(requireContext())
-                                rvRecentSubActivities.layoutManager = layoutManagerRecent
-                                recylcerAdapterRecent = RecentActivityAdapter(
-                                    requireContext(),
-                                    "dashboard",
-                                    apiData.data.market_activity as MutableList<RecentActivityData>,
-                                    arguments,
-                                    requireActivity() as NewDashboardActivity,
-                                    userData
-                                )
-                                rvRecentSubActivities.adapter = recylcerAdapterRecent
-                            }
-
-                            if (apiData.data.task_assigned != null) {
-                                println("task_assigned")
-                                rvAssignedTask.setHasFixedSize(true)
-                                layoutManager = LinearLayoutManager(requireContext())
-                                rvAssignedTask.layoutManager = layoutManager
-                                recylcerAdapter = TaskAssignedAdapter(
-                                    requireContext(),
-                                    apiData.data.task_assigned as MutableList<DashboardTaskAssignedData>,
-                                    this@DashboardFragment,
-                                    requireActivity() as NewDashboardActivity
-                                )
-                                rvAssignedTask.adapter = recylcerAdapter
-                            }
-
-                            if (apiData.data.daily_trend != null) {
-                                setupCombinedCart(chartDailyStatusThree, apiData.data.daily_trend)
-                            }
-
-                            if (apiData.data.market_activity != null) {
-                                rvRecentSubActivities.setHasFixedSize(true)
-                                layoutManagerRecent = LinearLayoutManager(requireContext())
-                                rvRecentSubActivities.layoutManager = layoutManagerRecent
-                                recylcerAdapterRecent = RecentActivityAdapter(
-                                    requireContext(),
-                                    "dashboard",
-                                    apiData.data.market_activity as MutableList<RecentActivityData>,
-                                    arguments,
-                                    requireActivity() as NewDashboardActivity,
-                                    userData
-                                )
-                                rvRecentSubActivities.adapter = recylcerAdapterRecent
-                            }
-                        } else {
-                            if (team_type == "7") {
-                                if (apiData.data.daily_trend != null) {
-                                    setupCombinedCart(chartDailyStatusTwo, apiData.data.daily_trend)
-                                }
-
-
-                            }
-                        }
-
-
-                        //If Manager
-                        if(team_type.toInt() <= 4){
-
-                            if(apiData.data.managment_display_share != null){
-                                showPieChart(ManagerDisplayChart, apiData.data.managment_display_share)
-                                showLineChart(ManagerShareChart)
-                            }
-
-
-
-                            if(apiData.data.managment_dashboard_labels != null){
-                                val management_label = apiData.data.managment_dashboard_labels
-
-                                try{
-                                    txtManagerCoverageCount.text = management_label.filter { it.ManagementLabelName == "Store_Coverage_L1" }[0].ManagementLabelValue
-                                    Manager_Dashboard_Online.text = management_label.filter { it.ManagementLabelName == "Store_Coverage_L2" }[0].ManagementLabelValue
-                                    Manager_Dashboard_CoverageButton.text = management_label.filter { it.ManagementLabelName == "Store_Coverage_L3" }[0].ManagementLabelValue
-
-                                    txtManagerDeploymentCount.text = management_label.filter { it.ManagementLabelName == "Pending_Deployment_L1" }[0].ManagementLabelValue
-                                    Manager_Deployment_Online.text = management_label.filter { it.ManagementLabelName == "Pending_Deployment_L2" }[0].ManagementLabelValue
-                                    Manager_Dashboard_DeploymentButton.text = management_label.filter { it.ManagementLabelName == "Pending_Deployment_L3" }[0].ManagementLabelValue
-
-                                    txtManagerTicketCount.text = management_label.filter { it.ManagementLabelName == "Open_Tickets_L1" }[0].ManagementLabelValue
-                                    Manager_Ticket_Online.text = management_label.filter { it.ManagementLabelName == "Open_Tickets_L2" }[0].ManagementLabelValue
-                                    Manager_Dashboard_TicketButton.text = management_label.filter { it.ManagementLabelName == "Open_Tickets_L3" }[0].ManagementLabelValue
-
-                                    txtManagerTaskCount.text = management_label.filter { it.ManagementLabelName == "Pending_Tasks_L1" }[0].ManagementLabelValue
-                                    Manager_Task_Online.text = management_label.filter { it.ManagementLabelName == "Pending_Tasks_L2" }[0].ManagementLabelValue
-                                    Manager_Dashboard_TaskButton.text = management_label.filter { it.ManagementLabelName == "Pending_Tasks_L3" }[0].ManagementLabelValue
-                                }catch (ex: java.lang.Exception){
-
-                                }
-
-                            }
-
-                            if(apiData.data.managment_daily_activity != null){
-                                rvManagerActiviites.setHasFixedSize(true)
-                                layoutManagerRecent = LinearLayoutManager(requireContext())
-                                rvManagerActiviites.layoutManager = layoutManagerRecent
-                                recylcerAdapterRecent = RecentActivityAdapter(
-                                    requireContext(),
-                                    "dashboard",
-                                    apiData.data.managment_daily_activity as MutableList<RecentActivityData>,
-                                    arguments,
-                                    requireActivity() as NewDashboardActivity,
-                                    userData
-                                )
-                                rvManagerActiviites.adapter = recylcerAdapterRecent
-                            }
-                        }
-
-
-                        mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                    })
-                } else {
-                    requireActivity().runOnUiThread(java.lang.Runnable {
-                        activity?.let { it1 ->
-                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                .setTitle("Error!!")
-                                .setMessage("Data not fetched.")
-                                .sneakWarning()
-                        }
-                        //mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
-                    })
-                }
-            }
-        })
-    }
+    //endregion
 }
