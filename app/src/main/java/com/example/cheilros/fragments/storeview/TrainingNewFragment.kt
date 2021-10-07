@@ -219,7 +219,7 @@ class TrainingNewFragment : BaseFragment() {
         btnSubmit.setOnClickListener {
             val client = OkHttpClient()
 
-            if( CSP.getData("sess_selected_training_features") != ""){
+            if (CSP.getData("sess_selected_training_features") != "") {
                 try {
 
                     val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
@@ -229,6 +229,16 @@ class TrainingNewFragment : BaseFragment() {
                         MultipartBody.Builder().setType(MultipartBody.FORM)
 
                     println(CSP.getData("training_attendees"))
+
+                    builder.addFormDataPart(
+                        "Stores",
+                        arguments?.getInt("StoreID").toString()
+                    )
+
+                    builder.addFormDataPart(
+                        "TrainingTypeID",
+                       "1"
+                    )
 
                     CSP.getData("training_attendees")?.let { it1 ->
                         builder.addFormDataPart(
@@ -320,7 +330,7 @@ class TrainingNewFragment : BaseFragment() {
                 } catch (ex: Exception) {
                     Log.e("Error_", ex.message.toString())
                 }
-            }else{
+            } else {
                 Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                     .setTitle("Warning!!")
                     .setMessage("Please select atleast one Feature!")
