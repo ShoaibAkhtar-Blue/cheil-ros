@@ -300,7 +300,7 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:foreground="?android:attr/selectableItemBackground"
-                            app:cardBackgroundColor="#ea4335"
+                            app:cardBackgroundColor="#534f47"
                             app:cardCornerRadius="6dp">
 
                             <LinearLayout
@@ -875,30 +875,7 @@
                     </LinearLayout>
 
 
-                    <LinearLayout
-                        android:id="@+id/LLManagerGraphSales"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
 
-                        <TextView
-                            style="@style/headingStyle"
-                            android:text="Display Share" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/border_grey"
-                            android:orientation="vertical"
-                            android:padding="16dp">
-
-                            <com.github.mikephil.charting.charts.PieChart
-                                android:id="@+id/ManagerDisplayChart"
-                                android:layout_width="match_parent"
-                                android:layout_height="200dp" />
-
-                        </LinearLayout>
-                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/LLManagerGraphShares"
@@ -919,6 +896,31 @@
 
                             <com.github.mikephil.charting.charts.LineChart
                                 android:id="@+id/ManagerShareChart"
+                                android:layout_width="match_parent"
+                                android:layout_height="200dp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/LLManagerGraphSales"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/headingStyle"
+                            android:text="Display Share" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border_grey"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <com.github.mikephil.charting.charts.PieChart
+                                android:id="@+id/ManagerDisplayChart"
                                 android:layout_width="match_parent"
                                 android:layout_height="200dp" />
 

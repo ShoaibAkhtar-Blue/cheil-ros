@@ -140,6 +140,39 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <RadioGroup
+                android:orientation="horizontal"
+                android:id="@+id/rgBarcodeType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#024CAF50"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                app:layout_constraintVertical_bias="0.24000001">
+
+                <RadioButton
+                    android:checked="true"
+                    android:layout_weight="1"
+                    android:id="@+id/rbLDU"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="LDU"
+                    android:textSize="24sp" />
+
+                <RadioButton
+                    android:layout_weight="1"
+                    android:id="@+id/rbRDU"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="RDU"
+                    android:textSize="24sp" />
+
+
+            </RadioGroup>
+
+
             <EditText
                 android:minWidth="320dp"
                 android:id="@+id/etInputBarcode"

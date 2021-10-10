@@ -464,6 +464,8 @@ class RecentActivityAdapter(
         return filterList.size
     }
 
+    override fun getItemViewType(position: Int): Int = position
+
     fun removeItem(position: Int) {
         itemList.removeAt(position)
         notifyItemRemoved(position)

@@ -400,7 +400,8 @@ class DisplayProductCategoryData(
 
 class DisplayCountDetailViewModel(val status: Int, val data: List<DisplayCountDetailViewData>)
 class DisplayCountDetailViewData(
-    val SerialNumber: String
+    val SerialNumber: String,
+    val UnitType: String
 )
 
 class DisplayCountViewModel(val status: Int, val data: List<DisplayCountViewData>)
@@ -417,7 +418,8 @@ class DisplayCountJSONData(
     val StoreID: Int?,
     val SerialNumber: String?,
     val TeamMemberID: Int?,
-    val IsBarCodeEnabled: String
+    val IsBarCodeEnabled: String,
+    val UnitType : String,
 )
 
 @Parcelize

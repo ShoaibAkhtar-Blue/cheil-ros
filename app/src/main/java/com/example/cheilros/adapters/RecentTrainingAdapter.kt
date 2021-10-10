@@ -61,4 +61,6 @@ class RecentTrainingAdapter(
     override fun getItemCount(): Int {
         return filterList.size
     }
+
+    override fun getItemViewType(position: Int): Int = position
 }

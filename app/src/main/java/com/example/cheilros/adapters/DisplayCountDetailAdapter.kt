@@ -77,7 +77,7 @@ class DisplayCountDetailAdapter(
                 val text = editable.toString()
                 println(text)
                 //if(text != "")
-                    onTextUpdated(text)
+                onTextUpdated(text)
 //                else {
 //                    txtAttend.setText("0")
 //                    onTextUpdated("0")
@@ -114,17 +114,18 @@ class DisplayCountDetailAdapter(
 
         holder.onTextUpdated = { text ->
             if (filterList[position].isBarCodeEnabled == "N")
-                addDatainJsonObject(position, text)
+                addDatainJsonObject(position, text, false, "1")
         }
 
-        val isAlreadyEdit = displayCountData.filter { it.ProductID == filterList[position].ProductID}
-        if(isAlreadyEdit.isNotEmpty()){
+        val isAlreadyEdit =
+            displayCountData.filter { it.ProductID == filterList[position].ProductID }
+        if (isAlreadyEdit.isNotEmpty()) {
             println("isAlreadyEdit")
             if (filterList[position].isBarCodeEnabled == "N")
                 holder.txtAttend.setText(isAlreadyEdit[0].SerialNumber)
             else
                 holder.txtAttend.setText(filterList[position].DisplayCount.toString())
-        }else{
+        } else {
             holder.txtAttend.setText(filterList[position].DisplayCount.toString())
         }
 
@@ -137,7 +138,10 @@ class DisplayCountDetailAdapter(
             val jsonString: String = gson.toJson(DisplayCountJSON(displayCountData))
             println(jsonString)
 
-            val url = "${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountDetailAdd?TeamMemberID=${CSP.getData("user_id")}"
+            val url =
+                "${CSP.getData("base_url")}/DisplayCount.asmx/DisplayCountDetailAdd?TeamMemberID=${
+                    CSP.getData("user_id")
+                }"
 
             val request_header: MediaType? = "application/text; charset=utf-8".toMediaTypeOrNull()
 
@@ -325,15 +329,27 @@ class DisplayCountDetailAdapter(
             dialog.setCancelable(false)
             dialog.setCanceledOnTouchOutside(true)
 
+
+
             dialog.btnAccept.setOnClickListener {
+
+                val selectedBarcodeType: Int = dialog.rgBarcodeType!!.checkedRadioButtonId
+                val barcodeTypeVal = dialog.findViewById<RadioButton>(selectedBarcodeType).text
+
+                var barcodeType = if (barcodeTypeVal.equals("LDU"))
+                    "1"
+                else
+                    "2"
+
+
                 val barInput = dialog.etInputBarcode.text.toString()
 
                 try {
                     if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
-                        println("ActivityDetail_BARCODE_SET ${barInput}_${filterList[position].ProductID}")
+                        println("ActivityDetail_BARCODE_SET ${barInput}_${filterList[position].ProductID}_$barcodeType")
                         CSP.saveData(
                             "ActivityDetail_BARCODE_SET",
-                            "${barInput}_${filterList[position].ProductID}"
+                            "${barInput}_${filterList[position].ProductID}_$barcodeType"
                         )
                         CSP.delData("activity_barcodes")
                         updateItem(filterList[position].ProductID)
@@ -343,18 +359,22 @@ class DisplayCountDetailAdapter(
 
                         println("ActivityDetail_BARCODE_SET: ${CSP.getData("ActivityDetail_BARCODE_SET")}")
                         println("barInput: $barInput")
-                        println("" +
-                                ": ${filterList[position].ProductID}")
+                        println(
+                            "" +
+                                    ": ${filterList[position].ProductID}"
+                        )
 
                         CSP.saveData(
                             "ActivityDetail_BARCODE_SET",
-                            "${CSP.getData("ActivityDetail_BARCODE_SET")},${barInput}_${filterList[position].ProductID}"
+                            "${CSP.getData("ActivityDetail_BARCODE_SET")},${barInput}_${filterList[position].ProductID}_$barcodeType"
                         )
                         CSP.delData("activity_barcodes")
                         updateItem(filterList[position].ProductID)
                     }
 
-                    addDatainJsonObject(position, barInput, true)
+                    println("barcodeType $barcodeType")
+
+                    addDatainJsonObject(position, barInput, true, barcodeType.toString())
                 } catch (ex: Exception) {
                     Log.e("Error_", ex.message.toString())
                 }
@@ -364,7 +384,12 @@ class DisplayCountDetailAdapter(
         }
     }
 
-    fun addDatainJsonObject(position: Int, text: String, isMuliProdSerialAllow: Boolean = false) {
+    fun addDatainJsonObject(
+        position: Int,
+        text: String,
+        isMuliProdSerialAllow: Boolean = false,
+        type: String
+    ) {
         println("addDatainJsonObject: $text")
         val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
         val currentDateAndTime: String = simpleDateFormat.format(Date())
@@ -377,7 +402,8 @@ class DisplayCountDetailAdapter(
                         arguments?.getInt("StoreID"),
                         text,
                         CSP.getData("user_id")?.toInt(),
-                        filterList[position].isBarCodeEnabled
+                        filterList[position].isBarCodeEnabled,
+                        type
                     )
                 )
             } else {
@@ -391,7 +417,8 @@ class DisplayCountDetailAdapter(
                             arguments?.getInt("StoreID"),
                             text,
                             CSP.getData("user_id")?.toInt(),
-                            filterList[position].isBarCodeEnabled
+                            filterList[position].isBarCodeEnabled,
+                            type
                         )
                     )
                 } else if (isMuliProdSerialAllow) {
@@ -401,7 +428,8 @@ class DisplayCountDetailAdapter(
                             arguments?.getInt("StoreID"),
                             text,
                             CSP.getData("user_id")?.toInt(),
-                            filterList[position].isBarCodeEnabled
+                            filterList[position].isBarCodeEnabled,
+                            type
                         )
                     )
                 } else {
@@ -413,7 +441,8 @@ class DisplayCountDetailAdapter(
                             arguments?.getInt("StoreID"),
                             text,
                             CSP.getData("user_id")?.toInt(),
-                            filterList[position].isBarCodeEnabled
+                            filterList[position].isBarCodeEnabled,
+                            type
                         )
 
                 }
@@ -431,7 +460,7 @@ class DisplayCountDetailAdapter(
                     "StoreID"
                 )
             }"
-
+        println(url)
         val client = OkHttpClient()
 
         val request = Request.Builder()
@@ -457,7 +486,7 @@ class DisplayCountDetailAdapter(
                                 var barcodeList: MutableList<String> = arrayListOf()
 
                                 for (bl in apiData.data) {
-                                    barcodeList.add(bl.SerialNumber)
+                                    barcodeList.add("${bl.SerialNumber} (${bl.UnitType})")
                                 }
 
                                 val li = LayoutInflater.from(context)
