@@ -61,6 +61,7 @@ class DisplayCountFragment : BaseFragment() {
     }
 
     fun fetchDisplayCount(url: String) {
+        println(url)
         val request = Request.Builder()
             .url(url)
             .build()

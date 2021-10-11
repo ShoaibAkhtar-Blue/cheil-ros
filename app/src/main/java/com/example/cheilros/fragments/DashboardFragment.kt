@@ -63,6 +63,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.data.LineData
 
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.utils.EntryXComparator
 
 
@@ -733,8 +734,8 @@ class DashboardFragment : BaseFragment() {
             override fun getFormattedValue(value: Float): String {
                 return DAYS.get(value.toInt())
             }
-        }*/
-        var xAxisLabels: MutableList<String> = ArrayList()
+        }*/var xAxisLabels: MutableList<String> = ArrayList()
+
         var i = 0
         for (label in data) {
             println(label.TrendDate)
@@ -927,6 +928,70 @@ class DashboardFragment : BaseFragment() {
 
     private fun showLineChart(lineChart: LineChart) {
 
+        val xvalue = ArrayList<String>()
+        xvalue.add("11.00 AM")
+        xvalue.add("12.00 AM")
+        xvalue.add("01.00 AM")
+        xvalue.add("02.00 AM")
+        xvalue.add("03.00 AM")
+        xvalue.add("04.00 AM")
+        xvalue.add("05.00 AM")
+
+        lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(xvalue)
+        lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        lineChart.xAxis.setCenterAxisLabels(false)
+        lineChart.xAxis.setDrawGridLines(false)
+        //xAxis.granularity = 1f // only intervals of 1 day
+        lineChart.xAxis.textColor = Color.BLACK;
+        lineChart.xAxis.textSize = 8f
+        //lineChart.xAxis.labelCount = 7
+
+        val lineentry = ArrayList<Entry>()
+        lineentry.add(Entry( 0f,60f))
+        lineentry.add(Entry(1f,20f ))
+        lineentry.add(Entry(2f, 29f))
+        lineentry.add(Entry(3f, 35f))
+        lineentry.add(Entry(4f, 86f))
+        lineentry.add(Entry(5f, 47f))
+        lineentry.add(Entry(6f, 58f))
+
+        val lineentry1 = ArrayList<Entry>()
+        lineentry1.add(Entry( 0f,30f))
+        lineentry1.add(Entry(1f,80f ))
+        lineentry1.add(Entry(2f, 66f))
+        lineentry1.add(Entry(3f, 25f))
+        lineentry1.add(Entry(4f, 63f))
+        lineentry1.add(Entry(5f, 52f))
+        lineentry1.add(Entry(6f, 98f))
+
+        val linedataset = LineDataSet(lineentry, "Samsung")
+        linedataset.color = resources.getColor(R.color.purple_200)
+        linedataset.circleRadius = 3f
+        linedataset.lineWidth = 3f
+        linedataset.setDrawFilled(true)
+        linedataset.fillColor = resources.getColor(R.color.purple_700)
+        linedataset.fillAlpha = 30
+
+        val linedataset1 = LineDataSet(lineentry1, "Oppo")
+        linedataset1.color = resources.getColor(R.color.status_cancel)
+        linedataset1.circleRadius = 0f
+        linedataset1.lineWidth = 3f
+        linedataset1.setDrawFilled(true)
+        linedataset1.fillColor = resources.getColor(R.color.status_checkout)
+        linedataset1.fillAlpha = 30
+
+        //lineChart.extraBottomOffset = 50f
+
+        val finaldataset = ArrayList<LineDataSet>()
+        finaldataset.add(linedataset)
+        finaldataset.add(linedataset1)
+
+
+        val data = LineData(finaldataset as List<ILineDataSet>)
+        lineChart.data = data
+        lineChart.setBackgroundColor(resources.getColor(R.color.white))
+
+        /*
         lineChart.axisLeft.setDrawGridLines(false)
         val xAxis: XAxis = lineChart.xAxis
         xAxis.setDrawGridLines(false)
@@ -961,6 +1026,10 @@ class DashboardFragment : BaseFragment() {
         entries.add(Entry(7.toFloat(), 58.toFloat()))
         entries.add(Entry(5.toFloat(), 45.toFloat()))
         entries.add(Entry(9.toFloat(), 96.toFloat()))
+        entries.add(Entry(9.toFloat(), 96.toFloat()))
+        entries.add(Entry(9.toFloat(), 96.toFloat()))
+        entries.add(Entry(9.toFloat(), 96.toFloat()))
+        entries.add(Entry(9.toFloat(), 96.toFloat()))
         Collections.sort(entries, EntryXComparator())
 
         val lineDataSet = LineDataSet(entries, "-")
@@ -969,6 +1038,7 @@ class DashboardFragment : BaseFragment() {
         lineChart.data = data
 
         lineChart.invalidate()
+        */
     }
 
     private fun generateLineData(data: List<DashboardBarChartData>): LineData? {

@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@drawable/border_bottom_grey"
@@ -32,6 +33,7 @@
             android:textSize="14dp" />
 
         <TextView
+            android:layout_weight="1"
             android:id="@+id/txtBrand"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -83,6 +85,6 @@
             android:text="COUNT"
             android:textColor="#4c4c4c"
             android:textSize="14dp" />-->
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>
