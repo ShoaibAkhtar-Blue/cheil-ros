@@ -33,10 +33,14 @@ import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.activity_new_dashboard.*
 import kotlinx.android.synthetic.main.fragment_journey_plan.view.*
 import kotlinx.android.synthetic.main.fragment_my_coverage.*
+import kotlinx.android.synthetic.main.fragment_my_coverage.todo_list_empty_view
 import kotlinx.android.synthetic.main.fragment_my_coverage.view.*
 import kotlinx.android.synthetic.main.fragment_my_coverage.view.txtNoRecord
+import kotlinx.android.synthetic.main.fragment_team_status.*
 import okhttp3.*
 import java.io.IOException
+import java.text.DecimalFormat
+import java.text.NumberFormat
 
 
 class MyCoverageFragment : BaseFragment() {
@@ -529,6 +533,10 @@ class MyCoverageFragment : BaseFragment() {
                     println(apiData.status)
                     if (apiData.status == 200) {
                         try {
+                            val formatter1: NumberFormat = DecimalFormat("00000")
+                            txtManagerCoverageCount.text =
+                                formatter1.format(apiData.data.size.toInt())
+
                             requireActivity().runOnUiThread(java.lang.Runnable {
                                 recylcerAdapter = MyCoverageAdapter(
                                     requireContext(),

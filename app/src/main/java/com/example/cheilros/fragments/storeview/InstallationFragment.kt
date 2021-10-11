@@ -23,8 +23,12 @@ import kotlinx.android.synthetic.main.activity_new_dashboard.*
 import kotlinx.android.synthetic.main.fragment_activity.view.*
 import kotlinx.android.synthetic.main.fragment_activity_sub_category.*
 import kotlinx.android.synthetic.main.fragment_activity_sub_category.mainLoadingLayoutCC
+import kotlinx.android.synthetic.main.fragment_activity_sub_category.rvActivityDetail
+import kotlinx.android.synthetic.main.fragment_activity_sub_category.rvRecentSubActivities
+import kotlinx.android.synthetic.main.fragment_activity_sub_category.txtStoreSubName
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
+import kotlinx.android.synthetic.main.fragment_installation.*
 import okhttp3.*
 import java.io.IOException
 
@@ -65,6 +69,9 @@ class InstallationFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         txtStoreSubName.text = arguments?.getString("ActivityTypeName")
 
+        if (team_type.toInt() <= 4)
+            cvInstallationData.visibility = View.GONE
+
         fetchRecentActivities(
             "${CSP.getData("base_url")}/OperMarketActivities.asmx/ViewMarketActivityList?StoreID=${
                 arguments?.getInt(
@@ -81,7 +88,10 @@ class InstallationFragment : BaseFragment() {
             android.widget.SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(qString: String): Boolean {
-                recylcerAdapter?.filter?.filter(qString)
+                if (team_type.toInt() <= 4)
+                    recylcerAdapterRecent?.filter?.filter(qString)
+                else
+                    recylcerAdapter?.filter?.filter(qString)
                 return true
             }
 

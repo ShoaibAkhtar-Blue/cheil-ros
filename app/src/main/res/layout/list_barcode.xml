@@ -43,6 +43,16 @@
                     android:textColor="@color/black"
                     android:textSize="14dp" />
 
+                <TextView
+                    android:layout_marginRight="8dp"
+                    android:id="@+id/txtType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/samsungsharpsans_bold"
+                    android:text="Store Name"
+                    android:textColor="@color/black"
+                    android:textSize="14dp" />
+
                 <ImageButton
                     android:id="@+id/btnRemove"
                     android:layout_width="32dp"

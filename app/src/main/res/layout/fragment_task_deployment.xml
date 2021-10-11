@@ -73,6 +73,7 @@ tools:context=".fragments.storeview.TaskDeploymentFragment">
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cvTaskData"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

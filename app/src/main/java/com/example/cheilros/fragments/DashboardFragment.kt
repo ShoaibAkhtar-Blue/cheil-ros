@@ -290,7 +290,7 @@ class DashboardFragment : BaseFragment() {
         //CSP.saveData("Asset_Parameters", "N")
         //CSP.saveData("CheckIn_Camera", "N")
         //CSP.saveData("CheckOut_Camera", "N")
-        CSP.saveData("LocationLimit", "-1")
+        //CSP.saveData("LocationLimit", "-1")
 
         /*val myLocation = Location("")
 

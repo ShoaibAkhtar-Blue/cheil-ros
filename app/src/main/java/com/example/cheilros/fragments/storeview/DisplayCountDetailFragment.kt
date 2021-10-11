@@ -141,7 +141,7 @@ class DisplayCountDetailFragment : BaseFragment() {
                 .sneakSuccess()
 
             println("activity_barcodes: ${CSP.getData("activity_barcodes")}")
-            println("ActivityDetail_BARCODE_SET: ${CSP.getData("ActivityDetail_BARCODE_SET")}")
+            println("ActivityDetail_BARCODE_SET_FRAG: ${CSP.getData("ActivityDetail_BARCODE_SET")}")
             println("dispProdID: ${CSP.getData("dispProdID")}")
             println("dispPosition: ${CSP.getData("dispPosition")}")
 
@@ -155,7 +155,7 @@ class DisplayCountDetailFragment : BaseFragment() {
                 CSP.getData("dispPosition")?.let {
                     recylcerAdapter.addDatainJsonObject(
                         it.toInt(),
-                        CSP.getData("activity_barcodes")!!, true
+                        CSP.getData("activity_barcodes")!!, true,"1"
                     )
                 }
 
@@ -176,7 +176,7 @@ class DisplayCountDetailFragment : BaseFragment() {
                 CSP.getData("dispPosition")?.let {
                     recylcerAdapter.addDatainJsonObject(
                         it.toInt(),
-                        CSP.getData("activity_barcodes")!!, true
+                        CSP.getData("activity_barcodes")!!, true,"1"
                     )
                 }
 

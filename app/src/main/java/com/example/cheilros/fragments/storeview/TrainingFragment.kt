@@ -81,6 +81,9 @@ class TrainingFragment : BaseFragment() {
             }&TeamMemberID=${CSP.getData("user_id")}"
         )*/
 
+        if(team_type.toInt() <= 4)
+            btnAddTraining.visibility = View.GONE
+
         btnAddTraining.setOnClickListener {
             val bundle = bundleOf(
                 "StoreID" to arguments?.getInt("StoreID"),

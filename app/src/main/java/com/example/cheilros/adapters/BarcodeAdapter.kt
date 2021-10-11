@@ -36,6 +36,7 @@ class BarcodeAdapter(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var txtTitle: TextView = view.findViewById(R.id.txtTitle)
+        var txtType: TextView = view.findViewById(R.id.txtType)
         var btnRemove: ImageButton = view.findViewById(R.id.btnRemove)
     }
 
@@ -51,11 +52,21 @@ class BarcodeAdapter(
 
         if (barcodeList[position].contains("_")) {
             var splitText = barcodeList[position].split("_")
+            println("barcodeList: ${barcodeList[position]}")
             serialNum = splitText[0]
-            holder.txtTitle.text = serialNum
+            println("serialNum: $serialNum ${splitText[2]}")
+
+            if(splitText[2] != "")
+                holder.txtType.text = "${splitText[2]}"
+            else
+                holder.txtType.visibility = View.GONE
+
+                holder.txtTitle.text = serialNum
         } else {
             serialNum = barcodeList[position]
             holder.txtTitle.text = serialNum
+
+            holder.txtType.visibility = View.GONE
         }
 
         if (!isRemoveActive)

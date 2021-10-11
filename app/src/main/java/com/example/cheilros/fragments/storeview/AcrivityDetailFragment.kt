@@ -199,6 +199,7 @@ class AcrivityDetailFragment : BaseFragment() {
 
             builder.setNegativeButton("Gallery") { dialog, which ->
                 val activity = requireActivity() as NewDashboardActivity
+                CSP.saveData("imgType", "before")
                 activity.pickFromGallery()
             }
 
@@ -226,6 +227,7 @@ class AcrivityDetailFragment : BaseFragment() {
 
             builder.setNegativeButton("Gallery") { dialog, which ->
                 val activity = requireActivity() as NewDashboardActivity
+                CSP.saveData("imgType", "after")
                 activity.pickFromGallery()
             }
 
@@ -424,12 +426,15 @@ class AcrivityDetailFragment : BaseFragment() {
                     .setMessage("Image Added to this session!")
                     .sneakSuccess()
 
+                println("imgType: ${CSP.getData("imgType")}")
+
                 if (CSP.getData("imgType") == "before")
                     recylcerAdapter.addNewItem(CSP.getData("sess_gallery_img").toString())
                 else
                     recylcerAdapterAfter.addNewItem(CSP.getData("sess_gallery_img").toString())
 
                 CSP.delData("sess_gallery_img")
+                CSP.delData("imgType")
             } catch (ex: Exception) {
 
             }

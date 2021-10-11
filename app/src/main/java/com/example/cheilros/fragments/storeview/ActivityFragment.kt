@@ -61,6 +61,10 @@ class ActivityFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         //txtStoreName.text = arguments?.getString("StoreName")
+
+        if (team_type.toInt() <= 4)
+            cvActivityData.visibility = View.GONE
+
         fetchActivity("${CSP.getData("base_url")}/Activity.asmx/ActivityTypeList?DivisionID=1")
         fetchRecentActivities(
             "${CSP.getData("base_url")}/OperMarketActivities.asmx/ViewMarketActivityList?StoreID=${
@@ -75,7 +79,10 @@ class ActivityFragment : BaseFragment() {
             android.widget.SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(qString: String): Boolean {
-                recylcerAdapter?.filter?.filter(qString)
+                if (team_type.toInt() <= 4)
+                    recylcerAdapterRecent?.filter?.filter(qString)
+                else
+                    recylcerAdapter?.filter?.filter(qString)
                 return true
             }
 

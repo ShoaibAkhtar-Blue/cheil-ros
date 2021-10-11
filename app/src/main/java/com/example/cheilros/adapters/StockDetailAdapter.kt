@@ -234,6 +234,9 @@ class StockDetailAdapter(
         if(settingData.filter { it.fixedLabelName == "Stock_Column2" }[0].labelName == "")
             holder.txtSalesValue.visibility = View.GONE
 
+        if(settingData.filter { it.fixedLabelName == "Stock_Column1" }[0].labelName == "")
+            holder.txtSaleQuantity.visibility = View.GONE
+
         fragment.btnSubmit.setOnClickListener {
 
             fragment.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
