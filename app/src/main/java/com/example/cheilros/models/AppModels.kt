@@ -19,26 +19,44 @@ class DashboardCumlativeData(
     val managment_daily_sale: List<ManagerDailySaleData>,
     val managment_display_share: List<ManagerDisplayShareData>,
     val managment_daily_activity: List<RecentActivityData>,
+    val training_summary: List<TrainingSummaryData>,
 )
 //endregion
 
 //region Manager
+
+class TrainingSummaryData(
+    val TrainingTypeName: String,
+    val TrainingDate: String,
+    val Start: String,
+    val EndTime: String,
+    val Attendese: Int,
+    val OtherAttendese: Int,
+    val TeamMemberID: Int
+)
 
 class ManagerDashboardLabelData(
     val ManagementLabelID: String,
     val ManagementLabelName: String,
     val ManagementLabelValue: String
 )
+
 class ManagerDailySaleData(
-    val BrandName: String,
-    val SaleDate: String,
-    val TTLSale: String
+    val Brand: String,
+    val data: List<DailySaleData>
 )
+
+class DailySaleData(
+    val date: String,
+    val count: String
+)
+
 class ManagerDisplayShareData(
     val BrandName: String,
     val SaleDate: String,
     val TTLDisplay: String
 )
+
 class ManagerDailyActivityData(
     val BrandName: String,
     val SaleDate: String,
@@ -419,7 +437,7 @@ class DisplayCountJSONData(
     val SerialNumber: String?,
     val TeamMemberID: Int?,
     val IsBarCodeEnabled: String,
-    val UnitType : String,
+    val UnitType: String,
 )
 
 @Parcelize

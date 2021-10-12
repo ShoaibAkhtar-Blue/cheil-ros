@@ -21,6 +21,7 @@ import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.MenuNavigationAdapter
 import com.example.cheilros.adapters.RecentActivityAdapter
 import com.example.cheilros.adapters.TaskAssignedAdapter
+import com.example.cheilros.adapters.TrainingSummaryAdapter
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.models.*
 import com.github.mikephil.charting.animation.Easing
@@ -64,7 +65,6 @@ import com.github.mikephil.charting.data.LineData
 
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import com.github.mikephil.charting.utils.EntryXComparator
 
 
 class DashboardFragment : BaseFragment() {
@@ -78,6 +78,7 @@ class DashboardFragment : BaseFragment() {
 
     lateinit var layoutManagerRecent: RecyclerView.LayoutManager
     lateinit var recylcerAdapterRecent: RecentActivityAdapter
+    lateinit var recylcerAdapterTrainingSummary: TrainingSummaryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -591,6 +592,21 @@ class DashboardFragment : BaseFragment() {
                             }
                         }
 
+                        //If Training
+                        if (team_type.toInt() >= 9){
+                            if (apiData.data.training_summary != null){
+                                rvTrainingSummary.setHasFixedSize(true)
+                                layoutManagerRecent = LinearLayoutManager(requireContext())
+                                rvTrainingSummary.layoutManager = layoutManagerRecent
+                                recylcerAdapterTrainingSummary = TrainingSummaryAdapter(
+                                    requireContext(),
+                                    apiData.data.training_summary as MutableList<TrainingSummaryData>,
+                                    arguments
+                                )
+                                rvTrainingSummary.adapter = recylcerAdapterTrainingSummary
+                            }
+                        }
+
 
                         //If Manager
                         if (team_type.toInt() <= 4) {
@@ -600,10 +616,11 @@ class DashboardFragment : BaseFragment() {
                                     ManagerDisplayChart,
                                     apiData.data.managment_display_share
                                 )
-                                showLineChart(ManagerShareChart)
                             }
 
-
+                            if (apiData.data.managment_daily_sale != null) {
+                                showLineChart(ManagerShareChart, apiData.data.managment_daily_sale)
+                            }
 
                             if (apiData.data.managment_dashboard_labels != null) {
                                 val management_label = apiData.data.managment_dashboard_labels
@@ -734,7 +751,8 @@ class DashboardFragment : BaseFragment() {
             override fun getFormattedValue(value: Float): String {
                 return DAYS.get(value.toInt())
             }
-        }*/var xAxisLabels: MutableList<String> = ArrayList()
+        }*/
+        var xAxisLabels: MutableList<String> = ArrayList()
 
         var i = 0
         for (label in data) {
@@ -926,17 +944,20 @@ class DashboardFragment : BaseFragment() {
         pieChart.invalidate()
     }
 
-    private fun showLineChart(lineChart: LineChart) {
+    private fun showLineChart(
+        lineChart: LineChart,
+        data: List<ManagerDailySaleData>
+    ) {
 
         val xvalue = ArrayList<String>()
-        xvalue.add("11.00 AM")
-        xvalue.add("12.00 AM")
-        xvalue.add("01.00 AM")
-        xvalue.add("02.00 AM")
-        xvalue.add("03.00 AM")
-        xvalue.add("04.00 AM")
-        xvalue.add("05.00 AM")
+        for(chartVal in data){
+            for (chartSubVal in chartVal.data){
+                xvalue.add(chartSubVal.date)
+            }
+        }
 
+        lineChart.setTouchEnabled(false)
+        lineChart.description.isEnabled = false
         lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(xvalue)
         lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
         lineChart.xAxis.setCenterAxisLabels(false)
@@ -946,9 +967,90 @@ class DashboardFragment : BaseFragment() {
         lineChart.xAxis.textSize = 8f
         //lineChart.xAxis.labelCount = 7
 
-        val lineentry = ArrayList<Entry>()
-        lineentry.add(Entry( 0f,60f))
-        lineentry.add(Entry(1f,20f ))
+
+        // SS Entry
+        val LE_SS = ArrayList<Entry>()
+        data[0].data.forEachIndexed { index, element ->
+            LE_SS.add(Entry(index.toFloat(), element.count.toFloat()))
+        }
+
+        val LD_SS = LineDataSet(LE_SS, data[0].Brand)
+        LD_SS.color = Color.parseColor("#649ed0")
+        LD_SS.circleRadius = 3f
+        LD_SS.lineWidth = 3f
+        LD_SS.setDrawFilled(true)
+        LD_SS.fillColor =  Color.parseColor("#649ed0")
+        LD_SS.fillAlpha = 30
+
+        // AA Entry
+        val LE_AA = ArrayList<Entry>()
+        data[1].data.forEachIndexed { index, element ->
+            LE_AA.add(Entry(index.toFloat(), element.count.toFloat()))
+        }
+        val LD_AA = LineDataSet(LE_AA, data[1].Brand)
+        LD_AA.color = Color.parseColor("#f97b24")
+        LD_AA.circleRadius = 3f
+        LD_AA.lineWidth = 3f
+        LD_AA.setDrawFilled(true)
+        LD_AA.fillColor = Color.parseColor("#f97b24")
+        LD_AA.fillAlpha = 30
+
+        // H Entry
+        val LE_H = ArrayList<Entry>()
+        data[2].data.forEachIndexed { index, element ->
+            LE_H.add(Entry(index.toFloat(), element.count.toFloat()))
+        }
+        val LD_H = LineDataSet(LE_H, data[2].Brand)
+        LD_H.color = Color.parseColor("#a4a4a4")
+        LD_H.circleRadius = 3f
+        LD_H.lineWidth = 3f
+        LD_H.setDrawFilled(true)
+        LD_H.fillColor = Color.parseColor("#a4a4a4")
+        LD_H.fillAlpha = 30
+
+        // O Entry
+        val LE_O = ArrayList<Entry>()
+        data[3].data.forEachIndexed { index, element ->
+            LE_O.add(Entry(index.toFloat(), element.count.toFloat()))
+        }
+        val LD_O = LineDataSet(LE_O, data[3].Brand)
+        LD_O.color = Color.parseColor("#dfc04c")
+        LD_O.circleRadius = 3f
+        LD_O.lineWidth = 3f
+        LD_O.setDrawFilled(true)
+        LD_O.fillColor = Color.parseColor("#dfc04c")
+        LD_O.fillAlpha = 30
+
+        // V Entry
+        val LE_V = ArrayList<Entry>()
+        data[4].data.forEachIndexed { index, element ->
+            LE_V.add(Entry(index.toFloat(), element.count.toFloat()))
+        }
+        val LD_V = LineDataSet(LE_V, data[4].Brand)
+        LD_V.color = Color.parseColor("#4f6fb8")
+        LD_V.circleRadius = 3f
+        LD_V.lineWidth = 3f
+        LD_V.setDrawFilled(true)
+        LD_V.fillColor = Color.parseColor("#4f6fb8")
+        LD_V.fillAlpha = 30
+
+        // OTHER Entry
+        val LE_OTHER = ArrayList<Entry>()
+        data[5].data.forEachIndexed { index, element ->
+            LE_OTHER.add(Entry(index.toFloat(), element.count.toFloat()))
+        }
+        val LD_OTHER = LineDataSet(LE_OTHER, data[5].Brand)
+        LD_OTHER.color = Color.parseColor("#6db23d")
+        LD_OTHER.circleRadius = 3f
+        LD_OTHER.lineWidth = 3f
+        LD_OTHER.setDrawFilled(true)
+        LD_OTHER.fillColor = Color.parseColor("#6db23d")
+        LD_OTHER.fillAlpha = 30
+
+
+        /*val lineentry = ArrayList<Entry>()
+        lineentry.add(Entry(0f, 60f))
+        lineentry.add(Entry(1f, 20f))
         lineentry.add(Entry(2f, 29f))
         lineentry.add(Entry(3f, 35f))
         lineentry.add(Entry(4f, 86f))
@@ -956,8 +1058,8 @@ class DashboardFragment : BaseFragment() {
         lineentry.add(Entry(6f, 58f))
 
         val lineentry1 = ArrayList<Entry>()
-        lineentry1.add(Entry( 0f,30f))
-        lineentry1.add(Entry(1f,80f ))
+        lineentry1.add(Entry(0f, 30f))
+        lineentry1.add(Entry(1f, 80f))
         lineentry1.add(Entry(2f, 66f))
         lineentry1.add(Entry(3f, 25f))
         lineentry1.add(Entry(4f, 63f))
@@ -978,13 +1080,17 @@ class DashboardFragment : BaseFragment() {
         linedataset1.lineWidth = 3f
         linedataset1.setDrawFilled(true)
         linedataset1.fillColor = resources.getColor(R.color.status_checkout)
-        linedataset1.fillAlpha = 30
+        linedataset1.fillAlpha = 30*/
 
         //lineChart.extraBottomOffset = 50f
 
         val finaldataset = ArrayList<LineDataSet>()
-        finaldataset.add(linedataset)
-        finaldataset.add(linedataset1)
+        finaldataset.add(LD_SS)
+        finaldataset.add(LD_AA)
+        finaldataset.add(LD_H)
+        finaldataset.add(LD_O)
+        finaldataset.add(LD_V)
+        finaldataset.add(LD_OTHER)
 
 
         val data = LineData(finaldataset as List<ILineDataSet>)
