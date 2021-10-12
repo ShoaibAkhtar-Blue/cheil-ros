@@ -94,6 +94,7 @@ class BarcodeAdapter(
                     if (barcodeList.size == 0)
                         mainDialog.dismiss()
                 } else {
+                    serialNum = serialNum.dropLast(5)
                     var url =
                         "${CSP.getData("base_url")}/DisplayCount.asmx/RemoveDisplayModel?ProductID=${productID}&StoreID=${
                             arguments?.getInt(
