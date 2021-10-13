@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_dashboardFragment_to_openTicketsFragment"
             app:destination="@id/openTicketsFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_trainingListFragment"
+            app:destination="@id/trainingListFragment" />
     </fragment>
     <fragment
         android:id="@+id/journeyPlanFragment"
@@ -651,4 +654,18 @@
         android:name="com.example.cheilros.fragments.managment.OpenTicketsFragment"
         android:label="open_tickets"
         tools:layout="@layout/fragment_open_tickets" />
+    <fragment
+        android:id="@+id/trainingListFragment"
+        android:name="com.example.cheilros.fragments.training.TrainingListFragment"
+        android:label="training_list"
+        tools:layout="@layout/fragment_training_list" >
+        <action
+            android:id="@+id/action_trainingListFragment_to_trainingStoresFragment"
+            app:destination="@id/trainingStoresFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/trainingStoresFragment"
+        android:name="com.example.cheilros.fragments.training.TrainingStoresFragment"
+        android:label="training_stores"
+        tools:layout="@layout/fragment_training_stores" />
 </navigation>

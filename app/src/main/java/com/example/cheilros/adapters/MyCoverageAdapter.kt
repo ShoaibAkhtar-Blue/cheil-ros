@@ -665,7 +665,7 @@ class MyCoverageAdapter(
                 context?.let { it1 ->
                     Sneaker.with(it1) // Activity, Fragment or ViewGroup
                         .setTitle("Warning")
-                        .setMessage("Please Allow Location Permission!")
+                        .setMessage(settingData.filter { it.fixedLabelName == "Dashboard_GPSLocatingMessage" }[0].labelName)
                         .sneakWarning()
 
                 }

@@ -62,6 +62,7 @@ class StockAdapter(
             if(settingData.filter { it.fixedLabelName == "Stock_Column2" }[0].labelName == "")
                 holder.ValueHeading.visibility = View.GONE
 
+
         }catch (ex: Exception){
 
         }
@@ -77,11 +78,15 @@ class StockAdapter(
                 for (i in 0 until numRows) { //Rows
                     val row = TableRow(context)
                     for (j in 0 until 3) { //Column
+                        println("i: $i")
                         println("j: $j")
                         val value: Int = (100..200).random()
                         val tv = TextView(context)
                         tv.setTextColor(Color.BLACK)
                         tv.textSize = 20.0f
+
+                        if(itemList[position].Products[i].StockStatus == "" && itemList[position].Products[i].Field2 == "")
+                            brandIndex = i
 
                         val productName =
                             itemList[position].Products[brandIndex].ProductCategoryName

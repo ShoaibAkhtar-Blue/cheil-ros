@@ -24,6 +24,12 @@ class DashboardCumlativeData(
 //endregion
 
 //region Manager
+class TrainingTypesModel(val status: Int, val data: List<TrainingTypesData>)
+class TrainingTypesData(
+    val TrainingTypeID: Int,
+    val TrainingTypeName: String,
+    val ActiveStatus: Int
+)
 
 class TrainingSummaryData(
     val TrainingTypeName: String,

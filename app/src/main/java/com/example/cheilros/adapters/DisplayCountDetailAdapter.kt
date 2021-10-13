@@ -114,7 +114,7 @@ class DisplayCountDetailAdapter(
 
         holder.onTextUpdated = { text ->
             if (filterList[position].isBarCodeEnabled == "N")
-                addDatainJsonObject(position, text, false, "1")
+                addDatainJsonObject(position, text, false, "2")
         }
 
         val isAlreadyEdit =

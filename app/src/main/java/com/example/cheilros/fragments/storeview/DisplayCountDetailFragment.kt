@@ -155,7 +155,7 @@ class DisplayCountDetailFragment : BaseFragment() {
                 CSP.getData("dispPosition")?.let {
                     recylcerAdapter.addDatainJsonObject(
                         it.toInt(),
-                        CSP.getData("activity_barcodes")!!, true,"1"
+                        CSP.getData("activity_barcodes")!!, true,"2"
                     )
                 }
 
@@ -176,7 +176,7 @@ class DisplayCountDetailFragment : BaseFragment() {
                 CSP.getData("dispPosition")?.let {
                     recylcerAdapter.addDatainJsonObject(
                         it.toInt(),
-                        CSP.getData("activity_barcodes")!!, true,"1"
+                        CSP.getData("activity_barcodes")!!, true,"2"
                     )
                 }
 

@@ -202,7 +202,7 @@ class CameraActivity : AppCompatActivity() {
         fos?.use {
 
             // Finally writing the bitmap to the output stream that we opened
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, it)
             //Toast.makeText(this, "Captured View and saved to Gallery", Toast.LENGTH_SHORT).show()
         }
         return "${imagesDir.absolutePath}/$filename"

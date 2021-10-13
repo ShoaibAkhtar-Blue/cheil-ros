@@ -307,6 +307,18 @@ class DashboardFragment : BaseFragment() {
         val distanceInMeters: Float = myLocation.distanceTo(storeLocation)
         println("distanceInMeters: ${distanceInMeters}")*/
 
+        cvOtherTraining.setOnClickListener {
+            try {
+                (activity as NewDashboardActivity).userLocation
+                findNavController().navigate(R.id.action_dashboardFragment_to_trainingListFragment)
+            } catch (ex: java.lang.Exception) {
+                Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                    .setTitle("Warning!!")
+                    .setMessage(settingData.filter { it.fixedLabelName == "Dashboard_GPSLocatingMessage" }[0].labelName)
+                    .sneakWarning()
+            }
+        }
+
         cvOnSiteTraining.setOnClickListener {
             try {
                 (activity as NewDashboardActivity).userLocation
@@ -314,7 +326,7 @@ class DashboardFragment : BaseFragment() {
             } catch (ex: java.lang.Exception) {
                 Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                     .setTitle("Warning!!")
-                    .setMessage("Please Allow Location Permission!")
+                    .setMessage(settingData.filter { it.fixedLabelName == "Dashboard_GPSLocatingMessage" }[0].labelName)
                     .sneakWarning()
             }
         }
@@ -326,7 +338,7 @@ class DashboardFragment : BaseFragment() {
             } catch (ex: java.lang.Exception) {
                 Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                     .setTitle("Warning!!")
-                    .setMessage("Please Allow Location Permission!")
+                    .setMessage(settingData.filter { it.fixedLabelName == "Dashboard_GPSLocatingMessage" }[0].labelName)
                     .sneakWarning()
             }
         }
@@ -337,7 +349,7 @@ class DashboardFragment : BaseFragment() {
             } catch (ex: java.lang.Exception) {
                 Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                     .setTitle("Warning!!")
-                    .setMessage("Please Allow Location Permission!")
+                    .setMessage(settingData.filter { it.fixedLabelName == "Dashboard_GPSLocatingMessage" }[0].labelName)
                     .sneakWarning()
             }
         }
@@ -349,7 +361,7 @@ class DashboardFragment : BaseFragment() {
             } catch (ex: java.lang.Exception) {
                 Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                     .setTitle("Warning!!")
-                    .setMessage("Please Allow Location Permission!")
+                    .setMessage(settingData.filter { it.fixedLabelName == "Dashboard_GPSLocatingMessage" }[0].labelName)
                     .sneakWarning()
             }
         }
@@ -361,7 +373,7 @@ class DashboardFragment : BaseFragment() {
             } catch (ex: java.lang.Exception) {
                 Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                     .setTitle("Warning!!")
-                    .setMessage("Please Allow Location Permission!")
+                    .setMessage(settingData.filter { it.fixedLabelName == "Dashboard_GPSLocatingMessage" }[0].labelName)
                     .sneakWarning()
             }
         }
@@ -375,7 +387,7 @@ class DashboardFragment : BaseFragment() {
             } catch (ex: java.lang.Exception) {
                 Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                     .setTitle("Warning!!")
-                    .setMessage("Please Allow Location Permission!")
+                    .setMessage(settingData.filter { it.fixedLabelName == "Dashboard_GPSLocatingMessage" }[0].labelName)
                     .sneakWarning()
             }
         }
@@ -388,7 +400,7 @@ class DashboardFragment : BaseFragment() {
             } catch (ex: java.lang.Exception) {
                 Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                     .setTitle("Warning!!")
-                    .setMessage("Please Allow Location Permission!")
+                    .setMessage(settingData.filter { it.fixedLabelName == "Dashboard_GPSLocatingMessage" }[0].labelName)
                     .sneakWarning()
             }
         }
@@ -400,7 +412,7 @@ class DashboardFragment : BaseFragment() {
             } catch (ex: java.lang.Exception) {
                 Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
                     .setTitle("Warning!!")
-                    .setMessage("Please Allow Location Permission!")
+                    .setMessage(settingData.filter { it.fixedLabelName == "Dashboard_GPSLocatingMessage" }[0].labelName)
                     .sneakWarning()
             }
         }
