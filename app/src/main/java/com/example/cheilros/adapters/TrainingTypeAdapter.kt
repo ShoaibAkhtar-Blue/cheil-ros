@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
@@ -47,6 +48,11 @@ class TrainingTypeAdapter(
         holder.RLimgActivity.visibility = View.GONE
 
         holder.ActivityTypeName.text = itemList[position].TrainingTypeName
+
+        holder.LLrecentactivity.setOnClickListener {
+            Navigation.findNavController(it)
+                .navigate(R.id.action_trainingListFragment_to_trainingStoresFragment)
+        }
 
     }
 

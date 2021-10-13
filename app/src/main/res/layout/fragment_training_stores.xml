@@ -130,7 +130,7 @@ tools:context=".fragments.training.TrainingStoresFragment">
 
 
         <com.example.cheilros.activities.customobj.EmptyRecyclerView
-            android:id="@+id/rvTrainingShop"
+            android:id="@+id/rvTrainingStores"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
