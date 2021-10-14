@@ -279,7 +279,7 @@ class DashboardFragment : BaseFragment() {
                     CSP.getData(
                         "team_type_id"
                     )
-                }"
+                }&FromDate=2021-05-06&ToDate=2021-05-06"
             )
         } catch (ex: Exception) {
 
