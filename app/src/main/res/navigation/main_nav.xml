@@ -667,5 +667,9 @@
         android:id="@+id/trainingStoresFragment"
         android:name="com.example.cheilros.fragments.training.TrainingStoresFragment"
         android:label="training_stores"
-        tools:layout="@layout/fragment_training_stores" />
+        tools:layout="@layout/fragment_training_stores" >
+        <action
+            android:id="@+id/action_trainingStoresFragment_to_trainingNewFragment"
+            app:destination="@id/trainingNewFragment" />
+    </fragment>
 </navigation>

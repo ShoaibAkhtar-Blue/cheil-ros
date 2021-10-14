@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -39,6 +40,12 @@ class TrainingListFragment : BaseFragment() {
         val view = inflater.inflate(R.layout.fragment_training_list, container, false)
         toolbarVisibility(false)
         view.mainLoadingLayout.setState(LoadingLayout.LOADING)
+
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
+            // Handle the back button event
+            println("callback")
+            findNavController().popBackStack()
+        }
 
         return view
     }

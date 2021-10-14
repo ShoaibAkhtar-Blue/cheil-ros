@@ -68,6 +68,7 @@ class StoreViewFragment : BaseFragment() {
         CSP.delData("ActivityDetail_SESSION_IMAGE")
         CSP.delData("ActivityDetail_SESSION_IMAGE_SET")
         CSP.delData("salesData")
+        CSP.delData("selectedStores")
         //endregion
 
         //StoreView_SubTitle

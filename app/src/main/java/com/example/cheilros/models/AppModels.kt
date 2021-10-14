@@ -648,6 +648,12 @@ class MyCoverageData(
     val VistedBy: String,
     val VisitStatusID: Int
 )
+data class SelectedMyCoverageData(
+    val StoreID: Int,
+    val StoreCode: String,
+    val StoreName: String,
+    val isSelect: Boolean
+)
 
 class ChannelModel(val status: Int, val data: List<ChannelData>)
 class ChannelData(

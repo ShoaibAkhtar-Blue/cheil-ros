@@ -36,12 +36,14 @@ import com.example.cheilros.fragments.training.TrainingStoresFragment
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.CheckInOutModel
 import com.example.cheilros.models.MyCoverageData
+import com.example.cheilros.models.SelectedMyCoverageData
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.ramotion.foldingcell.FoldingCell
+import kotlinx.android.synthetic.main.fragment_training_stores.*
 import kotlinx.android.synthetic.main.mycoverage_content_cell.view.*
 import kotlinx.android.synthetic.main.mycoverage_title_cell.view.*
 import okhttp3.*
@@ -61,11 +63,20 @@ class TrainingStoresAdapter(
     val activity: NewDashboardActivity
 ) : RecyclerView.Adapter<TrainingStoresAdapter.ViewHolder>(), Filterable {
 
+    var onClick: AdapterView.OnItemClickListener? = null
+
+    fun setOnItemClickLitener(mOnItemClickLitener: AdapterView.OnItemClickListener?) {
+        this.onClick = mOnItemClickLitener
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(bean: SelectedMyCoverageData)
+    }
 
     lateinit var CSP: CustomSharedPref
     private val client = OkHttpClient()
     lateinit var locationManager: LocationManager
-
+    //val selectStores= mutableListOf<SelectedMyCoverageData>()
     var curPos: Int = 0
     var lat: String = "0"
     var lng: String = "0"
@@ -115,6 +126,8 @@ class TrainingStoresAdapter(
         var txtSerialNo: TextView = view.findViewById(R.id.txtSerialNo)
 
         //var mapView: MapView = view.findViewById(R.id.mapView)
+        var LLjp: LinearLayout = view.findViewById(R.id.LLjp)
+        var imgArrowDown: ImageView = view.findViewById(R.id.imgArrowDown)
         var txtCode: TextView = view.findViewById(R.id.txtCode)
         var txtTitle: TextView = view.findViewById(R.id.txtTitle)
         var txtTitleHeader: TextView = view.findViewById(R.id.txtTitleHeader)
@@ -161,6 +174,8 @@ class TrainingStoresAdapter(
             context?.let {
                 holder.item?.let { itemData ->
 
+                    holder.imgArrowDown.visibility = View.INVISIBLE
+
                     holder.txtSerialNo.text = (holder.layoutPosition + 1).toString()
 
                     holder.txtCode.text = itemData.StoreCode
@@ -174,6 +189,42 @@ class TrainingStoresAdapter(
 
                     holder.txtRegion.text = itemData.RegionName
                     holder.txtAddress.text = itemData.Address
+
+                    val isSelected = frag.selectStores.filter { it.StoreID == itemData.StoreID }
+                    if(isSelected.size == 1)
+                        holder.RLnum.setBackgroundColor(Color.YELLOW)
+
+                    holder.LLjp.setOnClickListener {
+                        val isSelected = frag.selectStores.filter { it.StoreID == itemData.StoreID }
+                        if(isSelected.size == 0){
+                            frag.selectStores.add(SelectedMyCoverageData(itemData.StoreID, itemData.StoreCode, itemData.StoreName, true))
+                            holder.RLnum.setBackgroundColor(Color.YELLOW)
+                        }else{
+                            val index = frag.selectStores.indexOf(frag.selectStores.find { it.StoreID == itemData.StoreID })
+                            frag.selectStores.removeAt(index)
+                            holder.RLnum.setBackgroundColor(Color.parseColor("#534f47"))
+                        }
+                        println("isSelected: $isSelected")
+
+                    }
+
+                    frag.btnSubmit.setOnClickListener {
+                        if(frag.selectStores.size > 0){
+                            var selectedStores = mutableListOf<String>()
+                            for(store in frag.selectStores){
+                                println("store: ${store.StoreName}")
+                                selectedStores.add(store.StoreID.toString())
+                            }
+                            println("selectedStores: ${selectedStores.joinToString().trim()}")
+                            CSP.saveData("selectedStores", selectedStores.joinToString().trim())
+                            val bundle = bundleOf(
+                                "StoreID" to selectedStores.joinToString().trim(),
+                            )
+                            Navigation.findNavController(it)
+                                .navigate(R.id.action_trainingStoresFragment_to_trainingNewFragment, bundle)
+
+                        }
+                    }
 
                     try {
                         if (settingData.filter { it.fixedLabelName == "StoreList_LocationUpdate" }[0].labelName == "") {
@@ -200,7 +251,6 @@ class TrainingStoresAdapter(
             }
         }
     }
-
 
 
     override fun getFilter(): Filter {

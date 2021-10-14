@@ -1,5 +1,7 @@
 package com.example.cheilros.fragments.training
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -7,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -45,6 +48,8 @@ class TrainingStoresFragment : BaseFragment() {
     lateinit var channelData: List<ChannelData>
     lateinit var channelTypeData: List<ChannelTypeData>
 
+    val selectStores= mutableListOf<SelectedMyCoverageData>()
+
     var defaultChannel = "0"
     var defaultChannelType = "0"
 
@@ -71,6 +76,12 @@ class TrainingStoresFragment : BaseFragment() {
 
         toolbarVisibility(false)
 
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
+            // Handle the back button event
+            println("callback")
+            findNavController().popBackStack()
+        }
+
         return view
     }
 
@@ -93,11 +104,157 @@ class TrainingStoresFragment : BaseFragment() {
         fetchChannelType("${CSP.getData("base_url")}/Webservice.asmx/ChannelTypeList")
         fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${defaultChannel}&SearchKeyWord=&ChannelTypeID=${defaultChannelType}")
 
+        btnChannel.setOnClickListener {
+            // setup the alert builder
+            // setup the alert builder
+            val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("")
+
+            // add a list
+
+            // add a list
+            var channels: Array<String> = arrayOf()
+            for (c in channelData) {
+                channels += c.ChannelName
+            }
+
+            builder.setItems(channels,
+                DialogInterface.OnClickListener { dialog, which ->
+                    println(channelData[which].ChannelID)
+                    defaultChannel = channelData[which].ChannelID.toString()
+                    btnChannel.text = "${channelData[which].ChannelName}"
+                    fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${defaultChannel}&SearchKeyWord=&ChannelTypeID=${defaultChannelType}")
+                })
+
+            // create and show the alert dialog
+
+            // create and show the alert dialog
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+
+            /*val colorList: ArrayList<ColorVO> = ArrayList<ColorVO>()
+            // String array for alert dialog multi choice items
+            // String array for alert dialog multi choice items
+            val colors = arrayOf(
+                "Red",
+                "Green",
+                "Blue",
+                "Purple",
+                "Olive"
+            )
+            // Boolean array for initial selected items
+            // Boolean array for initial selected items
+            val checkedColors = booleanArrayOf(
+                false,  // Red
+                false,  // Green
+                false,  // Blue
+                false,  // Purple
+                false // Olive
+            )
+
+            val builder = AlertDialog.Builder(requireContext())
+
+            // make a list to hold state of every color
+
+            // make a list to hold state of every color
+            for (i in colors.indices) {
+                val colorVO = ColorVO()
+                colorVO.setName(colors.get(i))
+                colorVO.setSelected(checkedColors.get(i))
+                colorList.add(colorVO)
+            }
+
+            // Do something here to pass only arraylist on this both arrays ('colors' & 'checkedColors')
+
+            // Do something here to pass only arraylist on this both arrays ('colors' & 'checkedColors')
+            builder.setMultiChoiceItems(colors, checkedColors,
+                OnMultiChoiceClickListener { dialog, which, isChecked -> // set state to vo in list
+                    colorList.get(which).setSelected(isChecked)
+                    Toast.makeText(
+                        ApplicationProvider.getApplicationContext(),
+                        colorList.get(which).getName().toString() + " " + isChecked,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
+
+            builder.setCancelable(false)
+
+            builder.setTitle("Your preferred colors?")
+
+            builder.setPositiveButton(
+                "OK"
+            ) { dialog, which ->
+                txtSelected.setText("Your preferred colors..... \n")
+
+                // save state of selected vos
+                val selectedList: ArrayList<ColorVO> = ArrayList()
+                for (i in 0 until colorList.size()) {
+                    val colorVO: ColorVO = colorList.get(i)
+                    colors.get(i) = colorVO.getName()
+                    checkedColors.get(i) = colorVO.isSelected()
+                    if (colorVO.isSelected()) {
+                        selectedList.add(colorVO)
+                    }
+                }
+                for (i in 0 until selectedList.size()) {
+                    // if element is last then not attach comma or attach it
+                    if (i != selectedList.size() - 1) txtSelected.setText(
+                        txtSelected.getText() + selectedList[i].getName().toString() + " ,"
+                    ) else txtSelected.setText(txtSelected.getText() + selectedList[i].getName())
+                }
+                colorList.clear()
+            }
+
+            builder.setNegativeButton(
+                "No"
+            ) { dialog, which -> // make sure to clear list that duplication dont formed here
+                colorList.clear()
+            }
+
+            builder.setNeutralButton(
+                "Cancel"
+            ) { dialog, which -> // make sure to clear list that duplication dont formed here
+                colorList.clear()
+            }
+
+            val dialog = builder.create()
+            dialog.show()*/
+        }
+
+        btnChannelType.setOnClickListener {
+            // setup the alert builder
+            // setup the alert builder
+            val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("")
+
+            // add a list
+
+            // add a list
+            var channels: Array<String> = arrayOf()
+            for (c in channelTypeData) {
+                channels += c.ChannelTypeName
+            }
+
+            builder.setItems(channels,
+                DialogInterface.OnClickListener { dialog, which ->
+                    println(channelTypeData[which].ChannelTypeID)
+                    defaultChannelType = channelTypeData[which].ChannelTypeID.toString()
+                    btnChannelType.text = "${channelTypeData[which].ChannelTypeName}"
+                    fetchData("${CSP.getData("base_url")}/Storelist.asmx/TeamMemberStoreList?TeamMemberID=${userData[0].memberID}&ChannelID=${defaultChannel}&SearchKeyWord=&ChannelTypeID=${defaultChannelType}")
+                })
+
+            // create and show the alert dialog
+
+            // create and show the alert dialog
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+
     }
 
     fun fetchChannel(url: String) {
 
-        mainLoadingLayoutCoverage.setState(LoadingLayout.LOADING)
+        mainLoadingLayout.setState(LoadingLayout.LOADING)
 
         val request = Request.Builder()
             .url(url)
@@ -111,7 +268,7 @@ class TrainingStoresFragment : BaseFragment() {
                             .setTitle("Error!!")
                             .setMessage(e.message.toString())
                             .sneakError()
-                        mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                     }
                 })
             }
@@ -128,7 +285,7 @@ class TrainingStoresFragment : BaseFragment() {
                         try {
                             requireActivity().runOnUiThread(java.lang.Runnable {
                                 activity?.let { it1 ->
-                                    //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                                    //mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                                     try {
                                         btnChannelType.text = channelData[0].ChannelName
                                     } catch (ex: Exception) {
@@ -149,7 +306,7 @@ class TrainingStoresFragment : BaseFragment() {
                                     .setTitle("Error!!")
                                     .setMessage("Data not fetched.")
                                     .sneakWarning()
-                                mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                                mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                             }
                         })
                     }
@@ -170,7 +327,7 @@ class TrainingStoresFragment : BaseFragment() {
 
     fun fetchChannelType(url: String) {
 
-        mainLoadingLayoutCoverage.setState(LoadingLayout.LOADING)
+        mainLoadingLayout.setState(LoadingLayout.LOADING)
 
         val request = Request.Builder()
             .url(url)
@@ -184,7 +341,7 @@ class TrainingStoresFragment : BaseFragment() {
                             .setTitle("Error!!")
                             .setMessage(e.message.toString())
                             .sneakError()
-                        mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                     }
                 })
             }
@@ -201,7 +358,7 @@ class TrainingStoresFragment : BaseFragment() {
                         try {
                             requireActivity().runOnUiThread(java.lang.Runnable {
                                 activity?.let { it1 ->
-                                    //mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                                    //mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                                     try {
                                         btnChannel.text = channelTypeData[0].ChannelTypeName
                                     } catch (ex: Exception) {
@@ -222,7 +379,7 @@ class TrainingStoresFragment : BaseFragment() {
                                     .setTitle("Error!!")
                                     .setMessage("Data not fetched.")
                                     .sneakWarning()
-                                mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                                mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                             }
                         })
                     }
@@ -243,8 +400,8 @@ class TrainingStoresFragment : BaseFragment() {
 
     fun fetchData(url: String) {
         println(url)
-        mainLoadingLayoutCoverage.setState(LoadingLayout.LOADING)
-        btnLocation.visibility = View.INVISIBLE
+        mainLoadingLayout.setState(LoadingLayout.LOADING)
+
         val request = Request.Builder()
             .url(url)
             .build()
@@ -258,7 +415,7 @@ class TrainingStoresFragment : BaseFragment() {
                             .setMessage(e.message.toString())
                             .sneakError()
                     }
-                    mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                    mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                 })
             }
 
@@ -287,9 +444,9 @@ class TrainingStoresFragment : BaseFragment() {
                                 )
                                 recyclerView.adapter = recylcerAdapter
 
-                                btnLocation.visibility = View.VISIBLE
 
-                                mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+
+                                mainLoadingLayout.setState(LoadingLayout.COMPLETE)
 
                                 toolbarVisibility(true)
                                 (activity as NewDashboardActivity).shouldGoBack = true
@@ -308,7 +465,7 @@ class TrainingStoresFragment : BaseFragment() {
                                     .setMessage("Data not fetched.")
                                     .sneakWarning()
                             }
-                            mainLoadingLayoutCoverage.setState(LoadingLayout.COMPLETE)
+                            mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                         })
                     }
                 } catch (ex: Exception) {

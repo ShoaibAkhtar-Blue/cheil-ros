@@ -192,9 +192,14 @@ class MyCoverageAdapter(
             context?.let {
                 holder.item?.let { itemData ->
 
-                    if(CSP.getData("team_type_id")!!.toInt() <= 4 || CSP.getData("team_type_id")!!.toInt() >= 9){
+                    if(CSP.getData("team_type_id")!!.toInt() <= 4){
                         holder.btnAccept.visibility = View.GONE
                         holder.btnLocUpdate.visibility = View.GONE
+                    }
+
+                    if(CSP.getData("team_type_id")!!.toInt() >= 9){
+                        holder.btnAccept.visibility = View.GONE
+                        //holder.btnLocUpdate.visibility = View.GONE
                     }
 
 

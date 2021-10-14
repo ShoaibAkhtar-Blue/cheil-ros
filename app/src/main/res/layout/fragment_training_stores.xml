@@ -128,11 +128,18 @@ tools:context=".fragments.training.TrainingStoresFragment">
             style="@style/ButtonList"
             android:text="Select Channel" />
 
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Go to training" />
 
         <com.example.cheilros.activities.customobj.EmptyRecyclerView
             android:id="@+id/rvTrainingStores"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
+
+
 
         <!-- Added an empty view which will be shown when the EmptyRecyclerView
      is empty -->

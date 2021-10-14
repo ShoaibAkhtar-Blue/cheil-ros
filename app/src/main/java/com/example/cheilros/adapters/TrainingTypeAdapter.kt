@@ -38,7 +38,7 @@ class TrainingTypeAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrainingTypeAdapter.ViewHolder {
         CSP = CustomSharedPref(parent.context)
         val view =
-            LayoutInflater.from(context).inflate(R.layout.list_recent_activities, parent, false)
+            LayoutInflater.from(context).inflate(R.layout.list_training_type, parent, false)
         return TrainingTypeAdapter.ViewHolder(view)
     }
 

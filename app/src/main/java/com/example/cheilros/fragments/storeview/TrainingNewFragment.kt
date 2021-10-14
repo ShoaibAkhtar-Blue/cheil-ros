@@ -94,6 +94,8 @@ class TrainingNewFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mainLoadingLayoutTD.setState(LoadingLayout.LOADING)
 
+
+
         if (CSP.getData("team_type_id")!!.toInt() <= 4) {
             btnAddAttendee.visibility = View.GONE
             LLImageRV.visibility = View.GONE
@@ -114,9 +116,9 @@ class TrainingNewFragment : BaseFragment() {
 
         fetchAttendees(
             "${CSP.getData("base_url")}/Training.asmx/StoreTeamMemberForTraining?StoreID=${
-                arguments?.getInt(
+                if (CSP.getData("selectedStores") == "") arguments?.getInt(
                     "StoreID"
-                )
+                ) else CSP.getData("selectedStores")
             }"
         )
 
@@ -232,12 +234,16 @@ class TrainingNewFragment : BaseFragment() {
 
                     builder.addFormDataPart(
                         "Stores",
-                        arguments?.getInt("StoreID").toString()
+                        "${
+                            if (CSP.getData("selectedStores") == "") arguments?.getInt(
+                                "StoreID"
+                            ) else CSP.getData("selectedStores")
+                        }"
                     )
 
                     builder.addFormDataPart(
                         "TrainingTypeID",
-                       "1"
+                        "1"
                     )
 
                     CSP.getData("training_attendees")?.let { it1 ->
@@ -271,7 +277,11 @@ class TrainingNewFragment : BaseFragment() {
                             arguments?.getInt(
                                 "TrainingModelID"
                             )
-                        }&StoreID=${arguments?.getInt("StoreID")}&Description=-&TeamMemberID=${
+                        }&StoreID=${
+                            if (CSP.getData("selectedStores") == "") arguments?.getInt(
+                                "StoreID"
+                            ) else CSP.getData("selectedStores")
+                        }&Description=-&TeamMemberID=${
                             CSP.getData(
                                 "user_id"
                             )
@@ -284,7 +294,11 @@ class TrainingNewFragment : BaseFragment() {
                                 arguments?.getInt(
                                     "TrainingModelID"
                                 )
-                            }&StoreID=${arguments?.getInt("StoreID")}&Description=-&TeamMemberID=${
+                            }&StoreID=${
+                                if (CSP.getData("selectedStores") == "") arguments?.getInt(
+                                    "StoreID"
+                                ) else CSP.getData("selectedStores")
+                            }&Description=-&TeamMemberID=${
                                 CSP.getData(
                                     "user_id"
                                 )
