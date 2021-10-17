@@ -73,9 +73,13 @@ class SalesFragment : BaseFragment() {
         val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
         val currentDateAndTime: String = simpleDateFormat.format(Date())
 
-        btnDate.tag = currentDateAndTime
-
-        CSP.saveData("salesData", currentDateAndTime)
+        println("salesData: ${CSP.getData("salesData")}")
+        if(CSP.getData("salesData") == ""){
+            btnDate.tag = currentDateAndTime
+            CSP.saveData("salesData", currentDateAndTime)
+        }else{
+            btnDate.tag = CSP.getData("salesData")
+        }
 
         btnDate.setOnClickListener {
             val calendar = Calendar.getInstance()
@@ -217,6 +221,7 @@ class SalesFragment : BaseFragment() {
     fun filterTS(status: Int = 0, filterDate: String = "") {
         var fd = if (filterDate.equals("")) btnDate.tag else filterDate
         btnDate.tag = fd
+        CSP.saveData("salesData", fd.toString())
         getCurrentWeek(btnDate.tag as String)
         fetchSales(
             "${CSP.getData("base_url")}/Sales.asmx/SaleCountSummary?StoreID=${

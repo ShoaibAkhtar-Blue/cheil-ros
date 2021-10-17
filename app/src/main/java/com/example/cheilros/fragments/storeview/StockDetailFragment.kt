@@ -124,6 +124,7 @@ class StockDetailFragment : BaseFragment() {
                     { view, year, monthOfYear, dayOfMonth ->
                         val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
                         btnDate.tag = currentDate
+                        CSP.saveData("salesData", currentDate)
                         fetchStockDetail(
                             "${CSP.getData("base_url")}/Stock.asmx/StockStatus?BrandID=${
                                 arguments?.getInt(
@@ -358,6 +359,7 @@ class StockDetailFragment : BaseFragment() {
     fun filterTS(status: Int = 0, filterDate: String = "") {
         var fd = if (filterDate.equals("")) btnDate.tag else filterDate
         btnDate.tag = fd
+        CSP.saveData("salesData", fd.toString())
         getCurrentWeek(btnDate.tag as String)
         fetchStockDetail(
             "${CSP.getData("base_url")}/Stock.asmx/StockStatus?BrandID=${

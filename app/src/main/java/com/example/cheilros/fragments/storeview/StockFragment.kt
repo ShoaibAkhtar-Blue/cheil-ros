@@ -69,10 +69,14 @@ class StockFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
         val currentDateAndTime: String = simpleDateFormat.format(Date())
+        println("salesData: ${CSP.getData("salesData")}")
+        if(CSP.getData("salesData") == ""){
+            btnDate.tag = currentDateAndTime
+            CSP.saveData("salesData", currentDateAndTime)
+        }else{
+            btnDate.tag = CSP.getData("salesData")
+        }
 
-        btnDate.tag = currentDateAndTime
-
-        CSP.saveData("salesData", currentDateAndTime)
 
         btnDate.setOnClickListener {
             val calendar = Calendar.getInstance()
@@ -86,6 +90,7 @@ class StockFragment : BaseFragment() {
                     { view, year, monthOfYear, dayOfMonth ->
                         val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
                         btnDate.tag = currentDate
+                        println("currentDate: $currentDate")
                         CSP.saveData("salesData", currentDate)
                         fetchStock(
                             "${CSP.getData("base_url")}/Stock.asmx/StockSummary?StoreID=${
@@ -100,7 +105,7 @@ class StockFragment : BaseFragment() {
             datePickerDialog.show()
         }
         getCurrentWeek(btnDate.tag as String)
-        fetchStock("${CSP.getData("base_url")}/Stock.asmx/StockSummary?StoreID=${arguments?.getInt("StoreID")}&StockDate=$currentDateAndTime")
+        fetchStock("${CSP.getData("base_url")}/Stock.asmx/StockSummary?StoreID=${arguments?.getInt("StoreID")}&StockDate=${btnDate.tag}")
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -208,6 +213,7 @@ class StockFragment : BaseFragment() {
     fun filterTS(status: Int = 0, filterDate: String = "") {
         var fd = if (filterDate.equals("")) btnDate.tag else filterDate
         btnDate.tag = fd
+        CSP.saveData("salesData", fd.toString())
         getCurrentWeek(btnDate.tag as String)
         fetchStock("${CSP.getData("base_url")}/Stock.asmx/StockSummary?StoreID=${arguments?.getInt("StoreID")}&StockDate=${btnDate.tag}")
     }
