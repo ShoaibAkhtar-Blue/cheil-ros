@@ -8,10 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.Filter
-import android.widget.Filterable
-import android.widget.TextView
+import android.widget.*
 import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -57,6 +54,7 @@ class SalesDetailAdapter(
         var txtBrand: TextView = view.findViewById(R.id.txtBrand)
         var txtSaleQuantity: EditText = view.findViewById(R.id.txtSaleQuantity)
         var txtSalesValue: EditText = view.findViewById(R.id.txtSalesValue)
+        var LLSaleDetail: LinearLayout = view.findViewById(R.id.LLSaleDetail)
         var watcher: TextWatcher? = null
 
         init { // TextChanged listener added only once.
@@ -96,10 +94,21 @@ class SalesDetailAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
+        val isMultiSaleAllow = false
+
         if (CSP.getData("team_type_id")!!.toInt() <= 4) {
             holder.txtSaleQuantity.isEnabled = false
             holder.txtSalesValue.isEnabled = false
             fragment.btnSubmit.visibility = View.GONE
+        }
+
+        if(isMultiSaleAllow){
+            holder.txtSaleQuantity.visibility = View.INVISIBLE
+            holder.txtSalesValue.visibility = View.INVISIBLE
+
+            holder.LLSaleDetail.setOnClickListener {
+
+            }
         }
 
         holder.txtNum.text = (position + 1).toString()

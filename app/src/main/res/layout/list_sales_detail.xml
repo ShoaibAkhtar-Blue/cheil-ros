@@ -6,10 +6,11 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/LLSaleDetail"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@drawable/border_bottom_grey"
+        android:orientation="horizontal"
         android:paddingLeft="16dp"
         android:paddingTop="4dp"
         android:paddingRight="16dp"
@@ -33,12 +34,12 @@
             android:textSize="14dp" />
 
         <TextView
-            android:layout_weight="1"
             android:id="@+id/txtBrand"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_toStartOf="@+id/txtSaleQuantity"
             android:layout_toEndOf="@+id/txtNum"
+            android:layout_weight="1"
             android:fontFamily="@font/samsungsharpsans_medium"
             android:gravity="center|left"
             android:text="BRAND"
