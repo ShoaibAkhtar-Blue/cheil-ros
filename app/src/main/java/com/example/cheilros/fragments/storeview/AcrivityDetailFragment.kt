@@ -246,12 +246,13 @@ class AcrivityDetailFragment : BaseFragment() {
 
             val client = OkHttpClient()
             try {
+                println("SerialNumbers: ${CSP.getData("ActivityDetail_BARCODE_SET").toString()}")
                 val builder: MultipartBody.Builder =
                     MultipartBody.Builder().setType(MultipartBody.FORM)
 
                 builder.addFormDataPart(
                     "SerialNumbers",
-                    CSP.getData("activity_barcodes").toString()
+                    CSP.getData("ActivityDetail_BARCODE_SET").toString()
                 )
 
                 for (paths in capturedPicturesList) {

@@ -109,7 +109,7 @@ open class BaseFragment : Fragment() {
                     .get(0).labelName, true)
             } else if (fragmentLabel == "pending_deployment") {
                 configureToolbar(settingData.filter { it.fixedLabelName == "Dashboard_PendingButton" }
-                    .get(0).labelName, true)
+                    .get(0).labelName, true, true)
             }else if (fragmentLabel == "pending_task") {
                 configureToolbar("Pending Task", true, true)
             }else if (fragmentLabel == "open_tickets") {

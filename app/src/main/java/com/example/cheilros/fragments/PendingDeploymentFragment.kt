@@ -3,10 +3,12 @@ package com.example.cheilros.fragments
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.appcompat.widget.SearchView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -54,9 +56,6 @@ class PendingDeploymentFragment : BaseFragment() {
             println("callback")
             findNavController().popBackStack()
         }
-
-
-
         return view
     }
 
@@ -109,6 +108,27 @@ class PendingDeploymentFragment : BaseFragment() {
             val dialog: AlertDialog = builder.create()
             dialog.show()
         }
+
+
+        requireActivity().toolbar_search.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener,
+            android.widget.SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(qString: String): Boolean {
+                try {
+                    recylcerAdapter?.filter?.filter(qString)
+                } catch (ex: Exception) {
+                    Log.e("Error_", ex.message.toString())
+                }
+
+                return true
+            }
+
+            override fun onQueryTextSubmit(qString: String): Boolean {
+
+                return true
+            }
+        })
     }
 
     fun fetchActivityCategory(url: String) {

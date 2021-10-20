@@ -390,6 +390,17 @@ class SalesDetailData(
     val SaleValue: Int
 )
 
+class DailyMultipleSaleModel(val status: Int, val data: List<DailyMultipleSaleData>)
+class DailyMultipleSaleData(
+    val SaleID: Int,
+    val StoreID: Int,
+    val ProductID: Int,
+    val SaleCount: Int,
+    val SalePrice: Int,
+    val SaleDate: String
+)
+
+
 class SalesJSON(val data: List<SalesJSONData>)
 class SalesJSONData(
     val ProductID: Int,
