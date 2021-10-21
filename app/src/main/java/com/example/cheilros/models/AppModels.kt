@@ -408,7 +408,8 @@ class SalesJSONData(
     val SaleCount: String,
     val SalePrice: String,
     val TeamMemberID: Int?,
-    val SaleDate: String?
+    val SaleDate: String?,
+    val intSerialNo: Int
 )
 //endregion
 
@@ -608,7 +609,8 @@ class PendingDeploymentData(
     val TaskDeploymentCategoryName: String,
     val ActivityCategoryName: String,
     val StoreCode: String,
-    val StoreName: String
+    val StoreName: String,
+    val StatusID: Int
 )
 //endregion
 

@@ -329,8 +329,6 @@ class DisplayCountDetailAdapter(
             dialog.setCancelable(false)
             dialog.setCanceledOnTouchOutside(true)
 
-
-
             dialog.btnAccept.setOnClickListener {
 
                 val selectedBarcodeType: Int = dialog.rgBarcodeType!!.checkedRadioButtonId

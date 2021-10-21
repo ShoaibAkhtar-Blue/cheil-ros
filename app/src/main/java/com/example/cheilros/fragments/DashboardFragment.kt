@@ -1,5 +1,7 @@
 package com.example.cheilros.fragments
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -65,6 +67,8 @@ import com.github.mikephil.charting.data.LineData
 
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import kotlinx.android.synthetic.main.fragment_journey_plan.*
+import kotlinx.android.synthetic.main.fragment_training_new.*
 
 
 class DashboardFragment : BaseFragment() {
@@ -79,6 +83,8 @@ class DashboardFragment : BaseFragment() {
     lateinit var layoutManagerRecent: RecyclerView.LayoutManager
     lateinit var recylcerAdapterRecent: RecentActivityAdapter
     lateinit var recylcerAdapterTrainingSummary: TrainingSummaryAdapter
+
+    val calendar = Calendar.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -274,12 +280,63 @@ class DashboardFragment : BaseFragment() {
             //TODO: Fetch Commented
             val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
             val currentDateAndTimeFormated: String = simpleDateFormat.format(Date())
+
+            btnFromDt.text = currentDateAndTimeFormated
+            btnToDt.text = currentDateAndTimeFormated
+
+            if(team_type.toInt() >= 9){
+                btnFromDt.setOnClickListener {
+                    //getting current day,month and year.
+                    val year = calendar.get(Calendar.YEAR)
+                    val month = calendar.get(Calendar.MONTH)
+                    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+                    val datePickerDialog =
+                        DatePickerDialog(
+                            requireContext(), DatePickerDialog.OnDateSetListener
+                            { view, year, monthOfYear, dayOfMonth ->
+                                val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
+                                btnFromDt.text = currentDate
+                            }, year, month, day
+                        )
+                    datePickerDialog.show()
+                }
+
+                btnToDt.setOnClickListener {
+                    //getting current day,month and year.
+                    val year = calendar.get(Calendar.YEAR)
+                    val month = calendar.get(Calendar.MONTH)
+                    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+                    val datePickerDialog =
+                        DatePickerDialog(
+                            requireContext(), DatePickerDialog.OnDateSetListener
+                            { view, year, monthOfYear, dayOfMonth ->
+                                val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
+                                btnToDt.text = currentDate
+                            }, year, month, day
+                        )
+                    datePickerDialog.show()
+                }
+
+                btnFilter.setOnClickListener {
+                    fetchAllDashboardData(
+                        "${CSP.getData("base_url")}/Dashboard.asmx/Dashboard_Cumulative?StoreID=0&ActivityCategoryID=0&ActivityTypeID=20&BrandID=0&TeamMemberID=${userData[0].memberID}&PerformanceMonth=0&PerformanceYear=0&TrendDate=${currentDateAndTimeFormated}&Status=1&ActivityDate=2021-01-01&TeamTypeID=${
+                            CSP.getData(
+                                "team_type_id"
+                            )
+                        }&FromDate=${btnFromDt.text}&ToDate=${btnToDt.text}"
+                    )
+                }
+            }
+
+
             fetchAllDashboardData(
                 "${CSP.getData("base_url")}/Dashboard.asmx/Dashboard_Cumulative?StoreID=0&ActivityCategoryID=0&ActivityTypeID=20&BrandID=0&TeamMemberID=${userData[0].memberID}&PerformanceMonth=0&PerformanceYear=0&TrendDate=${currentDateAndTimeFormated}&Status=1&ActivityDate=2021-01-01&TeamTypeID=${
                     CSP.getData(
                         "team_type_id"
                     )
-                }&FromDate=2021-05-06&ToDate=2021-05-06"
+                }&FromDate=${btnFromDt.text}&ToDate=${btnToDt.text}"
             )
         } catch (ex: Exception) {
 
@@ -342,6 +399,7 @@ class DashboardFragment : BaseFragment() {
                     .sneakWarning()
             }
         }
+
         cvManagerTask.setOnClickListener {
             try {
                 (activity as NewDashboardActivity).userLocation
@@ -377,8 +435,6 @@ class DashboardFragment : BaseFragment() {
                     .sneakWarning()
             }
         }
-
-
 
         cvCoverage.setOnClickListener {
             try {

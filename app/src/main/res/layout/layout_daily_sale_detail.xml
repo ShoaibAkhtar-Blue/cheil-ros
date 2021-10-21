@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/LLSaleDetail"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/border_bottom_grey"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingTop="4dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="4dp">
+
+        <TextView
+            android:id="@+id/txtNum"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentBottom="false"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="24dp"
+            android:fontFamily="@font/samsungsharpsans_medium"
+            android:gravity="center"
+            android:text="00"
+            android:textColor="#4c4c4c"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/txtBrand"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toStartOf="@+id/txtSaleQuantity"
+            android:layout_toEndOf="@+id/txtNum"
+            android:layout_weight="1"
+            android:fontFamily="@font/samsungsharpsans_medium"
+            android:gravity="center|left"
+            android:text="BRAND"
+            android:textColor="#4c4c4c"
+            android:textSize="14dp"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/txtSaleQuantity"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="8dp"
+            android:layout_toStartOf="@+id/txtSalesValue"
+            android:layout_weight="1"
+            android:background="@drawable/border_grey"
+            android:ems="10"
+            android:inputType="number"
+            android:maxLength="3"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="0"
+            android:textAlignment="center"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <EditText
+            android:id="@+id/txtSalesValue"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_weight="1"
+            android:background="@drawable/border_grey"
+            android:ems="10"
+            android:inputType="number"
+            android:maxLength="10"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textAlignment="center"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <!--<TextView
+            android:id="@+id/txtAttend"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:fontFamily="@font/samsungsharpsans_bold"
+            android:gravity="center"
+            android:text="COUNT"
+            android:textColor="#4c4c4c"
+            android:textSize="14dp" />-->
+    </LinearLayout>
+
+</LinearLayout>

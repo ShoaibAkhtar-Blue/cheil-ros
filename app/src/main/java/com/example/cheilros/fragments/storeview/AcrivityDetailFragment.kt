@@ -3,9 +3,11 @@ package com.example.cheilros.fragments.storeview
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
@@ -21,6 +23,7 @@ import com.example.cheilros.helpers.CoreHelperMethods
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.dialog_barcode.*
+import kotlinx.android.synthetic.main.dialog_barcode_input.*
 import kotlinx.android.synthetic.main.fragment_acrivity_detail.*
 import kotlinx.android.synthetic.main.fragment_acrivity_detail.txtStoreSubName
 import kotlinx.android.synthetic.main.fragment_acrivity_detail.view.*
@@ -179,6 +182,58 @@ class AcrivityDetailFragment : BaseFragment() {
         btnScanBarcode.setOnClickListener {
             //findNavController().navigate(R.id.action_acrivityDetailFragment_to_barcodeFragment)
             findNavController().navigate(R.id.action_acrivityDetailFragment_to_barcodeActivity)
+        }
+
+        btnInputBarcode.setOnClickListener {
+            val li = LayoutInflater.from(context)
+            val promptsView: View = li.inflate(R.layout.dialog_barcode_input, null)
+
+            val dialog = Dialog(requireContext())
+            dialog.setContentView(promptsView)
+            dialog.setCancelable(false)
+            dialog.setCanceledOnTouchOutside(true)
+
+            dialog.btnAccept.setOnClickListener {
+                dialog.rgBarcodeType.visibility = View.GONE
+                val selectedBarcodeType: Int = dialog.rgBarcodeType!!.checkedRadioButtonId
+                val barcodeTypeVal = dialog.findViewById<RadioButton>(selectedBarcodeType).text
+
+                var barcodeType = if (barcodeTypeVal.equals("LDU"))
+                    "1"
+                else
+                    "2"
+
+
+                val barInput = dialog.etInputBarcode.text.toString()
+
+                if (!barInput.equals("")) {
+                    Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                        .setTitle("Success!!")
+                        .setMessage("Barcode Added to this session!")
+                        .sneakSuccess()
+
+                    println("ActivityDetail_BARCODE_SET: ${barInput}")
+
+                    if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
+                        CSP.saveData("ActivityDetail_BARCODE_SET", barInput)
+                        CSP.delData("activity_barcodes")
+                        txtBarcodeCount.text = "1"
+                    } else {
+                        CSP.saveData(
+                            "ActivityDetail_BARCODE_SET",
+                            "${CSP.getData("ActivityDetail_BARCODE_SET")},${barInput}"
+                        )
+                        CSP.delData("activity_barcodes")
+
+                        var barcodeCount = CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.size
+                        txtBarcodeCount.text = barcodeCount.toString()
+
+                    }
+                }
+
+                dialog.dismiss()
+            }
+            dialog.show()
         }
 
         btnTakePicture.setOnClickListener {

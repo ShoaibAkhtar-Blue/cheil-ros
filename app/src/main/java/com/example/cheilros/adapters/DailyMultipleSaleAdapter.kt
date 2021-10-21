@@ -22,7 +22,8 @@ class DailyMultipleSaleAdapter(
     val context: Context,
     val itemList: MutableList<DailyMultipleSaleData>,
     val arguments: Bundle?,
-    val salesDetailAdapter: SalesDetailAdapter
+    val salesDetailAdapter: SalesDetailAdapter,
+    val selectedDate: String
 ) : RecyclerView.Adapter<DailyMultipleSaleAdapter.ViewHolder>()  {
 
     lateinit var CSP: CustomSharedPref
@@ -58,7 +59,7 @@ class DailyMultipleSaleAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         CSP = CustomSharedPref(parent.context)
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.list_sales_detail, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.layout_daily_sale_detail, parent, false)
         return ViewHolder(view)
     }
 
@@ -69,6 +70,7 @@ class DailyMultipleSaleAdapter(
         holder.onTextUpdated = { text ->
             val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
             val currentDateAndTime: String = simpleDateFormat.format(Date())
+            println("productid ${itemList[position].ProductID}")
             try {
                 if (salesDetailAdapter.salesData.isNullOrEmpty()) {
                     println("salesCountData: null")
@@ -79,12 +81,13 @@ class DailyMultipleSaleAdapter(
                             text,
                             holder.txtSalesValue.text.toString(),
                             CSP.getData("user_id")?.toInt(),
-                            itemList[position].SaleDate
+                            selectedDate.toString(),
+                            (position + 1)
                         )
                     )
                 } else {
                     val salesSize =
-                        salesDetailAdapter.salesData.filter { it.ProductID == itemList[position].ProductID }.size
+                        salesDetailAdapter.salesData.filter { it.intSerialNo == (position + 1)}.size
                     println(salesSize)
                     if (salesSize == 0) {
                         salesDetailAdapter.salesData.add(
@@ -94,12 +97,13 @@ class DailyMultipleSaleAdapter(
                                 text,
                                 holder.txtSalesValue.text.toString(),
                                 CSP.getData("user_id")?.toInt(),
-                                itemList[position].SaleDate
+                                selectedDate.toString(),
+                                (position + 1)
                             )
                         )
                     } else {
                         val salesIndex =
-                            salesDetailAdapter.salesData.indexOf(salesDetailAdapter.salesData.find { it.ProductID == itemList[position].ProductID })
+                            salesDetailAdapter.salesData.indexOf(salesDetailAdapter.salesData.find { it.intSerialNo == (position + 1) })
                         salesDetailAdapter.salesData[salesIndex] =
                             SalesJSONData(
                                 itemList[position].ProductID,
@@ -107,7 +111,8 @@ class DailyMultipleSaleAdapter(
                                 text,
                                 holder.txtSalesValue.text.toString(),
                                 CSP.getData("user_id")?.toInt(),
-                                itemList[position].SaleDate
+                                selectedDate.toString(),
+                                (position + 1)
                             )
                     }
                 }
@@ -119,6 +124,7 @@ class DailyMultipleSaleAdapter(
         holder.onTextUpdated1 = { text ->
             val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
             val currentDateAndTime: String = simpleDateFormat.format(Date())
+            println("productid2 ${itemList[position].ProductID}")
             try {
                 if (salesDetailAdapter.salesData.isNullOrEmpty()) {
                     println("salesCountData: null")
@@ -129,12 +135,13 @@ class DailyMultipleSaleAdapter(
                             holder.txtSaleQuantity.text.toString(),
                             text,
                             CSP.getData("user_id")?.toInt(),
-                            itemList[position].SaleDate
+                            selectedDate.toString(),
+                            (position + 1)
                         )
                     )
                 } else {
                     val salesSize =
-                        salesDetailAdapter.salesData.filter { it.ProductID == itemList[position].ProductID }.size
+                        salesDetailAdapter.salesData.filter { it.intSerialNo == (position + 1) }.size
                     println(salesSize)
                     if (salesSize == 0) {
                         salesDetailAdapter.salesData.add(
@@ -144,12 +151,13 @@ class DailyMultipleSaleAdapter(
                                 holder.txtSaleQuantity.text.toString(),
                                 text,
                                 CSP.getData("user_id")?.toInt(),
-                                itemList[position].SaleDate
+                                selectedDate.toString(),
+                                (position + 1)
                             )
                         )
                     } else {
                         val salesIndex =
-                            salesDetailAdapter.salesData.indexOf(salesDetailAdapter.salesData.find { it.ProductID == itemList[position].ProductID })
+                            salesDetailAdapter.salesData.indexOf(salesDetailAdapter.salesData.find { it.intSerialNo == (position + 1) })
                         salesDetailAdapter.salesData[salesIndex] =
                             SalesJSONData(
                                 itemList[position].ProductID,
@@ -157,9 +165,9 @@ class DailyMultipleSaleAdapter(
                                 holder.txtSaleQuantity.text.toString(),
                                 text,
                                 CSP.getData("user_id")?.toInt(),
-                                itemList[position].SaleDate
+                                selectedDate.toString(),
+                                (position + 1)
                             )
-
                     }
                 }
             } catch (ex: Exception) {

@@ -39,6 +39,7 @@ class PendingDeploymentFragment : BaseFragment() {
 
     lateinit var activityData: List<ActivityCategoryData>
     var defaultActivity = "0"
+    var defaultStatus = "0"
 
     lateinit var recylcerAdapter: PendingDeploymentAdapter
 
@@ -80,7 +81,7 @@ class PendingDeploymentFragment : BaseFragment() {
                 CSP.getData(
                     "user_id"
                 )
-            }&ActivityCategory=${defaultActivity}"
+            }&ActivityCategory=${defaultActivity}&StatusID=${defaultStatus}"
         )
         btnActivity.setOnClickListener {
             val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
@@ -101,7 +102,34 @@ class PendingDeploymentFragment : BaseFragment() {
                             CSP.getData(
                                 "user_id"
                             )
-                        }&ActivityCategory=${defaultActivity}"
+                        }&ActivityCategory=${defaultActivity}&StatusID=${defaultStatus}"
+                    )
+                })
+
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+
+        btnStatus.setOnClickListener {
+            val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("")
+
+            // add a list
+            var channels: Array<String> = arrayOf()
+            channels += settingData.filter { it.fixedLabelName == "PendingDeployment_All" }[0].labelName
+            channels += "Done"
+            channels += "Pending"
+
+            builder.setItems(channels,
+                DialogInterface.OnClickListener { dialog, which ->
+                    defaultStatus = which.toString()
+                    btnStatus.text = "${channels[which]}"
+                    fetchPendingDeployment(
+                        "${CSP.getData("base_url")}/Webservice.asmx/PendingDeployment?TeamMemberID=${
+                            CSP.getData(
+                                "user_id"
+                            )
+                        }&ActivityCategory=${defaultActivity}&StatusID=${defaultStatus}"
                     )
                 })
 

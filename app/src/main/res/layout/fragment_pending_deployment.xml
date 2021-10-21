@@ -58,10 +58,14 @@ tools:context=".fragments.PendingDeploymentFragment">
         </com.google.android.material.textfield.TextInputLayout>-->
 
         <Button
+            android:id="@+id/btnStatus"
+            style="@style/ButtonList"
+            android:text="Select Status" />
+
+        <Button
             android:id="@+id/btnActivity"
             style="@style/ButtonList"
             android:text="Select Activity" />
-
 
         <com.example.cheilros.activities.customobj.EmptyRecyclerView
             android:id="@+id/rvPendingDeployment"

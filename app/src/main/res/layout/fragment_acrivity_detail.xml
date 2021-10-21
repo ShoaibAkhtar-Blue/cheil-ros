@@ -286,18 +286,39 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
 
                         </RelativeLayout>
 
-                        <ImageButton
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?android:attr/selectableItemBackground"
-                            android:id="@+id/btnScanBarcode"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:layout_gravity="center"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
-                            android:backgroundTint="@android:color/transparent"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/barcode_logo" />
+                            android:layout_marginBottom="16dp"
+                            android:gravity="center">
+                            <ImageButton
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:foreground="?android:attr/selectableItemBackground"
+                                android:id="@+id/btnScanBarcode"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_gravity="center"
+
+                                android:backgroundTint="@android:color/transparent"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/barcode_logo" />
+
+                            <ImageButton
+                                android:id="@+id/btnInputBarcode"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_gravity="center"
+                                android:backgroundTint="@android:color/transparent"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:foreground="?android:attr/selectableItemBackground"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/plus" />
+                        </LinearLayout>
+
+
 
                     </LinearLayout>
 

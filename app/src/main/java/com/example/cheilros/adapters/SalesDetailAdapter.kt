@@ -1,5 +1,6 @@
 package com.example.cheilros.adapters
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -102,7 +103,7 @@ class SalesDetailAdapter(
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
 
         val isMultiSaleAllow = CSP.getData("AllowMultipleSale").equals("Y")
 
@@ -117,6 +118,9 @@ class SalesDetailAdapter(
             holder.txtSalesValue.visibility = View.INVISIBLE
 
             holder.LLSaleDetail.setOnClickListener {
+
+                salesData.clear()
+
                 val li = LayoutInflater.from(context)
                 val promptsView: View = li.inflate(R.layout.dialog_sales_detail_product, null)
                 var ctx = it
@@ -126,6 +130,7 @@ class SalesDetailAdapter(
                 dialog.setCanceledOnTouchOutside(true)
 
                 //region Load Daily Sale Data
+                println("${CSP.getData("base_url")}/Sales.asmx/DailyMultipleSaleView?ProductID=${filterList[position].ProductID}&StoreID=${arguments?.getInt("StoreID").toString()}&SaleDate=${selectedDate}")
                 val request = Request.Builder()
                     .url("${CSP.getData("base_url")}/Sales.asmx/DailyMultipleSaleView?ProductID=${filterList[position].ProductID}&StoreID=${arguments?.getInt("StoreID").toString()}&SaleDate=${selectedDate}")
                     .build()
@@ -160,9 +165,24 @@ class SalesDetailAdapter(
                                          context,
                                          apiData.data as MutableList<DailyMultipleSaleData>,
                                          arguments,
-                                        this@SalesDetailAdapter
+                                        this@SalesDetailAdapter,
+                                        selectedDate as String
                                      )
                                     dialog.rvSalesProductDetail.adapter = recylcerDailyMultipleSaleAdapter
+
+                                    if(apiData.data.size < 5){
+                                        val total_new_row = 5 - apiData.data.size
+                                        println("total_new_row $total_new_row")
+
+                                        repeat(total_new_row){
+                                            recylcerDailyMultipleSaleAdapter.itemList.add(DailyMultipleSaleData(0, arguments?.getInt("StoreID")!!
+                                                .toInt(), filterList[position].ProductID, 0,0, selectedDate as String
+                                            ))
+
+                                        }
+                                        recylcerDailyMultipleSaleAdapter.notifyDataSetChanged()
+                                    }
+
                                 }
                             } else {
                                 (context as Activity).runOnUiThread {
@@ -198,14 +218,42 @@ class SalesDetailAdapter(
                 }
 
                 dialog.btnAccept.setOnClickListener {
-                    //dialog.dismiss()
                     val gson = Gson()
                     val jsonString: String = gson.toJson(SalesJSON(salesData))
                     println(jsonString)
 
-                    //saveSale(ctx, salesData)
+                    val del_sale_url = "${CSP.getData("base_url")}/Sales.asmx/SaleCountRemove?ProductID=0&StoreID=${arguments?.getInt("StoreID")}&SaleDate=${selectedDate as String}"
+                    val client = OkHttpClient()
+
+                    val request = Request.Builder()
+                        .url(del_sale_url)
+                        .build()
+
+                    client.newCall(request).enqueue(object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+
+                        }
+
+                        override fun onResponse(call: Call, response: Response) {
+                            val body = response.body?.string()
+                            println(body)
+                            val gson = GsonBuilder().create()
+                            val apiData =
+                                gson.fromJson(body, CheckInOutModel::class.java)
+                            if (apiData.status == 200) {
+                                (context as Activity).runOnUiThread {
+                                    saveSale(ctx, salesData)
+                                }
+                            } else {
+
+                            }
+                        }
+                    })
+
+                    dialog.dismiss()
                 }
 
+                dialog.btnAddNew.visibility = View.GONE
                 dialog.btnAddNew.setOnClickListener {
                     recylcerDailyMultipleSaleAdapter.itemList.add(DailyMultipleSaleData(0, arguments?.getInt("StoreID")!!
                         .toInt(), filterList[position].ProductID, 0,0, selectedDate as String
@@ -214,6 +262,8 @@ class SalesDetailAdapter(
                 }
 
                 dialog.show()
+
+                salesData.clear()
             }
         }
 
@@ -233,7 +283,8 @@ class SalesDetailAdapter(
                             text,
                             holder.txtSalesValue.text.toString(),
                             CSP.getData("user_id")?.toInt(),
-                            selectedDate.toString()
+                            selectedDate.toString(),
+                            0
                         )
                     )
                 } else {
@@ -248,7 +299,8 @@ class SalesDetailAdapter(
                                 text,
                                 holder.txtSalesValue.text.toString(),
                                 CSP.getData("user_id")?.toInt(),
-                                selectedDate.toString()
+                                selectedDate.toString(),
+                                0
                             )
                         )
                     } else {
@@ -261,7 +313,8 @@ class SalesDetailAdapter(
                                 text,
                                 holder.txtSalesValue.text.toString(),
                                 CSP.getData("user_id")?.toInt(),
-                                selectedDate.toString()
+                                selectedDate.toString(),
+                                0
                             )
                     }
                 }
@@ -283,7 +336,8 @@ class SalesDetailAdapter(
                             holder.txtSaleQuantity.text.toString(),
                             text,
                             CSP.getData("user_id")?.toInt(),
-                            selectedDate.toString()
+                            selectedDate.toString(),
+                            0
                         )
                     )
                 } else {
@@ -298,7 +352,8 @@ class SalesDetailAdapter(
                                 holder.txtSaleQuantity.text.toString(),
                                 text,
                                 CSP.getData("user_id")?.toInt(),
-                                selectedDate.toString()
+                                selectedDate.toString(),
+                                0
                             )
                         )
                     } else {
@@ -311,9 +366,9 @@ class SalesDetailAdapter(
                                 holder.txtSaleQuantity.text.toString(),
                                 text,
                                 CSP.getData("user_id")?.toInt(),
-                                selectedDate.toString()
+                                selectedDate.toString(),
+                                0
                             )
-
                     }
                 }
 

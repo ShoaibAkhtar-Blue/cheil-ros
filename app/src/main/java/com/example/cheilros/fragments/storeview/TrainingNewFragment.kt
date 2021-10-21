@@ -335,7 +335,12 @@ class TrainingNewFragment : BaseFragment() {
                                 CSP.delData("TrainingDetail_SESSION_IMAGE")
                                 CSP.delData("TrainingDetail_SESSION_IMAGE_SET")
 
-                                findNavController().navigateUp()
+                                if(team_type.toInt() >= 9){
+                                    findNavController().navigate(R.id.action_trainingNewFragment_to_dashboardFragment)
+                                }else{
+                                    findNavController().navigateUp()
+                                }
+
                             }
                         }
 

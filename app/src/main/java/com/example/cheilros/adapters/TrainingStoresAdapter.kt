@@ -192,13 +192,13 @@ class TrainingStoresAdapter(
 
                     val isSelected = frag.selectStores.filter { it.StoreID == itemData.StoreID }
                     if(isSelected.size == 1)
-                        holder.RLnum.setBackgroundColor(Color.YELLOW)
+                        holder.RLnum.setBackgroundColor(Color.RED)
 
                     holder.LLjp.setOnClickListener {
                         val isSelected = frag.selectStores.filter { it.StoreID == itemData.StoreID }
                         if(isSelected.size == 0){
                             frag.selectStores.add(SelectedMyCoverageData(itemData.StoreID, itemData.StoreCode, itemData.StoreName, true))
-                            holder.RLnum.setBackgroundColor(Color.YELLOW)
+                            holder.RLnum.setBackgroundColor(Color.RED)
                         }else{
                             val index = frag.selectStores.indexOf(frag.selectStores.find { it.StoreID == itemData.StoreID })
                             frag.selectStores.removeAt(index)

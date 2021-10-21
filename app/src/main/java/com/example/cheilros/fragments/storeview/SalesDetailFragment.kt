@@ -90,6 +90,8 @@ class SalesDetailFragment : BaseFragment() {
 
         btnDate.tag = CSP.getData("salesData")
 
+        println("btnDate.tag ${btnDate.tag}")
+
         getCurrentWeek(btnDate.tag as String)
 
         fetchCategory("${CSP.getData("base_url")}/DisplayCount.asmx/ProductCategoryList")

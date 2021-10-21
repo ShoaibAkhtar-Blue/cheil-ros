@@ -957,6 +957,27 @@
                             style="@style/headingStyle"
                             android:text="Summary" />
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <Button
+                                android:layout_weight="1"
+                                style="@style/ButtonDate"
+                                android:id="@+id/btnFromDt"
+                                android:text="Checkin" />
+                            <Button
+                                android:layout_weight="1"
+                                style="@style/ButtonDate"
+                                android:id="@+id/btnToDt"
+                                android:text="Checkout" />
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/btnFilter"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Filter" />
+
                         <TableLayout
                             android:id="@+id/table_heading_layout"
                             android:layout_width="match_parent"
