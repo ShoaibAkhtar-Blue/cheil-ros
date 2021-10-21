@@ -114,8 +114,8 @@ class SalesDetailAdapter(
         }
 
         if (isMultiSaleAllow) {
-            holder.txtSaleQuantity.visibility = View.INVISIBLE
-            holder.txtSalesValue.visibility = View.INVISIBLE
+            holder.txtSaleQuantity.isEnabled = false
+            holder.txtSalesValue.isEnabled = false
 
             holder.LLSaleDetail.setOnClickListener {
 
