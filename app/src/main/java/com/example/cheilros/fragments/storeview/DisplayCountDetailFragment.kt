@@ -307,6 +307,7 @@ class DisplayCountDetailFragment : BaseFragment() {
                                 .setMessage(ex.message.toString())
                                 .sneakError()
                         }
+                        Log.e("Error_", ex.message.toString())
                         findNavController().popBackStack()
                     })
                 }
@@ -367,6 +368,7 @@ class DisplayCountDetailFragment : BaseFragment() {
                                 .setMessage(ex.message.toString())
                                 .sneakError()
                         }
+                        Log.e("Error_", ex.message.toString())
                         findNavController().popBackStack()
                     })
                 }

@@ -954,6 +954,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/Dashboard_TrainingSummaryTitle"
                             style="@style/headingStyle"
                             android:text="Summary" />
 
@@ -1030,7 +1031,7 @@
                                     android:layout_width="0dp"
                                     android:layout_column="1"
                                     android:layout_weight="1"
-                                    android:text="EndTime"
+                                    android:text="End"
                                     style="@style/table_header"
                                     android:paddingEnd="5dp"
                                     android:textAlignment="center"

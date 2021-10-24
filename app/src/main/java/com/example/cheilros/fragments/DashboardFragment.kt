@@ -118,6 +118,8 @@ class DashboardFragment : BaseFragment() {
             view.txtCurrentDate.text = currentDateAndTime
             view.StoreView_SubTitle.text =
                 settingData.filter { it.fixedLabelName == "Dashboard_TaskTitle" }.get(0).labelName
+            view.Dashboard_TrainingSummaryTitle.text =
+                settingData.filter { it.fixedLabelName == "Dashboard_TrainingSummaryTitle" }.get(0).labelName
 
             view.LLGraphTwo.visibility = View.GONE
             view.LLGraphOne.visibility = View.GONE
@@ -137,6 +139,7 @@ class DashboardFragment : BaseFragment() {
                 view.LLTask.visibility = View.GONE
                 view.LLRecentActivity.visibility = View.GONE
             } else if (team_type.toInt() >= 9) {
+
                 view.gridview.visibility = View.GONE
                 view.cvJourneyPlan.visibility = View.GONE
                 view.LLNormalCard.visibility = View.GONE

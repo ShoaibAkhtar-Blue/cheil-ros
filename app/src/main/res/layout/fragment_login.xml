@@ -95,7 +95,8 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Forgot Password" />
+            android:text="Forgot Password"
+            android:visibility="invisible" />
 
         <ImageButton
             android:id="@+id/btnFingerAuth"

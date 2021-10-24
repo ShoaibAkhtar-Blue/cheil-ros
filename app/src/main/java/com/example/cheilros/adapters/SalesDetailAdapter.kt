@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.text.TextWatcher
 import android.util.Log
@@ -11,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -222,7 +224,8 @@ class SalesDetailAdapter(
                     val jsonString: String = gson.toJson(SalesJSON(salesData))
                     println(jsonString)
 
-                    val del_sale_url = "${CSP.getData("base_url")}/Sales.asmx/SaleCountRemove?ProductID=0&StoreID=${arguments?.getInt("StoreID")}&SaleDate=${selectedDate as String}"
+                    val del_sale_url = "${CSP.getData("base_url")}/Sales.asmx/SaleCountRemove?ProductID=${filterList[position].ProductID}&StoreID=${arguments?.getInt("StoreID")}&SaleDate=${selectedDate as String}"
+                    println(del_sale_url)
                     val client = OkHttpClient()
 
                     val request = Request.Builder()
@@ -415,6 +418,7 @@ class SalesDetailAdapter(
         val request = Request.Builder().post(body).url(url).build()
         val client = OkHttpClient()
         client.newCall(request).enqueue(object : Callback {
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onResponse(call: Call, response: Response) {
                 val tm = response.body?.string()
                 println(tm)
@@ -426,8 +430,9 @@ class SalesDetailAdapter(
                             .sneakSuccess()
                     }
 
-                    Navigation.findNavController(view).navigateUp()
-                    fragment.mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
+                    //Navigation.findNavController(view).navigateUp()
+                    fragment.filterTS(0)
+                    //fragment.mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)
                 }
             }
 

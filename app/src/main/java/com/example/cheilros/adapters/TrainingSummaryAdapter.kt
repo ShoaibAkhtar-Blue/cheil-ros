@@ -1,17 +1,23 @@
 package com.example.cheilros.adapters
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.TrainingSummaryData
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TrainingSummaryAdapter(val context: Context, val itemList: List<TrainingSummaryData>, val arguments: Bundle?): RecyclerView.Adapter<TrainingSummaryAdapter.ViewHolder>(){
 
@@ -37,9 +43,16 @@ class TrainingSummaryAdapter(val context: Context, val itemList: List<TrainingSu
         return ViewHolder(view)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+        val date = LocalDate.parse(filterList[position].TrainingDate, formatter)
+
+        val jpdate = date.format(DateTimeFormatter.ofPattern("yyyy-M-d"))
+
+
         holder.txtType.text = filterList[position].TrainingTypeName.take(6)
-        holder.txtDate.text = filterList[position].TrainingDate
+        holder.txtDate.text = jpdate
         holder.txtStart.text = filterList[position].Start
         holder.txtEnd.text = filterList[position].EndTime
         holder.txtAttendees.text = filterList[position].Attendese.toString()

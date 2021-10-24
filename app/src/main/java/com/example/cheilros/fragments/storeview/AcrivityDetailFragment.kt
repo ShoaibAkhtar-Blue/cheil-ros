@@ -170,6 +170,16 @@ class AcrivityDetailFragment : BaseFragment() {
                 }!!
                 dialog.rvBarcode.adapter = recylcerAdapterBC
 
+                dialog.setOnDismissListener {
+                    if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
+                        txtBarcodeCount.text = "1"
+                    } else {
+                        var barcodeCount = CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.size
+                        txtBarcodeCount.text = barcodeCount.toString()
+
+                    }
+                }
+
                 dialog.show()
             } else {
                 Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
