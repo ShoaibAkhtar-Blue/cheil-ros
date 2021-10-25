@@ -128,10 +128,10 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/border_grey"
-                            android:maxLength="5"
+                            android:maxLength="20"
                             android:gravity="start|top"
                             android:hint="Quantity"
-                            android:inputType="number"
+                            android:inputType="text"
                             android:padding="8dp" />
 
                     </LinearLayout>

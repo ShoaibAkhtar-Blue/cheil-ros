@@ -244,9 +244,9 @@ class DisplayCountDetailFragment : BaseFragment() {
                                             "View",
                                             AppCompatResources.getDrawable(
                                                 requireContext(),
-                                                R.drawable.ic_baseline_view
+                                                R.drawable.view_icon
                                             ),
-                                            Color.parseColor("#000000"),
+                                            Color.parseColor("#8fc83e"),
                                             Color.parseColor("#ffffff"),
                                             UnderlayButtonClickListener { pos: Int ->
                                                 recylcerAdapter.allBarcodes(pos)
@@ -258,9 +258,9 @@ class DisplayCountDetailFragment : BaseFragment() {
                                             "Scan",
                                             AppCompatResources.getDrawable(
                                                 requireContext(),
-                                                R.drawable.barcode2
+                                                R.drawable.scan_icon
                                             ),
-                                            Color.parseColor("#FF0000"),
+                                            Color.parseColor("#534f47"),
                                             Color.parseColor("#ffffff"),
                                             UnderlayButtonClickListener { pos: Int ->
                                                 recylcerAdapter.barCodeScan(pos)
@@ -272,9 +272,9 @@ class DisplayCountDetailFragment : BaseFragment() {
                                             "Input",
                                             AppCompatResources.getDrawable(
                                                 requireContext(),
-                                                R.drawable.ic_baseline_edit_24
+                                                R.drawable.input
                                             ),
-                                            Color.parseColor("#00FF00"),
+                                            Color.parseColor("#ea4335"),
                                             Color.parseColor("#ffffff"),
                                             UnderlayButtonClickListener { pos: Int ->
                                                 recylcerAdapter.inputBarcode(pos)

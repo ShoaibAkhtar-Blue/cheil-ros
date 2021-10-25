@@ -172,7 +172,7 @@ class AcrivityDetailFragment : BaseFragment() {
 
                 dialog.setOnDismissListener {
                     if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
-                        txtBarcodeCount.text = "1"
+                        txtBarcodeCount.text = "0"
                     } else {
                         var barcodeCount = CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.size
                         txtBarcodeCount.text = barcodeCount.toString()

@@ -125,12 +125,14 @@ tools:context=".fragments.storeview.StorePicturesFragment">
 </com.valartech.loadinglayout.LoadingLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:visibility="invisible"
+        android:backgroundTint="#534f47"
         android:id="@+id/btnAddStorePicture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        android:src="@drawable/plus"
+        android:src="@drawable/camera_icon"
+        app:borderWidth="0dp"
         app:layout_anchorGravity="bottom|right|end"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

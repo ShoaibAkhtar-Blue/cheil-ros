@@ -1,6 +1,7 @@
 package com.example.cheilros.fragments.storeview
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,6 +69,8 @@ class TaskDeploymentFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         txtStoreSubName.text = arguments?.getString("ActivityTypeName")
+
+        println("Burhan")
 
         if (team_type.toInt() <= 4)
             cvTaskData.visibility = View.GONE
@@ -210,6 +213,7 @@ class TaskDeploymentFragment : BaseFragment() {
                                 .setMessage(ex.message.toString())
                                 .sneakError()
                         }
+                        Log.e("Error_", ex.message.toString())
                         findNavController().popBackStack()
                     })
                 }
@@ -280,6 +284,7 @@ class TaskDeploymentFragment : BaseFragment() {
                                 .setMessage(ex.message.toString())
                                 .sneakError()
                         }
+                        Log.e("Error_", ex.message.toString())
                         findNavController().popBackStack()
                     })
                 }

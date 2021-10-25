@@ -239,7 +239,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
                 // Draw Text
 //                p.setColor(Color.BLACK);
                 p.setColor(textColor);
-                p.setTextSize(40);
+                p.setTextSize(36);
                 Rect r = new Rect();
                 float cHeight = rect.height();
                 float cWidth = rect.width();
@@ -258,7 +258,7 @@ public abstract class SwipeHelper extends ItemTouchHelper.SimpleCallback {
                 //animate
                 // Draw Text
                 TextPaint textPaint = new TextPaint();
-                textPaint.setTextSize(40);
+                textPaint.setTextSize(36);
                 textPaint.setColor(textColor);
                 StaticLayout sl = new StaticLayout(text, textPaint, (int) rect.width(),
                         Layout.Alignment.ALIGN_CENTER, 1, 1, false);

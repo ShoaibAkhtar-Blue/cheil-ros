@@ -230,7 +230,7 @@ class RecentActivityData(
     val BrandName: String,
     val ActivityDescription: String,
     val StatusID: Int,
-    val Quantity: Int,
+    val Quantity: String,
     val StoreID: Int,
     val StoreCode: String,
     val StoreName: String,
