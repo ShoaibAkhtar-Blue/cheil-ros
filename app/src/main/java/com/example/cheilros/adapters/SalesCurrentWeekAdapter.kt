@@ -46,6 +46,8 @@ class SalesCurrentWeekAdapter(
 
         val listDate = data[position]
 
+        val SDFormat = SimpleDateFormat("h:m a")
+
         val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.ENGLISH)
         val date = LocalDate.parse(listDate, formatter)
 

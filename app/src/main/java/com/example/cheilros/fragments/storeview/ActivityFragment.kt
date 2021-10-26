@@ -49,6 +49,10 @@ class ActivityFragment : BaseFragment() {
         toolbarVisibility(false)
         view.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
+        //region Reset Session
+        CSP.delData("ActivityDetail_BARCODE_SET")
+        //endregion
+
         //region Set Labels
         view.txtStoreName.text =
             settingData.filter { it.fixedLabelName == "StoreMenu_Activity" }.get(0).labelName

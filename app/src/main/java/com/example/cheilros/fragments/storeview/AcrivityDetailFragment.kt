@@ -344,6 +344,13 @@ class AcrivityDetailFragment : BaseFragment() {
                     )
                 }
 
+                if(capturedPicturesList.size == 0)
+                    builder.addFormDataPart("BeforeActivityPicture","")
+                if(capturedPicturesListAfter.size == 0)
+                    builder.addFormDataPart("AfterActivityPicture","")
+                if(CSP.getData("ActivityDetail_BARCODE_SET").toString() == "")
+                    builder.addFormDataPart("SerialNumbers","")
+
                 /*if(!CSP.getData("ActivityDetail_SESSION_IMAGE_SET").equals("")){
                     val imgPaths = CSP.getData("ActivityDetail_SESSION_IMAGE_SET")?.split(",")
                     if (imgPaths != null) {
@@ -362,6 +369,16 @@ class AcrivityDetailFragment : BaseFragment() {
                          .addFormDataPart("SerialNumbers", CSP.getData("activity_barcodes").toString())
                          .build()*/
                 val requestBody = builder.build()
+                println("${CSP.getData("base_url")}/OperMarketActivities.asmx/MarketActivityDetails?TeamMemberID=${
+                    CSP.getData(
+                        "user_id"
+                    )
+                }&ActivityTypeID=${arguments?.getInt("ActivityTypeID")}&ActivityCategoryID=${
+                    arguments?.getInt(
+                        "ActivityCategoryID"
+                    )
+                }&StoreID=${arguments?.getInt("StoreID")}&BrandID=1&ActivityDescription=${txtBrandDescription.text}&StatusID=1&Quantity=${txtBrandQuantity.text}"
+                )
                 val request: Request = Request.Builder()
                     .url(
                         "${CSP.getData("base_url")}/OperMarketActivities.asmx/MarketActivityDetails?TeamMemberID=${
@@ -398,6 +415,7 @@ class AcrivityDetailFragment : BaseFragment() {
 
                     override fun onResponse(call: Call, response: Response) {
                         val body = response.body?.string()
+                        println("ActivityDetailResponse")
                         println(body)
 
                         requireActivity().runOnUiThread {

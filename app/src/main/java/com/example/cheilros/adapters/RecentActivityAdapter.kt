@@ -85,6 +85,7 @@ class RecentActivityAdapter(
             holder.btnCancel.visibility = View.GONE
         }
 
+
         holder.ActivityTypeName.text = filterList[position].ActivityTypeName
         holder.ActivityDescription.text = "Description: ${filterList[position].ActivityDescription}"
         holder.txtDate.text = filterList[position].ActivityDateTime
@@ -112,6 +113,7 @@ class RecentActivityAdapter(
             holder.btnCancel.visibility = View.GONE
             holder.btnAccept.text = "Follow-Up"
         } else {
+            holder.btnAccept.visibility = View.GONE
             holder.btnAccept.text = "Edit"
             holder.btnCancel.text = "Delete"
         }

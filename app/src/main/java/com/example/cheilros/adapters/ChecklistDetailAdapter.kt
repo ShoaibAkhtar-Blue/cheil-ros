@@ -121,6 +121,7 @@ class ChecklistDetailAdapter(
             dialog.txtTitle.text = "Question"
             dialog.txtQuestion.text = itemList[position].Question
             println("InputTypeID: ${itemList[position].InputTypeID}")
+            println("CheckListStatus: ${itemList[position].CheckListStatus}")
 
             //region Set Label
             try{
@@ -193,6 +194,11 @@ class ChecklistDetailAdapter(
             if (itemList[position].InputTypeID == 1) {
                 println("InputTypeID: ${itemList[position].InputTypeID}")
                 dialog.llCheckbox.visibility = View.VISIBLE
+
+                if(itemList[position].CheckListStatus == "Yes")
+                    dialog.rbYes.isChecked = true
+                else if(itemList[position].CheckListStatus == "No")
+                    dialog.rbNo.isChecked = true
             }
 
             if (itemList[position].InputTypeID == 2) {
@@ -244,6 +250,7 @@ class ChecklistDetailAdapter(
                     answer = dialog.btnDate.text.toString()
                 } else if (itemList[position].InputTypeID == 1) {
                     //answer = if (dialog.checkBox.isChecked) "Yes" else "No"
+
                     try {
                         val selectedOption: Int = dialog.rgTypeOne!!.checkedRadioButtonId
 
@@ -263,6 +270,7 @@ class ChecklistDetailAdapter(
                         println("selectedOption: $selectedOption")
                         var radioButton: RadioButton = dialog.findViewById(selectedOption)
                         answer = radioButton.text.toString()
+
                     } catch (ex: Exception) {
                         answer = "No"
                     }
