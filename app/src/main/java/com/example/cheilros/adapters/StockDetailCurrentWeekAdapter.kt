@@ -46,7 +46,7 @@ class StockDetailCurrentWeekAdapter(
 
         val listDate = data[position]
 
-        val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.ENGLISH)
+        /*val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.ENGLISH)
         val date = LocalDate.parse(listDate, formatter)
 
         val filterFormatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.ENGLISH)
@@ -71,6 +71,63 @@ class StockDetailCurrentWeekAdapter(
 
         convertView.cvJPweek.setOnClickListener {
             fragment.filterTS(0, jpdate)
+        }*/
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.ENGLISH)
+            val date = LocalDate.parse(listDate, formatter)
+
+            val filterFormatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.ENGLISH)
+            val filterdate = LocalDate.parse(filterDate, filterFormatter)
+
+            val jpdate = date.format(DateTimeFormatter.ofPattern("yyyy-M-d"))
+
+            println("listDate: ${listDate}-${filterdate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))}")
+
+            if (listDate.equals(filterdate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy")))) {
+                convertView.cvJPweek.setCardBackgroundColor(Color.BLACK)
+                //convertView.cvJPweek.layoutParams = LinearLayout.LayoutParams(160, LinearLayout.LayoutParams.WRAP_CONTENT);
+                convertView.txtDate.setTextColor(Color.WHITE)
+            }
+
+            var curDay = date.format(DateTimeFormatter.ofPattern("E"))
+            var curDate = date.format(DateTimeFormatter.ofPattern("d"))
+            //println("listDate: ${curDay}")
+
+            convertView.txtDay.text = curDay
+            convertView.txtDate.text = curDate
+
+            convertView.cvJPweek.setOnClickListener {
+                fragment.filterTS(0, jpdate)
+            }
+        }else{
+
+            val parser =  SimpleDateFormat("MM/dd/yyyy")
+            val formatter = SimpleDateFormat("yyyy-M-d")
+            val formatter1 = SimpleDateFormat("E")
+            val formatter2 = SimpleDateFormat("d")
+            //val formattedDate = formatter.format(parser.parse("2018-12-14T09:55:00"))
+
+            val date = parser.parse(listDate)
+            val filterdate = formatter.parse(filterDate)
+
+            val jpdate = formatter.format(date)
+
+            if (listDate == parser.format(formatter.parse(filterDate))) {
+                convertView.cvJPweek.setCardBackgroundColor(Color.BLACK)
+                //convertView.cvJPweek.layoutParams = LinearLayout.LayoutParams(160, LinearLayout.LayoutParams.WRAP_CONTENT);
+                convertView.txtDate.setTextColor(Color.WHITE)
+            }
+
+            var curDay = formatter1.format(parser.parse(listDate))
+            var curDate = formatter2.format(parser.parse(listDate))
+
+            convertView.txtDay.text = curDay.toString()
+            convertView.txtDate.text = curDate.toString()
+
+            convertView.cvJPweek.setOnClickListener {
+                fragment.filterTS(0, jpdate)
+            }
         }
 
         return convertView
