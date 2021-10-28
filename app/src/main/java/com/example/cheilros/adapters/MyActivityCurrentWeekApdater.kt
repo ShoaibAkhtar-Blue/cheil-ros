@@ -46,7 +46,7 @@ private val filterDate: String
 
         val listDate = data[position]
 
-        val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.ENGLISH)
+        /*val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.ENGLISH)
         val date = LocalDate.parse(listDate, formatter)
 
         val filterFormatter = DateTimeFormatter.ofPattern("yyyy-M-d", Locale.ENGLISH)
@@ -72,9 +72,9 @@ private val filterDate: String
         convertView.cvJPweek.setOnClickListener {
             fragment.filterTS(0, jpdate)
             //fragment.filerJP(0, jpdate)
-        }
+        }*/
 
-        /*if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.ENGLISH)
             val date = LocalDate.parse(listDate, formatter)
 
@@ -129,7 +129,7 @@ private val filterDate: String
             convertView.cvJPweek.setOnClickListener {
                 fragment.filterTS(0, jpdate)
             }
-        }*/
+        }
 
         return convertView
     }

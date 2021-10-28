@@ -85,6 +85,10 @@ class SalesDetailFragment : BaseFragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        val isMultiSaleAllow = CSP.getData("AllowMultipleSale").equals("Y")
+        if(isMultiSaleAllow)
+            btnSubmit.visibility = View.GONE
+
         val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
         val currentDateAndTime: String = simpleDateFormat.format(Date())
 

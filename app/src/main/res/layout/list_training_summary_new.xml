@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/LLjp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_marginBottom="2dp">
+
+    <!-- LEFT TITLE PART -->
+    <!-- RIGHT TITLE PART -->
+    <RelativeLayout
+        android:id="@+id/RLnum"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_weight="12"
+        android:background="@color/status_none"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/txtSerialNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:fontFamily="@font/samsungsharpsans_bold"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="18dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/white">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/TrainingTypeName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/lightgrey"
+                android:fontFamily="@font/samsungsharpsans_bold"
+                android:gravity="center_vertical"
+                android:paddingLeft="4dp"
+                android:text="TrainingTypeName"
+                android:textColor="@color/black"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/Description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/top_bottom_border"
+                android:fontFamily="@font/samsungsharpsans_medium"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:paddingLeft="4dp"
+                android:text="Description"
+                android:textColor="@color/black"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/TrainingDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/top_bottom_border"
+                android:fontFamily="@font/samsungsharpsans_medium"
+                android:gravity="center_vertical"
+                android:paddingLeft="4dp"
+                android:text="TrainingDate"
+                android:textColor="@color/black"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/Attendese"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/top_bottom_border"
+                android:fontFamily="@font/samsungsharpsans_medium"
+                android:gravity="center_vertical"
+                android:paddingLeft="4dp"
+                android:text="Attendese"
+                android:textColor="@color/black"
+                android:textSize="14dp" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

@@ -666,6 +666,7 @@ class DashboardFragment : BaseFragment() {
                         //If Training
                         if (team_type.toInt() >= 9){
                             if (apiData.data.training_summary != null){
+                                txtTrainingCount.text = apiData.data.training_summary.size.toString()
                                 rvTrainingSummary.setHasFixedSize(true)
                                 layoutManagerRecent = LinearLayoutManager(requireContext())
                                 rvTrainingSummary.layoutManager = layoutManagerRecent

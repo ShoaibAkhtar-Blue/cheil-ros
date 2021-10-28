@@ -38,7 +38,8 @@ class TrainingSummaryData(
     val EndTime: String,
     val Attendese: Int,
     val OtherAttendese: Int,
-    val TeamMemberID: Int
+    val TeamMemberID: Int,
+    val Description: String
 )
 
 class ManagerDashboardLabelData(
