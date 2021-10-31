@@ -51,6 +51,12 @@
                 android:textColor="@color/black"
                 android:textSize="22dp" />
 
+            <SearchView
+                android:id="@+id/toolbar_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:searchIcon="@drawable/search" />
+
             <ImageButton
                 android:id="@+id/btnRightMenu"
                 android:layout_width="24dp"
@@ -58,13 +64,8 @@
                 android:backgroundTint="@android:color/transparent"
                 android:padding="0dp"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/action_icon" />
+                app:srcCompat="@drawable/home_black_icon" />
 
-            <SearchView
-                android:id="@+id/toolbar_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:searchIcon="@drawable/search" />
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>

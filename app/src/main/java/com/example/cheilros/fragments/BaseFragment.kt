@@ -101,6 +101,12 @@ open class BaseFragment : Fragment() {
 
         println("fragmentLabel: $fragmentLabel")
         try {
+
+            //region Add Action btn in screens
+            arguments?.getString("StoreName")?.let { configureToolbar(it, true, false, true) }
+            //endregion
+
+
             if (fragmentLabel == "dashboard") {
                 configureToolbar(settingData.filter { it.fixedLabelName == "Dashbord_Title" }
                     .get(0).labelName)
@@ -127,16 +133,16 @@ open class BaseFragment : Fragment() {
                 configureToolbar(settingData.filter { it.fixedLabelName == "MenuTitle6" }
                     .get(0).labelName, true, false)
             } else if (fragmentLabel == "activity_detail") {
-                arguments?.getString("StoreName")?.let { configureToolbar(it, true) }
+                arguments?.getString("StoreName")?.let { configureToolbar(it, true, false, true) }
             } else if (fragmentLabel == "training_list" ) {
-                configureToolbar("Training Type", true)
+                configureToolbar("Training Type", true, false, true)
             }else if (fragmentLabel == "training_stores" ) {
-                configureToolbar("Training Stores", true)
+                configureToolbar("Training Stores", true, false, true)
             } else if (fragmentLabel == "display_count_detail") {
-                arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
+                arguments?.getString("StoreName")?.let { configureToolbar(it, true, true, true) }
                 //configureToolbar("Display", true, true)
             } else if (fragmentLabel == "task_deployment" || fragmentLabel == "activity" || fragmentLabel == "installation" || fragmentLabel == "installation_main" || fragmentLabel == "price_detail" || fragmentLabel == "sales_detail" || fragmentLabel == "stock_detail") {
-                arguments?.getString("StoreName")?.let { configureToolbar(it, true, true) }
+                arguments?.getString("StoreName")?.let { configureToolbar(it, true, true,true) }
             } else if (fragmentLabel == "training" || fragmentLabel == "installation_main" || fragmentLabel == "activity_category" || fragmentLabel == "store_view" || fragmentLabel == "activity" || fragmentLabel == "task_deployment" || fragmentLabel == "display_count" || fragmentLabel == "installation" || fragmentLabel == "training_list" ) {
                 val callback =
                     requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
@@ -195,7 +201,8 @@ open class BaseFragment : Fragment() {
     fun configureToolbar(
         title: String,
         isBackHandle: Boolean = false,
-        isSearchHandle: Boolean = false
+        isSearchHandle: Boolean = false,
+        isActionBtnHandle: Boolean = false
     ) {
         println("configureToolbar")
         var activity = requireActivity()
@@ -225,8 +232,21 @@ open class BaseFragment : Fragment() {
                 println("search")
             }
         } else {
-            activity.btnRightMenu.visibility = View.INVISIBLE
+
             activity.toolbar_search.visibility = View.GONE
+        }
+
+        if (isActionBtnHandle) {
+            activity.btnRightMenu.visibility = View.VISIBLE
+            activity.btnRightMenu.setOnClickListener {
+                try {
+                    findNavController().navigate(R.id.dashboardFragment)
+                } catch (ex: Exception) {
+
+                }
+            }
+        }else{
+            activity.btnRightMenu.visibility = View.GONE
         }
 
     }

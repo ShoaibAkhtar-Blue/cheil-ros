@@ -16,7 +16,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 17
-        versionName "1.5.42"
+        versionName "1.5.43"
 
         multiDexEnabled true
 

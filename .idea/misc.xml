@@ -4,7 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Burhan/Projects/Android/SOLHUT/app/src/main/res/drawable/border_grey.xml" value="0.34444444444444444" />
-        <entry key="..\:/Burhan/Projects/Android/SOLHUT/app/src/main/res/layout/activity_new_dashboard.xml" value="0.21510416666666668" />
+        <entry key="..\:/Burhan/Projects/Android/SOLHUT/app/src/main/res/layout/activity_new_dashboard.xml" value="0.25" />
         <entry key="..\:/Burhan/Projects/Android/SOLHUT/app/src/main/res/layout/dialog_assets.xml" value="0.21145833333333333" />
         <entry key="..\:/Burhan/Projects/Android/SOLHUT/app/src/main/res/layout/dialog_barcode.xml" value="0.36615384615384616" />
         <entry key="..\:/Burhan/Projects/Android/SOLHUT/app/src/main/res/layout/dialog_barcode_input.xml" value="0.36615384615384616" />
@@ -104,7 +104,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
