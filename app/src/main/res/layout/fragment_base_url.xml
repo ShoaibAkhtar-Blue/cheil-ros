@@ -67,6 +67,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            android:visibility="gone"
             android:id="@+id/menu"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
@@ -81,6 +82,11 @@
                 android:inputType="none" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btnLanguage"
+            style="@style/ButtonList"
+            android:text="Select Language" />
 
         <Button
             android:id="@+id/btnSave"

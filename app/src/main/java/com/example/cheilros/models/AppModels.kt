@@ -549,6 +549,12 @@ class AppSettingData(
     val FixedLabelName: String,
     val ActiveStatus: Int
 )
+
+class AppLanguagesModel(val status: Int, val data: List<AppLanguagesData>)
+class AppLanguagesData(
+    val LanguageID: Int,
+    val Language: String
+)
 //endregion
 
 class CheckInOutModel(val status: Int)
@@ -673,6 +679,12 @@ class ChannelModel(val status: Int, val data: List<ChannelData>)
 class ChannelData(
     val ChannelID: Int,
     val ChannelName: String
+)
+class DeploymentReasonModel(val status: Int, val data: List<DeploymentReasonData>)
+class DeploymentReasonData(
+    val DeploymentReasonID: Int,
+    val DeploymentReason: String,
+    val ActiveStatus: Int
 )
 
 class ChannelTypeModel(val status: Int, val data: List<ChannelTypeData>)

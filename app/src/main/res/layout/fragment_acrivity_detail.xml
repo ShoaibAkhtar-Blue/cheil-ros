@@ -113,6 +113,11 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
                             </RelativeLayout>
                         </LinearLayout>
 
+                        <Button
+                            android:id="@+id/btnDeploymentReason"
+                            style="@style/ButtonList"
+                            android:text="Select Deployment Reason" />
+
                         <EditText
                             android:id="@+id/txtBrandDescription"
                             android:layout_width="match_parent"
@@ -123,6 +128,7 @@ tools:context=".fragments.storeview.AcrivityDetailFragment">
                             android:hint="Description"
                             android:inputType="textMultiLine"
                             android:padding="8dp" />
+
                         <EditText
                             android:id="@+id/txtBrandQuantity"
                             android:layout_width="match_parent"

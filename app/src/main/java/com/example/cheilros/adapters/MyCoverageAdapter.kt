@@ -804,7 +804,7 @@ class MyCoverageAdapter(
                 if (charSearch.isEmpty()) {
                     filterList = itemList as ArrayList<MyCoverageData>
                 } else {
-                    if (filterList.size > 0) {
+                    //if (filterList.size > 0) {
                         val resultList = ArrayList<MyCoverageData>()
                         for (row in itemList) {
                             if (row.StoreName.toLowerCase().contains(
@@ -816,7 +816,7 @@ class MyCoverageAdapter(
                             }
                         }
                         filterList = resultList
-                    }
+                    //}
                 }
                 val filterResults = FilterResults()
                 filterResults.values = filterList

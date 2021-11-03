@@ -2,6 +2,7 @@ package com.example.cheilros.fragments.storeview
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,6 +21,11 @@ import com.example.cheilros.adapters.BarcodeAdapter
 import com.example.cheilros.adapters.CapturedPictureAdapter
 import com.example.cheilros.fragments.BaseFragment
 import com.example.cheilros.helpers.CoreHelperMethods
+import com.example.cheilros.models.ChannelData
+import com.example.cheilros.models.ChannelModel
+import com.example.cheilros.models.DeploymentReasonData
+import com.example.cheilros.models.DeploymentReasonModel
+import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.dialog_barcode.*
@@ -28,6 +34,7 @@ import kotlinx.android.synthetic.main.fragment_acrivity_detail.*
 import kotlinx.android.synthetic.main.fragment_acrivity_detail.txtStoreSubName
 import kotlinx.android.synthetic.main.fragment_acrivity_detail.view.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
+import kotlinx.android.synthetic.main.fragment_my_coverage.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -45,6 +52,10 @@ class AcrivityDetailFragment : BaseFragment() {
 
     var capturedPicturesList: MutableList<String> = arrayListOf()
     var capturedPicturesListAfter: MutableList<String> = arrayListOf()
+
+    lateinit var reasonData: List<DeploymentReasonData>
+
+    var defaultReason = "0"
 
 
     @SuppressLint("RestrictedApi")
@@ -79,8 +90,10 @@ class AcrivityDetailFragment : BaseFragment() {
                 println("callback")
                 // setup the alert builder
                 val builder: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
-                builder.setTitle(settingData.filter { it.fixedLabelName == "General_CloseSession" }.get(0).labelName)
-                builder.setMessage(settingData.filter { it.fixedLabelName == "General_CloseSessionMessage" }.get(0).labelName)
+                builder.setTitle(settingData.filter { it.fixedLabelName == "General_CloseSession" }
+                    .get(0).labelName)
+                builder.setMessage(settingData.filter { it.fixedLabelName == "General_CloseSessionMessage" }
+                    .get(0).labelName)
 
                 // add the buttons
 
@@ -110,6 +123,36 @@ class AcrivityDetailFragment : BaseFragment() {
         txtStoreSubName.text = arguments?.getString("ActivityTypeName")
         txtTitleHeader.text = arguments?.getString("ActivityCategoryName")
 
+        fetchDeploymentReason("${CSP.getData("base_url")}/Webservice.asmx/DeploymentReason")
+
+        btnDeploymentReason.setOnClickListener {
+            // setup the alert builder
+            val builder: android.app.AlertDialog.Builder =
+                android.app.AlertDialog.Builder(requireContext())
+            builder.setTitle("")
+
+            // add a list
+
+            // add a list
+            var channels: Array<String> = arrayOf()
+            for (c in reasonData) {
+                channels += c.DeploymentReason
+            }
+
+            builder.setItems(channels,
+                DialogInterface.OnClickListener { dialog, which ->
+                    println(reasonData[which].DeploymentReasonID)
+                    defaultReason = reasonData[which].DeploymentReasonID.toString()
+                    btnDeploymentReason.text = "${reasonData[which].DeploymentReason}"
+                })
+
+            // create and show the alert dialog
+
+            // create and show the alert dialog
+            val dialog: android.app.AlertDialog = builder.create()
+            dialog.show()
+        }
+
         if (arguments?.getInt("ActivityTypeID")!! > 20) {
             LLScanBarcode.visibility = View.VISIBLE
             LLAfter.visibility = View.VISIBLE
@@ -138,17 +181,19 @@ class AcrivityDetailFragment : BaseFragment() {
         }
 
         try {
-            txtBarcodeCount.text = if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) "0" else {
-                CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.size.toString()
-            }
+            txtBarcodeCount.text =
+                if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) "0" else {
+                    CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.size.toString()
+                }
         } catch (ex: Exception) {
             txtBarcodeCount.text = "0"
         }
 
         RLbarcode.setOnClickListener {
 
-            if(!CSP.getData("ActivityDetail_BARCODE_SET").equals("")){
-                var savedBarcodes = CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.toTypedArray()
+            if (!CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
+                var savedBarcodes =
+                    CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.toTypedArray()
                 //var savedBarcodes = "abc, xyz"?.split(",").toTypedArray()
 
                 val li = LayoutInflater.from(requireContext())
@@ -174,7 +219,8 @@ class AcrivityDetailFragment : BaseFragment() {
                     if (CSP.getData("ActivityDetail_BARCODE_SET").equals("")) {
                         txtBarcodeCount.text = "0"
                     } else {
-                        var barcodeCount = CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.size
+                        var barcodeCount =
+                            CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.size
                         txtBarcodeCount.text = barcodeCount.toString()
 
                     }
@@ -235,7 +281,8 @@ class AcrivityDetailFragment : BaseFragment() {
                         )
                         CSP.delData("activity_barcodes")
 
-                        var barcodeCount = CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.size
+                        var barcodeCount =
+                            CSP.getData("ActivityDetail_BARCODE_SET")?.split(",")?.size
                         txtBarcodeCount.text = barcodeCount.toString()
 
                     }
@@ -344,12 +391,12 @@ class AcrivityDetailFragment : BaseFragment() {
                     )
                 }
 
-                if(capturedPicturesList.size == 0)
-                    builder.addFormDataPart("BeforeActivityPicture","")
-                if(capturedPicturesListAfter.size == 0)
-                    builder.addFormDataPart("AfterActivityPicture","")
-                if(CSP.getData("ActivityDetail_BARCODE_SET").toString() == "")
-                    builder.addFormDataPart("SerialNumbers","")
+                if (capturedPicturesList.size == 0)
+                    builder.addFormDataPart("BeforeActivityPicture", "")
+                if (capturedPicturesListAfter.size == 0)
+                    builder.addFormDataPart("AfterActivityPicture", "")
+                if (CSP.getData("ActivityDetail_BARCODE_SET").toString() == "")
+                    builder.addFormDataPart("SerialNumbers", "")
 
                 /*if(!CSP.getData("ActivityDetail_SESSION_IMAGE_SET").equals("")){
                     val imgPaths = CSP.getData("ActivityDetail_SESSION_IMAGE_SET")?.split(",")
@@ -369,15 +416,16 @@ class AcrivityDetailFragment : BaseFragment() {
                          .addFormDataPart("SerialNumbers", CSP.getData("activity_barcodes").toString())
                          .build()*/
                 val requestBody = builder.build()
-                println("${CSP.getData("base_url")}/OperMarketActivities.asmx/MarketActivityDetails?TeamMemberID=${
-                    CSP.getData(
-                        "user_id"
-                    )
-                }&ActivityTypeID=${arguments?.getInt("ActivityTypeID")}&ActivityCategoryID=${
-                    arguments?.getInt(
-                        "ActivityCategoryID"
-                    )
-                }&StoreID=${arguments?.getInt("StoreID")}&BrandID=1&ActivityDescription=${txtBrandDescription.text}&StatusID=1&Quantity=${txtBrandQuantity.text}"
+                println(
+                    "${CSP.getData("base_url")}/OperMarketActivities.asmx/MarketActivityDetails?TeamMemberID=${
+                        CSP.getData(
+                            "user_id"
+                        )
+                    }&ActivityTypeID=${arguments?.getInt("ActivityTypeID")}&ActivityCategoryID=${
+                        arguments?.getInt(
+                            "ActivityCategoryID"
+                        )
+                    }&StoreID=${arguments?.getInt("StoreID")}&BrandID=1&ActivityDescription=${txtBrandDescription.text}&StatusID=1&Quantity=${txtBrandQuantity.text}&DeploymentReasonID=${defaultReason}"
                 )
                 val request: Request = Request.Builder()
                     .url(
@@ -389,7 +437,7 @@ class AcrivityDetailFragment : BaseFragment() {
                             arguments?.getInt(
                                 "ActivityCategoryID"
                             )
-                        }&StoreID=${arguments?.getInt("StoreID")}&BrandID=1&ActivityDescription=${txtBrandDescription.text}&StatusID=1&Quantity=${txtBrandQuantity.text}"
+                        }&StoreID=${arguments?.getInt("StoreID")}&BrandID=1&ActivityDescription=${txtBrandDescription.text}&StatusID=1&Quantity=${txtBrandQuantity.text}&DeploymentReasonID=${defaultReason}"
                     )
                     .post(requestBody)
                     .build()
@@ -523,6 +571,79 @@ class AcrivityDetailFragment : BaseFragment() {
 
             }
         }
+    }
+
+    fun fetchDeploymentReason(url: String) {
+        mainLoadingLayout.setState(LoadingLayout.LOADING)
+
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                requireActivity().runOnUiThread(java.lang.Runnable {
+                    activity?.let { it1 ->
+                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                            .setTitle("Error!!")
+                            .setMessage(e.message.toString())
+                            .sneakError()
+                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                    }
+                })
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body?.string()
+                println(body)
+                try {
+                    val gson = GsonBuilder().create()
+                    val apiData = gson.fromJson(body, DeploymentReasonModel::class.java)
+                    println(apiData.status)
+                    if (apiData.status == 200) {
+                        reasonData = apiData.data
+                        try {
+                            requireActivity().runOnUiThread(java.lang.Runnable {
+                                activity?.let { it1 ->
+                                    mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                                    try {
+                                        //btnDeploymentReason.text = reasonData[0].DeploymentReason
+                                    } catch (ex: Exception) {
+
+                                    }
+                                }
+                            })
+                        } catch (ex: Exception) {
+//                        requireActivity().runOnUiThread(java.lang.Runnable {
+//                            Toast.makeText(context, "Error ${ex.message}", Toast.LENGTH_SHORT).show()
+//                        })
+                        }
+
+                    } else {
+                        requireActivity().runOnUiThread(java.lang.Runnable {
+                            activity?.let { it1 ->
+                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                    .setTitle("Error!!")
+                                    .setMessage("Data not fetched.")
+                                    .sneakWarning()
+                                mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                            }
+                        })
+                    }
+                } catch (ex: Exception) {
+                    requireActivity().runOnUiThread(java.lang.Runnable {
+                        activity?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Error!!")
+                                .setMessage(ex.message.toString())
+                                .sneakError()
+                        }
+                        findNavController().popBackStack()
+                    })
+                }
+            }
+        })
     }
 
 }

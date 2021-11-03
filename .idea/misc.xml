@@ -41,6 +41,7 @@
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/drawable/table_border_light.xml" value="0.27685185185185185" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/drawable/top_bottom_border.xml" value="0.22314814814814815" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/activity_barcode.xml" value="0.16953125" />
+        <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/activity_main.xml" value="0.32037037037037036" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/activity_new_dashboard.xml" value="0.16953125" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/dialog_add_store_picture.xml" value="0.2298611111111111" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/dialog_add_visit.xml" value="0.22152777777777777" />
@@ -56,6 +57,7 @@
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/dialog_training_attendee.xml" value="0.22152777777777777" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_acrivity_detail.xml" value="0.24166666666666667" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_barcode.xml" value="0.2984375" />
+        <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_base_url.xml" value="0.23541666666666666" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_dashboard.xml" value="0.33" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_display_count_detail.xml" value="0.21458333333333332" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_field_users.xml" value="0.2046875" />
