@@ -123,44 +123,48 @@ class AcrivityDetailFragment : BaseFragment() {
         txtStoreSubName.text = arguments?.getString("ActivityTypeName")
         txtTitleHeader.text = arguments?.getString("ActivityCategoryName")
 
-        fetchDeploymentReason("${CSP.getData("base_url")}/Webservice.asmx/DeploymentReason")
 
-        btnDeploymentReason.setOnClickListener {
-            // setup the alert builder
-            val builder: android.app.AlertDialog.Builder =
-                android.app.AlertDialog.Builder(requireContext())
-            builder.setTitle("")
-
-            // add a list
-
-            // add a list
-            var channels: Array<String> = arrayOf()
-            for (c in reasonData) {
-                channels += c.DeploymentReason
-            }
-
-            builder.setItems(channels,
-                DialogInterface.OnClickListener { dialog, which ->
-                    println(reasonData[which].DeploymentReasonID)
-                    defaultReason = reasonData[which].DeploymentReasonID.toString()
-                    btnDeploymentReason.text = "${reasonData[which].DeploymentReason}"
-                })
-
-            // create and show the alert dialog
-
-            // create and show the alert dialog
-            val dialog: android.app.AlertDialog = builder.create()
-            dialog.show()
-        }
 
         if (arguments?.getInt("ActivityTypeID")!! > 20) {
             LLScanBarcode.visibility = View.VISIBLE
             LLAfter.visibility = View.VISIBLE
             ActivityScreen_After.visibility = View.VISIBLE
             ActivityScreen_Before.visibility = View.VISIBLE
+
+
+            fetchDeploymentReason("${CSP.getData("base_url")}/Webservice.asmx/DeploymentReason")
+
+            btnDeploymentReason.setOnClickListener {
+                // setup the alert builder
+                val builder: android.app.AlertDialog.Builder =
+                    android.app.AlertDialog.Builder(requireContext())
+                builder.setTitle("")
+
+                // add a list
+
+                // add a list
+                var channels: Array<String> = arrayOf()
+                for (c in reasonData) {
+                    channels += c.DeploymentReason
+                }
+
+                builder.setItems(channels,
+                    DialogInterface.OnClickListener { dialog, which ->
+                        println(reasonData[which].DeploymentReasonID)
+                        defaultReason = reasonData[which].DeploymentReasonID.toString()
+                        btnDeploymentReason.text = "${reasonData[which].DeploymentReason}"
+                    })
+
+                // create and show the alert dialog
+
+                // create and show the alert dialog
+                val dialog: android.app.AlertDialog = builder.create()
+                dialog.show()
+            }
         } else {
             ActivityScreen_Before.visibility = View.GONE
             LLScanBarcode.visibility = View.INVISIBLE
+            btnDeploymentReason.visibility = View.GONE
         }
 
         try {
@@ -608,7 +612,7 @@ class AcrivityDetailFragment : BaseFragment() {
                                 activity?.let { it1 ->
                                     mainLoadingLayout.setState(LoadingLayout.COMPLETE)
                                     try {
-                                        //btnDeploymentReason.text = reasonData[0].DeploymentReason
+                                        btnDeploymentReason.text = reasonData[0].DeploymentReason
                                     } catch (ex: Exception) {
 
                                     }
