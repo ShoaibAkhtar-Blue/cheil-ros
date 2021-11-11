@@ -402,6 +402,36 @@ class AcrivityDetailFragment : BaseFragment() {
                 if (CSP.getData("ActivityDetail_BARCODE_SET").toString() == "")
                     builder.addFormDataPart("SerialNumbers", "")
 
+
+                if(CSP.getData("Task_Before") == "Y" && capturedPicturesList.size == 0){
+                    requireActivity().runOnUiThread {
+                        activity?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Warning!!")
+                                .setMessage("Please take atleast one Before Image")
+                                .sneakWarning()
+                        }
+                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                    }
+                    return@setOnClickListener
+                }
+
+
+                if(CSP.getData("Task_After") == "Y" && capturedPicturesListAfter.size == 0 && arguments?.getInt("ActivityTypeID")!! > 20){
+                    requireActivity().runOnUiThread {
+                        activity?.let { it1 ->
+                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                .setTitle("Warning!!")
+                                .setMessage("Please take atleast one After Image")
+                                .sneakWarning()
+                        }
+                        mainLoadingLayout.setState(LoadingLayout.COMPLETE)
+                    }
+
+                    return@setOnClickListener
+                }
+
+
                 /*if(!CSP.getData("ActivityDetail_SESSION_IMAGE_SET").equals("")){
                     val imgPaths = CSP.getData("ActivityDetail_SESSION_IMAGE_SET")?.split(",")
                     if (imgPaths != null) {

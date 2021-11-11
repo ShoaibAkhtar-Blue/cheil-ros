@@ -1,6 +1,5 @@
 package com.example.cheilros.fragments.storeview
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.DialogInterface
@@ -16,7 +15,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
-import com.example.cheilros.adapters.SalesCurrentWeekAdapter
 import com.example.cheilros.adapters.SalesDetailAdapter
 import com.example.cheilros.adapters.SalesDetailCurrentWeekAdapter
 import com.example.cheilros.fragments.BaseFragment
@@ -29,10 +27,13 @@ import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreN
 import kotlinx.android.synthetic.main.fragment_display_count_detail.btnProductCategory
 import kotlinx.android.synthetic.main.fragment_display_count_detail.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_display_count_detail.view.*
+import kotlinx.android.synthetic.main.fragment_display_count_detail.view.BrandHeading
+import kotlinx.android.synthetic.main.fragment_display_count_detail.view.btnProductCategory
 import kotlinx.android.synthetic.main.fragment_sales.*
 import kotlinx.android.synthetic.main.fragment_sales_detail.*
 import kotlinx.android.synthetic.main.fragment_sales_detail.btnDate
 import kotlinx.android.synthetic.main.fragment_sales_detail.rvCurrentWeek
+import kotlinx.android.synthetic.main.fragment_sales_detail.view.*
 import okhttp3.*
 import java.io.IOException
 import java.text.DateFormat
@@ -62,6 +63,9 @@ class SalesDetailFragment : BaseFragment() {
         val view = inflater.inflate(R.layout.fragment_sales_detail, container, false)
         //region Set Labels
         try {
+
+            view.SalesQty.text = settingData.filter { it.fixedLabelName == "Sale_Quantity" }.get(0).labelName
+            view.SalesValue.text = settingData.filter { it.fixedLabelName == "Sale_Value" }.get(0).labelName
 
             view.txtStoreName.text =
                 settingData.filter { it.fixedLabelName == "StoreMenu_DailySales" }
@@ -263,7 +267,8 @@ class SalesDetailFragment : BaseFragment() {
                                     apiData.data as MutableList<SalesDetailData>,
                                     ref,
                                     arguments,
-                                    btnDate.tag.toString()
+                                    btnDate.tag.toString(),
+                                    settingData
                                 )
                             rvSalesDetail.adapter = recylcerAdapter
                             mainLoadingLayoutCC.setState(LoadingLayout.COMPLETE)

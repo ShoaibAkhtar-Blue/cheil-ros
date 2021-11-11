@@ -62,14 +62,6 @@ class StockDetailFragment : BaseFragment() {
 
         //region Set Labels
         try {
-            view.txtStoreName.text =
-                settingData.filter { it.fixedLabelName == "StoreMenu_DailyStock" }
-                    .get(0).labelName + " / " + arguments?.getString("BrandName")
-            view.BrandHeading.text =
-                settingData.filter { it.fixedLabelName == "StoreMenu_DailyStock" }
-                    .get(0).labelName
-            view.btnProductCategory.text =
-                "${arguments?.getString("ProductCategoryName")}"
 
             view.SalesQty.text =
                 settingData.filter { it.fixedLabelName == "Stock_Column1" }
@@ -78,6 +70,15 @@ class StockDetailFragment : BaseFragment() {
             view.SalesValue.text =
                 settingData.filter { it.fixedLabelName == "Stock_Column2" }
                     .get(0).labelName
+
+            view.txtStoreName.text =
+                settingData.filter { it.fixedLabelName == "StoreMenu_DailyStock" }
+                    .get(0).labelName + " / " + arguments?.getString("BrandName")
+            view.BrandHeading.text =
+                settingData.filter { it.fixedLabelName == "StoreMenu_DailyStock" }
+                    .get(0).labelName
+            view.btnProductCategory.text =
+                "${arguments?.getString("ProductCategoryName")}"
 
             if (settingData.filter { it.fixedLabelName == "Stock_Column2" }[0].labelName == "")
                 view.SalesValue.visibility = View.GONE

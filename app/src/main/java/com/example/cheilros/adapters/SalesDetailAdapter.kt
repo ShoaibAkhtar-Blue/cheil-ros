@@ -14,10 +14,10 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.widget.doAfterTextChanged
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.data.AppSetting
 import com.example.cheilros.fragments.storeview.SalesDetailFragment
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.*
@@ -43,7 +43,8 @@ class SalesDetailAdapter(
     val itemList: MutableList<SalesDetailData>,
     val fragment: SalesDetailFragment,
     val arguments: Bundle?,
-    val selectedDate: CharSequence
+    val selectedDate: CharSequence,
+    val settingData: List<AppSetting>
 ) :
     RecyclerView.Adapter<SalesDetailAdapter.ViewHolder>(),
     Filterable {
@@ -130,6 +131,9 @@ class SalesDetailAdapter(
                 dialog.setContentView(promptsView)
                 dialog.setCancelable(false)
                 dialog.setCanceledOnTouchOutside(true)
+
+                dialog.SalesQty.text = settingData.filter { it.fixedLabelName == "Sale_Quantity" }[0].labelName
+                dialog.SalesValue.text = settingData.filter { it.fixedLabelName == "Sale_Value" }[0].labelName
 
                 //region Load Daily Sale Data
                 println("${CSP.getData("base_url")}/Sales.asmx/DailyMultipleSaleView?ProductID=${filterList[position].ProductID}&StoreID=${arguments?.getInt("StoreID").toString()}&SaleDate=${selectedDate}")
