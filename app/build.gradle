@@ -15,8 +15,8 @@ android {
         applicationId "com.cheil.ros"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 22
-        versionName "1.5.47"
+        versionCode 23
+        versionName "1.5.48"
 
         multiDexEnabled true
 

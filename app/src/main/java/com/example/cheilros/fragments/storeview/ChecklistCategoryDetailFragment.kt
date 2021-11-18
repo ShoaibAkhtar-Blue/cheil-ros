@@ -51,7 +51,7 @@ class ChecklistCategoryDetailFragment : BaseFragment() {
                 arguments?.getInt(
                     "ChecklistID"
                 ).toString()
-            }&StoreID=${arguments?.getInt("StoreID").toString()}"
+            }&StoreID=${arguments?.getInt("StoreID").toString()}&TeamMemberID=${CSP.getData("user_id")}"
         )
     }
 
