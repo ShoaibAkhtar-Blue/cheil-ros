@@ -2,6 +2,7 @@ package com.example.cheilros.adapters
 
 import android.Manifest
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Context.LOCATION_SERVICE
@@ -41,10 +42,13 @@ import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.ramotion.foldingcell.FoldingCell
 import kotlinx.android.synthetic.main.dialog_add_visit.*
+import kotlinx.android.synthetic.main.fragment_dashboard.*
 import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import kotlinx.android.synthetic.main.mycoverage_content_cell.view.*
 import okhttp3.*
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class JPAdapter(
@@ -419,6 +423,32 @@ class JPAdapter(
                                 dialog.setCancelable(false)
                                 dialog.setCanceledOnTouchOutside(true)
 
+                                val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+                                val currentDateAndTimeFormated: String = simpleDateFormat.format(Date())
+
+                                dialog.btnSelectedDate.text = currentDateAndTimeFormated
+
+                                dialog.btnSelectedDate.visibility = View.VISIBLE
+
+                                dialog.btnSelectedDate.setOnClickListener {
+                                    val calendar = Calendar.getInstance()
+                                    //getting current day,month and year.
+                                    val year = calendar.get(Calendar.YEAR)
+                                    val month = calendar.get(Calendar.MONTH)
+                                    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+                                    val datePickerDialog =
+                                        DatePickerDialog(
+                                            context, DatePickerDialog.OnDateSetListener
+                                            { view, year, monthOfYear, dayOfMonth ->
+                                                val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
+                                                dialog.btnSelectedDate.text = currentDate
+                                            }, year, month, day
+                                        )
+                                    datePickerDialog.datePicker.minDate = System.currentTimeMillis()
+                                    datePickerDialog.show()
+                                }
+
 
                                 dialog.txtTitle.text =
                                     settingData.filter { it.fixedLabelName == "JourneyPlan_Title" }
@@ -438,7 +468,7 @@ class JPAdapter(
                                     settingData.filter { it.fixedLabelName == "JourneyPlan_CancelSave" }
                                         .get(0).labelName
                                 dialog.btnAccept.setOnClickListener {
-                                    cancelJP("${CSP.getData("base_url")}/JourneyPlan.asmx/CancelVisit?VisitID=${itemData.VisitID}&Longitude=$lng&Latitude=$lat&Remarks=${dialog.etRemarks.text}")
+                                    cancelJP("${CSP.getData("base_url")}/JourneyPlan.asmx/CancelVisit?VisitID=${itemData.VisitID}&Longitude=$lng&Latitude=$lat&Remarks=${dialog.etRemarks.text}&PlanDate=${dialog.btnSelectedDate.text}")
                                     dialog.dismiss()
                                 }
                                 dialog.show()
@@ -576,6 +606,7 @@ class JPAdapter(
     }
 
     fun cancelJP(url: String) {
+        println(url)
         val request = Request.Builder()
             .url(url)
             .build()

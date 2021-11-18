@@ -67,7 +67,7 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         activity = requireActivity() as NewDashboardActivity
-        fetchAssetList("${CSP.getData("base_url")}/Asset.asmx/AssetList?StoreID=$StoreID")
+        fetchAssetList("${CSP.getData("base_url")}/Asset.asmx/AssetList?StoreID=$StoreID&TeamMemberID=${CSP.getData("user_id")}")
 
         if (CSP.getData("team_type_id")!!.toInt() <= 4)
             btnAddAsset.visibility = View.INVISIBLE
@@ -487,7 +487,7 @@ class StoreActiveAssetsFragment(val StoreID: Int?, val StoreName: String?) : Bas
                             CSP.delData("StoreAsset_SESSION_IMAGE")
                             CSP.delData("StoreAsset_SESSION_IMAGE_SET")
 
-                            fetchAssetList("${CSP.getData("base_url")}/Asset.asmx/AssetList?StoreID=$StoreID")
+                            fetchAssetList("${CSP.getData("base_url")}/Asset.asmx/AssetList?StoreID=$StoreID&TeamMemberID=${CSP.getData("user_id")}")
 
                             dialog.dismiss()
                         })

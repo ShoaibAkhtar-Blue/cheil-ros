@@ -125,7 +125,7 @@ class AcrivityDetailFragment : BaseFragment() {
 
 
 
-        if (arguments?.getInt("ActivityTypeID")!! > 20) {
+        if (arguments?.getInt("ActivityTypeID")!! > 20 && CSP.getData("OnlyBefore") == "Y") {
             LLScanBarcode.visibility = View.VISIBLE
             LLAfter.visibility = View.VISIBLE
             ActivityScreen_After.visibility = View.VISIBLE

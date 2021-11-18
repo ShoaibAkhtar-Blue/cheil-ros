@@ -115,7 +115,7 @@ class StoreViewFragment : BaseFragment() {
                 arguments?.getInt(
                     "StoreID"
                 ).toString()
-            }"
+            }&TeamMemberID=${CSP.getData("user_id")}"
         )
         //fetchRecentActivities("${CSP.getData("base_url")}/OperMarketActivities.asmx/ViewMarketActivityList?StoreID=${arguments?.getInt("StoreID").toString()}&ActivityCategoryID=0&ActivityTypeID=0&BrandID=0&TeamMemberID=${CSP.getData("user_id")}")
         fetchStoreInfo(
@@ -123,7 +123,7 @@ class StoreViewFragment : BaseFragment() {
                 arguments?.getInt(
                     "StoreID"
                 ).toString()
-            }"
+            }&TeamMemberID=${CSP.getData("user_id")}"
         )
 
         if (CSP.getData("team_type_id")!!.toInt() <= 4)

@@ -48,7 +48,7 @@ class StoreStatusFragment(val StoreID: Int?, val StoreName: String?) : BaseFragm
 
         //fetchChecklistanswer("${CSP.getData("base_url")}/Checklist.asmx/ChecklistAnswered?StoreID=$StoreID")
         //fetchInvestmentanswer("${CSP.getData("base_url")}/Storelist.asmx/StoreInvestmentElements?StoreID=${arguments?.getInt("StoreID")}")
-        fetchInvestment("${CSP.getData("base_url")}/Audit.asmx/InvestmentElement_AuditView?StoreID=$StoreID")
+        fetchInvestment("${CSP.getData("base_url")}/Audit.asmx/InvestmentElement_AuditView?StoreID=$StoreID&TeamMemberID=${CSP.getData("user_id")}")
 
 
         /*btnEditChecklist.setOnClickListener {
