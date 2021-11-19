@@ -125,12 +125,17 @@ class AcrivityDetailFragment : BaseFragment() {
 
 
 
-        if (arguments?.getInt("ActivityTypeID")!! > 20 && CSP.getData("OnlyBefore") == "Y") {
+        if (arguments?.getInt("ActivityTypeID")!! > 20) {
             LLScanBarcode.visibility = View.VISIBLE
             LLAfter.visibility = View.VISIBLE
             ActivityScreen_After.visibility = View.VISIBLE
             ActivityScreen_Before.visibility = View.VISIBLE
 
+            if(CSP.getData("OnlyBefore") == "Y"){
+                ActivityScreen_After.visibility = View.GONE
+                ActivityScreen_Before.visibility = View.INVISIBLE
+                LLAfter.visibility = View.GONE
+            }
 
             fetchDeploymentReason("${CSP.getData("base_url")}/Webservice.asmx/DeploymentReason")
 

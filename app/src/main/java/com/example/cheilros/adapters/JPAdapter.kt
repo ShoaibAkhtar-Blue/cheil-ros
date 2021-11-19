@@ -445,6 +445,26 @@ class JPAdapter(
                                                 dialog.btnSelectedDate.text = currentDate
                                             }, year, month, day
                                         )
+
+                                    // Max = current
+                                    val maxTime = calendar.timeInMillis
+
+                                    // Move day as first day of the month
+                                    //calendar.set(Calendar.MONTH, 1)
+                                    // Move "month" for previous one
+                                    calendar.add(Calendar.MONTH, 1)
+
+                                    //calendar.add(Calendar.DATE, 3);
+
+                                    // Min = time after changes
+                                    val minTime = calendar.timeInMillis
+
+                                    val calen = Calendar.getInstance()
+                                    calen[Calendar.MONTH] = calendar.get(Calendar.MONTH)
+                                    calen[Calendar.DAY_OF_MONTH] = calendar.get(Calendar.DAY_OF_MONTH)
+                                    calen[Calendar.YEAR] = calendar.get(Calendar.YEAR)
+
+                                    datePickerDialog.datePicker.maxDate = calen.timeInMillis
                                     datePickerDialog.datePicker.minDate = System.currentTimeMillis()
                                     datePickerDialog.show()
                                 }
