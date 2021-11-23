@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.cheilros.BuildConfig
 import com.example.cheilros.MainActivity
 import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
@@ -279,68 +280,87 @@ class DashboardFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
+
         try {
-            //TODO: Fetch Commented
-            val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
-            val currentDateAndTimeFormated: String = simpleDateFormat.format(Date())
 
-            btnFromDt.text = currentDateAndTimeFormated
-            btnToDt.text = currentDateAndTimeFormated
+            //Check Version Match
+            Log.i("Version:", "${BuildConfig.VERSION_NAME} - ${ CSP.getData("Version")}")
+            if(BuildConfig.VERSION_NAME != CSP.getData("Version")){
 
-            if(team_type.toInt() >= 9){
-                btnFromDt.setOnClickListener {
-                    //getting current day,month and year.
-                    val year = calendar.get(Calendar.YEAR)
-                    val month = calendar.get(Calendar.MONTH)
-                    val day = calendar.get(Calendar.DAY_OF_MONTH)
+                CSP.delData("user_id")
+                mUserDataViewModel.nukeTable()
 
-                    val datePickerDialog =
-                        DatePickerDialog(
-                            requireContext(), DatePickerDialog.OnDateSetListener
-                            { view, year, monthOfYear, dayOfMonth ->
-                                val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
-                                btnFromDt.text = currentDate
-                            }, year, month, day
-                        )
-                    datePickerDialog.show()
-                }
+                val intent = Intent(requireContext(), MainActivity::class.java)
 
-                btnToDt.setOnClickListener {
-                    //getting current day,month and year.
-                    val year = calendar.get(Calendar.YEAR)
-                    val month = calendar.get(Calendar.MONTH)
-                    val day = calendar.get(Calendar.DAY_OF_MONTH)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+                requireContext().startActivity(intent)
 
-                    val datePickerDialog =
-                        DatePickerDialog(
-                            requireContext(), DatePickerDialog.OnDateSetListener
-                            { view, year, monthOfYear, dayOfMonth ->
-                                val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
-                                btnToDt.text = currentDate
-                            }, year, month, day
-                        )
-                    datePickerDialog.show()
-                }
+                requireActivity().finish()
+            }else{
+                //TODO: Fetch Commented
+                val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+                val currentDateAndTimeFormated: String = simpleDateFormat.format(Date())
 
-                btnFilter.setOnClickListener {
-                    fetchAllDashboardData(
-                        "${CSP.getData("base_url")}/Dashboard.asmx/Dashboard_Cumulative?StoreID=0&ActivityCategoryID=0&ActivityTypeID=20&BrandID=0&TeamMemberID=${userData[0].memberID}&PerformanceMonth=0&PerformanceYear=0&TrendDate=${currentDateAndTimeFormated}&Status=1&ActivityDate=2021-01-01&TeamTypeID=${
-                            CSP.getData(
-                                "team_type_id"
+                btnFromDt.text = currentDateAndTimeFormated
+                btnToDt.text = currentDateAndTimeFormated
+
+                if(team_type.toInt() >= 9){
+                    btnFromDt.setOnClickListener {
+                        //getting current day,month and year.
+                        val year = calendar.get(Calendar.YEAR)
+                        val month = calendar.get(Calendar.MONTH)
+                        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+                        val datePickerDialog =
+                            DatePickerDialog(
+                                requireContext(), DatePickerDialog.OnDateSetListener
+                                { view, year, monthOfYear, dayOfMonth ->
+                                    val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
+                                    btnFromDt.text = currentDate
+                                }, year, month, day
                             )
-                        }&FromDate=${btnFromDt.text}&ToDate=${btnToDt.text}"
-                    )
+                        datePickerDialog.show()
+                    }
+
+                    btnToDt.setOnClickListener {
+                        //getting current day,month and year.
+                        val year = calendar.get(Calendar.YEAR)
+                        val month = calendar.get(Calendar.MONTH)
+                        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+                        val datePickerDialog =
+                            DatePickerDialog(
+                                requireContext(), DatePickerDialog.OnDateSetListener
+                                { view, year, monthOfYear, dayOfMonth ->
+                                    val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
+                                    btnToDt.text = currentDate
+                                }, year, month, day
+                            )
+                        datePickerDialog.show()
+                    }
+
+                    btnFilter.setOnClickListener {
+                        fetchAllDashboardData(
+                            "${CSP.getData("base_url")}/Dashboard.asmx/Dashboard_Cumulative?StoreID=0&ActivityCategoryID=0&ActivityTypeID=20&BrandID=0&TeamMemberID=${userData[0].memberID}&PerformanceMonth=0&PerformanceYear=0&TrendDate=${currentDateAndTimeFormated}&Status=1&ActivityDate=2021-01-01&TeamTypeID=${
+                                CSP.getData(
+                                    "team_type_id"
+                                )
+                            }&FromDate=${btnFromDt.text}&ToDate=${btnToDt.text}"
+                        )
+                    }
                 }
+
+
+                fetchAllDashboardData(
+                    "${CSP.getData("base_url")}/Dashboard.asmx/Dashboard_Cumulative?StoreID=0&ActivityCategoryID=0&ActivityTypeID=20&BrandID=0&TeamMemberID=${userData[0].memberID}&PerformanceMonth=0&PerformanceYear=0&TrendDate=${currentDateAndTimeFormated}&Status=1&ActivityDate=2021-01-01&TeamTypeID=${
+                        CSP.getData(
+                            "team_type_id"
+                        )
+                    }&FromDate=${btnFromDt.text}&ToDate=${btnToDt.text}"
+                )
             }
-
-
-            fetchAllDashboardData(
-                "${CSP.getData("base_url")}/Dashboard.asmx/Dashboard_Cumulative?StoreID=0&ActivityCategoryID=0&ActivityTypeID=20&BrandID=0&TeamMemberID=${userData[0].memberID}&PerformanceMonth=0&PerformanceYear=0&TrendDate=${currentDateAndTimeFormated}&Status=1&ActivityDate=2021-01-01&TeamTypeID=${
-                    CSP.getData(
-                        "team_type_id"
-                    )
-                }&FromDate=${btnFromDt.text}&ToDate=${btnToDt.text}"
-            )
         } catch (ex: Exception) {
 
         }

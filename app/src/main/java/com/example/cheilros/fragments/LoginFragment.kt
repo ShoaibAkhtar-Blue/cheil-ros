@@ -63,6 +63,13 @@ class LoginFragment : BaseFragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
+        if(BuildConfig.VERSION_NAME != CSP.getData("Version")){
+            view.txtWarning.text = "Please install new version v${CSP.getData("Version")}"
+            view.txtWarning.visibility = View.VISIBLE
+        }else{
+            view.txtWarning.visibility = View.GONE
+        }
+
 
         //Remove User Data & Permissions
         mUserDataViewModel.nukeTable()

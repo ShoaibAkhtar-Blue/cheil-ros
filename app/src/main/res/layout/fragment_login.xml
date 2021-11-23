@@ -90,6 +90,15 @@
             android:layout_height="wrap_content"
             android:text="Login" />
 
+        <TextView
+            android:id="@+id/txtWarning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="-"
+            android:textColor="@color/design_default_color_error" />
+
         <Button
             android:id="@+id/btnForgot"
             style="@style/Widget.MaterialComponents.Button.TextButton"

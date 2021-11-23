@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -391,8 +392,13 @@ class JourneyPlanFragment : BaseFragment() {
                                 )
                             }
 
+                            val sdf = SimpleDateFormat("yyyy-M-d")
+                            val strDate = sdf.parse(btnDate.tag.toString())
 
-                            val isCurrentDate: Boolean = currentDate.equals(btnDate.tag.toString())
+                            //val isCurrentDate: Boolean = currentDate.equals(btnDate.tag.toString())
+                            val isCurrentDate: Boolean = if (Date().before(strDate) || currentDate.equals(btnDate.tag.toString())) true else false
+                            Log.i("isCurrentDate", isCurrentDate.toString())
+                            //val isCurrentDate: Boolean = currentDateAndTime.
 
                             layoutManager = LinearLayoutManager(requireContext())
                             rvJourneyPlan.layoutManager = layoutManager
