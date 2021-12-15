@@ -1,30 +1,21 @@
 package com.example.cheilros.adapters
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
-import android.location.Criteria
 import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
-import android.os.Build
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.os.bundleOf
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +26,7 @@ import com.example.cheilros.fragments.MyCoverageFragment
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.CheckInOutModel
 import com.example.cheilros.models.MyCoverageData
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -42,7 +34,6 @@ import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.ramotion.foldingcell.FoldingCell
 import kotlinx.android.synthetic.main.mycoverage_content_cell.view.*
-import kotlinx.android.synthetic.main.mycoverage_title_cell.view.*
 import okhttp3.*
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -57,7 +48,8 @@ class MyCoverageAdapter(
     val latitude: String,
     val longitude: String,
     fragment: MyCoverageFragment,
-    val activity: NewDashboardActivity
+    val activity: NewDashboardActivity,
+    val fusedLocationClient: FusedLocationProviderClient
 ) : RecyclerView.Adapter<MyCoverageAdapter.ViewHolder>(), Filterable {
 
 
@@ -185,19 +177,20 @@ class MyCoverageAdapter(
         holder.item = item
     }
 
+    @SuppressLint("MissingPermission")
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
-        try{
+        try {
             val uLocation = activity.userLocation
             context?.let {
                 holder.item?.let { itemData ->
 
-                    if(CSP.getData("team_type_id")!!.toInt() <= 4){
+                    if (CSP.getData("team_type_id")!!.toInt() <= 4) {
                         holder.btnAccept.visibility = View.GONE
                         holder.btnLocUpdate.visibility = View.GONE
                     }
 
-                    if(CSP.getData("team_type_id")!!.toInt() >= 9){
+                    if (CSP.getData("team_type_id")!!.toInt() >= 9) {
                         holder.btnAccept.visibility = View.GONE
                         //holder.btnLocUpdate.visibility = View.GONE
                     }
@@ -216,13 +209,14 @@ class MyCoverageAdapter(
                     holder.txtRegion.text = itemData.RegionName
                     holder.txtAddress.text = itemData.Address
 
-                    try{
-                        if(settingData.filter { it.fixedLabelName == "StoreList_LocationUpdate" }[0].labelName == ""){
+                    try {
+                        if (settingData.filter { it.fixedLabelName == "StoreList_LocationUpdate" }[0].labelName == "") {
                             holder.btnLocUpdate.visibility = View.GONE
-                        }else{
-                            holder.btnLocUpdate.text = settingData.filter { it.fixedLabelName == "StoreList_LocationUpdate" }[0].labelName
+                        } else {
+                            holder.btnLocUpdate.text =
+                                settingData.filter { it.fixedLabelName == "StoreList_LocationUpdate" }[0].labelName
                         }
-                    }catch (ex: Exception){
+                    } catch (ex: Exception) {
                         holder.btnLocUpdate.visibility = View.GONE
                     }
 
@@ -233,7 +227,10 @@ class MyCoverageAdapter(
                         builder.setMessage("Are you Sure?")
 
                         builder.setPositiveButton("Yes") { dialog, which ->
-                            var locURL = "${CSP.getData("base_url")}/Activity.asmx/UpdateLocation?StoreID=${itemData.StoreID}&TeamMemberID=${CSP.getData("user_id")}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}"
+                            var locURL =
+                                "${CSP.getData("base_url")}/Activity.asmx/UpdateLocation?StoreID=${itemData.StoreID}&TeamMemberID=${
+                                    CSP.getData("user_id")
+                                }&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}"
                             println(locURL)
                             try {
                                 val request = Request.Builder()
@@ -257,7 +254,8 @@ class MyCoverageAdapter(
                                         println(body)
 
                                         val gson = GsonBuilder().create()
-                                        val apiData = gson.fromJson(body, CheckInOutModel::class.java)
+                                        val apiData =
+                                            gson.fromJson(body, CheckInOutModel::class.java)
                                         println(apiData.status)
                                         if (apiData.status == 200) {
                                             (context as Activity).runOnUiThread {
@@ -280,7 +278,7 @@ class MyCoverageAdapter(
                                         }
                                     }
                                 })
-                            }catch (ex: Exception){
+                            } catch (ex: Exception) {
 
                             }
                         }
@@ -290,7 +288,6 @@ class MyCoverageAdapter(
                         }
 
                         builder.show()
-
 
 
                     }
@@ -312,7 +309,7 @@ class MyCoverageAdapter(
                             settingData.filter { it.fixedLabelName == "StoreList_ViewButton" }
                                 .get(0).labelName
 
-                        if(CSP.getData("team_type_id")!!.toInt() >= 9){
+                        if (CSP.getData("team_type_id")!!.toInt() >= 9) {
                             holder.btnCancel.text = "Training"
                         }
                     } catch (ex: Exception) {
@@ -320,244 +317,270 @@ class MyCoverageAdapter(
                     }
 
                     holder.btnAccept.setOnClickListener {
-                        try {
 
-                            println("Location: ${uLocation.latitude.toDouble()}-${uLocation.longitude.toDouble()}")
-                            val myLocation = Location("")
+                        fusedLocationClient.lastLocation
+                            .addOnSuccessListener { location ->
+                                if (location != null) {
+                                    val lat = location.latitude
+                                    val lng = location.longitude
+                                    Log.d("getLastKnownLocation", "$lat-$lng")
 
-                            /*myLocation.latitude = 31.513813030475678
-                            myLocation.longitude = 74.34433225759757*/
+                                    try {
+                                        println("Location: ${location.latitude.toDouble()}-${location.longitude.toDouble()}")
+                                        val myLocation = Location("")
 
-
-                            myLocation.latitude = uLocation.latitude.toDouble()
-                            myLocation.longitude = uLocation.longitude.toDouble()
-
-                            lat = uLocation.latitude.toString()
-                            lng = uLocation.longitude.toString()
-
-                            val storeLocation = Location("")
-
-                            try {
-                                storeLocation.latitude = itemData.Longitude.toDouble()
-                                storeLocation.longitude = itemData.Latitude.toDouble()
-                            } catch (ex: Exception) {
-                                storeLocation.latitude = 0.0
-                                storeLocation.longitude = 0.0
-                            }
+                                        myLocation.latitude = 31.513813030475678
+                                        myLocation.longitude = 74.34433225759757
 
 
-                            val distanceInMeters: Float = myLocation.distanceTo(storeLocation)
-                            println("distanceInMeters: ${distanceInMeters} Location: $lat - $lng")
-                            //activity.getLocation()
+                                        myLocation.latitude = location.latitude.toDouble()
+                                        myLocation.longitude = location.longitude.toDouble()
+
+//                                        lat = uLocation.latitude.toString()
+//                                        lng = uLocation.longitude.toString()
+
+                                        val storeLocation = Location("")
+
+                                        try {
+                                            storeLocation.latitude = itemData.Longitude.toDouble()
+                                            storeLocation.longitude = itemData.Latitude.toDouble()
+                                        } catch (ex: Exception) {
+                                            storeLocation.latitude = 0.0
+                                            storeLocation.longitude = 0.0
+                                        }
 
 
-                            /*val builder = AlertDialog.Builder(context)
-                            builder.setMessage("ULocation:${uLocation.latitude.toDouble()} - ${uLocation.longitude.toDouble()} \n Your Location: $lat - $lng \n Store Location: ${itemData.Longitude.toDouble()} - ${itemData.Latitude.toDouble()} \n Distance: $distanceInMeters")
+                                        val distanceInMeters: Float =
+                                            myLocation.distanceTo(storeLocation)
+                                        println("distanceInMeters: ${distanceInMeters} Location: $lat - $lng")
+                                        //activity.getLocation()
 
-                            builder.setPositiveButton("Ok") { dialog, which ->
 
-                            }
+                                        /*val builder = AlertDialog.Builder(context)
+                                        builder.setMessage("ULocation:${location.latitude.toDouble()} - ${location.longitude.toDouble()} \n Your Location: $lat - $lng \n Store Location: ${itemData.Longitude.toDouble()} - ${itemData.Latitude.toDouble()} \n Distance: $distanceInMeters")
 
-                            builder.show()*/
+                                        builder.setPositiveButton("Ok") { dialog, which ->
 
-                            var minDistance = CSP.getData("LocationLimit")?.toDouble()
+                                        }
 
-                            if (minDistance!! >= 0) {
-                                println("LocationLimit: $lat-$lng")
-                                println(
-                                    "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
-                                        itemData.StoreID
-                                    }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=&Longitude=$lng&Latitude=$lat&Remarks=-"
-                                )
-                                if (distanceInMeters >= minDistance) {
-                                    println("distanceInMeters: Distance is greater")
-                                    (context as Activity).runOnUiThread {
-                                        context?.let { it1 ->
-                                            try {
-                                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                                    .setTitle(settingData.filter { it -> it.fixedLabelName == "General_OutOfRangeTitle" }[0].labelName)
-                                                    .setMessage(settingData.filter { it -> it.fixedLabelName == "General_OutOfRangeMessage" }[0].labelName)
-                                                    .sneakWarning()
-                                            } catch (ex: Exception) {
-                                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                                    .setTitle("Out of Range!!")
-                                                    .setMessage("Your Current Location is greater than $minDistance meters!")
-                                                    .sneakWarning()
+                                        builder.show()*/
+
+                                        var minDistance = CSP.getData("LocationLimit")?.toDouble()
+
+                                        if (minDistance!! >= 0) {
+                                            println("LocationLimit: $lat-$lng")
+                                            println(
+                                                "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
+                                                    itemData.StoreID
+                                                }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=&Longitude=$lng&Latitude=$lat&Remarks=-"
+                                            )
+                                            if (distanceInMeters >= minDistance) {
+                                                println("distanceInMeters: Distance is greater")
+                                                (context as Activity).runOnUiThread {
+                                                    context?.let { it1 ->
+                                                        try {
+                                                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                                                .setTitle(settingData.filter { it -> it.fixedLabelName == "General_OutOfRangeTitle" }[0].labelName)
+                                                                .setMessage(settingData.filter { it -> it.fixedLabelName == "General_OutOfRangeMessage" }[0].labelName)
+                                                                .sneakWarning()
+                                                        } catch (ex: Exception) {
+                                                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                                                .setTitle("Out of Range!!")
+                                                                .setMessage("Your Current Location is greater than $minDistance meters!")
+                                                                .sneakWarning()
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                if (itemData.VisitStatusID != 0) { // Checkout
+
+                                                    if (CSP.getData("CheckOut_Camera")
+                                                            .equals("Y")
+                                                    ) {
+                                                        CSP.saveData("fragName", "MyCoverage")
+                                                        CSP.saveData(
+                                                            "sess_store_id",
+                                                            itemData.StoreID.toString()
+                                                        )
+                                                        CSP.saveData(
+                                                            "sess_visit_status_id",
+                                                            itemData.VisitStatusID.toString()
+                                                        )
+                                                        CSP.saveData(
+                                                            "sess_visit_id",
+                                                            itemData.VisitStatusID.toString()
+                                                        )
+                                                        Navigation.findNavController(it)
+                                                            .navigate(R.id.action_myCoverageFragment_to_cameraActivity)
+                                                    } else {
+                                                        CSP.saveData(
+                                                            "sess_visit_status_id",
+                                                            itemData.VisitStatusID.toString()
+                                                        )
+                                                        CSP.saveData(
+                                                            "sess_visit_id",
+                                                            itemData.VisitStatusID.toString()
+                                                        )
+
+                                                        val simpleDateFormat =
+                                                            SimpleDateFormat("yyyy-M-d")
+                                                        val currentDateAndTime: String =
+                                                            simpleDateFormat.format(Date())
+
+                                                        println(
+                                                            "${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemData.VisitStatusID}&Longitude=$lng&Latitude=$lat&Remarks=-"
+                                                        )
+
+                                                        sendVisitRequest(
+                                                            "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
+                                                                itemData.StoreID
+                                                            }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${location.longitude.toString()}&Latitude=${location.latitude.toString()}&Remarks=-"
+                                                        )
+
+                                                        sendVisitRequest(
+                                                            "${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemData.VisitStatusID}&Longitude=$lng&Latitude=$lat&Remarks=-"
+                                                        )
+                                                    }
+                                                } else { // Checkin
+                                                    if (CSP.getData("CheckIn_Camera").equals("Y")) {
+                                                        CSP.saveData("fragName", "MyCoverage")
+                                                        CSP.saveData(
+                                                            "sess_store_id",
+                                                            itemData.StoreID.toString()
+                                                        )
+                                                        CSP.saveData(
+                                                            "sess_visit_status_id",
+                                                            itemData.VisitStatusID.toString()
+                                                        )
+                                                        Navigation.findNavController(it)
+                                                            .navigate(R.id.action_myCoverageFragment_to_cameraActivity)
+                                                    } else {
+                                                        CSP.saveData(
+                                                            "sess_visit_status_id",
+                                                            itemData.VisitStatusID.toString()
+                                                        )
+                                                        CSP.saveData(
+                                                            "sess_visit_id",
+                                                            itemData.VisitStatusID.toString()
+                                                        )
+
+                                                        val simpleDateFormat =
+                                                            SimpleDateFormat("yyyy-M-d")
+                                                        val currentDateAndTime: String =
+                                                            simpleDateFormat.format(Date())
+
+                                                        println(
+                                                            "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
+                                                                itemData.StoreID
+                                                            }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${location.longitude.toString()}&Latitude=${location.latitude.toString()}&Remarks=-"
+                                                        )
+
+                                                        sendVisitRequest(
+                                                            "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
+                                                                itemData.StoreID
+                                                            }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${location.longitude.toString()}&Latitude=${location.latitude.toString()}&Remarks=-"
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            println("Else")
+                                            if (itemData.VisitStatusID != 0) { // Checkout
+
+                                                if (CSP.getData("CheckOut_Camera").equals("Y")) {
+                                                    CSP.saveData("fragName", "MyCoverage")
+                                                    CSP.saveData(
+                                                        "sess_store_id",
+                                                        itemData.StoreID.toString()
+                                                    )
+                                                    CSP.saveData(
+                                                        "sess_visit_status_id",
+                                                        itemData.VisitStatusID.toString()
+                                                    )
+                                                    CSP.saveData(
+                                                        "sess_visit_id",
+                                                        itemData.VisitStatusID.toString()
+                                                    )
+                                                    Navigation.findNavController(it)
+                                                        .navigate(R.id.action_myCoverageFragment_to_cameraActivity)
+                                                } else {
+                                                    CSP.saveData(
+                                                        "sess_visit_status_id",
+                                                        itemData.VisitStatusID.toString()
+                                                    )
+                                                    CSP.saveData(
+                                                        "sess_visit_id",
+                                                        itemData.VisitStatusID.toString()
+                                                    )
+
+                                                    val simpleDateFormat =
+                                                        SimpleDateFormat("yyyy-M-d")
+                                                    val currentDateAndTime: String =
+                                                        simpleDateFormat.format(Date())
+                                                    sendVisitRequest(
+                                                        "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
+                                                            itemData.StoreID
+                                                        }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=$lng&Latitude=$lat&Remarks=-"
+                                                    )
+
+                                                    println(
+                                                        "${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemData.VisitStatusID}&Longitude=$lng&Latitude=$lat&Remarks=-"
+                                                    )
+
+                                                    sendVisitRequest(
+                                                        "${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemData.VisitStatusID}&Longitude=$lng&Latitude=$lat&Remarks=-"
+                                                    )
+                                                }
+                                            } else { // Checkin
+                                                println("Checkin")
+                                                if (CSP.getData("CheckIn_Camera").equals("Y")) {
+                                                    CSP.saveData("fragName", "MyCoverage")
+                                                    CSP.saveData(
+                                                        "sess_store_id",
+                                                        itemData.StoreID.toString()
+                                                    )
+                                                    CSP.saveData(
+                                                        "sess_visit_status_id",
+                                                        itemData.VisitStatusID.toString()
+                                                    )
+                                                    Navigation.findNavController(it)
+                                                        .navigate(R.id.action_myCoverageFragment_to_cameraActivity)
+                                                } else {
+                                                    CSP.saveData(
+                                                        "sess_visit_status_id",
+                                                        itemData.VisitStatusID.toString()
+                                                    )
+                                                    CSP.saveData(
+                                                        "sess_visit_id",
+                                                        itemData.VisitStatusID.toString()
+                                                    )
+
+                                                    val simpleDateFormat =
+                                                        SimpleDateFormat("yyyy-M-d")
+                                                    val currentDateAndTime: String =
+                                                        simpleDateFormat.format(Date())
+
+                                                    println(
+                                                        "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
+                                                            itemData.StoreID
+                                                        }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${location.longitude.toString()}&Latitude=${location.latitude.toString()}&Remarks=-"
+                                                    )
+
+                                                    sendVisitRequest(
+                                                        "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
+                                                            itemData.StoreID
+                                                        }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${location.longitude.toString()}&Latitude=${location.latitude.toString()}&Remarks=-"
+                                                    )
+                                                }
                                             }
                                         }
+                                    } catch (ex: Exception) {
+                                        Log.e("Error_", ex.message.toString())
                                     }
-                                } else {
-                                    if (itemData.VisitStatusID != 0) { // Checkout
 
-                                        if (CSP.getData("CheckOut_Camera").equals("Y")) {
-                                            CSP.saveData("fragName", "MyCoverage")
-                                            CSP.saveData(
-                                                "sess_store_id",
-                                                itemData.StoreID.toString()
-                                            )
-                                            CSP.saveData(
-                                                "sess_visit_status_id",
-                                                itemData.VisitStatusID.toString()
-                                            )
-                                            CSP.saveData(
-                                                "sess_visit_id",
-                                                itemData.VisitStatusID.toString()
-                                            )
-                                            Navigation.findNavController(it)
-                                                .navigate(R.id.action_myCoverageFragment_to_cameraActivity)
-                                        } else {
-                                            CSP.saveData(
-                                                "sess_visit_status_id",
-                                                itemData.VisitStatusID.toString()
-                                            )
-                                            CSP.saveData(
-                                                "sess_visit_id",
-                                                itemData.VisitStatusID.toString()
-                                            )
-
-                                            val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
-                                            val currentDateAndTime: String =
-                                                simpleDateFormat.format(Date())
-
-                                            println(
-                                                "${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemData.VisitStatusID}&Longitude=$lng&Latitude=$lat&Remarks=-"
-                                            )
-
-                                            /*sendVisitRequest(
-                                                "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
-                                                    itemData.StoreID
-                                                }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}&Remarks=-"
-                                            )*/
-
-                                            sendVisitRequest(
-                                                "${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemData.VisitStatusID}&Longitude=$lng&Latitude=$lat&Remarks=-"
-                                            )
-                                        }
-                                    } else { // Checkin
-                                        if (CSP.getData("CheckIn_Camera").equals("Y")) {
-                                            CSP.saveData("fragName", "MyCoverage")
-                                            CSP.saveData(
-                                                "sess_store_id",
-                                                itemData.StoreID.toString()
-                                            )
-                                            CSP.saveData(
-                                                "sess_visit_status_id",
-                                                itemData.VisitStatusID.toString()
-                                            )
-                                            Navigation.findNavController(it)
-                                                .navigate(R.id.action_myCoverageFragment_to_cameraActivity)
-                                        } else {
-                                            CSP.saveData(
-                                                "sess_visit_status_id",
-                                                itemData.VisitStatusID.toString()
-                                            )
-                                            CSP.saveData(
-                                                "sess_visit_id",
-                                                itemData.VisitStatusID.toString()
-                                            )
-
-                                            val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
-                                            val currentDateAndTime: String =
-                                                simpleDateFormat.format(Date())
-
-                                            println(
-                                                "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
-                                                    itemData.StoreID
-                                                }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}&Remarks=-"
-                                            )
-
-                                            sendVisitRequest(
-                                                "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
-                                                    itemData.StoreID
-                                                }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}&Remarks=-"
-                                            )
-                                        }
-                                    }
-                                }
-                            } else {
-                                println("Else")
-                                if (itemData.VisitStatusID != 0) { // Checkout
-
-                                    if (CSP.getData("CheckOut_Camera").equals("Y")) {
-                                        CSP.saveData("fragName", "MyCoverage")
-                                        CSP.saveData("sess_store_id", itemData.StoreID.toString())
-                                        CSP.saveData(
-                                            "sess_visit_status_id",
-                                            itemData.VisitStatusID.toString()
-                                        )
-                                        CSP.saveData(
-                                            "sess_visit_id",
-                                            itemData.VisitStatusID.toString()
-                                        )
-                                        Navigation.findNavController(it)
-                                            .navigate(R.id.action_myCoverageFragment_to_cameraActivity)
-                                    } else {
-                                        CSP.saveData(
-                                            "sess_visit_status_id",
-                                            itemData.VisitStatusID.toString()
-                                        )
-                                        CSP.saveData(
-                                            "sess_visit_id",
-                                            itemData.VisitStatusID.toString()
-                                        )
-
-                                        val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
-                                        val currentDateAndTime: String = simpleDateFormat.format(Date())
-                                        /*sendVisitRequest(
-                                            "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
-                                                itemData.StoreID
-                                            }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=$lng&Latitude=$lat&Remarks=-"
-                                        )*/
-
-                                        println(
-                                            "${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemData.VisitStatusID}&Longitude=$lng&Latitude=$lat&Remarks=-"
-                                        )
-
-                                        sendVisitRequest(
-                                            "${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemData.VisitStatusID}&Longitude=$lng&Latitude=$lat&Remarks=-"
-                                        )
-                                    }
-                                } else { // Checkin
-                                    println("Checkin")
-                                    if (CSP.getData("CheckIn_Camera").equals("Y")) {
-                                        CSP.saveData("fragName", "MyCoverage")
-                                        CSP.saveData("sess_store_id", itemData.StoreID.toString())
-                                        CSP.saveData(
-                                            "sess_visit_status_id",
-                                            itemData.VisitStatusID.toString()
-                                        )
-                                        Navigation.findNavController(it)
-                                            .navigate(R.id.action_myCoverageFragment_to_cameraActivity)
-                                    } else {
-                                        CSP.saveData(
-                                            "sess_visit_status_id",
-                                            itemData.VisitStatusID.toString()
-                                        )
-                                        CSP.saveData(
-                                            "sess_visit_id",
-                                            itemData.VisitStatusID.toString()
-                                        )
-
-                                        val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
-                                        val currentDateAndTime: String = simpleDateFormat.format(Date())
-
-                                        println(
-                                            "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
-                                                itemData.StoreID
-                                            }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}&Remarks=-"
-                                        )
-
-                                        sendVisitRequest(
-                                            "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
-                                                itemData.StoreID
-                                            }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${uLocation.longitude.toString()}&Latitude=${uLocation.latitude.toString()}&Remarks=-"
-                                        )
-                                    }
                                 }
                             }
-                        } catch (ex: Exception) {
-                            Log.e("Error_", ex.message.toString())
-                        }
+
                     }
 
                     holder.btnClose.setOnClickListener {
@@ -571,7 +594,7 @@ class MyCoverageAdapter(
                             "StoreName" to itemData.StoreName
                         )
 
-                        if(CSP.getData("team_type_id")!!.toInt() >= 9){
+                        if (CSP.getData("team_type_id")!!.toInt() >= 9) {
                             println("Location: ${uLocation.latitude.toDouble()}-${uLocation.longitude.toDouble()}")
                             val myLocation = Location("")
 
@@ -614,14 +637,20 @@ class MyCoverageAdapter(
                                             }
                                         }
                                     }
-                                }else{
+                                } else {
                                     Navigation.findNavController(it)
-                                        .navigate(R.id.action_myCoverageFragment_to_trainingFragment, bundle)
+                                        .navigate(
+                                            R.id.action_myCoverageFragment_to_trainingFragment,
+                                            bundle
+                                        )
                                 }
                             }
-                        }else{
+                        } else {
                             Navigation.findNavController(it)
-                                .navigate(R.id.action_myCoverageFragment_to_storeViewFragment, bundle)
+                                .navigate(
+                                    R.id.action_myCoverageFragment_to_storeViewFragment,
+                                    bundle
+                                )
                         }
                     }
                 }
@@ -643,14 +672,21 @@ class MyCoverageAdapter(
                                             itemData.Latitude.toDouble()
                                         )
                                         it.addMarker(
-                                            MarkerOptions().position(latLng).title(itemData.StoreName)
+                                            MarkerOptions().position(latLng)
+                                                .title(itemData.StoreName)
                                         )
-                                        it.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17.0f))
+                                        it.moveCamera(
+                                            CameraUpdateFactory.newLatLngZoom(
+                                                latLng,
+                                                17.0f
+                                            )
+                                        )
                                         it!!.setOnMapClickListener {
                                             try {
                                                 val uri =
                                                     "https://maps.google.com/maps?daddr=${itemData.Longitude},${itemData.Latitude}"
-                                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+                                                val intent =
+                                                    Intent(Intent.ACTION_VIEW, Uri.parse(uri))
                                                 intent.setPackage("com.google.android.apps.maps")
                                                 context.startActivity(intent)
                                             } catch (ex: Exception) {
@@ -665,7 +701,7 @@ class MyCoverageAdapter(
                     }
                 }
             }
-        }catch (ex: Exception){
+        } catch (ex: Exception) {
             (context as Activity).runOnUiThread {
                 context?.let { it1 ->
                     Sneaker.with(it1) // Activity, Fragment or ViewGroup
@@ -677,6 +713,7 @@ class MyCoverageAdapter(
             }
         }
     }
+
 
     private fun sendVisitRequest(url: String) {
 
@@ -805,17 +842,17 @@ class MyCoverageAdapter(
                     filterList = itemList as ArrayList<MyCoverageData>
                 } else {
                     //if (filterList.size > 0) {
-                        val resultList = ArrayList<MyCoverageData>()
-                        for (row in itemList) {
-                            if (row.StoreName.toLowerCase().contains(
-                                    constraint.toString().toLowerCase()
-                                ) || row.StoreCode.toLowerCase()
-                                    .contains(constraint.toString().toLowerCase())
-                            ) {
-                                resultList.add(row)
-                            }
+                    val resultList = ArrayList<MyCoverageData>()
+                    for (row in itemList) {
+                        if (row.StoreName.toLowerCase().contains(
+                                constraint.toString().toLowerCase()
+                            ) || row.StoreCode.toLowerCase()
+                                .contains(constraint.toString().toLowerCase())
+                        ) {
+                            resultList.add(row)
                         }
-                        filterList = resultList
+                    }
+                    filterList = resultList
                     //}
                 }
                 val filterResults = FilterResults()

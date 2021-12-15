@@ -127,6 +127,8 @@ class NewDashboardActivity : AppCompatActivity() {
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             Log.d(TAG, "onLocationChanged()")
+            userLocation = location
+            Log.d("onLocationChanged", "${location.latitude}-${location.longitude}")
             //userLocation = location
 //            posc_lat.text = ("lat: " + location.latitude)
 //            posc_long.text = ("lon:" + location.longitude)
@@ -325,7 +327,7 @@ class NewDashboardActivity : AppCompatActivity() {
                     val result = if (task.isSuccessful) {
                         val result: Location = task.result
                         userLocation = result
-                        "Location (success): ${result.latitude}, ${result.longitude}"
+                       print( "Location (success): ${result.latitude}, ${result.longitude}")
                     } else {
                         val exception = task.exception
                         "Location (failure): $exception"

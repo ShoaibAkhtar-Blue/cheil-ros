@@ -3,7 +3,6 @@ package com.example.cheilros.fragments
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.content.DialogInterface.OnMultiChoiceClickListener
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.location.Location
@@ -13,7 +12,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -26,7 +24,8 @@ import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.activities.customobj.EmptyRecyclerView
 import com.example.cheilros.adapters.MyCoverageAdapter
 import com.example.cheilros.models.*
-import com.google.android.play.core.internal.e
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
@@ -67,9 +66,14 @@ class MyCoverageFragment : BaseFragment() {
 
     var isLoc: Boolean = false
 
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity = requireActivity() as NewDashboardActivity
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext()!!)
     }
 
     override fun onCreateView(
@@ -103,11 +107,11 @@ class MyCoverageFragment : BaseFragment() {
             findNavController().popBackStack()
         }
 
-        try {
+        /*try {
             uLocation = activity.userLocation
         } catch (ex: Exception) {
 
-        }
+        }*/
 
 
 
@@ -116,6 +120,12 @@ class MyCoverageFragment : BaseFragment() {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        try {
+            uLocation = activity.userLocation
+        } catch (ex: Exception) {
+
+        }
 
         recyclerView = rvCoverage
         recyclerView.setHasFixedSize(true);
@@ -350,6 +360,23 @@ class MyCoverageFragment : BaseFragment() {
         //(activity as NewDashboardActivity).shouldGoBack = true
     }
 
+    @SuppressLint("MissingPermission")
+    fun getLastKnownLocation() {
+
+        var loc = null
+
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location->
+                if (location != null) {
+                    val lat = location.latitude
+                    val lng = location.longitude
+                    Log.d("getLastKnownLocation", "$lat-$lng")
+
+                }
+
+            }
+    }
+
     fun reloadCoverage() {
         println("reloadCoverage")
         fetchChannel("${CSP.getData("base_url")}/Webservice.asmx/ChannelList")
@@ -545,7 +572,8 @@ class MyCoverageFragment : BaseFragment() {
                                     latitude,
                                     longitude,
                                     this@MyCoverageFragment,
-                                    requireActivity() as NewDashboardActivity
+                                    requireActivity() as NewDashboardActivity,
+                                    fusedLocationClient
                                 )
                                 recyclerView.adapter = recylcerAdapter
 
