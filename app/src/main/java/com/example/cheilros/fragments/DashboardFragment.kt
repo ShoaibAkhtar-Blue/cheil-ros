@@ -411,6 +411,19 @@ class DashboardFragment : BaseFragment() {
             }
         }
 
+        cvOnSiteJP.setOnClickListener {
+            try {
+                (activity as NewDashboardActivity).userLocation
+                if (team_type != "7")
+                    findNavController().navigate(R.id.action_dashboardFragment_to_journeyPlanFragment)
+            } catch (ex: java.lang.Exception) {
+                Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                    .setTitle("Warning!!")
+                    .setMessage(settingData.filter { it.fixedLabelName == "Dashboard_GPSLocatingMessage" }[0].labelName)
+                    .sneakWarning()
+            }
+        }
+
         cvManagerTicket.setOnClickListener {
             try {
                 (activity as NewDashboardActivity).userLocation

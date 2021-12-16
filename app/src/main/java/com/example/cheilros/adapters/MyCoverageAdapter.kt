@@ -191,7 +191,7 @@ class MyCoverageAdapter(
                     }
 
                     if (CSP.getData("team_type_id")!!.toInt() >= 9) {
-                        holder.btnAccept.visibility = View.GONE
+                        //holder.btnAccept.visibility = View.GONE
                         //holder.btnLocUpdate.visibility = View.GONE
                     }
 
