@@ -182,6 +182,10 @@ class JPAdapter(
                     settingData.filter { it.fixedLabelName == "JourneyPlan_CheckinButton" }
                         .get(0).labelName
 
+                if (CSP.getData("team_type_id")!!.toInt() >= 9) {
+                    holder.btnCancel.text = "Training"
+                }
+
                 if (itemData.VisitStatusID === 1) {
                     holder.RLStatus.setBackgroundColor(
                         ContextCompat.getColor(
@@ -406,115 +410,178 @@ class JPAdapter(
 
                 holder.btnCancel.setOnClickListener {
                     try {
-                        if (itemData.VisitStatusID === 1) {
-
+                        val bundle = bundleOf(
+                            "StoreID" to itemData.StoreID,
+                            "StoreName" to itemData.StoreName
+                        )
+                        if (CSP.getData("team_type_id")!!.toInt() >= 9) {
                             val uLocation = activity.userLocation
                             println("Location: ${uLocation.latitude.toDouble()}-${uLocation.longitude.toDouble()}")
+                            val myLocation = Location("")
 
-                            if (CSP.getData("CancelVisit").equals("Y")) {
-                                var lat: String = uLocation.latitude.toString()
-                                var lng: String = uLocation.longitude.toString()
+                            myLocation.latitude = uLocation.latitude.toDouble()
+                            myLocation.longitude = uLocation.longitude.toDouble()
 
-                                val li = LayoutInflater.from(context)
-                                val promptsView: View = li.inflate(R.layout.dialog_add_visit, null)
+                            val lat = uLocation.latitude.toString()
+                            val lng = uLocation.longitude.toString()
 
-                                val dialog = Dialog(context)
-                                dialog.setContentView(promptsView)
-                                dialog.setCancelable(false)
-                                dialog.setCanceledOnTouchOutside(true)
+                            val storeLocation = Location("")
 
-                                val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
-                                val currentDateAndTimeFormated: String = simpleDateFormat.format(Date())
+                            try {
+                                storeLocation.latitude = itemData.Longitude.toDouble()
+                                storeLocation.longitude = itemData.Latitude.toDouble()
+                            } catch (ex: Exception) {
+                                storeLocation.latitude = 0.0
+                                storeLocation.longitude = 0.0
+                            }
 
-                                dialog.btnSelectedDate.text = currentDateAndTimeFormated
+                            val distanceInMeters: Float = myLocation.distanceTo(storeLocation)
+                            println("distanceInMeters: ${distanceInMeters} Location: $lat - $lng")
 
-                                dialog.btnSelectedDate.visibility = View.VISIBLE
-
-                                dialog.btnSelectedDate.setOnClickListener {
-                                    val calendar = Calendar.getInstance()
-                                    //getting current day,month and year.
-                                    val year = calendar.get(Calendar.YEAR)
-                                    val month = calendar.get(Calendar.MONTH)
-                                    val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-                                    val datePickerDialog =
-                                        DatePickerDialog(
-                                            context, DatePickerDialog.OnDateSetListener
-                                            { view, year, monthOfYear, dayOfMonth ->
-                                                val currentDate: String = "$year-${(monthOfYear + 1)}-$dayOfMonth"
-                                                dialog.btnSelectedDate.text = currentDate
-                                            }, year, month, day
-                                        )
-
-                                    // Max = current
-                                    val maxTime = calendar.timeInMillis
-
-                                    // Move day as first day of the month
-                                    //calendar.set(Calendar.MONTH, 1)
-                                    // Move "month" for previous one
-                                    calendar.add(Calendar.MONTH, 1)
-
-                                    //calendar.add(Calendar.DATE, 3);
-
-                                    // Min = time after changes
-                                    val minTime = calendar.timeInMillis
-
-                                    val calen = Calendar.getInstance()
-                                    calen[Calendar.MONTH] = calendar.get(Calendar.MONTH)
-                                    calen[Calendar.DAY_OF_MONTH] = calendar.get(Calendar.DAY_OF_MONTH)
-                                    calen[Calendar.YEAR] = calendar.get(Calendar.YEAR)
-
-                                    datePickerDialog.datePicker.maxDate = calen.timeInMillis
-                                    datePickerDialog.datePicker.minDate = System.currentTimeMillis()
-                                    datePickerDialog.show()
-                                }
-
-
-                                dialog.txtTitle.text =
-                                    settingData.filter { it.fixedLabelName == "JourneyPlan_Title" }
-                                        .get(0).labelName
-                                dialog.txtQuestion.text =
-                                    settingData.filter { it.fixedLabelName == "JourneyPlan_CancelTitle" }
-                                        .get(0).labelName
-
-                                dialog.btnCancel.text =
-                                    settingData.filter { it.fixedLabelName == "StoreList_PopupCancel" }
-                                        .get(0).labelName
-                                dialog.btnCancel.setOnClickListener {
-                                    dialog.dismiss()
-                                }
-
-                                dialog.btnAccept.text =
-                                    settingData.filter { it.fixedLabelName == "JourneyPlan_CancelSave" }
-                                        .get(0).labelName
-                                dialog.btnAccept.setOnClickListener {
-                                    cancelJP("${CSP.getData("base_url")}/JourneyPlan.asmx/CancelVisit?VisitID=${itemData.VisitID}&Longitude=$lng&Latitude=$lat&Remarks=${dialog.etRemarks.text}&PlanDate=${dialog.btnSelectedDate.text}")
-                                    dialog.dismiss()
-                                }
-                                dialog.show()
-
-                            } else {
-                                (context as Activity).runOnUiThread {
-                                    context?.let { it1 ->
-                                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                            .setTitle("Permission!!")
-                                            .setMessage("You Don't have permission rights for this action!")
-                                            .sneakWarning()
+                            var minDistance = CSP.getData("LocationLimit")?.toDouble()
+                            println("minDistance: ${minDistance}")
+                            if (minDistance!! >= 0) {
+                                if (distanceInMeters >= minDistance) {
+                                    println("distanceInMeters: Distance is greater")
+                                    (context as Activity).runOnUiThread {
+                                        context?.let { it1 ->
+                                            try {
+                                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                                    .setTitle(settingData.filter { it -> it.fixedLabelName == "General_OutOfRangeTitle" }[0].labelName)
+                                                    .setMessage(settingData.filter { it -> it.fixedLabelName == "General_OutOfRangeMessage" }[0].labelName)
+                                                    .sneakWarning()
+                                            } catch (ex: Exception) {
+                                                Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                                    .setTitle("Out of Range!!")
+                                                    .setMessage("Your Current Location is greater than $minDistance meters!")
+                                                    .sneakWarning()
+                                            }
+                                        }
                                     }
+                                } else {
+                                    Navigation.findNavController(it)
+                                        .navigate(
+                                            R.id.action_journeyPlanFragment_to_trainingFragment,
+                                            bundle
+                                        )
                                 }
                             }
-                        } else {
-                            // If type is view
-                            val bundle = bundleOf(
-                                "StoreID" to itemData.StoreID,
-                                "StoreName" to itemData.StoreName
-                            )
-                            Navigation.findNavController(it)
-                                .navigate(
-                                    R.id.action_journeyPlanFragment_to_storeViewFragment,
-                                    bundle
+                        }else{
+                            if (itemData.VisitStatusID === 1) {
+
+                                val uLocation = activity.userLocation
+                                println("Location: ${uLocation.latitude.toDouble()}-${uLocation.longitude.toDouble()}")
+
+                                if (CSP.getData("CancelVisit").equals("Y")) {
+                                    var lat: String = uLocation.latitude.toString()
+                                    var lng: String = uLocation.longitude.toString()
+
+                                    val li = LayoutInflater.from(context)
+                                    val promptsView: View = li.inflate(R.layout.dialog_add_visit, null)
+
+                                    val dialog = Dialog(context)
+                                    dialog.setContentView(promptsView)
+                                    dialog.setCancelable(false)
+                                    dialog.setCanceledOnTouchOutside(true)
+
+                                    val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+                                    val currentDateAndTimeFormated: String =
+                                        simpleDateFormat.format(Date())
+
+                                    dialog.btnSelectedDate.text = currentDateAndTimeFormated
+
+                                    dialog.btnSelectedDate.visibility = View.VISIBLE
+
+                                    dialog.btnSelectedDate.setOnClickListener {
+                                        val calendar = Calendar.getInstance()
+                                        //getting current day,month and year.
+                                        val year = calendar.get(Calendar.YEAR)
+                                        val month = calendar.get(Calendar.MONTH)
+                                        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+                                        val datePickerDialog =
+                                            DatePickerDialog(
+                                                context, DatePickerDialog.OnDateSetListener
+                                                { view, year, monthOfYear, dayOfMonth ->
+                                                    val currentDate: String =
+                                                        "$year-${(monthOfYear + 1)}-$dayOfMonth"
+                                                    dialog.btnSelectedDate.text = currentDate
+                                                }, year, month, day
+                                            )
+
+                                        // Max = current
+                                        val maxTime = calendar.timeInMillis
+
+                                        // Move day as first day of the month
+                                        //calendar.set(Calendar.MONTH, 1)
+                                        // Move "month" for previous one
+                                        calendar.add(Calendar.MONTH, 1)
+
+                                        //calendar.add(Calendar.DATE, 3);
+
+                                        // Min = time after changes
+                                        val minTime = calendar.timeInMillis
+
+                                        val calen = Calendar.getInstance()
+                                        calen[Calendar.MONTH] = calendar.get(Calendar.MONTH)
+                                        calen[Calendar.DAY_OF_MONTH] =
+                                            calendar.get(Calendar.DAY_OF_MONTH)
+                                        calen[Calendar.YEAR] = calendar.get(Calendar.YEAR)
+
+                                        datePickerDialog.datePicker.maxDate = calen.timeInMillis
+                                        datePickerDialog.datePicker.minDate = System.currentTimeMillis()
+                                        datePickerDialog.show()
+                                    }
+
+
+                                    dialog.txtTitle.text =
+                                        settingData.filter { it.fixedLabelName == "JourneyPlan_Title" }
+                                            .get(0).labelName
+                                    dialog.txtQuestion.text =
+                                        settingData.filter { it.fixedLabelName == "JourneyPlan_CancelTitle" }
+                                            .get(0).labelName
+
+                                    dialog.btnCancel.text =
+                                        settingData.filter { it.fixedLabelName == "StoreList_PopupCancel" }
+                                            .get(0).labelName
+                                    dialog.btnCancel.setOnClickListener {
+                                        dialog.dismiss()
+                                    }
+
+                                    dialog.btnAccept.text =
+                                        settingData.filter { it.fixedLabelName == "JourneyPlan_CancelSave" }
+                                            .get(0).labelName
+                                    dialog.btnAccept.setOnClickListener {
+                                        cancelJP("${CSP.getData("base_url")}/JourneyPlan.asmx/CancelVisit?VisitID=${itemData.VisitID}&Longitude=$lng&Latitude=$lat&Remarks=${dialog.etRemarks.text}&PlanDate=${dialog.btnSelectedDate.text}")
+                                        dialog.dismiss()
+                                    }
+                                    dialog.show()
+
+                                } else {
+                                    (context as Activity).runOnUiThread {
+                                        context?.let { it1 ->
+                                            Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                                .setTitle("Permission!!")
+                                                .setMessage("You Don't have permission rights for this action!")
+                                                .sneakWarning()
+                                        }
+                                    }
+                                }
+                            } else {
+                                // If type is view
+                                val bundle = bundleOf(
+                                    "StoreID" to itemData.StoreID,
+                                    "StoreName" to itemData.StoreName
                                 )
+                                Navigation.findNavController(it)
+                                    .navigate(
+                                        R.id.action_journeyPlanFragment_to_storeViewFragment,
+                                        bundle
+                                    )
+                            }
                         }
+
+
                     } catch (ex: Exception) {
                         (context as Activity).runOnUiThread {
                             context?.let { it1 ->

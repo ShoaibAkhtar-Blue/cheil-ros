@@ -54,6 +54,9 @@
         <action
             android:id="@+id/action_journeyPlanFragment_to_storeViewFragment"
             app:destination="@id/storeViewFragment" />
+        <action
+            android:id="@+id/action_journeyPlanFragment_to_trainingFragment"
+            app:destination="@id/trainingFragment" />
     </fragment>
     <fragment
         android:id="@+id/myCoverageFragment"
