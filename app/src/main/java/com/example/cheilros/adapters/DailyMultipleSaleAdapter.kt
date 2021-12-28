@@ -12,9 +12,11 @@ import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.data.AppSetting
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.DailyMultipleSaleData
 import com.example.cheilros.models.SalesJSONData
+import com.kyleduo.switchbutton.SwitchButton
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -23,7 +25,8 @@ class DailyMultipleSaleAdapter(
     val itemList: MutableList<DailyMultipleSaleData>,
     val arguments: Bundle?,
     val salesDetailAdapter: SalesDetailAdapter,
-    val selectedDate: String
+    val selectedDate: String,
+    val settingData: List<AppSetting>
 ) : RecyclerView.Adapter<DailyMultipleSaleAdapter.ViewHolder>()  {
 
     lateinit var CSP: CustomSharedPref
@@ -38,6 +41,7 @@ class DailyMultipleSaleAdapter(
         var txtBrand: TextView = view.findViewById(R.id.txtBrand)
         var txtSaleQuantity: EditText = view.findViewById(R.id.txtSaleQuantity)
         var txtSalesValue: EditText = view.findViewById(R.id.txtSalesValue)
+        var cbSaleType: SwitchButton = view.findViewById(R.id.cbSaleType)
         var LLSaleDetail: LinearLayout = view.findViewById(R.id.LLSaleDetail)
         var watcher: TextWatcher? = null
 
@@ -64,6 +68,12 @@ class DailyMultipleSaleAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        var SaleType = CSP.getData("SaleType")
+
+        if(SaleType.equals("N")){
+            holder.cbSaleType.visibility = View.INVISIBLE
+        }
+
         holder.txtNum.text = (position + 1).toString()
         holder.txtBrand.visibility = View.INVISIBLE
 
@@ -71,6 +81,20 @@ class DailyMultipleSaleAdapter(
             val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
             val currentDateAndTime: String = simpleDateFormat.format(Date())
             println("productid ${itemList[position].ProductID}")
+
+            if(SaleType.equals("Y")){
+                if(holder.cbSaleType.text.equals(""))
+                    holder.cbSaleType.text = settingData.filter { it.fixedLabelName == "SaleScreen_Installment" }[0].labelName
+            }
+
+            /*if(SaleType.equals("Y")){
+                if (holder.cbSaleType.isChecked){
+                    SaleType = settingData.filter { it.fixedLabelName == "SaleScreen_Cash" }[0].labelName
+                }else{
+                    SaleType = settingData.filter { it.fixedLabelName == "SaleScreen_Installment" }[0].labelName
+                }
+            }*/
+
             try {
                 if (salesDetailAdapter.salesData.isNullOrEmpty()) {
                     println("salesCountData: null")
@@ -82,7 +106,8 @@ class DailyMultipleSaleAdapter(
                             holder.txtSalesValue.text.toString(),
                             CSP.getData("user_id")?.toInt(),
                             selectedDate.toString(),
-                            (position + 1)
+                            (position + 1),
+                            holder.cbSaleType.text.toString()
                         )
                     )
                 } else {
@@ -98,7 +123,8 @@ class DailyMultipleSaleAdapter(
                                 holder.txtSalesValue.text.toString(),
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
-                                (position + 1)
+                                (position + 1),
+                                holder.cbSaleType.text.toString()
                             )
                         )
                     } else {
@@ -112,7 +138,8 @@ class DailyMultipleSaleAdapter(
                                 holder.txtSalesValue.text.toString(),
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
-                                (position + 1)
+                                (position + 1),
+                                holder.cbSaleType.text.toString()
                             )
                     }
                 }
@@ -125,6 +152,20 @@ class DailyMultipleSaleAdapter(
             val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
             val currentDateAndTime: String = simpleDateFormat.format(Date())
             println("productid2 ${itemList[position].ProductID}")
+
+            if(SaleType.equals("Y")){
+                if(holder.cbSaleType.text.equals(""))
+                    holder.cbSaleType.text = settingData.filter { it.fixedLabelName == "SaleScreen_Installment" }[0].labelName
+            }
+
+            /*if(SaleType.equals("Y")){
+                if (holder.cbSaleType.isChecked){
+                    SaleType = settingData.filter { it.fixedLabelName == "SaleScreen_Cash" }[0].labelName
+                }else{
+                    SaleType = settingData.filter { it.fixedLabelName == "SaleScreen_Installment" }[0].labelName
+                }
+            }*/
+
             try {
                 if (salesDetailAdapter.salesData.isNullOrEmpty()) {
                     println("salesCountData: null")
@@ -136,7 +177,8 @@ class DailyMultipleSaleAdapter(
                             text,
                             CSP.getData("user_id")?.toInt(),
                             selectedDate.toString(),
-                            (position + 1)
+                            (position + 1),
+                            holder.cbSaleType.text.toString()
                         )
                     )
                 } else {
@@ -152,7 +194,8 @@ class DailyMultipleSaleAdapter(
                                 text,
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
-                                (position + 1)
+                                (position + 1),
+                                holder.cbSaleType.text.toString()
                             )
                         )
                     } else {
@@ -166,7 +209,84 @@ class DailyMultipleSaleAdapter(
                                 text,
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
-                                (position + 1)
+                                (position + 1),
+                                holder.cbSaleType.text.toString()
+                            )
+                    }
+                }
+            } catch (ex: Exception) {
+                println(ex.message)
+            }
+        }
+
+        holder.cbSaleType.setOnClickListener {
+            println("cbSaleType")
+            println("SaleType: $SaleType")
+            println(holder.cbSaleType.isChecked)
+            println(holder.cbSaleType.text)
+            val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
+            val currentDateAndTime: String = simpleDateFormat.format(Date())
+            println("productid ${itemList[position].ProductID}")
+
+            println("cbSaleType: $SaleType")
+            var SaleVal = "Cash"
+            if(SaleType.equals("Y")){
+                if (holder.cbSaleType.isChecked){
+                    SaleVal = settingData.filter { it.fixedLabelName == "SaleScreen_Cash" }[0].labelName
+                }else{
+                    SaleVal = settingData.filter { it.fixedLabelName == "SaleScreen_Installment" }[0].labelName
+                }
+            }
+
+            println("cbSaleType: $SaleVal")
+            holder.cbSaleType.text = SaleVal
+            println("cbSaleType: $SaleType")
+
+            try {
+                if (salesDetailAdapter.salesData.isNullOrEmpty()) {
+                    println("salesCountData: null")
+                    salesDetailAdapter.salesData.add(
+                        SalesJSONData(
+                            itemList[position].ProductID,
+                            arguments?.getInt("StoreID"),
+                            holder.txtSaleQuantity.text.toString(),
+                            holder.txtSalesValue.text.toString(),
+                            CSP.getData("user_id")?.toInt(),
+                            selectedDate.toString(),
+                            (position + 1),
+                            SaleVal.toString()
+                        )
+                    )
+                } else {
+                    val salesSize =
+                        salesDetailAdapter.salesData.filter { it.intSerialNo == (position + 1)}.size
+                    println(salesSize)
+                    if (salesSize == 0) {
+                        salesDetailAdapter.salesData.add(
+                            SalesJSONData(
+                                itemList[position].ProductID,
+                                arguments?.getInt("StoreID"),
+                                holder.txtSaleQuantity.text.toString(),
+                                holder.txtSalesValue.text.toString(),
+                                CSP.getData("user_id")?.toInt(),
+                                selectedDate.toString(),
+                                (position + 1),
+                                SaleVal.toString()
+                            )
+                        )
+                    } else {
+                        val salesIndex =
+                            salesDetailAdapter.salesData.indexOf(salesDetailAdapter.salesData.find { it.intSerialNo == (position + 1) })
+                        salesDetailAdapter.salesData[salesIndex] =
+                            SalesJSONData(
+                                itemList[position].ProductID,
+                                arguments?.getInt("StoreID"),
+                                holder.txtSaleQuantity.text.toString(),
+                                holder.txtSalesValue.text.toString(),
+                                CSP.getData("user_id")?.toInt(),
+                                selectedDate.toString(),
+                                (position + 1),
+                                SaleVal.toString()
                             )
                     }
                 }

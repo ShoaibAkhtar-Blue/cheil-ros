@@ -49,7 +49,64 @@
                 android:text="Add"
                 android:visibility="gone" />
 
-            <RelativeLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/black"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingTop="4dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="4dp">
+
+                <TextView
+                    android:id="@+id/txtNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="24dp"
+                    android:fontFamily="@font/samsungsharpsans_bold"
+                    android:gravity="center"
+                    android:text="#"
+                    android:textColor="@android:color/white"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:layout_weight="1"
+                    android:id="@+id/SalesQty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/samsungsharpsans_bold"
+                    android:gravity="center"
+                    android:text="Quantity"
+                    android:textColor="@android:color/white"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:layout_weight="1"
+                    android:id="@+id/SalesValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/samsungsharpsans_bold"
+                    android:gravity="center"
+                    android:text="Price"
+                    android:textColor="@android:color/white"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:layout_weight="1"
+                    android:id="@+id/SaleScreen_Cash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/samsungsharpsans_bold"
+                    android:gravity="center"
+                    android:text="Cash"
+                    android:textColor="@android:color/white"
+                    android:textSize="14dp" />
+
+            </LinearLayout>
+
+
+            <!--<RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@color/black"
@@ -98,7 +155,7 @@
                     android:text="Price"
                     android:textColor="@android:color/white"
                     android:textSize="14dp" />
-            </RelativeLayout>
+            </RelativeLayout>-->
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvSalesProductDetail"

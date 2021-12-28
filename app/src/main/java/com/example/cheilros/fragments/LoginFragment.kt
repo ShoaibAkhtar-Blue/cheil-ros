@@ -1,5 +1,6 @@
 package com.example.cheilros.fragments
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -43,6 +44,9 @@ import okhttp3.*
 import java.io.IOException
 import java.net.URL
 import java.util.concurrent.Executor
+import android.content.pm.PackageManager
+import android.provider.Settings
+
 
 class LoginFragment : BaseFragment() {
 
@@ -63,10 +67,10 @@ class LoginFragment : BaseFragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_login, container, false)
 
-        if(BuildConfig.VERSION_NAME != CSP.getData("Version") && CSP.getData("Version") != ""){
+        if (BuildConfig.VERSION_NAME != CSP.getData("Version") && CSP.getData("Version") != "") {
             view.txtWarning.text = "Please install new version v${CSP.getData("Version")}"
             view.txtWarning.visibility = View.VISIBLE
-        }else{
+        } else {
             view.txtWarning.visibility = View.GONE
         }
 
@@ -96,10 +100,13 @@ class LoginFragment : BaseFragment() {
         }
 
         try {
-            val telephonyManager =
-                requireContext().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            println("IMEI: ${telephonyManager.imei}")
-            userIMEI = telephonyManager.imei
+
+            /* val telephonyManager =
+                 requireContext().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+             println("IMEI: ${telephonyManager.imei}")*/
+
+            userIMEI = getIMEIDeviceId(requireContext()).toString()
+            println("IMEI: ${userIMEI}")
         } catch (ex: Exception) {
             Log.e("Error_", ex.message.toString())
         }
@@ -445,6 +452,37 @@ class LoginFragment : BaseFragment() {
                 }
             }
         })
+    }
+
+    fun getIMEIDeviceId(context: Context): String? {
+        try {
+            val deviceId: String
+            deviceId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+            } else {
+                val mTelephony =
+                    context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (context.checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                        return ""
+                    }
+                }
+                assert(mTelephony != null)
+                if (mTelephony.deviceId != null) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        mTelephony.imei
+                    } else {
+                        mTelephony.deviceId
+                    }
+                } else {
+                    Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+                }
+            }
+            Log.d("deviceId", deviceId)
+            return deviceId
+        } catch (ex: Exception) {
+            return ""
+        }
     }
 }
 

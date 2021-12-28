@@ -54,7 +54,7 @@
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/dialog_followup.xml" value="0.178125" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/dialog_photo_preview.xml" value="0.22152777777777777" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/dialog_price_detail.xml" value="0.22152777777777777" />
-        <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/dialog_sales_detail_product.xml" value="0.22604166666666667" />
+        <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/dialog_sales_detail_product.xml" value="0.38697916666666665" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/dialog_training_attendee.xml" value="0.22152777777777777" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_acrivity_detail.xml" value="0.24166666666666667" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_barcode.xml" value="0.2984375" />
@@ -85,6 +85,7 @@
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_training_list.xml" value="0.26875" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_training_new.xml" value="0.171484375" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/fragment_training_stores.xml" value="0.253125" />
+        <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/layout_daily_sale_detail.xml" value="0.2351851851851852" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/list_checklist.xml" value="0.2263888888888889" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/list_checklistdetail.xml" value="0.21458333333333332" />
         <entry key="..\:/Solhut/Projects/Android/cheil-ros-android-app/app/src/main/res/layout/list_displaycountdetail.xml" value="0.2298611111111111" />

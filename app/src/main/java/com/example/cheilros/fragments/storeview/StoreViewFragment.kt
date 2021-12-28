@@ -299,6 +299,8 @@ class StoreViewFragment : BaseFragment() {
                             txtStoreCity.text = apiData.data[0].DistrcitName
                             txtStoreDistributor.text = apiData.data[0].DistributorName
 
+                            CSP.saveData("SaleType", apiData.data[0].SaleType)
+
                             toolbarVisibility(true)
                             (activity as NewDashboardActivity).shouldGoBack = true
                             mainLoadingLayout.setState(LoadingLayout.COMPLETE)

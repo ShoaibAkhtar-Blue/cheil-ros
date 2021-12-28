@@ -134,6 +134,13 @@ class SalesDetailAdapter(
 
                 dialog.SalesQty.text = settingData.filter { it.fixedLabelName == "Sale_Quantity" }[0].labelName
                 dialog.SalesValue.text = settingData.filter { it.fixedLabelName == "Sale_Value" }[0].labelName
+                dialog.SaleScreen_Cash.text = settingData.filter { it.fixedLabelName == "SaleScreen_Cash" }[0].labelName
+
+                var SaleType = CSP.getData("SaleType")
+
+                if(SaleType.equals("N")){
+                    dialog.SaleScreen_Cash.visibility = View.INVISIBLE
+                }
 
                 //region Load Daily Sale Data
                 println("${CSP.getData("base_url")}/Sales.asmx/DailyMultipleSaleView?ProductID=${filterList[position].ProductID}&StoreID=${arguments?.getInt("StoreID").toString()}&SaleDate=${selectedDate}")
@@ -172,7 +179,8 @@ class SalesDetailAdapter(
                                          apiData.data as MutableList<DailyMultipleSaleData>,
                                          arguments,
                                         this@SalesDetailAdapter,
-                                        selectedDate as String
+                                        selectedDate as String,
+                                        settingData
                                      )
                                     dialog.rvSalesProductDetail.adapter = recylcerDailyMultipleSaleAdapter
 
@@ -291,7 +299,8 @@ class SalesDetailAdapter(
                             holder.txtSalesValue.text.toString(),
                             CSP.getData("user_id")?.toInt(),
                             selectedDate.toString(),
-                            0
+                            0,
+                            ""
                         )
                     )
                 } else {
@@ -307,7 +316,8 @@ class SalesDetailAdapter(
                                 holder.txtSalesValue.text.toString(),
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
-                                0
+                                0,
+                                ""
                             )
                         )
                     } else {
@@ -321,7 +331,8 @@ class SalesDetailAdapter(
                                 holder.txtSalesValue.text.toString(),
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
-                                0
+                                0,
+                                ""
                             )
                     }
                 }
@@ -344,7 +355,8 @@ class SalesDetailAdapter(
                             text,
                             CSP.getData("user_id")?.toInt(),
                             selectedDate.toString(),
-                            0
+                            0,
+                            ""
                         )
                     )
                 } else {
@@ -360,7 +372,8 @@ class SalesDetailAdapter(
                                 text,
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
-                                0
+                                0,
+                                ""
                             )
                         )
                     } else {
@@ -374,7 +387,8 @@ class SalesDetailAdapter(
                                 text,
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
-                                0
+                                0,
+                                ""
                             )
                     }
                 }

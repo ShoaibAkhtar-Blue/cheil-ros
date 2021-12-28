@@ -96,7 +96,8 @@ class StoreInfoData(
     val GradeName: String,
     val MallName: String,
     val Address: String,
-    val DistributorName: String
+    val DistributorName: String,
+    val SaleType: String
 )
 
 class AssetListModel(val status: Int, val data: List<AssetListData>)
@@ -410,7 +411,8 @@ class SalesJSONData(
     val SalePrice: String,
     val TeamMemberID: Int?,
     val SaleDate: String?,
-    val intSerialNo: Int
+    val intSerialNo: Int,
+    val SaleType: String
 )
 //endregion
 

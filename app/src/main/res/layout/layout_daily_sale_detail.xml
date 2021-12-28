@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -27,7 +27,7 @@
             android:layout_alignParentEnd="false"
             android:layout_alignParentBottom="false"
             android:layout_centerInParent="true"
-            android:layout_marginRight="24dp"
+            android:layout_marginRight="12dp"
             android:fontFamily="@font/samsungsharpsans_medium"
             android:gravity="center"
             android:text="00"
@@ -80,6 +80,19 @@
             android:paddingRight="16dp"
             android:textAlignment="center"
             tools:ignore="TouchTargetSizeCheck" />
+
+        <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/cbSaleType"
+            style="@style/SwitchButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/custom_text_state_color"
+            android:textSize="16dp"
+            app:kswTextAdjust="-2dp"
+            app:kswTextExtra="8dp"
+            app:kswTextOff="No"
+            app:kswTextOn="Yes"
+            />
 
         <!--<TextView
             android:id="@+id/txtAttend"
