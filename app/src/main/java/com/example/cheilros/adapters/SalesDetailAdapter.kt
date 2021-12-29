@@ -191,7 +191,7 @@ class SalesDetailAdapter(
                                         repeat(total_new_row){
                                             recylcerDailyMultipleSaleAdapter.itemList.add(DailyMultipleSaleData(0, arguments?.getInt("StoreID")!!
                                                 .toInt(), filterList[position].ProductID, 0,0, selectedDate as String
-                                            ))
+                                            ,0))
 
                                         }
                                         recylcerDailyMultipleSaleAdapter.notifyDataSetChanged()
@@ -272,7 +272,7 @@ class SalesDetailAdapter(
                 dialog.btnAddNew.setOnClickListener {
                     recylcerDailyMultipleSaleAdapter.itemList.add(DailyMultipleSaleData(0, arguments?.getInt("StoreID")!!
                         .toInt(), filterList[position].ProductID, 0,0, selectedDate as String
-                    ))
+                    ,0))
                     recylcerDailyMultipleSaleAdapter.notifyDataSetChanged()
                 }
 
@@ -300,7 +300,7 @@ class SalesDetailAdapter(
                             CSP.getData("user_id")?.toInt(),
                             selectedDate.toString(),
                             0,
-                            ""
+                            0
                         )
                     )
                 } else {
@@ -317,7 +317,7 @@ class SalesDetailAdapter(
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
                                 0,
-                                ""
+                                0
                             )
                         )
                     } else {
@@ -332,7 +332,7 @@ class SalesDetailAdapter(
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
                                 0,
-                                ""
+                                0
                             )
                     }
                 }
@@ -356,7 +356,7 @@ class SalesDetailAdapter(
                             CSP.getData("user_id")?.toInt(),
                             selectedDate.toString(),
                             0,
-                            ""
+                            0
                         )
                     )
                 } else {
@@ -373,7 +373,7 @@ class SalesDetailAdapter(
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
                                 0,
-                                ""
+                                0
                             )
                         )
                     } else {
@@ -388,7 +388,7 @@ class SalesDetailAdapter(
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
                                 0,
-                                ""
+                                0
                             )
                     }
                 }

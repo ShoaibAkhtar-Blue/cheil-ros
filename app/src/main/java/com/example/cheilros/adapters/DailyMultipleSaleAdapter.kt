@@ -74,6 +74,11 @@ class DailyMultipleSaleAdapter(
             holder.cbSaleType.visibility = View.INVISIBLE
         }
 
+        if(itemList[position].SaleType == 1){
+            holder.cbSaleType.isChecked = true
+            holder.cbSaleType.text = "1"
+        }
+
         holder.txtNum.text = (position + 1).toString()
         holder.txtBrand.visibility = View.INVISIBLE
 
@@ -84,7 +89,7 @@ class DailyMultipleSaleAdapter(
 
             if(SaleType.equals("Y")){
                 if(holder.cbSaleType.text.equals(""))
-                    holder.cbSaleType.text = settingData.filter { it.fixedLabelName == "SaleScreen_Installment" }[0].labelName
+                    holder.cbSaleType.text = "2"
             }
 
             /*if(SaleType.equals("Y")){
@@ -107,7 +112,7 @@ class DailyMultipleSaleAdapter(
                             CSP.getData("user_id")?.toInt(),
                             selectedDate.toString(),
                             (position + 1),
-                            holder.cbSaleType.text.toString()
+                            holder.cbSaleType.text.toString().toInt()
                         )
                     )
                 } else {
@@ -124,7 +129,7 @@ class DailyMultipleSaleAdapter(
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
                                 (position + 1),
-                                holder.cbSaleType.text.toString()
+                                holder.cbSaleType.text.toString().toInt()
                             )
                         )
                     } else {
@@ -139,7 +144,7 @@ class DailyMultipleSaleAdapter(
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
                                 (position + 1),
-                                holder.cbSaleType.text.toString()
+                                holder.cbSaleType.text.toString().toInt()
                             )
                     }
                 }
@@ -155,7 +160,7 @@ class DailyMultipleSaleAdapter(
 
             if(SaleType.equals("Y")){
                 if(holder.cbSaleType.text.equals(""))
-                    holder.cbSaleType.text = settingData.filter { it.fixedLabelName == "SaleScreen_Installment" }[0].labelName
+                    holder.cbSaleType.text = "2"
             }
 
             /*if(SaleType.equals("Y")){
@@ -178,7 +183,7 @@ class DailyMultipleSaleAdapter(
                             CSP.getData("user_id")?.toInt(),
                             selectedDate.toString(),
                             (position + 1),
-                            holder.cbSaleType.text.toString()
+                            holder.cbSaleType.text.toString().toInt()
                         )
                     )
                 } else {
@@ -195,7 +200,7 @@ class DailyMultipleSaleAdapter(
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
                                 (position + 1),
-                                holder.cbSaleType.text.toString()
+                                holder.cbSaleType.text.toString().toInt()
                             )
                         )
                     } else {
@@ -210,7 +215,7 @@ class DailyMultipleSaleAdapter(
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
                                 (position + 1),
-                                holder.cbSaleType.text.toString()
+                                holder.cbSaleType.text.toString().toInt()
                             )
                     }
                 }
@@ -232,9 +237,9 @@ class DailyMultipleSaleAdapter(
             var SaleVal = "Cash"
             if(SaleType.equals("Y")){
                 if (holder.cbSaleType.isChecked){
-                    SaleVal = settingData.filter { it.fixedLabelName == "SaleScreen_Cash" }[0].labelName
+                    SaleVal = "1"
                 }else{
-                    SaleVal = settingData.filter { it.fixedLabelName == "SaleScreen_Installment" }[0].labelName
+                    SaleVal = "2"
                 }
             }
 
@@ -254,7 +259,7 @@ class DailyMultipleSaleAdapter(
                             CSP.getData("user_id")?.toInt(),
                             selectedDate.toString(),
                             (position + 1),
-                            SaleVal.toString()
+                            SaleVal.toInt()
                         )
                     )
                 } else {
@@ -271,7 +276,7 @@ class DailyMultipleSaleAdapter(
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
                                 (position + 1),
-                                SaleVal.toString()
+                                SaleVal.toInt()
                             )
                         )
                     } else {
@@ -286,7 +291,7 @@ class DailyMultipleSaleAdapter(
                                 CSP.getData("user_id")?.toInt(),
                                 selectedDate.toString(),
                                 (position + 1),
-                                SaleVal.toString()
+                                SaleVal.toInt()
                             )
                     }
                 }

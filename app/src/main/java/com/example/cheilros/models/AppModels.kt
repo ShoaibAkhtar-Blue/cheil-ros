@@ -399,7 +399,8 @@ class DailyMultipleSaleData(
     val ProductID: Int,
     val SaleCount: Int,
     val SalePrice: Int,
-    val SaleDate: String
+    val SaleDate: String,
+    val SaleType: Int
 )
 
 
@@ -412,7 +413,7 @@ class SalesJSONData(
     val TeamMemberID: Int?,
     val SaleDate: String?,
     val intSerialNo: Int,
-    val SaleType: String
+    val SaleType: Int
 )
 //endregion
 
