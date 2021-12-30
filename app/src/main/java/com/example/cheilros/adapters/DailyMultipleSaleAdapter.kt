@@ -90,6 +90,8 @@ class DailyMultipleSaleAdapter(
             if(SaleType.equals("Y")){
                 if(holder.cbSaleType.text.equals(""))
                     holder.cbSaleType.text = "2"
+            }else{
+                holder.cbSaleType.text = "0"
             }
 
             /*if(SaleType.equals("Y")){
@@ -99,6 +101,8 @@ class DailyMultipleSaleAdapter(
                     SaleType = settingData.filter { it.fixedLabelName == "SaleScreen_Installment" }[0].labelName
                 }
             }*/
+
+
 
             try {
                 if (salesDetailAdapter.salesData.isNullOrEmpty()) {
@@ -161,6 +165,8 @@ class DailyMultipleSaleAdapter(
             if(SaleType.equals("Y")){
                 if(holder.cbSaleType.text.equals(""))
                     holder.cbSaleType.text = "2"
+            }else{
+                holder.cbSaleType.text = "0"
             }
 
             /*if(SaleType.equals("Y")){
