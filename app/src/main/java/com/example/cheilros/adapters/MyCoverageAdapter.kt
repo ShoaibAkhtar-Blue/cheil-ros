@@ -432,12 +432,6 @@ class MyCoverageAdapter(
                                                         )
 
                                                         sendVisitRequest(
-                                                            "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
-                                                                itemData.StoreID
-                                                            }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=${location.longitude.toString()}&Latitude=${location.latitude.toString()}&Remarks=-"
-                                                        )
-
-                                                        sendVisitRequest(
                                                             "${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemData.VisitStatusID}&Longitude=$lng&Latitude=$lat&Remarks=-"
                                                         )
                                                     }
@@ -517,11 +511,7 @@ class MyCoverageAdapter(
                                                         SimpleDateFormat("yyyy-M-d")
                                                     val currentDateAndTime: String =
                                                         simpleDateFormat.format(Date())
-                                                    sendVisitRequest(
-                                                        "${CSP.getData("base_url")}/StoreVisit.asmx/TeamMemberCheckInDirect?StoreID=${
-                                                            itemData.StoreID
-                                                        }&TeamMemberID=${CSP.getData("user_id")}&PlanRemarks=-&PlanDate=${currentDateAndTime}&Longitude=$lng&Latitude=$lat&Remarks=-"
-                                                    )
+
 
                                                     println(
                                                         "${CSP.getData("base_url")}/JourneyPlan.asmx/CheckOut?VisitID=${itemData.VisitStatusID}&Longitude=$lng&Latitude=$lat&Remarks=-"
@@ -716,7 +706,7 @@ class MyCoverageAdapter(
 
 
     private fun sendVisitRequest(url: String) {
-
+        println("sendVisitRequest: $url")
         var checkType =
             if (CSP.getData("sess_visit_status_id")
                     .equals("0")
