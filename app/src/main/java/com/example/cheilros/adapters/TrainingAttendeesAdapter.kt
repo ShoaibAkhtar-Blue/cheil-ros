@@ -68,11 +68,11 @@ class TrainingAttendeesAdapter(
         holder.checkboxAttendee.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 if (CSP.getData("training_attendees").equals("")) {
-                    CSP.saveData("training_attendees", "${itemList[position].TeamMemberID}:${itemList[position].TeamMemberName}")
+                    CSP.saveData("training_attendees", "${itemList[position].TeamMemberID}:${itemList[position].TeamMemberName}:${itemList[position].AttendeseTypeID}")
                 } else {
                     CSP.saveData(
                         "training_attendees",
-                        "${CSP.getData("training_attendees")},${itemList[position].TeamMemberID}:${itemList[position].TeamMemberName}"
+                        "${CSP.getData("training_attendees")},${itemList[position].TeamMemberID}:${itemList[position].TeamMemberName}:${itemList[position].AttendeseTypeID}"
                     )
                 }
             }
