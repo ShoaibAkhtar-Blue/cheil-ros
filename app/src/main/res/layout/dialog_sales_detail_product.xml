@@ -162,6 +162,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:minHeight="250dp" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/txtError"
+                android:layout_margin="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="*Please add price as well to proceed"
+                android:textColor="#F44336"></TextView>
         </LinearLayout>
 
 

@@ -232,9 +232,19 @@ class SalesDetailAdapter(
                 }
 
                 dialog.btnAccept.setOnClickListener {
+
                     val gson = Gson()
                     val jsonString: String = gson.toJson(SalesJSON(salesData))
                     println(jsonString)
+
+                    for(s in salesData){
+                        if(s.SaleCount.toInt() > 0 && s.SalePrice.toInt() == 0){
+                            dialog.txtError.visibility = View.VISIBLE
+                            return@setOnClickListener
+                        }else{
+                            dialog.txtError.visibility = View.GONE
+                        }
+                    }
 
                     val del_sale_url = "${CSP.getData("base_url")}/Sales.asmx/SaleCountRemove?ProductID=${filterList[position].ProductID}&StoreID=${arguments?.getInt("StoreID")}&SaleDate=${selectedDate as String}"
                     println(del_sale_url)
