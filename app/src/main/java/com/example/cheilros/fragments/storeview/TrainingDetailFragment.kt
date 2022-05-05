@@ -16,6 +16,8 @@ import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.CapturedPictureAdapter
 import com.example.cheilros.adapters.TrainingAttendeesAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.globals.UtilClass
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.TeamMemberData
@@ -41,10 +43,17 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class TrainingDetailFragment : BaseFragment() {
 
-    private val client = OkHttpClient()
+    //private val client = OkHttpClient()
+    //NIK: 2022-03-22
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .build()
 
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: TrainingAttendeesAdapter
@@ -110,7 +119,7 @@ class TrainingDetailFragment : BaseFragment() {
 
             dialog.btnAccept.text = settingData.filter { it.fixedLabelName == "StoreList_PopupAdd" }.get(0).labelName
             dialog.btnAccept.setOnClickListener {
-                recylcerAdapter.addNewItem(TeamMemberData(0, dialog.etAttendeeName.text.toString(), 1))
+                recylcerAdapter.addNewItem(TeamMemberData(0, dialog.etAttendeeName.text.toString(), 1, "")) // SA
                 dialog.dismiss()
             }
 
@@ -141,7 +150,13 @@ class TrainingDetailFragment : BaseFragment() {
         }
 
         btnSubmit.setOnClickListener {
-            val client = OkHttpClient()
+            //val client = OkHttpClient()
+            //NIK: 2022-03-22
+            val client: OkHttpClient = OkHttpClient.Builder()
+                .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .build()
 
             try {
                 val builder: MultipartBody.Builder =
@@ -156,10 +171,17 @@ class TrainingDetailFragment : BaseFragment() {
 
                 for (paths in capturedPicturesList) {
                     println(paths)
-                    val sourceFile = File(paths)
-                    val mimeType = CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
-                    val fileName: String = sourceFile.name
-                    builder.addFormDataPart("TrainingPictures", fileName,sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull()))
+                    val ImageFile = File(paths)
+                    val sourceFile = UtilClass.saveBitmapToFile(ImageFile)
+                    if (sourceFile!= null) {
+                        val mimeType = CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
+                        val fileName: String = sourceFile.name
+                        builder.addFormDataPart(
+                            "TrainingPictures",
+                            fileName,
+                            sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
+                        )
+                    }
                 }
 
                 /*if (!CSP.getData("TrainingDetail_SESSION_IMAGE_SET").equals("")) {

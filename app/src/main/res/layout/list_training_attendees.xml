@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/RLAttendee"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/border_bottom_grey"
         android:paddingLeft="16dp"
         android:paddingTop="4dp"
@@ -18,13 +18,8 @@
         <TextView
             android:id="@+id/txtNum"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="false"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentBottom="false"
-            android:layout_centerInParent="true"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginRight="24dp"
             android:fontFamily="@font/samsungsharpsans_medium"
             android:gravity="center"
@@ -35,7 +30,7 @@
         <TextView
             android:id="@+id/txtAttendee"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/txtNum"
             android:fontFamily="@font/samsungsharpsans_medium"
             android:gravity="center|left"
@@ -45,12 +40,26 @@
 
         <CheckBox
 
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:id="@+id/checkboxAttendee"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:text="" />
+
+        <TextView
+            android:id="@+id/txtAttendeeID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtAttendee"
+            android:layout_marginEnd="24dp"
+            android:layout_toEndOf="@id/txtNum"
+            android:fontFamily="@font/samsungsharpsans_medium"
+            android:gravity="center|start"
+            android:text="ATTENDEE_ID"
+            android:textColor="#4c4c4c"
+            android:textSize="12sp"
+            android:visibility="visible" />
 
     </RelativeLayout>
 

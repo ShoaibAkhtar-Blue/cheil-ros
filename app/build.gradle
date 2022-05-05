@@ -8,6 +8,20 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('E:\\Android\\cheil-ros-android-app\\app\\cheikkeytwo.jks')
+            storePassword 'Cheil.me@1'
+            keyPassword 'Cheil.me@1'
+            keyAlias 'key0'
+        }
+        release {
+            storeFile file('D:\\Nauman\\Clients\\DXB\\Adeel\\ROS\\APP\\cheil-ros-android-app\\app\\cheikkeytwo.jks')
+            storePassword 'Cheil.me@1'
+            keyPassword 'Cheil.me@1'
+            keyAlias 'key0'
+        }
+    }
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
@@ -16,11 +30,12 @@ android {
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 26
-        versionName "1.5.53"
+        versionName "1.5.54"
 
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.debug
     }
 
     buildTypes {
@@ -125,6 +140,7 @@ dependencies {
     implementation 'com.github.mhmdVoj:SwipeList:0.1'
 
     implementation 'androidx.biometric:biometric:1.2.0-alpha03'
+    implementation "org.jetbrains.kotlin:kotlin-script-runtime:1.5.31"
 
 //    implementation "com.github.kojofosu:Quantitizer:1.5.0"
 }

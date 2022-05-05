@@ -15,10 +15,14 @@ import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.cheilros.R
+import com.example.cheilros.fragments.MyCoverageFragment
+import com.example.cheilros.globals.UtilClass
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.helpers.*
 import com.example.cheilros.models.CheckInOutModel
 import com.google.gson.GsonBuilder
@@ -43,13 +47,20 @@ import java.io.IOException
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class CameraActivity : AppCompatActivity() {
 
     lateinit var CSP: CustomSharedPref
 
-    private val client = OkHttpClient()
+    //private val client = OkHttpClient()
+    //NIK: 2022-03-22
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .build()
 
     lateinit var locationManager: LocationManager
 
@@ -152,12 +163,13 @@ class CameraActivity : AppCompatActivity() {
     // this method saves the image to gallery
     private fun saveMediaToStorage(bitmap: Bitmap): String {
         // Generating a file name
-        val filename = "${System.currentTimeMillis()}.jpg"
+        return try {
+            val filename = "${System.currentTimeMillis()}.jpg"
 
-        // Output stream
-        var fos: OutputStream? = null
+            // Output stream
+            var fos: OutputStream? = null
 
-        /*// For devices running android >= Q
+            /*// For devices running android >= Q
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             // getting the contentResolver
             this.contentResolver?.also { resolver ->
@@ -194,18 +206,29 @@ class CameraActivity : AppCompatActivity() {
             Toast.makeText(this , "Captured View and saved to Gallery" , Toast.LENGTH_SHORT).show()
         }*/
 
+            var imagesDir =
+                applicationContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);     //NIK: 2022-04-13
+            /*
+        //Depreciated
         val imagesDir =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        Log.i("directoryImg1", "${imagesDir.absolutePath}/$filename")
-        val image = File(imagesDir, filename)
-        fos = FileOutputStream(image)
-        fos?.use {
+         */
+            Log.i("directoryImg1", "${imagesDir?.absolutePath}/$filename")
+            val image = File(imagesDir, filename)
 
-            // Finally writing the bitmap to the output stream that we opened
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, it)
-            //Toast.makeText(this, "Captured View and saved to Gallery", Toast.LENGTH_SHORT).show()
+            fos = FileOutputStream(image)
+
+            fos?.use {
+                // Finally writing the bitmap to the output stream that we opened
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, it)
+            }
+
+            "${imagesDir?.absolutePath}/$filename"
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            Toast.makeText(this , ex.printStackTrace().toString(), Toast.LENGTH_SHORT).show()
+            ""
         }
-        return "${imagesDir.absolutePath}/$filename"
     }
 
 
@@ -325,7 +348,6 @@ class CameraActivity : AppCompatActivity() {
                             dialog.imgPrev.setImageBitmap(it.bitmap)
                             dialog.imgPrev.rotation = (-it.rotationDegrees).toFloat()
 
-
                             dialog.btnUpload.setOnClickListener {
                                 dialog.btnUpload.isEnabled = false
                                 dialog.btnUpload.isClickable = false
@@ -374,6 +396,7 @@ class CameraActivity : AppCompatActivity() {
                                     })*/
                                 //endregion
                                 val savedImagePath: String = saveMediaToStorage(bitmapImg)
+
                                 var checkTypeAPI: String = if (CSP.getData("sess_visit_status_id")
                                         .equals("1")
                                 ) "CheckIn" else "CheckOut"
@@ -398,8 +421,6 @@ class CameraActivity : AppCompatActivity() {
                             }
 
                             dialog.show()
-
-
                         } else {
                             Log.d("CameraActivity", "Else statement")
                             imageView.setImageBitmap(it.bitmap)
@@ -657,8 +678,18 @@ class CameraActivity : AppCompatActivity() {
 
         println(checkType)
 
-        val client = OkHttpClient()
-        val sourceFile = File(imgPath)
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
+        //val sourceFile = File(imgPath)
+        //NIK: 2022-04-13
+        val ImageFile = File(imgPath)
+        val sourceFile = UtilClass.saveBitmapToFile(ImageFile)
+
         val mimeType = CoreHelperMethods(this@CameraActivity).getMimeType(sourceFile)
         val fileName: String = sourceFile.name
 
@@ -700,6 +731,10 @@ class CameraActivity : AppCompatActivity() {
                                 .setTitle("Success!!")
                                 .setMessage("Data Updated")
                                 .sneakSuccess()
+
+                            //val fra: MyCoverageFragment = MyCoverageFragment()
+                            //fra.reloadCoverage()
+
                             onBackPressed()
                         }
                     } else {
@@ -725,6 +760,7 @@ class CameraActivity : AppCompatActivity() {
              }*/
         } catch (ex: Exception) {
             ex.printStackTrace()
+            Toast.makeText(this , ex.printStackTrace().toString(), Toast.LENGTH_SHORT).show()
             Log.e("File upload", "failed")
         }
 

@@ -17,6 +17,7 @@ import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.activities.customobj.EmptyRecyclerView
 import com.example.cheilros.adapters.PendingDeploymentAdapter
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.models.ActivityCategoryData
 import com.example.cheilros.models.ActivityCategoryModel
 import com.example.cheilros.models.PendingDeploymentModel
@@ -31,6 +32,7 @@ import kotlinx.android.synthetic.main.fragment_pending_deployment.todo_list_empt
 import okhttp3.*
 import java.io.IOException
 import java.lang.Exception
+import java.util.concurrent.TimeUnit
 
 class PendingDeploymentFragment : BaseFragment() {
 
@@ -161,7 +163,13 @@ class PendingDeploymentFragment : BaseFragment() {
 
     fun fetchActivityCategory(url: String) {
         println(url)
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
         val request = Request.Builder()
             .url(url)
             .build()
@@ -210,7 +218,13 @@ class PendingDeploymentFragment : BaseFragment() {
 
     fun fetchPendingDeployment(url: String) {
         println(url)
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
         mainLoadingLayout.setState(LoadingLayout.LOADING)
         val request = Request.Builder()
             .url(url)

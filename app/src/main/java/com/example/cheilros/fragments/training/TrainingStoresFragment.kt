@@ -20,6 +20,7 @@ import com.example.cheilros.activities.customobj.EmptyRecyclerView
 import com.example.cheilros.adapters.MyCoverageAdapter
 import com.example.cheilros.adapters.TrainingStoresAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.models.*
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
@@ -34,13 +35,20 @@ import okhttp3.*
 import java.io.IOException
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.util.concurrent.TimeUnit
 
 
 class TrainingStoresFragment : BaseFragment() {
 
     lateinit var activity: NewDashboardActivity
     lateinit var uLocation: Location
-    private val client = OkHttpClient()
+    //private val client = OkHttpClient()
+    //NIK: 2022-03-22
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .build()
 
     lateinit var recyclerView: EmptyRecyclerView
     lateinit var layoutManager: RecyclerView.LayoutManager

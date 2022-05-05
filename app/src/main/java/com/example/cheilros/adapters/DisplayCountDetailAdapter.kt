@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.fragments.storeview.DisplayCountDetailFragment
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.*
 import com.google.gson.Gson
@@ -24,15 +25,14 @@ import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.dialog_barcode.*
 import kotlinx.android.synthetic.main.dialog_barcode_input.*
-import kotlinx.android.synthetic.main.fragment_investment_detail.btnSubmit
-import kotlinx.android.synthetic.main.fragment_investment_detail.mainLoadingLayoutCC
+import kotlinx.android.synthetic.main.fragment_investment_detail.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-
+import java.util.concurrent.TimeUnit
 
 class DisplayCountDetailAdapter(
     val context: Context,
@@ -133,7 +133,6 @@ class DisplayCountDetailAdapter(
 
             fragment.mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
 
-
             val gson = Gson()
             val jsonString: String = gson.toJson(DisplayCountJSON(displayCountData))
             println(jsonString)
@@ -143,11 +142,22 @@ class DisplayCountDetailAdapter(
                     CSP.getData("user_id")
                 }"
 
-            val request_header: MediaType? = "application/text; charset=utf-8".toMediaTypeOrNull()
+
+            /*
+             conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("Cache-Control", "no-cache");
+             */
+            val request_header: MediaType? = "application/text;Connection=Keep-Alive;Cache-Control=no-cache;charset=utf-8".toMediaTypeOrNull()
 
             var body: RequestBody = jsonString.toRequestBody(request_header)
             val request = Request.Builder().post(body).url(url).build()
-            val client = OkHttpClient()
+            //NIK: 2022-03-22
+            val client: OkHttpClient = OkHttpClient.Builder()
+                .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .build()
+
             client.newCall(request).enqueue(object : Callback {
                 override fun onResponse(call: Call, response: Response) {
                     val tm = response.body?.string()
@@ -459,7 +469,13 @@ class DisplayCountDetailAdapter(
                 )
             }"
         println(url)
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
 
         val request = Request.Builder()
             .url(url)

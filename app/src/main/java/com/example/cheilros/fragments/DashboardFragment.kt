@@ -26,6 +26,7 @@ import com.example.cheilros.adapters.RecentActivityAdapter
 import com.example.cheilros.adapters.TaskAssignedAdapter
 import com.example.cheilros.adapters.TrainingSummaryAdapter
 import com.example.cheilros.data.AppSetting
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.models.*
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
@@ -70,6 +71,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import kotlinx.android.synthetic.main.fragment_journey_plan.*
 import kotlinx.android.synthetic.main.fragment_training_new.*
+import java.util.concurrent.TimeUnit
 
 
 class DashboardFragment : BaseFragment() {
@@ -597,7 +599,13 @@ class DashboardFragment : BaseFragment() {
 
     private fun fetchAllDashboardData(url: String) {
         println(url)
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
 
         val request = Request.Builder()
             .url(url)

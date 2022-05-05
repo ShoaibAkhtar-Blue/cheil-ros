@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.ceylonlabs.imageviewpopup.ImagePopup
 import com.example.cheilros.R
 import com.example.cheilros.fragments.storeview.StorePicturesFragment
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.CheckInOutModel
 import com.example.cheilros.models.GeneralPicturesData
@@ -22,6 +23,7 @@ import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import okhttp3.*
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class StorePicturesAdapter(
     val context: Context?,
@@ -73,7 +75,13 @@ class StorePicturesAdapter(
                 val request = Request.Builder()
                     .url("${CSP.getData("base_url")}/Webservice.asmx/RemoveGeneralPicture?StoreID=${titles[position].StoreID}&PictureID=${titles[position].PictureID}")
                     .build()
-                val client = OkHttpClient()
+                //val client = OkHttpClient()
+                //NIK: 2022-03-22
+                val client: OkHttpClient = OkHttpClient.Builder()
+                    .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                    .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                    .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                    .build()
                 client.newCall(request).enqueue(object : Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         (context as Activity).runOnUiThread {

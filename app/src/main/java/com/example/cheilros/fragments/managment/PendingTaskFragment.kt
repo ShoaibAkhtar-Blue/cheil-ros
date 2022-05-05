@@ -19,6 +19,7 @@ import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.activities.customobj.EmptyRecyclerView
 import com.example.cheilros.adapters.PendingDeploymentAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.models.*
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
@@ -37,6 +38,7 @@ import java.io.IOException
 import java.lang.Exception
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.util.concurrent.TimeUnit
 
 
 class PendingTaskFragment : BaseFragment() {
@@ -175,7 +177,13 @@ class PendingTaskFragment : BaseFragment() {
     }
 
     fun fetchChannelType(url: String) {
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
         mainLoadingLayout.setState(LoadingLayout.LOADING)
 
         val request = Request.Builder()
@@ -249,7 +257,13 @@ class PendingTaskFragment : BaseFragment() {
 
     fun fetchActivityCategory(url: String) {
         println(url)
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
         val request = Request.Builder()
             .url(url)
             .build()
@@ -298,7 +312,13 @@ class PendingTaskFragment : BaseFragment() {
 
     fun fetchPendingDeployment(url: String) {
         println(url)
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
         mainLoadingLayout.setState(LoadingLayout.LOADING)
         val request = Request.Builder()
             .url(url)

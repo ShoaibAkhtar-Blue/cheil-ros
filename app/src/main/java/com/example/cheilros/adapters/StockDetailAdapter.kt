@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.fragments.storeview.StockDetailFragment
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.StockJSON
 import com.example.cheilros.models.StockJSONData
@@ -32,6 +33,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class StockDetailAdapter(
     val context: Context,
@@ -251,7 +253,13 @@ class StockDetailAdapter(
 
             var body: RequestBody = jsonString.toRequestBody(request_header)
             val request = Request.Builder().post(body).url(url).build()
-            val client = OkHttpClient()
+            //val client = OkHttpClient()
+            //NIK: 2022-03-22
+            val client: OkHttpClient = OkHttpClient.Builder()
+                .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .build()
             client.newCall(request).enqueue(object : Callback {
                 override fun onResponse(call: Call, response: Response) {
                     val tm = response.body?.string()

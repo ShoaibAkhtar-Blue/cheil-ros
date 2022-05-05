@@ -19,6 +19,7 @@ import com.example.cheilros.activities.customobj.EmptyRecyclerView
 import com.example.cheilros.adapters.PendingDeploymentAdapter
 import com.example.cheilros.adapters.RecentActivityAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.models.*
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
@@ -35,6 +36,7 @@ import okhttp3.*
 import java.io.IOException
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.util.concurrent.TimeUnit
 
 class OpenTicketsFragment : BaseFragment() {
 
@@ -42,7 +44,13 @@ class OpenTicketsFragment : BaseFragment() {
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: RecentActivityAdapter
 
-    private val client = OkHttpClient()
+    //private val client = OkHttpClient()
+    //NIK: 2022-03-22
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .build()
 
     lateinit var channelData: List<ChannelData>
     lateinit var channelTypeData: List<ChannelTypeData>
@@ -299,7 +307,13 @@ class OpenTicketsFragment : BaseFragment() {
 
     fun fetchOpenTickets(url: String) {
         println(url)
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
         mainLoadingLayout.setState(LoadingLayout.LOADING)
         val request = Request.Builder()
             .url(url)

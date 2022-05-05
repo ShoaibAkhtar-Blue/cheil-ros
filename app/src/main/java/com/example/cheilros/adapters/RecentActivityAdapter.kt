@@ -18,6 +18,8 @@ import com.bumptech.glide.Glide
 import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.data.UserData
+import com.example.cheilros.globals.UtilClass
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.*
@@ -34,6 +36,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class RecentActivityAdapter(
     val context: Context,
@@ -229,7 +232,13 @@ class RecentActivityAdapter(
                 val request = Request.Builder()
                     .url(issueLogURL)
                     .build()
-                val client = OkHttpClient()
+                //val client = OkHttpClient()
+                //NIK: 2022-03-22
+                val client: OkHttpClient = OkHttpClient.Builder()
+                    .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                    .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                    .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                    .build()
                 var layoutManager: RecyclerView.LayoutManager
                 var recylcerAdapter: IssueLogAdapter
 
@@ -321,7 +330,13 @@ class RecentActivityAdapter(
         holder.btnCancel.setOnClickListener {
             if (filterList[position].ActivityTypeID != 20) {
                 println("${CSP.getData("base_url")}/Activity.asmx/RemoveActivity?ActivityID=${itemList[position].ActivityID}")
-                val client = OkHttpClient()
+                //val client = OkHttpClient()
+                //NIK: 2022-03-22
+                val client: OkHttpClient = OkHttpClient.Builder()
+                    .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                    .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                    .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                    .build()
 
                 val request = Request.Builder()
                     .url("${CSP.getData("base_url")}/Activity.asmx/RemoveActivity?ActivityID=${itemList[position].ActivityID}")
@@ -386,7 +401,13 @@ class RecentActivityAdapter(
             "${CSP.getData("base_url")}/MarketActivity.asmx/ActivityFollowup?ActivityID=${itemList[position].ActivityID}&FollowupDescription=${dialog.etRemarks.text.toString()}&TeamMemberID=${
                 CSP.getData("user_id")
             }&ActiveStatus=$isFixed"
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
         try {
             val builder: MultipartBody.Builder =
                 MultipartBody.Builder().setType(MultipartBody.FORM)
@@ -394,15 +415,18 @@ class RecentActivityAdapter(
             var picNum = 1
             for (paths in capturedPicturesList) {
                 println(paths)
-                val sourceFile = File(paths)
-                val mimeType =
-                    CoreHelperMethods(context as Activity).getMimeType(sourceFile)
-                val fileName: String = sourceFile.name
-                builder.addFormDataPart(
-                    "Picture$picNum",
-                    fileName,
-                    sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
-                )
+                val ImageFile = File(paths)
+                val sourceFile = UtilClass.saveBitmapToFile(ImageFile)
+                if (sourceFile!= null) {
+                    val mimeType =
+                        CoreHelperMethods(context as Activity).getMimeType(sourceFile)
+                    val fileName: String = sourceFile.name
+                    builder.addFormDataPart(
+                        "Picture$picNum",
+                        fileName,
+                        sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
+                    )
+                }
                 picNum++
             }
 

@@ -22,6 +22,8 @@ import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.fragments.storeview.ChecklistCategoryDetailFragment
+import com.example.cheilros.globals.UtilClass
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.CheckListDetailData
@@ -47,6 +49,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class ChecklistDetailAdapter(
@@ -280,22 +283,33 @@ class ChecklistDetailAdapter(
 
                 //region Save Answer
 
-                val client = OkHttpClient()
+                //val client = OkHttpClient()
+                //NIK: 2022-03-22
+                val client: OkHttpClient = OkHttpClient.Builder()
+                    .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                    .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                    .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                    .build()
                 try {
                     val builder: MultipartBody.Builder =
                         MultipartBody.Builder().setType(MultipartBody.FORM)
 
                     for (paths in capturedPicturesList) {
                         println(paths)
-                        val sourceFile = File(paths)
-                        val mimeType =
-                            CoreHelperMethods(context as Activity).getMimeType(sourceFile)
-                        val fileName: String = sourceFile.name
-                        builder.addFormDataPart(
-                            "ChecklistImg",
-                            fileName,
-                            sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
-                        )
+                        //val sourceFile = File(paths)
+                        //NIK: 2022-03-22
+                        val ImageFile = File(paths)
+                        val sourceFile = UtilClass.saveBitmapToFile(ImageFile)
+                        if (sourceFile!= null) {
+                            val mimeType =
+                                CoreHelperMethods(context as Activity).getMimeType(sourceFile)
+                            val fileName: String = sourceFile.name
+                            builder.addFormDataPart(
+                                "ChecklistImg",
+                                fileName,
+                                sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
+                            )
+                        }
                     }
 
                     builder.addFormDataPart(
@@ -451,7 +465,14 @@ class ChecklistDetailAdapter(
 
             var body: RequestBody = jsonString.toRequestBody(request_header)
             val request = Request.Builder().post(body).url(url).build()
-            val client = OkHttpClient()
+            //val client = OkHttpClient()
+            //NIK: 2022-03-22
+            val client: OkHttpClient = OkHttpClient.Builder()
+                .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .build()
+
             client.newCall(request).enqueue(object : Callback {
                 override fun onResponse(call: Call, response: Response) {
                     val tm = response.body?.string()

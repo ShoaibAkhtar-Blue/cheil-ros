@@ -205,7 +205,7 @@ class RecentTrainingModelData(
 )
 
 class TeamMemberModel(val status: Int, val data: List<TeamMemberData>)
-class TeamMemberData(val TeamMemberID: Int, val TeamMemberName: String, val AttendeseTypeID: Int)
+class TeamMemberData(val TeamMemberID: Int, val TeamMemberName: String, val AttendeseTypeID: Int, val mySingleID: String)  // SA val mySingleID: String
 
 //endregion
 

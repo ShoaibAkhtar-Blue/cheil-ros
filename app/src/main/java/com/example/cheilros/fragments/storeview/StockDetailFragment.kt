@@ -18,6 +18,7 @@ import com.example.cheilros.R
 import com.example.cheilros.adapters.StockDetailAdapter
 import com.example.cheilros.adapters.StockDetailCurrentWeekAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.models.*
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
@@ -38,6 +39,7 @@ import java.io.IOException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class StockDetailFragment : BaseFragment() {
 
@@ -228,7 +230,13 @@ class StockDetailFragment : BaseFragment() {
         println(url)
         mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
         val ref = this
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
 
         val request = Request.Builder()
             .url(url)
@@ -298,7 +306,13 @@ class StockDetailFragment : BaseFragment() {
 
     fun fetchCategory(url: String) {
         mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
 
         val request = Request.Builder()
             .url(url)

@@ -20,6 +20,7 @@ import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.DisplayCountDetailAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.helpers.SwipeHelper
 import com.example.cheilros.models.*
 import com.google.gson.GsonBuilder
@@ -33,6 +34,7 @@ import kotlinx.android.synthetic.main.fragment_display_count_detail.mainLoadingL
 import kotlinx.android.synthetic.main.fragment_display_count_detail.view.*
 import okhttp3.*
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 
 class DisplayCountDetailFragment : BaseFragment() {
@@ -191,7 +193,13 @@ class DisplayCountDetailFragment : BaseFragment() {
     fun fetchDisplayCountDetail(url: String) {
         println(url)
         val ref = this
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
 
         val request = Request.Builder()
             .url(url)
@@ -317,7 +325,13 @@ class DisplayCountDetailFragment : BaseFragment() {
 
     fun fetchCategory(url: String) {
         mainLoadingLayoutCC.setState(LoadingLayout.LOADING)
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
 
         val request = Request.Builder()
             .url(url)

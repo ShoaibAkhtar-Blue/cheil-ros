@@ -23,6 +23,7 @@ import com.example.cheilros.adapters.JPCurrentWeekApdater
 import com.example.cheilros.adapters.MyCoverageAdapter
 import com.example.cheilros.adapters.TeamStatusAdapter
 import com.example.cheilros.adapters.TeamStatusCurrentWeekApdater
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.models.*
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
@@ -41,6 +42,7 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class TeamStatusFragment : BaseFragment() {
 
@@ -268,7 +270,13 @@ class TeamStatusFragment : BaseFragment() {
 
         mainLoadingLayoutTS.setState(LoadingLayout.LOADING)
 
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
 
         val request = Request.Builder()
             .url(url)
@@ -320,7 +328,13 @@ class TeamStatusFragment : BaseFragment() {
 
         mainLoadingLayoutTS.setState(LoadingLayout.LOADING)
 
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
 
         val request = Request.Builder()
             .url(url)
@@ -370,7 +384,13 @@ class TeamStatusFragment : BaseFragment() {
 
     fun fetchTeamStatus(url: String) {
 
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
 
         mainLoadingLayoutTS.setState(LoadingLayout.LOADING)
         println(url)

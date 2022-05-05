@@ -46,11 +46,19 @@ import java.net.URL
 import java.util.concurrent.Executor
 import android.content.pm.PackageManager
 import android.provider.Settings
+import com.example.cheilros.globals.gConstants
+import java.util.concurrent.TimeUnit
 
 
 class LoginFragment : BaseFragment() {
 
-    private val client = OkHttpClient()
+    //private val client = OkHttpClient()
+    //NIK: 2022-03-22
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .build()
 
     var userIMEI: String = ""
 

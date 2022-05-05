@@ -33,6 +33,7 @@ import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.fragments.MyCoverageFragment
 import com.example.cheilros.fragments.training.TrainingStoresFragment
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.CheckInOutModel
 import com.example.cheilros.models.MyCoverageData
@@ -50,6 +51,7 @@ import okhttp3.*
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 
@@ -74,7 +76,13 @@ class TrainingStoresAdapter(
     }
 
     lateinit var CSP: CustomSharedPref
-    private val client = OkHttpClient()
+    //private val client = OkHttpClient()
+    //NIK: 2022-03-22
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .build()
     lateinit var locationManager: LocationManager
     //val selectStores= mutableListOf<SelectedMyCoverageData>()
     var curPos: Int = 0

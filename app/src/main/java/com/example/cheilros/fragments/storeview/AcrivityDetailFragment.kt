@@ -3,8 +3,9 @@ package com.example.cheilros.fragments.storeview
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,9 +21,9 @@ import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.BarcodeAdapter
 import com.example.cheilros.adapters.CapturedPictureAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.globals.UtilClass
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.helpers.CoreHelperMethods
-import com.example.cheilros.models.ChannelData
-import com.example.cheilros.models.ChannelModel
 import com.example.cheilros.models.DeploymentReasonData
 import com.example.cheilros.models.DeploymentReasonModel
 import com.google.gson.GsonBuilder
@@ -31,7 +32,6 @@ import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.dialog_barcode.*
 import kotlinx.android.synthetic.main.dialog_barcode_input.*
 import kotlinx.android.synthetic.main.fragment_acrivity_detail.*
-import kotlinx.android.synthetic.main.fragment_acrivity_detail.txtStoreSubName
 import kotlinx.android.synthetic.main.fragment_acrivity_detail.view.*
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
 import kotlinx.android.synthetic.main.fragment_my_coverage.*
@@ -39,7 +39,11 @@ import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.io.IOException
+import java.util.concurrent.TimeUnit
+
 
 class AcrivityDetailFragment : BaseFragment() {
 
@@ -365,7 +369,13 @@ class AcrivityDetailFragment : BaseFragment() {
 
             btnSubmit.text = "Processing..."*/
 
-            val client = OkHttpClient()
+            //val client = OkHttpClient()
+            //NIK: 2022-03-22
+            val client: OkHttpClient = OkHttpClient.Builder()
+                .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .build()
             try {
                 println("SerialNumbers: ${CSP.getData("ActivityDetail_BARCODE_SET").toString()}")
                 val builder: MultipartBody.Builder =
@@ -378,26 +388,37 @@ class AcrivityDetailFragment : BaseFragment() {
 
                 for (paths in capturedPicturesList) {
                     println(paths)
-                    val sourceFile = File(paths)
-                    val mimeType = CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
-                    val fileName: String = sourceFile.name
-                    builder.addFormDataPart(
-                        "BeforeActivityPicture",
-                        fileName,
-                        sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
-                    )
+                    //NIK: 2022-03-18
+                    //val sourceFile = File(paths)
+                    val ImageFile = File(paths)
+                    val sourceFile = UtilClass.saveBitmapToFile(ImageFile)
+
+                    if (sourceFile!= null) {
+                        val mimeType = CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
+                        val fileName: String = sourceFile.name
+                        builder.addFormDataPart(
+                            "BeforeActivityPicture",
+                            fileName,
+                            sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
+                        )
+                    }
                 }
 
                 for (paths in capturedPicturesListAfter) {
                     println(paths)
-                    val sourceFile = File(paths)
-                    val mimeType = CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
-                    val fileName: String = sourceFile.name
-                    builder.addFormDataPart(
-                        "AfterActivityPicture",
-                        fileName,
-                        sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
-                    )
+                    //NIK: 2022-03-18
+                    //val sourceFile = File(paths)
+                    val ImageFile = File(paths)
+                    val sourceFile = UtilClass.saveBitmapToFile(ImageFile)
+                    if (sourceFile!= null) {
+                        val mimeType = CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
+                        val fileName: String = sourceFile.name
+                        builder.addFormDataPart(
+                            "AfterActivityPicture",
+                            fileName,
+                            sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
+                        )
+                    }
                 }
 
                 if (capturedPicturesList.size == 0)

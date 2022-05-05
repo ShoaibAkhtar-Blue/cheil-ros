@@ -23,6 +23,7 @@ import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.activities.customobj.EmptyRecyclerView
 import com.example.cheilros.adapters.MyCoverageAdapter
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.models.*
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -30,23 +31,26 @@ import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
 import com.valartech.loadinglayout.LoadingLayout
 import kotlinx.android.synthetic.main.activity_new_dashboard.*
-import kotlinx.android.synthetic.main.fragment_journey_plan.view.*
 import kotlinx.android.synthetic.main.fragment_my_coverage.*
-import kotlinx.android.synthetic.main.fragment_my_coverage.todo_list_empty_view
 import kotlinx.android.synthetic.main.fragment_my_coverage.view.*
-import kotlinx.android.synthetic.main.fragment_my_coverage.view.txtNoRecord
-import kotlinx.android.synthetic.main.fragment_team_status.*
 import okhttp3.*
 import java.io.IOException
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.util.concurrent.TimeUnit
 
 
 class MyCoverageFragment : BaseFragment() {
 
     lateinit var activity: NewDashboardActivity
     lateinit var uLocation: Location
-    private val client = OkHttpClient()
+    //private val client = OkHttpClient()
+    //NIK: 2022-03-22
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .build()
 
     lateinit var recyclerView: EmptyRecyclerView
     lateinit var layoutManager: RecyclerView.LayoutManager
@@ -65,7 +69,6 @@ class MyCoverageFragment : BaseFragment() {
     var longitude: String = "0.0"
 
     var isLoc: Boolean = false
-
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 

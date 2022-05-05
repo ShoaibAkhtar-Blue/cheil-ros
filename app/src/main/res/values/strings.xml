@@ -23,4 +23,6 @@
     <string name="sample_text">Lorem Epsoum ...</string>
     <string name="error">Error</string>
     <string name="no_results">no results</string>
+    <string name="training_title">Training Title</string>
+    <string name="number_of_attendees">Number of Attendees</string>
 </resources>

@@ -46,7 +46,7 @@ class CameraFragment : BaseFragment() {
 
     lateinit var viewCV: View
 
-    private val client = OkHttpClient()
+    //private val client = OkHttpClient()
 
     lateinit var locationManager: LocationManager
 

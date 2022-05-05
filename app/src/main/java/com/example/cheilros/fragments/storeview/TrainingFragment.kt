@@ -16,6 +16,7 @@ import com.example.cheilros.adapters.RecentTrainingAdapter
 import com.example.cheilros.adapters.TrainingAdapter
 import com.example.cheilros.adapters.TrainingSimpleAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.models.RecentTrainingModel
 import com.example.cheilros.models.TrainingModel
 import com.example.cheilros.models.TrainingSimpleModel
@@ -30,10 +31,17 @@ import kotlinx.android.synthetic.main.fragment_training.*
 import kotlinx.android.synthetic.main.fragment_training.view.*
 import okhttp3.*
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class TrainingFragment : BaseFragment() {
 
-    private val client = OkHttpClient()
+    //private val client = OkHttpClient()
+    //NIK: 2022-03-22
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .build()
 
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: TrainingSimpleAdapter

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
 import com.example.cheilros.adapters.InvestmentDetailAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.BrandsData
 import com.valartech.loadinglayout.LoadingLayout
@@ -22,10 +23,17 @@ import kotlinx.android.synthetic.main.fragment_investment_detail.*
 import kotlinx.android.synthetic.main.fragment_investment_detail.mainLoadingLayoutCC
 import kotlinx.android.synthetic.main.fragment_investment_detail.view.*
 import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
 
 class InvestmentDetailFragment : BaseFragment() {
 
-    private val client = OkHttpClient()
+    //private val client = OkHttpClient()
+    //NIK: 2022-03-22
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .build()
 
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: InvestmentDetailAdapter

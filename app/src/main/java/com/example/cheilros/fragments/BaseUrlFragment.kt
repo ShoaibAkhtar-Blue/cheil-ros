@@ -23,6 +23,7 @@ import com.example.cheilros.data.AppSetting
 import com.example.cheilros.datavm.AppSettingViewModel
 import com.example.cheilros.datavm.UserDataViewModel
 import com.example.cheilros.datavm.UserPermissionViewModel
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.AppLanguagesData
 import com.example.cheilros.models.AppLanguagesModel
@@ -36,11 +37,19 @@ import kotlinx.android.synthetic.main.fragment_my_coverage.*
 import okhttp3.*
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class BaseUrlFragment : Fragment() {
 
-    private val client = OkHttpClient()
+    //private val client = OkHttpClient()
+    //NIK: 2022-03-22
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .build()
+
     private lateinit var mAppSettingViewModel: AppSettingViewModel
     private lateinit var mUserDataViewModel: UserDataViewModel
     private lateinit var mUserPermissionViewModel: UserPermissionViewModel
@@ -296,7 +305,14 @@ class BaseUrlFragment : Fragment() {
     }
 
     fun fetchLanguage(url: String) {
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
+
         println(url)
         val request = Request.Builder()
             .url(url)

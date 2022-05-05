@@ -13,6 +13,7 @@ import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheilros.R
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.CheckInOutModel
 import com.example.cheilros.models.DisplayCountDetailViewModel
@@ -20,6 +21,7 @@ import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.dialog_barcode.*
 import okhttp3.*
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class BarcodeAdapter(
     val context: Context,
@@ -103,7 +105,13 @@ class BarcodeAdapter(
                         }&SerialNumber=${serialNum}"
                     println(url)
 
-                    val client = OkHttpClient()
+                    //val client = OkHttpClient()
+                    //NIK: 2022-03-22
+                    val client: OkHttpClient = OkHttpClient.Builder()
+                        .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                        .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                        .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                        .build()
 
                     val request = Request.Builder()
                         .url(url)

@@ -51,6 +51,24 @@
                 android:textColor="@color/black"
                 android:textSize="20dp" />
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/OTFTrainingTitle"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:hint="@string/training_title">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etTrainingTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -130,11 +148,24 @@
                                 android:id="@+id/PromoterName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:layout_marginRight="60dp"
                                 android:layout_toStartOf="@+id/PromoterAttend"
                                 android:layout_toEndOf="@+id/txtNum"
                                 android:fontFamily="@font/samsungsharpsans_bold"
                                 android:gravity="center|left"
                                 android:text="PROMOTER NAME"
+                                android:textColor="@android:color/white"
+                                android:textSize="14dp" />
+
+                            <TextView
+                                android:id="@+id/PromoterID"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="24dp"
+                                android:layout_toStartOf="@id/PromoterAttend"
+                                android:fontFamily="@font/samsungsharpsans_bold"
+                                android:gravity="center|left"
+                                android:text="ID"
                                 android:textColor="@android:color/white"
                                 android:textSize="14dp" />
 
@@ -168,18 +199,62 @@
                         android:layout_marginBottom="16dp"
                         android:orientation="vertical">
 
-                        <ImageButton
-                            android:id="@+id/btnAddAttendee"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:layout_gravity="right"
-                            android:backgroundTint="@android:color/transparent"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?android:attr/selectableItemBackground"
-                            android:padding="0dp"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/add_person" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <!--
+                            <EditText
+                                android:id="@+id/txtNumberOfAttendees"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="#ededed"
+                                android:fontFamily="@font/samsungsharpsans_bold"
+                                android:gravity="center"
+                                android:hint="No of Attendees"
+                                android:inputType="number"
+                                android:maxLength="4"
+                                android:padding="8dp"
+                                android:textColor="@color/black"
+                                android:textSize="20dp" />
+                                -->
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/OTFNumberOfAttendees"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginRight="16dp"
+                                android:hint="@string/number_of_attendees">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etNumberOfAttendees"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="number"
+                                    android:maxLength="4"
+                                    android:maxLines="1"
+                                    android:text="" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <ImageButton
+                                android:id="@+id/btnAddAttendee"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_gravity="center_vertical"
+                                android:backgroundTint="@android:color/transparent"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:foreground="?android:attr/selectableItemBackground"
+                                android:padding="0dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/add_person" />
+
+                        </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/LLImageRV"

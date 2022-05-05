@@ -14,6 +14,7 @@ import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.RecentActivityAdapter
 import com.example.cheilros.adapters.TrainingTypeAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.models.RecentActivityData
 import com.example.cheilros.models.RecentActivityModel
 import com.example.cheilros.models.TrainingTypesData
@@ -26,6 +27,7 @@ import kotlinx.android.synthetic.main.fragment_training_list.*
 import kotlinx.android.synthetic.main.fragment_training_list.view.*
 import okhttp3.*
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class TrainingListFragment : BaseFragment() {
 
@@ -55,7 +57,13 @@ class TrainingListFragment : BaseFragment() {
     }
 
     fun fetchTrainingType(url: String){
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
         val request = Request.Builder()
             .url(url)
             .build()

@@ -13,6 +13,7 @@ import com.example.cheilros.adapters.ChecklistAnsweredAdapter
 import com.example.cheilros.adapters.InvestmentAdapter
 import com.example.cheilros.adapters.InvestmentAnswerAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.models.CheckListAnswerModel
 import com.example.cheilros.models.InvestmentAnswerModel
 import com.example.cheilros.models.InvestmentModel
@@ -21,6 +22,7 @@ import com.irozon.sneaker.Sneaker
 import kotlinx.android.synthetic.main.fragment_store_status.*
 import okhttp3.*
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 
 class StoreStatusFragment(val StoreID: Int?, val StoreName: String?) : BaseFragment() {
@@ -133,7 +135,13 @@ class StoreStatusFragment(val StoreID: Int?, val StoreName: String?) : BaseFragm
 
     fun fetchInvestmentanswer(url: String) {
 
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
 
         val request = Request.Builder()
             .url(url)
@@ -197,7 +205,13 @@ class StoreStatusFragment(val StoreID: Int?, val StoreName: String?) : BaseFragm
 
     fun fetchInvestment(url: String) {
         println(url)
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
 
         val request = Request.Builder()
             .url(url)

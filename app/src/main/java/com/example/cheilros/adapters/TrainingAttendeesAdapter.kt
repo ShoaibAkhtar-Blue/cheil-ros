@@ -28,16 +28,23 @@ import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class TrainingAttendeesAdapter(
     val context: Context,
     val itemList: MutableList<TeamMemberData>,
     val fragment: TrainingNewFragment,
-    val arguments: Bundle?
+    val arguments: Bundle?,
+    private val ROS_LabelName: Int
 ) :
     RecyclerView.Adapter<TrainingAttendeesAdapter.ViewHolder>() {
 
+    // SA
+    //private var ROS_LabelName: Int = 0
+    private val trainees = ArrayList<Int>()
+
     lateinit var CSP: CustomSharedPref
+
     var investmentsCountData: MutableList<InvestmentJSONData> = mutableListOf()
 
 
@@ -45,6 +52,10 @@ class TrainingAttendeesAdapter(
         var RLAttendee: RelativeLayout = view.findViewById(R.id.RLAttendee)
         var txtNum: TextView = view.findViewById(R.id.txtNum)
         var txtAttendee: TextView = view.findViewById(R.id.txtAttendee)
+
+        // SA
+        var txtAttendeeID: TextView = view.findViewById(R.id.txtAttendeeID)
+
         var checkboxAttendee: CheckBox = view.findViewById(R.id.checkboxAttendee)
     }
 
@@ -53,6 +64,10 @@ class TrainingAttendeesAdapter(
         viewType: Int
     ): ViewHolder {
         CSP = CustomSharedPref(parent.context)
+
+        // SA
+        //CSP.saveData("training_attendees", "")
+
         val view =
             LayoutInflater.from(context).inflate(R.layout.list_training_attendees, parent, false)
         return ViewHolder(view)
@@ -62,17 +77,41 @@ class TrainingAttendeesAdapter(
         holder.txtNum.text = (position + 1).toString()
         holder.txtAttendee.text = itemList[position].TeamMemberName
 
+        // SA
+        //holder.txtAttendeeID.text = itemList[position].TeamMemberID.toString()
+        if (ROS_LabelName == 0) {
+            holder.txtAttendeeID.visibility = View.GONE
+        } else {
+            holder.txtAttendeeID.text = itemList[position].mySingleID
+        }
+
         if(itemList[position].AttendeseTypeID != 0)
             holder.RLAttendee.setBackgroundColor(Color.GRAY)
 
         holder.checkboxAttendee.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
+
+                /*
+                if (!trainees.contains(position)) {
+                    if (CSP.getData("training_attendees").equals("")) {
+                        CSP.saveData("training_attendees", "${itemList[position].TeamMemberID}:${itemList[position].TeamMemberName}:${itemList[position].mySingleID}:${itemList[position].AttendeseTypeID}")
+                    } else {
+                        CSP.saveData(
+                            "training_attendees",
+                            "${CSP.getData("training_attendees")},${itemList[position].TeamMemberID}:${itemList[position].TeamMemberName}:${itemList[position].mySingleID}:${itemList[position].AttendeseTypeID}"
+                        )
+                    }
+                }
+
+                 */
+
+                // SA
                 if (CSP.getData("training_attendees").equals("")) {
-                    CSP.saveData("training_attendees", "${itemList[position].TeamMemberID}:${itemList[position].TeamMemberName}:${itemList[position].AttendeseTypeID}")
+                    CSP.saveData("training_attendees", "${itemList[position].TeamMemberID}:${itemList[position].TeamMemberName}:${itemList[position].mySingleID}:${itemList[position].AttendeseTypeID}")
                 } else {
                     CSP.saveData(
                         "training_attendees",
-                        "${CSP.getData("training_attendees")},${itemList[position].TeamMemberID}:${itemList[position].TeamMemberName}:${itemList[position].AttendeseTypeID}"
+                        "${CSP.getData("training_attendees")},${itemList[position].TeamMemberID}:${itemList[position].TeamMemberName}:${itemList[position].mySingleID}:${itemList[position].AttendeseTypeID}"
                     )
                 }
             }

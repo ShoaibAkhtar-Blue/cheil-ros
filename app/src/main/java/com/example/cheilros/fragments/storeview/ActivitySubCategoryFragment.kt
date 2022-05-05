@@ -13,6 +13,7 @@ import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.ActivitySubCategoryAdapter
 import com.example.cheilros.adapters.RecentActivityAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.models.ActivityCategoryModel
 import com.example.cheilros.models.RecentActivityData
 import com.example.cheilros.models.RecentActivityModel
@@ -27,11 +28,18 @@ import kotlinx.android.synthetic.main.fragment_checklist_category.view.mainLoadi
 import kotlinx.android.synthetic.main.fragment_checklist_category.view.txtStoreName
 import okhttp3.*
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 
 class ActivitySubCategoryFragment : BaseFragment() {
 
-    private val client = OkHttpClient()
+    //private val client = OkHttpClient()
+    //NIK: 2022-03-22
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .build()
 
     lateinit var layoutManager: RecyclerView.LayoutManager
     lateinit var recylcerAdapter: ActivitySubCategoryAdapter
@@ -202,7 +210,13 @@ class ActivitySubCategoryFragment : BaseFragment() {
             .url(url)
             .build()
 
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {

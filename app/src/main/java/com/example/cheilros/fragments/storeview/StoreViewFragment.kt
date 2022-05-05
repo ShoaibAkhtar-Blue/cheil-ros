@@ -23,6 +23,7 @@ import com.example.cheilros.adapters.RecentActivityAdapter
 import com.example.cheilros.adapters.StoreMenuAdapter
 import com.example.cheilros.adapters.StoreViewTabsPagerAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.models.CheckListAnswerModel
 import com.example.cheilros.models.RecentActivityData
 import com.example.cheilros.models.RecentActivityModel
@@ -37,6 +38,7 @@ import kotlinx.android.synthetic.main.fragment_store_view.*
 import kotlinx.android.synthetic.main.fragment_store_view.view.*
 import okhttp3.*
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 
 class StoreViewFragment : BaseFragment() {
@@ -261,7 +263,13 @@ class StoreViewFragment : BaseFragment() {
             .url(url)
             .build()
 
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -339,7 +347,13 @@ class StoreViewFragment : BaseFragment() {
             .url(url)
             .build()
 
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -409,7 +423,13 @@ class StoreViewFragment : BaseFragment() {
         mainLoadingLayout.setState(LoadingLayout.LOADING)
         println(url)
 
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
 
         val request = Request.Builder()
             .url(url)

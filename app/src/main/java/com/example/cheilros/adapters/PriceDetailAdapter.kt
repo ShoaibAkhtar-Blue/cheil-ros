@@ -18,6 +18,7 @@ import com.example.cheilros.R
 import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.data.AppSetting
 import com.example.cheilros.data.UserData
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.helpers.CustomSharedPref
 import com.example.cheilros.models.MyCoverageData
@@ -32,6 +33,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 
 class PriceDetailAdapter(
@@ -206,7 +208,13 @@ class PriceDetailAdapter(
         }
 
         holder.btnAccept.setOnClickListener {
-            val client = OkHttpClient()
+            //val client = OkHttpClient()
+            //NIK: 2022-03-22
+            val client: OkHttpClient = OkHttpClient.Builder()
+                .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .build()
             try {
                 val builder: MultipartBody.Builder =
                     MultipartBody.Builder().setType(MultipartBody.FORM)

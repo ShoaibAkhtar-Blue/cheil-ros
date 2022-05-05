@@ -20,6 +20,8 @@ import com.example.cheilros.adapters.CapturedPictureAdapter
 import com.example.cheilros.adapters.TrainingAdapter
 import com.example.cheilros.adapters.TrainingAttendeesAdapter
 import com.example.cheilros.fragments.BaseFragment
+import com.example.cheilros.globals.UtilClass
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.helpers.CoreHelperMethods
 import com.example.cheilros.models.TeamMemberData
 import com.example.cheilros.models.TeamMemberModel
@@ -57,6 +59,7 @@ import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class TrainingNewFragment : BaseFragment() {
@@ -71,6 +74,11 @@ class TrainingNewFragment : BaseFragment() {
     lateinit var recylcerAdapterTL: TrainingAdapter
 
     var capturedPicturesList: MutableList<String> = arrayListOf()
+
+    // SA
+    private var ROS_LabelName: Int = 0
+    private lateinit var checkInTime: String
+    private lateinit var checkOutTime: String
 
 
     override fun onCreateView(
@@ -102,6 +110,21 @@ class TrainingNewFragment : BaseFragment() {
             btnSubmit.visibility = View.INVISIBLE
         }
 
+        // SA
+        ROS_LabelName = settingData.filter { it.labelID == 128 }.get(0).labelName.toInt()
+
+        // SA
+        if (ROS_LabelName == 0) {
+            OTFTrainingTitle.visibility = View.GONE
+            etTrainingTitle.setText("")
+            OTFNumberOfAttendees.visibility = View.INVISIBLE
+            etNumberOfAttendees.setText("")
+            PromoterID.visibility = View.GONE
+        }
+
+        // SA
+        Log.i("${TrainingNewFragment::class.java.simpleName}: ", "${settingData.filter { it.labelID == 128 }.get(0).labelName}")
+
         try {
             rvTrainingPictures.setHasFixedSize(true)
             layoutManagerPA = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
@@ -127,6 +150,10 @@ class TrainingNewFragment : BaseFragment() {
             val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
                 cal.set(Calendar.HOUR_OF_DAY, hour)
                 cal.set(Calendar.MINUTE, minute)
+
+                // SA
+                checkInTime = SimpleDateFormat("HH:mm:ss").format(cal.time)
+
                 btnCheckinTime.text = SimpleDateFormat("HH:mm:ss").format(cal.time)
             }
             TimePickerDialog(
@@ -143,6 +170,10 @@ class TrainingNewFragment : BaseFragment() {
             val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
                 cal.set(Calendar.HOUR_OF_DAY, hour)
                 cal.set(Calendar.MINUTE, minute)
+
+                // SA
+                checkOutTime = SimpleDateFormat("HH:mm:ss").format(cal.time)
+
                 btnCheckoutTime.text = SimpleDateFormat("HH:mm:ss").format(cal.time)
             }
             TimePickerDialog(
@@ -164,6 +195,12 @@ class TrainingNewFragment : BaseFragment() {
             dialog.setCancelable(false)
             dialog.setCanceledOnTouchOutside(true)
 
+            // SA
+            if (ROS_LabelName == 0) {
+                dialog.OTAttendeeID.visibility = View.GONE
+                dialog.etAttendeeID.setText("")
+            }
+
             dialog.txtTitle.text =
                 settingData.filter { it.fixedLabelName == "Training_AddAttendees" }.get(0).labelName
             dialog.txtQuestion.text =
@@ -183,7 +220,8 @@ class TrainingNewFragment : BaseFragment() {
                     TeamMemberData(
                         0,
                         dialog.etAttendeeName.text.toString(),
-                        1
+                        1,
+                        dialog.etAttendeeID.text.toString() // SA
                     )
                 )
                 dialog.dismiss()
@@ -219,10 +257,20 @@ class TrainingNewFragment : BaseFragment() {
         }
 
         btnSubmit.setOnClickListener {
-            val client = OkHttpClient()
+            //val client = OkHttpClient()
+            //NIK: 2022-03-22
+            val client: OkHttpClient = OkHttpClient.Builder()
+                .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+                .build()
 
             if (CSP.getData("sess_selected_training_features") != "") {
+
                 try {
+
+                    // SA
+                    Log.i("${TrainingNewFragment::class.java.simpleName}", "Check In: ${btnCheckinTime.text} Check out: ${btnCheckoutTime.text}")
 
                     val simpleDateFormat = SimpleDateFormat("yyyy-M-d")
                     val currentDateAndTime: String = simpleDateFormat.format(Date())
@@ -231,6 +279,9 @@ class TrainingNewFragment : BaseFragment() {
                         MultipartBody.Builder().setType(MultipartBody.FORM)
 
                     println(CSP.getData("training_attendees"))
+
+                    // SA
+                    Log.i("${TrainingNewFragment::class.java.simpleName}: ", "${CSP.getData("training_attendees")}")
 
                     builder.addFormDataPart(
                         "Stores",
@@ -262,14 +313,21 @@ class TrainingNewFragment : BaseFragment() {
 
                     for (paths in capturedPicturesList) {
                         println(paths)
-                        val sourceFile = File(paths)
-                        val mimeType = CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
-                        val fileName: String = sourceFile.name
-                        builder.addFormDataPart(
-                            "TrainingPictures",
-                            fileName,
-                            sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
-                        )
+                        //val sourceFile = File(paths)
+                        //NIK: 2022-03-22
+                        //NIK: 2022-03-22
+                        val ImageFile = File(paths)
+                        val sourceFile = UtilClass.saveBitmapToFile(ImageFile)
+                        if (sourceFile!= null) {
+                            val mimeType =
+                                CoreHelperMethods(requireActivity()).getMimeType(sourceFile)
+                            val fileName: String = sourceFile.name
+                            builder.addFormDataPart(
+                                "TrainingPictures",
+                                fileName,
+                                sourceFile.asRequestBody(mimeType?.toMediaTypeOrNull())
+                            )
+                        }
                     }
 
                     println(
@@ -287,9 +345,31 @@ class TrainingNewFragment : BaseFragment() {
                             )
                         }&TrainingDateTime=${currentDateAndTime}&StartTime=${currentDateAndTime} ${btnCheckinTime.text}&EndTime=${currentDateAndTime} ${btnCheckoutTime.text}&AttendeseTypeID=1"
                     )
-                    val requestBody = builder.build()
-                    val request: Request = Request.Builder()
-                        .url(
+
+                    // SA
+                    if (btnCheckinTime.text != "Checkin" && btnCheckoutTime.text != "Checkout" && checkOutTime > checkInTime) {
+                        val requestBody = builder.build()
+                        val request: Request = Request.Builder()
+                            .url(
+                                "${CSP.getData("base_url")}/Training.asmx/OperTrainingDetail?TrainingModelID=${
+                                    arguments?.getInt(
+                                        "TrainingModelID"
+                                    )
+                                }&StoreID=${
+                                    if (CSP.getData("selectedStores") == "") arguments?.getInt(
+                                        "StoreID"
+                                    ) else CSP.getData("selectedStores")
+                                }&Description=-&TeamMemberID=${
+                                    CSP.getData(
+                                        "user_id"
+                                    )
+                                }&TrainingDateTime=${currentDateAndTime}&StartTime=${currentDateAndTime} ${btnCheckinTime.text}&EndTime=${currentDateAndTime} ${btnCheckoutTime.text}&AttendeseTypeID=1&TrainingTitle=${etTrainingTitle.text.toString().trim()}&NoOfAttendees=${etNumberOfAttendees.text.toString()}"
+                            )
+                            .post(requestBody)
+                            .build()
+
+                        // SA
+                        Log.i("${TrainingNewFragment::class.java.simpleName}",
                             "${CSP.getData("base_url")}/Training.asmx/OperTrainingDetail?TrainingModelID=${
                                 arguments?.getInt(
                                     "TrainingModelID"
@@ -302,49 +382,53 @@ class TrainingNewFragment : BaseFragment() {
                                 CSP.getData(
                                     "user_id"
                                 )
-                            }&TrainingDateTime=${currentDateAndTime}&StartTime=${currentDateAndTime} ${btnCheckinTime.text}&EndTime=${currentDateAndTime} ${btnCheckoutTime.text}&AttendeseTypeID=1"
+                            }&TrainingDateTime=${currentDateAndTime}&StartTime=${currentDateAndTime} ${btnCheckinTime.text}&EndTime=${currentDateAndTime} ${btnCheckoutTime.text}&AttendeseTypeID=1&TrainingTitle=${etTrainingTitle.text.toString().trim()}&NoOfAttendees=${etNumberOfAttendees.text.toString()}"
                         )
-                        .post(requestBody)
-                        .build()
 
-                    client.newCall(request).enqueue(object : Callback {
-                        override fun onFailure(call: Call, e: IOException) {
-                            requireActivity().runOnUiThread {
-                                activity?.let { it1 ->
-                                    Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                        .setTitle("Error!!")
-                                        .setMessage(e.message.toString())
-                                        .sneakWarning()
+                        client.newCall(request).enqueue(object : Callback {
+                            override fun onFailure(call: Call, e: IOException) {
+                                requireActivity().runOnUiThread {
+                                    activity?.let { it1 ->
+                                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                            .setTitle("Error!!")
+                                            .setMessage(e.message.toString())
+                                            .sneakWarning()
+                                    }
                                 }
                             }
-                        }
 
-                        override fun onResponse(call: Call, response: Response) {
-                            val body = response.body?.string()
-                            println(body)
+                            override fun onResponse(call: Call, response: Response) {
+                                val body = response.body?.string()
+                                println(body)
 
-                            requireActivity().runOnUiThread {
-                                activity?.let { it1 ->
-                                    Sneaker.with(it1) // Activity, Fragment or ViewGroup
-                                        .setTitle("Success!!")
-                                        .setMessage("Activity Updated!")
-                                        .sneakSuccess()
+                                requireActivity().runOnUiThread {
+                                    activity?.let { it1 ->
+                                        Sneaker.with(it1) // Activity, Fragment or ViewGroup
+                                            .setTitle("Success!!")
+                                            .setMessage("Activity Updated!")
+                                            .sneakSuccess()
+                                    }
+                                    CSP.delData("training_attendees")
+                                    CSP.delData("sess_selected_training_features")
+                                    CSP.delData("TrainingDetail_SESSION_IMAGE")
+                                    CSP.delData("TrainingDetail_SESSION_IMAGE_SET")
+
+                                    if(team_type.toInt() >= 9){
+                                        findNavController().navigate(R.id.action_trainingNewFragment_to_dashboardFragment)
+                                    }else{
+                                        findNavController().navigateUp()
+                                    }
+
                                 }
-                                CSP.delData("training_attendees")
-                                CSP.delData("sess_selected_training_features")
-                                CSP.delData("TrainingDetail_SESSION_IMAGE")
-                                CSP.delData("TrainingDetail_SESSION_IMAGE_SET")
-
-                                if(team_type.toInt() >= 9){
-                                    findNavController().navigate(R.id.action_trainingNewFragment_to_dashboardFragment)
-                                }else{
-                                    findNavController().navigateUp()
-                                }
-
                             }
-                        }
 
-                    })
+                        })
+                    } else {
+                        Sneaker.with(requireActivity()) // Activity, Fragment or ViewGroup
+                            .setTitle("Warning!!")
+                            .setMessage("Please select Check In and Check Out Time!")
+                            .sneakWarning()
+                    }
 
                 } catch (ex: Exception) {
                     Log.e("Error_", ex.message.toString())
@@ -355,8 +439,6 @@ class TrainingNewFragment : BaseFragment() {
                     .setMessage("Please select atleast one Feature!")
                     .sneakWarning()
             }
-
-
         }
 
 
@@ -402,7 +484,13 @@ class TrainingNewFragment : BaseFragment() {
     }
 
     fun fetchTraining(url: String) {
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
         println(url)
         val request = Request.Builder()
             .url(url)
@@ -466,7 +554,17 @@ class TrainingNewFragment : BaseFragment() {
     }
 
     fun fetchAttendees(url: String) {
-        val client = OkHttpClient()
+
+        // SA
+        Log.i("In fetchAttendees: ${TrainingNewFragment::class.java.simpleName}", arguments?.getInt("StoreID").toString())
+
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
         println(url)
         val request = Request.Builder()
             .url(url)
@@ -501,7 +599,8 @@ class TrainingNewFragment : BaseFragment() {
                                 requireContext(),
                                 apiData.data as MutableList<TeamMemberData>,
                                 this@TrainingNewFragment,
-                                arguments
+                                arguments,
+                                ROS_LabelName
                             )
                             rvAttendees.adapter = recylcerAdapter
                             mainLoadingLayoutTD.setState(LoadingLayout.COMPLETE)

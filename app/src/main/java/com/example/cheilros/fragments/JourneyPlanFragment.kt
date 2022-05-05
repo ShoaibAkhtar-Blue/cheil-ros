@@ -23,6 +23,7 @@ import com.example.cheilros.activities.NewDashboardActivity
 import com.example.cheilros.adapters.JPAdapter
 import com.example.cheilros.adapters.JPCurrentWeekApdater
 import com.example.cheilros.adapters.JPStatusAdapter
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.models.JPStatusData
 import com.example.cheilros.models.JPStatusModel
 import com.example.cheilros.models.JourneyPlanModel
@@ -43,11 +44,18 @@ import java.io.IOException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class JourneyPlanFragment : BaseFragment() {
 
-    private val client = OkHttpClient()
+    //private val client = OkHttpClient()
+    //NIK: 2022-03-22
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+        .build()
 
     //lateinit var recyclerView: RecyclerView
     lateinit var layoutManager: RecyclerView.LayoutManager

@@ -17,6 +17,7 @@ import com.example.cheilros.R
 import com.example.cheilros.activities.customobj.EmptyRecyclerView
 import com.example.cheilros.adapters.MyActivitiesAdapter
 import com.example.cheilros.adapters.MyActivityCurrentWeekApdater
+import com.example.cheilros.globals.gConstants
 import com.example.cheilros.models.MyActivitiesModel
 import com.google.gson.GsonBuilder
 import com.irozon.sneaker.Sneaker
@@ -34,6 +35,7 @@ import java.io.IOException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class MyActivitiesFragment : BaseFragment() {
@@ -147,7 +149,13 @@ class MyActivitiesFragment : BaseFragment() {
 
     fun fetchMyActivities(url: String) {
         println(url)
-        val client = OkHttpClient()
+        //val client = OkHttpClient()
+        //NIK: 2022-03-22
+        val client: OkHttpClient = OkHttpClient.Builder()
+            .connectTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .writeTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .readTimeout(gConstants.gCONNECTION_TIMEOUT_SECS, TimeUnit.SECONDS)
+            .build()
 
         mainLoadingLayout.setState(LoadingLayout.LOADING)
         println(url)
